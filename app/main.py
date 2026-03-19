@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from app.config import API_KEY
 from app.parser import parse_task
 from app.storage import save_to_gcs
 from app.tripletex import TripletexClient
@@ -24,6 +25,13 @@ async def health():
 
 @app.post("/solve")
 async def solve(request: Request):
+    # API key verification — if API_KEY is set, require Bearer token
+    if API_KEY:
+        auth_header = request.headers.get("authorization", "")
+        if not auth_header.startswith("Bearer ") or auth_header[7:] != API_KEY:
+            logger.warning("Unauthorized request — invalid or missing API key")
+            return JSONResponse({"status": "completed"}, status_code=200)
+
     t0 = time.monotonic()
     body = await request.json()
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")

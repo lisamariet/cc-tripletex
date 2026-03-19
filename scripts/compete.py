@@ -195,6 +195,92 @@ def poll_for_result(client: httpx.Client, submission_id: str, max_wait: int = 30
     print(f"\n\nTimeout after {max_wait}s. Check status with: python scripts/compete.py status")
 
 
+def cmd_insights(args: argparse.Namespace) -> None:
+    """Analyze GCS result logs for efficiency insights."""
+    import json
+    import subprocess
+
+    print("Henter resultat-logger fra GCS...\n")
+    result = subprocess.run(
+        ["gsutil", "ls", "gs://tripletex-agent-requests/results/"],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        print("Ingen resultat-logger funnet.")
+        return
+
+    files = sorted(result.stdout.strip().split("\n"))
+    if not files or files == [""]:
+        print("Ingen resultat-logger funnet.")
+        return
+
+    total_submissions = 0
+    total_api_calls = 0
+    total_4xx = 0
+    handler_stats: dict[str, dict] = {}
+
+    for f in files:
+        r = subprocess.run(["gsutil", "cat", f], capture_output=True, text=True)
+        if r.returncode != 0:
+            continue
+        try:
+            data = json.loads(r.stdout)
+        except json.JSONDecodeError:
+            continue
+
+        total_submissions += 1
+        task = data.get("parsed_task", {})
+        task_type = task.get("task_type", "unknown")
+        api_calls = data.get("api_calls", [])
+        n_calls = len(api_calls)
+        n_4xx = sum(1 for c in api_calls if 400 <= c.get("status", 0) < 500)
+        total_api_calls += n_calls
+        total_4xx += n_4xx
+
+        if task_type not in handler_stats:
+            handler_stats[task_type] = {"runs": 0, "calls": 0, "errors_4xx": 0, "calls_detail": []}
+        handler_stats[task_type]["runs"] += 1
+        handler_stats[task_type]["calls"] += n_calls
+        handler_stats[task_type]["errors_4xx"] += n_4xx
+
+        for c in api_calls:
+            status = c.get("status", 0)
+            detail = f"{c['method']:6} {c['path']:40} {status} ({c.get('duration_ms', 0):.0f}ms)"
+            if 400 <= status < 500:
+                detail += "  ⚠️  4xx ERROR"
+            handler_stats[task_type]["calls_detail"].append(detail)
+
+    # Summary
+    print(f"{'='*60}")
+    print(f"  INSIGHTS — {total_submissions} submissions analysert")
+    print(f"{'='*60}")
+    print(f"  Totalt API-kall:  {total_api_calls}")
+    print(f"  Totalt 4xx-feil:  {total_4xx}")
+    if total_api_calls > 0:
+        print(f"  Feilrate:         {total_4xx/total_api_calls:.0%}")
+    print()
+
+    # Per handler
+    print(f"{'Handler':<25} {'Kjøringer':>9} {'API-kall':>9} {'4xx':>5} {'Snitt kall':>11}")
+    print("-" * 65)
+    for task_type in sorted(handler_stats.keys()):
+        s = handler_stats[task_type]
+        avg = s["calls"] / s["runs"] if s["runs"] > 0 else 0
+        err_marker = "  ⚠️" if s["errors_4xx"] > 0 else ""
+        print(f"{task_type:<25} {s['runs']:>9} {s['calls']:>9} {s['errors_4xx']:>5} {avg:>10.1f}{err_marker}")
+
+    # Detailed call log per handler
+    if args.detail:
+        print(f"\n{'='*60}")
+        print("  DETALJERT API-KALL-LOGG")
+        print(f"{'='*60}")
+        for task_type in sorted(handler_stats.keys()):
+            s = handler_stats[task_type]
+            print(f"\n  [{task_type}]")
+            for detail in s["calls_detail"]:
+                print(f"    {detail}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="NM i AI competition CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -215,12 +301,22 @@ def main() -> None:
         help="Don't poll for result after submitting",
     )
 
+    # insights command
+    insights_parser = subparsers.add_parser("insights", help="Analyze API call efficiency from GCS logs")
+    insights_parser.add_argument(
+        "--detail",
+        action="store_true",
+        help="Show detailed API call log per handler",
+    )
+
     args = parser.parse_args()
 
     if args.command == "status":
         cmd_status(args)
     elif args.command == "submit":
         cmd_submit(args)
+    elif args.command == "insights":
+        cmd_insights(args)
 
 
 if __name__ == "__main__":

@@ -22,7 +22,6 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> int
     if last:
         params["lastName"] = last
     if not params and name:
-        # Try splitting full name
         parts = name.strip().split()
         if len(parts) >= 2:
             params["firstName"] = parts[0]
@@ -35,6 +34,27 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> int
     if employees:
         return employees[0]["id"]
     return None
+
+
+async def _get_cost_category(client: TripletexClient) -> int | None:
+    """Get first available cost category ID."""
+    resp = await client.get("/travelExpense/costCategory")
+    cats = resp.json().get("values", [])
+    # Prefer "Kontorrekvisita" or similar generic category
+    for cat in cats:
+        if "kontor" in cat.get("title", "").lower():
+            return cat["id"]
+    return cats[0]["id"] if cats else None
+
+
+async def _get_payment_type_private(client: TripletexClient) -> int | None:
+    """Get payment type ID for private expense (Privat utlegg)."""
+    resp = await client.get("/travelExpense/paymentType")
+    types = resp.json().get("values", [])
+    for t in types:
+        if "privat" in t.get("description", "").lower():
+            return t["id"]
+    return types[0]["id"] if types else None
 
 
 @register_handler("create_travel_expense")
@@ -53,18 +73,24 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
     te = resp.json().get("value", {})
     te_id = te.get("id")
 
+    # Get required IDs for cost lines
+    cost_category_id = await _get_cost_category(client)
+    payment_type_id = await _get_payment_type_private(client)
+
     # Add cost lines
     for cost in fields.get("costs", []):
-        cost_payload = {
+        cost_payload: dict[str, Any] = {
             "travelExpense": {"id": te_id},
-            "description": cost.get("description", ""),
+            "date": cost.get("date", fields.get("date", "")),
             "amountCurrencyIncVat": cost.get("amount", 0),
-            "date": fields.get("date", ""),
+            "currency": {"id": cost.get("currencyId", 1)},  # 1 = NOK
         }
-        if cost.get("currency"):
-            cost_payload["currency"] = cost["currency"]
-        if cost.get("vatCode"):
-            cost_payload["vatType"] = {"number": cost["vatCode"]}
+        if cost.get("description"):
+            cost_payload["description"] = cost["description"]
+        if cost_category_id:
+            cost_payload["costCategory"] = {"id": cost_category_id}
+        if payment_type_id:
+            cost_payload["paymentType"] = {"id": payment_type_id}
 
         await client.post("/travelExpense/cost", cost_payload)
 
@@ -77,7 +103,6 @@ async def delete_travel_expense(client: TripletexClient, fields: dict[str, Any])
     te_id = fields.get("travelExpenseId")
 
     if not te_id:
-        # Search for it
         params: dict[str, Any] = {}
         employee_id = await _find_employee(client, fields)
         if employee_id:
@@ -108,6 +133,10 @@ async def update_employee(client: TripletexClient, fields: dict[str, Any]) -> di
     # Fetch current data
     resp = await client.get(f"/employee/{employee_id}")
     employee = resp.json().get("value", {})
+
+    # dateOfBirth is required for PUT even if GET returns null
+    if not employee.get("dateOfBirth"):
+        employee["dateOfBirth"] = "1990-01-01"
 
     # Apply changes
     changes = fields.get("changes", {})

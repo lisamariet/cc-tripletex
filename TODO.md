@@ -53,7 +53,9 @@ Tier 3 åpner lørdag — design basert på reelle oppgaver.
 - [x] Test-script: `scripts/test_handlers.py` (sandbox-verifisering)
 
 ## Neste steg
-- [ ] Kjøre submissions og analysere resultater
+- [x] **API key beskyttelse** — Bearer token auth på /solve (key: se .env eller Cloud Run env vars)
+- [ ] **Insights dashboard** — Legg til analyse av API-kall: unødvendige kall, 4xx-feil, effektivitet per handler
 - [ ] Sandbox-teste Tier 2 handlers (invoice, payment, travel expense)
+- [ ] Kjøre submissions og analysere resultater
 - [ ] Finjustere parser basert på feilede oppgaver
 - [ ] Implementere Tier 3 når det åpner
