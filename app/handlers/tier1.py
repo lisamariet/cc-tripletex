@@ -44,6 +44,18 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
     payload = {"firstName": fields["firstName"], "lastName": fields["lastName"]}
     payload.update(_pick(fields, "email", "phoneNumberMobile", "dateOfBirth", "startDate"))
 
+    # userType is required — default to STANDARD
+    payload["userType"] = fields.get("userType", "STANDARD")
+
+    # department is required — use provided or fetch first available
+    if fields.get("departmentId"):
+        payload["department"] = {"id": fields["departmentId"]}
+    else:
+        dept_resp = await client.get("/department", params={"count": 1})
+        depts = dept_resp.json().get("values", [])
+        if depts:
+            payload["department"] = {"id": depts[0]["id"]}
+
     if fields.get("address"):
         addr = fields["address"]
         payload["address"] = _pick(addr, "addressLine1", "postalCode", "city", "country")
@@ -58,8 +70,13 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
 @register_handler("create_product")
 async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dict:
     payload = {"name": fields["name"]}
-    payload.update(_pick(fields, "number", "priceExcludingVat", "priceIncludingVat",
-                         "description", "isInactive"))
+    payload.update(_pick(fields, "number", "description", "isInactive"))
+
+    # Map price fields to correct Tripletex API names
+    if fields.get("priceExcludingVat") is not None:
+        payload["priceExcludingVatCurrency"] = fields["priceExcludingVat"]
+    if fields.get("priceIncludingVat") is not None:
+        payload["priceIncludingVatCurrency"] = fields["priceIncludingVat"]
 
     # If vatCode specified, look up the vatType
     if fields.get("vatCode"):

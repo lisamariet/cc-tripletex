@@ -47,8 +47,9 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
         customer_id = await _find_or_create_customer(client, fields)
         project_payload["customer"] = {"id": customer_id}
 
-    if fields.get("startDate"):
-        project_payload["startDate"] = fields["startDate"]
+    # startDate is required by Tripletex — default to today
+    from datetime import date
+    project_payload["startDate"] = fields.get("startDate") or date.today().isoformat()
     if fields.get("endDate"):
         project_payload["endDate"] = fields["endDate"]
     if fields.get("isClosed") is not None:
