@@ -1,0 +1,49 @@
+# AI Accounting Agent
+
+Submit your `/solve` endpoint. We'll send a random accounting task and score the result.
+
+## Task docs
+
+<https://app.ainm.no/docs/tripletex/overview>
+
+## Tripletex API docs
+
+<https://kkpqfuj-amager.tripletex.dev/v2-docs/>
+
+---
+
+## Tripletex — AI Accounting Agent (NM i AI)
+
+**Konsept:** Bygg en AI-agent som løser regnskapsoppgaver i Tripletex. Du mottar et oppgaveprompt (på ett av 7 språk), bruker Tripletex API for å utføre oppgaven, og scores på korrekthet og effektivitet.
+
+### Hvordan det fungerer
+
+1. Du eksponerer en `/solve` HTTPS-endpoint som mottar POST med `prompt`, `files` (base64) og `tripletex_credentials`
+2. For hver submission provisjoneres en fersk Tripletex sandbox-konto (tom)
+3. Agenten tolker promptet, kaller Tripletex API via proxy, og returnerer `{"status": "completed"}`
+4. Resultat verifiseres felt-for-felt
+
+### Oppgaver
+
+- 30 ulike oppgavetyper med 56 varianter hver (7 språk × 8 datasett)
+- Kategorier: Ansatte, Kunder/Produkter, Fakturering, Reiseregninger, Prosjekter, Korreksjoner, Avdelinger
+- 3 tier-nivåer med stigende vanskelighetsgrad (Tier 1 = ×1, Tier 2 = ×2, Tier 3 = ×3 multiplikator)
+
+### Scoring
+
+- **Korrekthet:** felt-for-felt sjekk, normalisert 0–1
+- **Tier-multiplikator:** ganges med korrekthet
+- **Effektivitetsbonus:** Opp til dobling ved perfekt score — færre API-kall og null 4xx-feil gir høyere bonus
+- **Maks score per oppgave:** opptil 6.0 (Tier 3 perfekt + best effektivitet)
+- Kun beste score per oppgave teller
+
+### Teknisk
+
+- **Auth:** Basic Auth med brukernavn `0` og session token som passord
+- **Proxy:** Alle API-kall via `base_url` fra credentials (ikke direkte til Tripletex)
+- **Timeout:** 5 minutter
+- **API:** Standard Tripletex v2 REST (`/employee`, `/customer`, `/invoice`, `/order`, `/travelExpense`, `/project`, etc.)
+
+### Rate limits
+
+- Verifiserte team: 3 samtidige submissions, 5 per oppgave per dag
