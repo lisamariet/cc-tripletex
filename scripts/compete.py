@@ -10,6 +10,8 @@ import time
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+from typing import Any
+
 import httpx
 from dotenv import load_dotenv
 
@@ -19,6 +21,8 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 API_BASE = "https://api.ainm.no"
 ENDPOINT_URL = "https://tripletex-agent-753459644453.europe-west1.run.app"
+TASK_ID = "cccccccc-cccc-cccc-cccc-cccccccccccc"  # Tripletex challenge task ID
+SOLVE_PATH = "/solve"
 
 COMMON_HEADERS = {
     "accept": "*/*",
@@ -742,39 +746,34 @@ def cmd_insights(args: argparse.Namespace) -> None:
 def cmd_submit(args: argparse.Namespace) -> None:
     """Trigger a new submission and poll for result."""
     endpoint = args.endpoint or ENDPOINT_URL
+    api_key = os.environ.get("API_KEY", "")
 
     with make_client() as client:
-        print(f"Submitting endpoint: {endpoint}")
+        print(f"Submitting: {endpoint}")
 
-        # Try POST to /tripletex/submit with endpoint URL
-        payload = {"endpoint_url": endpoint}
-        resp = client.post(f"{API_BASE}/tripletex/submit", json=payload)
+        payload: dict[str, Any] = {
+            "endpoint_url": f"{endpoint}{SOLVE_PATH}",
+        }
+        if api_key:
+            payload["endpoint_api_key"] = api_key
 
-        if resp.status_code == 404:
-            # Fallback: try with just url field
-            payload = {"url": endpoint}
-            resp = client.post(f"{API_BASE}/tripletex/submit", json=payload)
-
-        if resp.status_code == 404:
-            # Another fallback: POST to submissions endpoint
-            resp = client.post(f"{API_BASE}/tripletex/my/submissions", json={"endpoint_url": endpoint})
-
-        if resp.status_code == 405:
-            print(f"Warning: POST returned 405. Response: {resp.text}")
-            print("You may need to submit via the web UI at https://app.ainm.no/submit/tripletex")
-            return
+        resp = client.post(f"{API_BASE}/tasks/{TASK_ID}/submissions", json=payload)
 
         if not resp.is_success:
-            print(f"Submit failed ({resp.status_code}): {resp.text}")
+            print(f"Submit feilet ({resp.status_code}): {resp.text}")
             return
 
         result = resp.json()
-        print(f"Submission triggered: {result}")
+        sub_id = result.get("id", "?")
+        used = result.get("daily_submissions_used", "?")
+        max_sub = result.get("daily_submissions_max", "?")
+        print(f"  Submission: {sub_id}")
+        print(f"  Status: {result.get('status', '?')}")
+        print(f"  Daglig forbruk: {used}/{max_sub}")
 
-        # Poll for result
-        submission_id = result.get("id") or result.get("submission_id")
+        submission_id = result.get("id")
         if submission_id and not args.no_poll:
-            print("\nPolling for result...")
+            print("\nPoller for resultat...")
             poll_for_result(client, submission_id)
         elif not args.no_poll:
             print("\nWaiting for results...")
@@ -990,6 +989,49 @@ Kommandoer:
         help="Maks ventetid i sekunder (default: 1800 = 30 min)",
     )
 
+def cmd_batch(args: argparse.Namespace) -> None:
+    """Submit multiple times with interval between each."""
+    count = args.count
+    interval = args.interval
+    endpoint = ENDPOINT_URL
+    api_key = os.environ.get("API_KEY", "")
+
+    print(f"{BOLD}Batch submit: {count} submissions, {interval}s mellom hver{RESET}\n")
+
+    with make_client() as client:
+        for i in range(count):
+            payload: dict[str, Any] = {"endpoint_url": f"{endpoint}{SOLVE_PATH}"}
+            if api_key:
+                payload["endpoint_api_key"] = api_key
+
+            resp = client.post(f"{API_BASE}/tasks/{TASK_ID}/submissions", json=payload)
+
+            if not resp.is_success:
+                print(f"  {RED}[{i+1}/{count}] Feilet ({resp.status_code}): {resp.text[:100]}{RESET}")
+                if resp.status_code == 429:
+                    print(f"  Rate limit — venter 60s...")
+                    time.sleep(60)
+                continue
+
+            result = resp.json()
+            used = result.get("daily_submissions_used", "?")
+            max_sub = result.get("daily_submissions_max", "?")
+            print(f"  {GREEN}[{i+1}/{count}]{RESET} {result.get('id','?')[:8]}... "
+                  f"status={result.get('status','?')} ({used}/{max_sub} brukt)")
+
+            if i < count - 1:
+                print(f"  Venter {interval}s...", end="\r", flush=True)
+                time.sleep(interval)
+
+    print(f"\n{BOLD}Ferdig. Sjekk resultater: python3 scripts/compete.py status{RESET}")
+
+
+    # batch command
+    batch_parser = subparsers.add_parser("batch", help="Submit N ganger med pause mellom")
+    batch_parser.add_argument("count", type=int, help="Antall submissions")
+    batch_parser.add_argument("--interval", type=int, default=60,
+                              help="Sekunder mellom submissions (default: 60)")
+
     args = parser.parse_args()
 
     if args.command == "status":
@@ -998,6 +1040,8 @@ Kommandoer:
         cmd_show(args)
     elif args.command == "submit":
         cmd_submit(args)
+    elif args.command == "batch":
+        cmd_batch(args)
     elif args.command == "insights":
         cmd_insights(args)
     elif args.command == "poll":
