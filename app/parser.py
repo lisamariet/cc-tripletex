@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import re
 from typing import Any
 
 import anthropic
@@ -10,12 +12,98 @@ from app.config import ANTHROPIC_API_KEY, LLM_MODEL, LLM_FALLBACK_MODEL
 from app.file_processor import process_files
 from app.models import ParsedTask
 
+# Parser backend selection (haiku | gemini | embedding | auto)
+PARSER_BACKEND = os.getenv("PARSER_BACKEND", "haiku")
+
 logger = logging.getLogger(__name__)
+
+# All valid task types that have registered handlers
+VALID_TASK_TYPES = {
+    "create_supplier", "create_customer", "create_employee", "create_product",
+    "create_department", "create_invoice", "register_payment", "reverse_payment",
+    "create_credit_note", "create_travel_expense", "delete_travel_expense",
+    "create_project", "set_project_fixed_price", "update_employee",
+    "update_customer", "create_voucher", "reverse_voucher", "delete_voucher",
+    "update_supplier", "update_product", "delete_employee", "delete_customer",
+    "delete_supplier", "create_order", "register_supplier_invoice",
+    "register_timesheet", "create_invoice_from_pdf", "run_payroll",
+    "create_custom_dimension",
+}
+
+# Keyword patterns for inferring task type when LLM returns "unknown"
+# Each entry: (task_type, list of regex patterns — match ANY = positive signal)
+_KEYWORD_RULES: list[tuple[str, list[str]]] = [
+    ("create_custom_dimension", [
+        r"dimensjon|dimension|dimensão|dimensión|Dimension",
+        r"regnskapsdimensjon|accounting dimension|dimensão contab|dimensión contab|comptable.*dimension|dimension.*comptable",
+    ]),
+    ("set_project_fixed_price", [
+        r"fastpris|fixed.?price|preço fixo|precio fijo|Festpreis|prix fixe|prix forfait",
+        r"delbetaling|partial payment|pago parcial|pagamento parcial|Teilzahlung|paiement partiel",
+    ]),
+    ("run_payroll", [
+        r"payroll|lønnskjøring|lønn(?:s)?kjøring|Gehaltsabrechnung|nómina|folha de pagamento|paie",
+        r"(?:base|grunn).*(?:salary|gehalt|lønn|salário|salario)|(?:salary|gehalt|lønn|salário|salario).*(?:base|grunn)",
+        r"Grundgehalt|baseSalary|grunnlønn",
+    ]),
+    ("register_timesheet", [
+        r"(?:registrer?|log|book|regist[ea]r?).{0,20}(?:timer|hours?|horas?|Stunden|heures)",
+        r"timesheet|timeliste|tidsskjema",
+        r"horas para .+na atividade",
+        r"(?:timer|hours?|horas?|Stunden|heures).{0,80}(?:prosjektfaktura|project.invoice|factura.*proyecto|fatura.*projeto|Projektrechnung|facture.*projet)",
+        r"(?:prosjektfaktura|project.invoice).{0,80}(?:timer|hours?|horas?|Stunden|heures)",
+    ]),
+    ("create_order", [
+        r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:ordre|order|pedido|Auftrag|commande|bestilling)",
+        r"Auftrag.{0,20}(?:erstellen|anlegen)",
+    ]),
+    ("create_invoice", [
+        r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:faktura|invoice|fatura|factura|Rechnung|facture)",
+    ]),
+    ("register_payment", [
+        r"(?:registrer?|register|enregistr|regist[ea]r?).{0,30}(?:betaling|payment|pago|pagamento|Zahlung|paiement)",
+    ]),
+    ("create_supplier", [
+        r"(?:opprett|registrer?|create|register|cre[ea]r?|erstellen|regist[ea]r?).{0,30}(?:leverandør|supplier|proveedor|fornecedor|Lieferant|fournisseur)",
+    ]),
+    ("create_customer", [
+        r"(?:opprett|registrer?|create|register|cre[ea]r?|erstellen|regist[ea]r?).{0,30}(?:kunde|customer|client[e]?|Kunde|client)",
+    ]),
+    ("create_employee", [
+        r"(?:opprett|registrer?|create|register|cre[ea]r?|erstellen|regist[ea]r?).{0,30}(?:ansatt|employee|empleado|empregado|Mitarbeiter|employé)",
+    ]),
+    ("create_project", [
+        r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:prosjekt|project|proyecto|projeto|Projekt|projet)",
+    ]),
+    ("create_voucher", [
+        r"(?:opprett|create|bokfør|cre[ea]r?|erstellen|comptabilise).{0,30}(?:bilag|voucher|asiento|lançamento|Beleg|pièce|écriture)",
+    ]),
+    ("register_supplier_invoice", [
+        r"(?:leverandør|supplier|innkjøps).*faktura|supplier.invoice|factura.*proveedor|fatura.*fornecedor",
+    ]),
+    ("create_credit_note", [
+        r"kreditnota|credit.?note|nota de crédito|Gutschrift|note de crédit|avoir",
+    ]),
+]
+
+
+def _infer_task_type_from_keywords(prompt: str) -> str | None:
+    """Try to infer task type from keywords in the prompt. Returns None if no match."""
+    prompt_lower = prompt.lower()
+    for task_type, patterns in _KEYWORD_RULES:
+        for pattern in patterns:
+            if re.search(pattern, prompt_lower, re.IGNORECASE):
+                logger.info(f"Keyword match: '{pattern}' → {task_type}")
+                return task_type
+    return None
+
 
 SYSTEM_PROMPT = """You are an accounting task parser for Tripletex (Norwegian accounting software).
 You receive a task prompt in one of these languages: Norwegian Bokmål, Norwegian Nynorsk, English, Spanish, Portuguese, German, or French.
 
 Extract the task type and relevant fields. Return ONLY valid JSON.
+
+IMPORTANT: You MUST classify the task as one of the supported types below. Only use "unknown" as an absolute last resort when none of the types match at all.
 
 Supported task types and their fields:
 
@@ -47,66 +135,67 @@ Supported task types and their fields:
    Fields: customerName, customerOrgNumber, invoiceNumber, comment, amount, invoiceDescription, lines (array of {description, quantity, unitPriceExcludingVat, vatCode})
 
 10. "create_travel_expense" — Register a travel expense
-   Fields: employeeName*, employeeFirstName, employeeLastName, title*, date (YYYY-MM-DD), costs (array of {description, amount, vatCode, currency})
+    Fields: employeeName*, employeeFirstName, employeeLastName, title*, date (YYYY-MM-DD), costs (array of {description, amount, vatCode, currency})
 
 11. "delete_travel_expense" — Delete a travel expense
     Fields: employeeName, travelExpenseTitle, travelExpenseId
 
-12. "create_project" — Create a project
+12. "create_project" — Create a project (without fixed price)
     Fields: name*, customerName, customerOrgNumber, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), projectManagerName, isClosed (bool)
 
-30. "set_project_fixed_price" — Create a project linked to a customer with a fixed price amount, and optionally invoice a percentage as partial payment (keywords: fastpris, fixed price, preço fixo, Festpreis, prix fixe, precio fijo, delbetaling, partial payment, pago parcial, pagamento parcial, Teilzahlung, paiement partiel)
+13. "set_project_fixed_price" — Create a project linked to a customer with a fixed price amount, and optionally invoice a percentage as partial payment (keywords: fastpris, fixed price, preço fixo, Festpreis, prix fixe, precio fijo, delbetaling, partial payment, pago parcial, pagamento parcial, Teilzahlung, paiement partiel)
     Fields: projectName*, customerName*, customerOrgNumber, fixedPrice* (number — the fixed price amount in NOK), projectManagerName, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), invoicePercentage (number — if the prompt asks to invoice X% of the fixed price as partial payment, extract the percentage here, e.g. 50 for 50%)
 
-13. "update_employee" — Update employee details
+14. "update_employee" — Update employee details
     Fields: employeeName, employeeFirstName, employeeLastName, changes (object with fields to update)
 
-14. "update_customer" — Update customer details
+15. "update_customer" — Update customer details
     Fields: customerName, customerOrgNumber, changes (object with fields to update)
 
-15. "create_voucher" — Create a voucher / journal entry
+16. "create_voucher" — Create a voucher / journal entry
     Fields: description*, date (YYYY-MM-DD), postings* (array of {debitAccount, creditAccount, amount, description})
 
-16. "reverse_voucher" — Reverse an existing voucher
+17. "reverse_voucher" — Reverse an existing voucher
     Fields: voucherNumber, date
 
-17. "delete_voucher" — Delete a voucher
+18. "delete_voucher" — Delete a voucher
     Fields: voucherNumber, date
 
-18. "update_supplier" — Update supplier details
+19. "update_supplier" — Update supplier details
     Fields: supplierName, supplierOrgNumber, organizationNumber, changes (object with fields to update)
 
-19. "update_product" — Update product details
+20. "update_product" — Update product details
     Fields: productName, productNumber, number, changes (object with fields to update)
 
-20. "delete_employee" — Delete an employee
+21. "delete_employee" — Delete an employee
     Fields: employeeName, employeeFirstName, employeeLastName
 
-21. "delete_customer" — Delete a customer
+22. "delete_customer" — Delete a customer
     Fields: customerName, customerOrgNumber
 
-22. "delete_supplier" — Delete a supplier
+23. "delete_supplier" — Delete a supplier
     Fields: supplierName, supplierOrgNumber
 
-23. "create_order" — Create an order (without invoicing)
+24. "create_order" — Create an order / Auftrag / pedido / commande (without invoicing)
     Fields: customerName*, customerOrgNumber, orderDate (YYYY-MM-DD), deliveryDate (YYYY-MM-DD), lines (array of {description, quantity, unitPriceExcludingVat})
 
-24. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
+25. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
     Fields: supplierName, supplierOrgNumber, organizationNumber, amount (gross total including VAT), description, invoiceDate (YYYY-MM-DD), expenseAccount (account number, default "4000"), invoiceNumber (the supplier's invoice reference, e.g. "INV-2026-4855"), vatRate (integer percent, e.g. 25 for 25%, default 25)
 
-25. "register_timesheet" — Register hours/timesheet entry for an employee
-    Fields: employeeName, employeeEmail, projectName, activityName, hours* (number), date (YYYY-MM-DD), comment
+26. "register_timesheet" — Register hours/timesheet entry for an employee, AND optionally generate a project invoice to the customer based on the registered hours (registrere timer, Stunden erfassen, registar horas, enregistrer heures, prosjektfaktura, project invoice)
+    Fields: employeeName, employeeEmail, projectName, activityName, hours* (number), date (YYYY-MM-DD), comment, hourlyRate (number — NOK per hour, extract if prompt mentions timesats/hourly rate/taxa horária/taux horaire/Stundensatz), customerName (the customer to invoice), customerOrgNumber (customer org number)
+    IMPORTANT: If the prompt asks to BOTH register hours AND generate an invoice/project invoice, this is ONE task of type "register_timesheet" — do NOT split it into two separate tasks. Extract hourlyRate, customerName, and customerOrgNumber as fields.
 
-26. "create_invoice_from_pdf" — Create an invoice from an attached PDF (scanned invoice)
+27. "create_invoice_from_pdf" — Create an invoice from an attached PDF (scanned invoice)
     Fields: customerName, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines (array of {description, quantity, unitPriceExcludingVat, vatCode}), totalAmount (number)
 
-27. "run_payroll" — Run payroll / salary payment for an employee (Gehaltsabrechnung, lønnskjøring, payroll)
+28. "run_payroll" — Run payroll / salary payment / Gehaltsabrechnung / lønnskjøring / nómina / folha de pagamento for an employee
     Fields: employeeName*, employeeEmail, baseSalary* (number in NOK), bonus (number in NOK, optional one-time bonus), month (integer 1-12, default current month), year (integer, default current year)
 
-28. "create_custom_dimension" — Create a custom accounting dimension with values, then optionally post a voucher linked to a dimension value
+29. "create_custom_dimension" — Create a custom accounting dimension (dimensjon/dimension/dimensão/dimensión/Dimension) with values, then optionally post a voucher linked to a dimension value
     Fields: dimensionName* (name of the dimension, e.g. "Region", "Kostsenter"), values* (array of strings, e.g. ["Sør-Norge", "Nord-Norge"]), voucherDate (YYYY-MM-DD), voucherDescription (string), accountNumber (integer, the expense/cost account), amount (number in NOK), dimensionValue (string — which value from the values array to link to the voucher posting), creditAccount (integer, default 1920 for bank)
 
-31. "unknown" — If you cannot determine the task type
+30. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
 
 Examples:
 
@@ -133,6 +222,9 @@ Output: {"taskType": "register_payment", "fields": {"customerName": "Floresta Ld
 
 Prompt: "Registe 4 horas para Maria Ferreira (maria.ferreira@example.org) na atividade \"Utvikling\" do projeto \"App-utvikling\" para hoje."
 Output: {"taskType": "register_timesheet", "fields": {"employeeName": "Maria Ferreira", "employeeEmail": "maria.ferreira@example.org", "activityName": "Utvikling", "projectName": "App-utvikling", "hours": 4}, "confidence": 0.94, "reasoning": "Portuguese prompt to register 4 timesheet hours for an employee on a project activity."}
+
+Prompt: "Registrer 24 timer for Solveig Hansen (solveig.hansen@example.org) på aktiviteten \"Analyse\" i prosjektet \"Apputvikling\" for Tindra AS (org.nr 945097523). Timesats: 1850 kr/t. Generer en prosjektfaktura til kunden basert på de registrerte timene."
+Output: {"taskType": "register_timesheet", "fields": {"employeeName": "Solveig Hansen", "employeeEmail": "solveig.hansen@example.org", "activityName": "Analyse", "projectName": "Apputvikling", "hours": 24, "hourlyRate": 1850, "customerName": "Tindra AS", "customerOrgNumber": "945097523"}, "confidence": 0.95, "reasoning": "Norwegian prompt to register 24 hours and generate a project invoice to Tindra AS based on the registered hours at 1850 NOK/h."}
 
 Prompt: "Create three departments in Tripletex: \"Utvikling\", \"Lager\", and \"Regnskap\"."
 Output: [{"taskType": "create_department", "fields": {"name": "Utvikling"}, "confidence": 0.95, "reasoning": "Batch: department 1 of 3."}, {"taskType": "create_department", "fields": {"name": "Lager"}, "confidence": 0.95, "reasoning": "Batch: department 2 of 3."}, {"taskType": "create_department", "fields": {"name": "Regnskap"}, "confidence": 0.95, "reasoning": "Batch: department 3 of 3."}]
@@ -195,18 +287,84 @@ def _parse_json_response(raw: str) -> dict:
 
 
 def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> ParsedTask:
-    """Parse a task prompt into a structured ParsedTask using one LLM call."""
+    """Parse a task prompt into a structured ParsedTask.
+
+    Backend selection via PARSER_BACKEND env var:
+      - "haiku"  (default) — Anthropic Haiku + Sonnet fallback
+      - "gemini" — Vertex AI Gemini 2.0 Flash
+      - "embedding" — embedding classification (stub, falls back to haiku)
+      - "auto" — embedding first, then Gemini, then Haiku as fallback
+    """
+    backend = PARSER_BACKEND.lower()
+    logger.info(f"parse_task called with backend={backend}")
+
+    if backend == "gemini":
+        from app.parser_gemini import parse_task_gemini
+        return parse_task_gemini(prompt, files)
+
+    if backend == "auto":
+        # Try embedding first
+        try:
+            from app.embeddings import classify_prompt
+            emb_type, emb_conf = classify_prompt(prompt)
+            if emb_type and emb_type != "unknown" and emb_conf > 0.90:
+                logger.info(f"[auto] Embedding resolved: {emb_type} (conf={emb_conf:.4f}), using Gemini for fields")
+                from app.parser_gemini import parse_task_gemini
+                result = parse_task_gemini(prompt, files)
+                if result.task_type != "unknown":
+                    return result
+        except Exception as e:
+            logger.warning(f"[auto] Embedding step failed: {e}")
+
+        # Then try Gemini
+        try:
+            from app.parser_gemini import parse_task_gemini
+            result = parse_task_gemini(prompt, files)
+            if result.task_type != "unknown" and result.confidence >= 0.85:
+                logger.info(f"[auto] Gemini resolved: {result.task_type} (conf={result.confidence})")
+                return result
+        except Exception as e:
+            logger.warning(f"[auto] Gemini step failed: {e}")
+
+        # Fall through to Haiku below
+        logger.info("[auto] Falling back to Haiku")
+
+    # backend == "haiku" or "embedding" or auto-fallback
     logger.info(f"Parsing task: {prompt[:200]}")
+
+    # --- Step 1: Embedding-based pre-classification ---
+    embedding_type: str | None = None
+    embedding_confidence: float = 0.0
+    try:
+        from app.embeddings import classify_prompt
+        embedding_type, embedding_confidence = classify_prompt(prompt)
+        logger.info(f"Embedding classification: type={embedding_type}, confidence={embedding_confidence:.4f}")
+    except Exception as e:
+        logger.warning(f"Embedding classification failed (falling back to LLM): {e}")
 
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=30.0)
     user_content = _build_user_content(prompt, files or [])
+
+    # If embedding gave high confidence, add type hint to the LLM prompt
+    if embedding_type and embedding_type != "unknown" and embedding_confidence > 0.85:
+        logger.info(f"Using embedding hint: {embedding_type} (confidence={embedding_confidence:.4f})")
+        hint_text = (
+            f'This task is of type "{embedding_type}". '
+            f"Extract the fields for this task type.\n\nOriginal prompt: {prompt}"
+        )
+        hint_content = [{"type": "text", "text": hint_text}]
+        if files:
+            hint_content.extend(process_files(files))
+        llm_content = hint_content
+    else:
+        llm_content = user_content
 
     try:
         message = client.messages.create(
             model=LLM_MODEL,
             max_tokens=1024,
             system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": user_content}],
+            messages=[{"role": "user", "content": llm_content}],
         )
     except Exception as e:
         logger.warning(f"Primary model failed ({LLM_MODEL}), trying fallback: {e}")
@@ -214,7 +372,7 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
             model=LLM_FALLBACK_MODEL,
             max_tokens=1024,
             system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": user_content}],
+            messages=[{"role": "user", "content": llm_content}],
         )
 
     raw_text = message.content[0].text
@@ -254,9 +412,15 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
     )
     logger.info(f"Parsed: type={task.task_type}, confidence={task.confidence}")
 
-    # Confidence-based Sonnet fallback: re-parse with stronger model if confidence is low
-    if task.confidence < 0.90 and message.model != LLM_FALLBACK_MODEL:
-        logger.info(f"Low confidence ({task.confidence}), re-parsing with {LLM_FALLBACK_MODEL}")
+    # Validate task_type: if LLM returned something not in our known types, treat as unknown
+    if task.task_type not in VALID_TASK_TYPES and task.task_type != "unknown":
+        logger.warning(f"LLM returned unrecognized task type: {task.task_type}")
+        task.task_type = "unknown"
+
+    # Sonnet fallback: re-parse if confidence is low OR task_type is "unknown"
+    needs_fallback = (task.confidence < 0.90 or task.task_type == "unknown") and message.model != LLM_FALLBACK_MODEL
+    if needs_fallback:
+        logger.info(f"Fallback needed (type={task.task_type}, confidence={task.confidence}), re-parsing with {LLM_FALLBACK_MODEL}")
         try:
             fallback_message = client.messages.create(
                 model=LLM_FALLBACK_MODEL,
@@ -274,10 +438,39 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
                     confidence=fallback_parsed.get("confidence", 0.0),
                     reasoning=fallback_parsed.get("reasoning", ""),
                 )
-                if fallback_task.confidence > task.confidence:
+                # Accept fallback if it improved confidence or resolved unknown
+                if fallback_task.task_type != "unknown" and fallback_task.task_type in VALID_TASK_TYPES:
+                    logger.info(f"Fallback resolved: {task.task_type} → {fallback_task.task_type} (confidence {fallback_task.confidence})")
+                    return fallback_task
+                if fallback_task.confidence > task.confidence and fallback_task.task_type != "unknown":
                     logger.info(f"Fallback improved confidence: {task.confidence} → {fallback_task.confidence}")
                     return fallback_task
         except Exception as e:
             logger.warning(f"Fallback re-parse failed: {e}")
+
+    # Last resort: keyword-based inference if still "unknown"
+    if task.task_type == "unknown":
+        inferred = _infer_task_type_from_keywords(prompt)
+        if inferred:
+            logger.info(f"Keyword inference resolved unknown → {inferred}")
+            task.task_type = inferred
+            task.reasoning = f"Keyword-inferred: {inferred}. Original: {task.reasoning}"
+            # Re-parse with fallback model to extract fields properly
+            try:
+                hint_prompt = f"This task is of type \"{inferred}\". Extract the fields.\n\nOriginal prompt: {prompt}"
+                hint_message = client.messages.create(
+                    model=LLM_FALLBACK_MODEL,
+                    max_tokens=1024,
+                    system=SYSTEM_PROMPT,
+                    messages=[{"role": "user", "content": [{"type": "text", "text": hint_prompt}]}],
+                )
+                hint_raw = hint_message.content[0].text
+                hint_parsed = _parse_json_response(hint_raw)
+                if isinstance(hint_parsed, dict) and hint_parsed.get("fields"):
+                    task.fields = hint_parsed["fields"]
+                    task.confidence = hint_parsed.get("confidence", 0.85)
+                    logger.info(f"Keyword-hinted re-parse extracted fields for {inferred}")
+            except Exception as e:
+                logger.warning(f"Keyword-hinted re-parse failed: {e}")
 
     return task
