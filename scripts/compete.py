@@ -1180,7 +1180,7 @@ def cmd_errors(args: argparse.Namespace) -> None:
         print("Ingen logger funnet.")
         return
 
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     one_hour_ago = now - timedelta(hours=1)
 
     # Collect all 4xx errors
@@ -1197,7 +1197,7 @@ def cmd_errors(args: argparse.Namespace) -> None:
 
         log_ts = data.get("timestamp", "")
         try:
-            dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
+            dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S").replace(tzinfo=timezone.utc)
         except (ValueError, IndexError):
             dt_log = None
 
