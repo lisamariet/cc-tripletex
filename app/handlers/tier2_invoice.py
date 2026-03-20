@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import date
 from typing import Any
 
 from app.handlers import register_handler
@@ -10,45 +11,87 @@ from app.tripletex import TripletexClient
 logger = logging.getLogger(__name__)
 
 
-async def _find_or_create_customer(client: TripletexClient, fields: dict[str, Any]) -> int:
-    """Find customer by name/orgNr or create one. Returns customer ID."""
+async def _find_or_create_customer(client: TripletexClient, fields: dict[str, Any]) -> int | None:
+    """Find customer by name/orgNr or create one. Returns customer ID or None."""
     name = fields.get("customerName", "")
     org_nr = fields.get("customerOrgNumber")
 
-    # Search by org number first (more specific)
     if org_nr:
-        resp = await client.get("/customer", params={"organizationNumber": org_nr, "isCustomer": True})
+        resp = await client.get("/customer", params={"organizationNumber": org_nr})
         values = resp.json().get("values", [])
         if values:
             return values[0]["id"]
 
-    # Search by name
     if name:
-        resp = await client.get("/customer", params={"name": name, "isCustomer": True})
+        resp = await client.get("/customer", params={"name": name})
         values = resp.json().get("values", [])
         if values:
             return values[0]["id"]
 
     # Create customer
-    payload = {"name": name or "Unknown Customer", "isCustomer": True}
+    payload: dict[str, Any] = {"name": name or "Unknown Customer", "isCustomer": True}
     if org_nr:
         payload["organizationNumber"] = org_nr
     resp = await client.post("/customer", payload)
-    return resp.json().get("value", {}).get("id")
+    value = resp.json().get("value", {})
+    return value.get("id") if value else None
+
+
+async def _find_customer_id(client: TripletexClient, fields: dict[str, Any]) -> int | None:
+    """Find customer by orgNr or name. Returns ID or None. Does NOT create."""
+    org_nr = fields.get("customerOrgNumber")
+    name = fields.get("customerName")
+
+    if org_nr:
+        resp = await client.get("/customer", params={"organizationNumber": org_nr})
+        values = resp.json().get("values", [])
+        if values:
+            return values[0]["id"]
+
+    if name:
+        resp = await client.get("/customer", params={"name": name})
+        values = resp.json().get("values", [])
+        if values:
+            return values[0]["id"]
+
+    return None
+
+
+async def _find_invoice(client: TripletexClient, fields: dict[str, Any], customer_id: int | None = None) -> dict | None:
+    """Find an invoice by customerId and optionally invoiceNumber. Returns invoice dict or None."""
+    search_params: dict[str, Any] = {
+        "invoiceDateFrom": "2000-01-01",
+        "invoiceDateTo": date.today().isoformat(),
+    }
+
+    if customer_id:
+        search_params["customerId"] = customer_id
+
+    # Only use invoiceNumber if it looks like a number
+    inv_num = fields.get("invoiceNumber")
+    if inv_num and str(inv_num).isdigit():
+        search_params["invoiceNumber"] = inv_num
+
+    resp = await client.get("/invoice", params=search_params)
+    invoices = resp.json().get("values", [])
+    return invoices[0] if invoices else None
 
 
 @register_handler("create_invoice")
 async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
     customer_id = await _find_or_create_customer(client, fields)
+    if not customer_id:
+        return {"status": "completed", "note": "Could not find or create customer"}
 
     # Build order lines
     order_lines = []
     for line in fields.get("lines", []):
-        order_line = {
-            "description": line.get("description", ""),
+        order_line: dict[str, Any] = {
             "count": line.get("quantity", 1),
             "unitPriceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
         }
+        if line.get("description"):
+            order_line["description"] = line["description"]
         if line.get("vatCode"):
             vat_resp = await client.get("/ledger/vatType", params={"number": line["vatCode"]})
             vat_types = vat_resp.json().get("values", [])
@@ -56,24 +99,31 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
                 order_line["vatType"] = {"id": vat_types[0]["id"]}
         order_lines.append(order_line)
 
-    # Create order
+    # Create order — orderDate and deliveryDate are required
+    today = date.today().isoformat()
+    order_date = fields.get("invoiceDate") or today
     order_payload = {
         "customer": {"id": customer_id},
-        "orderDate": fields.get("invoiceDate", ""),
-        "deliveryDate": fields.get("invoiceDate", ""),
+        "orderDate": order_date,
+        "deliveryDate": order_date,
         "orderLines": order_lines,
     }
     resp = await client.post("/order", order_payload)
     order = resp.json().get("value", {})
     order_id = order.get("id")
 
+    if not order_id:
+        return {"status": "completed", "note": "Failed to create order"}
+
     # Invoice the order — :invoice uses query params, not JSON body
-    from datetime import date
-    invoice_date = fields.get("invoiceDate") or date.today().isoformat()
-    resp = await client.put(f"/order/{order_id}/:invoice", params={
-        "invoiceDate": invoice_date,
+    invoice_params: dict[str, Any] = {
+        "invoiceDate": order_date,
         "sendToCustomer": False,
-    })
+    }
+    if fields.get("dueDate"):
+        invoice_params["invoiceDueDate"] = fields["dueDate"]
+
+    resp = await client.put(f"/order/{order_id}/:invoice", params=invoice_params)
     invoice_data = resp.json()
     logger.info(f"Created invoice from order {order_id}")
     return {"status": "completed", "taskType": "create_invoice", "created": invoice_data.get("value", {})}
@@ -81,36 +131,16 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
 
 @register_handler("register_payment")
 async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    from datetime import date
+    customer_id = await _find_customer_id(client, fields)
+    invoice = await _find_invoice(client, fields, customer_id)
 
-    # Find the invoice — GET /invoice requires date range filters
-    search_params: dict[str, Any] = {
-        "invoiceDateFrom": "2000-01-01",
-        "invoiceDateTo": date.today().isoformat(),
-    }
-    if fields.get("invoiceNumber"):
-        search_params["invoiceNumber"] = fields["invoiceNumber"]
-    if fields.get("customerOrgNumber"):
-        cust_resp = await client.get("/customer", params={"organizationNumber": fields["customerOrgNumber"]})
-        customers = cust_resp.json().get("values", [])
-        if customers:
-            search_params["customerId"] = customers[0]["id"]
-    elif fields.get("customerName"):
-        cust_resp = await client.get("/customer", params={"name": fields["customerName"]})
-        customers = cust_resp.json().get("values", [])
-        if customers:
-            search_params["customerId"] = customers[0]["id"]
-
-    resp = await client.get("/invoice", params=search_params)
-    invoices = resp.json().get("values", [])
-    if not invoices:
-        logger.error("No invoice found for payment registration")
+    if not invoice:
+        logger.error(f"No invoice found for payment: customer_id={customer_id}")
         return {"status": "completed", "note": "No matching invoice found"}
 
-    invoice = invoices[0]
     invoice_id = invoice.get("id")
 
-    # Get payment type (bank) — :payment uses query params, not JSON body
+    # Get payment type (bank)
     payment_type_resp = await client.get("/invoice/paymentType")
     payment_types = payment_type_resp.json().get("values", [])
     payment_type_id = None
@@ -121,53 +151,84 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
     if not payment_type_id and payment_types:
         payment_type_id = payment_types[0]["id"]
 
-    amount = fields.get("amount", invoice.get("amount", 0))
-    payment_date = fields.get("paymentDate", date.today().isoformat())
+    # Use amount from fields, or fall back to invoice amount
+    amount = fields.get("amount")
+    if amount is None or amount == 0:
+        amount = invoice.get("amount", 0)
+    # Ensure positive amount for payment
+    amount = abs(amount)
+
+    payment_date = fields.get("paymentDate") or date.today().isoformat()
 
     resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
         "paymentDate": payment_date,
         "paymentTypeId": payment_type_id,
         "paidAmount": amount,
     })
-    logger.info(f"Registered payment on invoice {invoice_id}")
+    logger.info(f"Registered payment on invoice {invoice_id}, amount={amount}")
     return {"status": "completed", "taskType": "register_payment", "invoiceId": invoice_id}
+
+
+@register_handler("reverse_payment")
+async def reverse_payment(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Reverse a payment on an invoice — makes it outstanding again."""
+    customer_id = await _find_customer_id(client, fields)
+    invoice = await _find_invoice(client, fields, customer_id)
+
+    if not invoice:
+        return {"status": "completed", "note": "No matching invoice found for reversal"}
+
+    invoice_id = invoice.get("id")
+
+    # Reverse payment by registering a negative payment
+    payment_type_resp = await client.get("/invoice/paymentType")
+    payment_types = payment_type_resp.json().get("values", [])
+    payment_type_id = None
+    for pt in payment_types:
+        if "bank" in pt.get("description", "").lower():
+            payment_type_id = pt["id"]
+            break
+    if not payment_type_id and payment_types:
+        payment_type_id = payment_types[0]["id"]
+
+    amount = fields.get("amount")
+    if amount is None or amount == 0:
+        amount = invoice.get("amount", 0)
+    # Negative amount to reverse
+    amount = -abs(amount)
+
+    payment_date = fields.get("paymentDate") or date.today().isoformat()
+
+    resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
+        "paymentDate": payment_date,
+        "paymentTypeId": payment_type_id,
+        "paidAmount": amount,
+    })
+    logger.info(f"Reversed payment on invoice {invoice_id}, amount={amount}")
+    return {"status": "completed", "taskType": "reverse_payment", "invoiceId": invoice_id}
 
 
 @register_handler("create_credit_note")
 async def create_credit_note(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    from datetime import date
+    customer_id = await _find_customer_id(client, fields)
+    invoice = await _find_invoice(client, fields, customer_id)
 
-    # Find the invoice — GET /invoice requires date range
-    search_params: dict[str, Any] = {
-        "invoiceDateFrom": "2000-01-01",
-        "invoiceDateTo": date.today().isoformat(),
-    }
-    if fields.get("invoiceNumber"):
-        search_params["invoiceNumber"] = fields["invoiceNumber"]
-    if fields.get("customerOrgNumber"):
-        cust_resp = await client.get("/customer", params={"organizationNumber": fields["customerOrgNumber"]})
-        customers = cust_resp.json().get("values", [])
-        if customers:
-            search_params["customerId"] = customers[0]["id"]
-
-    resp = await client.get("/invoice", params=search_params)
-    invoices = resp.json().get("values", [])
-    if not invoices:
+    if not invoice:
         return {"status": "completed", "note": "No matching invoice found for credit note"}
 
-    invoice_id = invoices[0].get("id")
-    credit_payload = {}
+    invoice_id = invoice.get("id")
+    credit_params: dict[str, Any] = {}
     if fields.get("comment"):
-        credit_payload["comment"] = fields["comment"]
+        credit_params["comment"] = fields["comment"]
 
-    resp = await client.put(f"/invoice/{invoice_id}/:createCreditNote", credit_payload)
+    # :createCreditNote uses query params, not JSON body
+    resp = await client.put(f"/invoice/{invoice_id}/:createCreditNote", params=credit_params)
     logger.info(f"Created credit note for invoice {invoice_id}")
     return {"status": "completed", "taskType": "create_credit_note", "invoiceId": invoice_id}
 
 
 @register_handler("update_customer")
 async def update_customer(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    # Find the customer
     params: dict[str, Any] = {}
     if fields.get("customerOrgNumber"):
         params["organizationNumber"] = fields["customerOrgNumber"]
@@ -182,7 +243,6 @@ async def update_customer(client: TripletexClient, fields: dict[str, Any]) -> di
     customer = customers[0]
     customer_id = customer.get("id")
 
-    # Apply changes
     changes = fields.get("changes", {})
     customer.update(changes)
 
