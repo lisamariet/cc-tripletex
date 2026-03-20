@@ -10,6 +10,44 @@ from app.tripletex import TripletexClient
 
 logger = logging.getLogger(__name__)
 
+_bank_account_ensured = False
+
+
+async def _ensure_bank_account(client: TripletexClient) -> None:
+    """Ensure the company has a bank account configured on ledger account 1920.
+
+    On a fresh sandbox this field is empty, which prevents invoice creation.
+    Only runs once per session (cached via module-level flag).
+    """
+    global _bank_account_ensured
+    if _bank_account_ensured:
+        return
+
+    resp = await client.get("/ledger/account", params={"number": "1920", "fields": "id,version,bankAccountNumber,isBankAccount,isInvoiceAccount"})
+    accounts = resp.json().get("values", [])
+    if not accounts:
+        logger.warning("Ledger account 1920 not found — cannot ensure bank account")
+        _bank_account_ensured = True
+        return
+
+    acct = accounts[0]
+    if acct.get("bankAccountNumber"):
+        _bank_account_ensured = True
+        return
+
+    # Set a dummy bank account number so invoicing works
+    acct_id = acct["id"]
+    # Fetch full account for PUT (need all fields)
+    full_resp = await client.get(f"/ledger/account/{acct_id}")
+    full_acct = full_resp.json().get("value", {})
+    full_acct["bankAccountNumber"] = "12345678903"
+    full_acct["isBankAccount"] = True
+    full_acct["isInvoiceAccount"] = True
+
+    await client.put(f"/ledger/account/{acct_id}", full_acct)
+    logger.info("Configured bank account on ledger account 1920 for invoicing")
+    _bank_account_ensured = True
+
 
 async def _find_or_create_customer(client: TripletexClient, fields: dict[str, Any]) -> int | None:
     """Find customer by name/orgNr or create one. Returns customer ID or None."""
@@ -78,7 +116,7 @@ async def _find_invoice(client: TripletexClient, fields: dict[str, Any], custome
     search_params: dict[str, Any] = {
         "invoiceDateFrom": "2000-01-01",
         "invoiceDateTo": date.today().isoformat(),
-        "fields": "id,amount,amountCurrency,amountOutstanding,amountOutstandingCurrency,amountExcludingVat,amountExcludingVatCurrency",
+        "fields": "id,amount,amountCurrency,amountOutstanding,amountExcludingVat,amountExcludingVatCurrency",
     }
 
     if customer_id:
@@ -129,6 +167,8 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
     On a fresh sandbox there are no invoices, so we must create the full chain.
     Returns the invoice dict or None on failure.
     """
+    await _ensure_bank_account(client)
+
     # Try to find existing invoice first
     customer_id = await _find_customer_id(client, fields)
     invoice = await _find_invoice(client, fields, customer_id)
@@ -212,6 +252,8 @@ async def _get_bank_payment_type_id(client: TripletexClient) -> int | None:
 
 @register_handler("create_invoice")
 async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    await _ensure_bank_account(client)
+
     # Fresh sandbox: POST customer directly — no existing customers to search for
     customer_id = await _create_customer_directly(client, fields)
     if not customer_id:
@@ -287,7 +329,7 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
     # Must check `is not None` because 0.0 is a valid amount (fully paid).
     amount_outstanding = invoice.get("amountOutstanding")
     if amount_outstanding is None:
-        amount_outstanding = invoice.get("amountOutstandingCurrency")
+        amount_outstanding = invoice.get("amountCurrencyOutstanding")
     amount_gross = invoice.get("amountCurrency") or invoice.get("amount") or 0
 
     # Prefer outstanding amount (it accounts for any prior partial payments).

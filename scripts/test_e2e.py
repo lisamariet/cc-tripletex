@@ -281,7 +281,7 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 search_by_id=True,
                 checks=[
                     # After payment, amountOutstanding should be 0
-                    FieldCheck("amountOutstandingCurrency", 0.0),
+                    FieldCheck("amountCurrencyOutstanding", 0.0),
                 ],
             ),
             tier=2,
@@ -331,7 +331,7 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 search_by_id=True,
                 checks=[
                     # After reversal, the outstanding amount should equal the full amount
-                    FieldCheck("amountOutstandingCurrency", 0, mode="gte"),
+                    FieldCheck("amountCurrencyOutstanding", 0, mode="gte"),
                 ],
             ),
             tier=2,
