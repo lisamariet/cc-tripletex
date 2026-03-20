@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # Vertex AI config
 _GCP_PROJECT = os.getenv("GCP_PROJECT", "ai-nm26osl-1771")
 _GCP_LOCATION = os.getenv("GCP_LOCATION", "europe-west1")
-_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-001")
+_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 _vertexai_initialized = False
 

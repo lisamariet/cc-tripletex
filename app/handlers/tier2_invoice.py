@@ -6,6 +6,7 @@ from datetime import date
 from typing import Any
 
 from app.handlers import register_handler
+from app.handlers.tier1 import _resolve_vat_type_id
 from app.tripletex import TripletexClient
 
 logger = logging.getLogger(__name__)
@@ -357,8 +358,11 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
                 "number": str(product_number),
                 "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
             }
-            # Note: vatType {"id": N} fails on POST /product in our sandbox (422 vatTypeId)
-            # but may work in competition sandbox. Try it, fall through if it fails.
+            # vatType is REQUIRED for POST /product — resolve from vatCode
+            vat_code = line.get("vatCode", "3")  # default to 25% standard
+            vat_id = await _resolve_vat_type_id(client, str(vat_code))
+            if vat_id is not None:
+                product_payload["vatType"] = {"id": vat_id}
             prod_resp = await client.post("/product", product_payload)
             if prod_resp.status_code in (200, 201):
                 product_id = prod_resp.json().get("value", {}).get("id")

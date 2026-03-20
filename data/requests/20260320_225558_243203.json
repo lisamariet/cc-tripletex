@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_225558_243203",
+  "prompt": "Crea tres departamentos en Tripletex: \"HR\", \"Regnskap\" y \"Lager\".",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "qnwKHDnGnkV5KAmgPGhD3nOCBJchpz05j4-AuGJoRMo"
+  }
+}

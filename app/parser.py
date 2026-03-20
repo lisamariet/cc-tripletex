@@ -298,6 +298,7 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
     """
     backend = PARSER_BACKEND.lower()
     logger.info(f"parse_task called with backend={backend}")
+    gemini_result = None  # Track Gemini result for auto-mode fallback
 
     if backend == "gemini":
         from app.parser_gemini import parse_task_gemini
@@ -338,15 +339,22 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
         except Exception as e:
             logger.warning(f"[auto] Embedding step failed: {e}")
 
-        # Then try Gemini
+        # Then try Gemini standalone
         try:
             from app.parser_gemini import parse_task_gemini
             result = parse_task_gemini(prompt, files)
             if result.task_type != "unknown" and result.confidence >= 0.85:
                 logger.info(f"[auto] Gemini resolved: {result.task_type} (conf={result.confidence})")
                 return result
+            # Accept lower-confidence Gemini results if task_type is valid
+            if result.task_type != "unknown" and result.task_type in VALID_TASK_TYPES:
+                logger.info(f"[auto] Gemini resolved (low conf): {result.task_type} (conf={result.confidence})")
+                gemini_result = result  # Save for potential use if Haiku also fails
+            else:
+                gemini_result = None
         except Exception as e:
             logger.warning(f"[auto] Gemini step failed: {e}")
+            gemini_result = None
 
         # Fall through to Haiku below
         logger.info("[auto] Falling back to Haiku")
@@ -414,12 +422,35 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
         )
     except Exception as e:
         logger.warning(f"Primary model failed ({LLM_MODEL}), trying fallback: {e}")
-        message = client.messages.create(
-            model=LLM_FALLBACK_MODEL,
-            max_tokens=1024,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": llm_content}],
-        )
+        try:
+            message = client.messages.create(
+                model=LLM_FALLBACK_MODEL,
+                max_tokens=1024,
+                system=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": llm_content}],
+            )
+        except Exception as e2:
+            logger.error(f"Fallback model also failed ({LLM_FALLBACK_MODEL}): {e2}")
+            # If auto mode had a Gemini result, use it
+            if backend == "auto" and gemini_result is not None:
+                logger.info(f"[auto] Using saved Gemini result: {gemini_result.task_type}")
+                return gemini_result
+            # Last resort: keyword inference
+            inferred = _infer_task_type_from_keywords(prompt)
+            if inferred:
+                logger.info(f"[auto] Keyword fallback: {inferred}")
+                return ParsedTask(
+                    task_type=inferred,
+                    fields={},
+                    confidence=0.5,
+                    reasoning=f"All LLM backends failed, keyword-inferred: {inferred}",
+                )
+            return ParsedTask(
+                task_type="unknown",
+                fields={},
+                confidence=0.0,
+                reasoning=f"All LLM backends failed: {e2}",
+            )
 
     raw_text = message.content[0].text
     logger.info(f"LLM response: {raw_text}")
