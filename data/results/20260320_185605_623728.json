@@ -1,0 +1,155 @@
+{
+  "timestamp": "20260320_185605_623728",
+  "prompt": "Create and send an invoice to the customer Blueshore Ltd (org no. 987928921) for 40600 NOK excluding VAT. The invoice is for Maintenance.",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Blueshore Ltd",
+      "customerOrgNumber": "987928921",
+      "lines": [
+        {
+          "description": "Maintenance",
+          "quantity": 1,
+          "unitPriceExcludingVat": 40600,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 223.0,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 182.0,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/456806190",
+      "status": 200,
+      "duration_ms": 190.7,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/ledger/account/456806190",
+      "status": 200,
+      "duration_ms": 221.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 184.1,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 225.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 328.8,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401965243/:invoice",
+      "status": 200,
+      "duration_ms": 586.1,
+      "error": null
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3966.8,
+  "result": {
+    "status": "completed",
+    "taskType": "create_invoice",
+    "created": {
+      "id": 2147537273,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147537273",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-20",
+      "customer": {
+        "id": 108260750,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108260750"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-03",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401965243,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401965243"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607511338,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607511338"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965736748,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965736748"
+        }
+      ],
+      "voucher": {
+        "id": 608833776,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608833776"
+      },
+      "deliveryDate": "2026-03-20",
+      "amount": 40600.0,
+      "amountCurrency": 40600.0,
+      "amountExcludingVat": 40600.0,
+      "amountExcludingVatCurrency": 40600.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 40600.0,
+      "amountCurrencyOutstanding": 40600.0,
+      "amountOutstandingTotal": 40600.0,
+      "amountCurrencyOutstandingTotal": 40600.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3844938907,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3844938907"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024157713
+    }
+  }
+}

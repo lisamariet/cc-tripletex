@@ -2,7 +2,39 @@
 
 **Opprettet:** 2026-03-20
 **Siste oppdatering:** 2026-03-20
-**Totalt registrerte bugs:** 25
+
+---
+
+## Oppgavetype-status (fra 111 submissions)
+
+| Oppgavetype | Forsøk | Snitt | Perfekt | Null | Status | Hovedproblem |
+|-------------|--------|-------|---------|------|--------|-------------|
+| **create_invoice** | 15 | 22% | 1 | 12 | 🔴 KRITISK | Bankkontonummer blokkerer |
+| **unknown** (fallback) | 17 | 26% | 2 | 14 | 🔴 KRITISK | Fallback genererer feil feltnavn |
+| **create_supplier** | 6 | 48% | 1 | 4 | 🟠 | Gamle runs uten email-sync |
+| **batch_create_order** | 2 | 19% | 0 | 1 | 🟠 | Batch-logikk feil (fikset) |
+| **create_employee** | 7 | 67% | 3 | 4 | 🟡 | Gamle runs uten roller |
+| **create_project** | 3 | 67% | 1 | 2 | 🟡 | Gamle runs |
+| **register_payment** | 6 | 65% | 2 | 3 | 🟡 | Beløp-feil (fikset) |
+| **create_travel_expense** | 6 | 74% | 3 | 2 | 🟡 | 403 token-feil |
+| **batch_register_timesheet** | 5 | 80% | 4 | 1 | 🟢 | Batch per-item type (fikset) |
+| **register_supplier_invoice** | 5 | 80% | 2 | 3 | 🟢 | voucherType (fikset) |
+| **run_payroll** | 5 | 80% | 2 | 3 | 🟢 | dateOfBirth/payload (fikset) |
+| **create_product** | 8 | 88% | 4 | 4 | 🟢 | Gamle runs uten MVA-fix |
+| **create_credit_note** | 6 | 89% | 2 | 4 | 🟢 | date-param (fikset) |
+| **batch_create_department** | 5 | 93% | 3 | 2 | 🟢 | salesmodules 422 (fikset) |
+| **create_customer** | 7 | 114% | 4 | 3 | ✅ | OK |
+| **reverse_payment** | 8 | 169% | 8 | 0 | ✅ | PERFEKT |
+
+**Nøkkelinnsikter:**
+- 1 eneste 4xx-feil halverer scoren (85% → 34% snitt)
+- Confidence < 0.80 = 100% feil
+- create_invoice er desidert største blocker (12 av 15 = null)
+- reverse_payment er vår beste handler (169% snitt, 0 feil)
+
+---
+
+**Totalt registrerte bugs:** 25+
 
 ---
 

@@ -1,0 +1,97 @@
+{
+  "timestamp": "20260320_185150_763575",
+  "prompt": "We have a new employee named Henry Smith, born 2. December 1988. Please create them as an employee with email henry.smith@example.org and start date 1. November 2026.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Henry",
+      "lastName": "Smith",
+      "email": "henry.smith@example.org",
+      "dateOfBirth": "1988-12-02",
+      "startDate": "2026-11-01"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 337.9,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 372.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 281.8,
+      "error": null
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3433.4,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18575160,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18575160",
+      "firstName": "Henry",
+      "lastName": "Smith",
+      "displayName": "Henry Smith",
+      "employeeNumber": "",
+      "dateOfBirth": "1988-12-02",
+      "email": "henry.smith@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 909097,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/909097"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 108260170,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

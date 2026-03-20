@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_185441_014652",
+  "prompt": "Registrer 24 timer for Solveig Hansen (solveig.hansen@example.org) på aktiviteten \"Analyse\" i prosjektet \"Apputvikling\" for Tindra AS (org.nr 945097523). Timesats: 1850 kr/t. Generer en prosjektfaktura til kunden basert på de registrerte timene.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "by81qr6qb0ZOrl3bxsK8_beRgMfQPwtgDRcmWe8tKes"
+  }
+}

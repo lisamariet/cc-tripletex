@@ -249,7 +249,7 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
     logger.info(f"Parsed: type={task.task_type}, confidence={task.confidence}")
 
     # Confidence-based Sonnet fallback: re-parse with stronger model if confidence is low
-    if task.confidence < 0.80 and message.model != LLM_FALLBACK_MODEL:
+    if task.confidence < 0.90 and message.model != LLM_FALLBACK_MODEL:
         logger.info(f"Low confidence ({task.confidence}), re-parsing with {LLM_FALLBACK_MODEL}")
         try:
             fallback_message = client.messages.create(
