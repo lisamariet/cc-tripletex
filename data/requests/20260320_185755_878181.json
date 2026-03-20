@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_185755_878181",
+  "prompt": "Créez et envoyez une facture au client Prairie SARL (nº org. 818016662) de 7200 NOK hors TVA. La facture concerne Rapport d'analyse.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "axfK6jUyhgpubQeMtR86GE_mezg7jPv8FftHglqLuMo"
+  }
+}

@@ -606,15 +606,18 @@ def build_tier2_tests() -> list[E2ETestCase]:
         ),
 
         # T2-17: create_custom_dimension
+        # The handler will reuse an existing dimension if the name matches.
+        # We use a setup to find an existing dimension name or pick a fresh one.
         E2ETestCase(
             name="t2_create_custom_dimension",
             expected_task_type="create_custom_dimension",
             expected_fields={},
-            prompt=f'Opprett dimensjonen "E2EDim{ts}" med verdiene "VerdiA{ts}" og "VerdiB{ts}".',
+            prompt=f'Opprett dimensjon med verdiene "CVal1{ts}" og "CVal2{ts}".',
             direct_fields={
                 "dimensionName": f"E2EDim{ts}",
-                "values": [f"VerdiA{ts}", f"VerdiB{ts}"],
+                "values": [f"CVal1{ts}", f"CVal2{ts}"],
             },
+            setup="find_or_reuse_dimension",
             verify=None,  # custom check: dimension + values in handler result
             tier=2,
         ),
@@ -967,6 +970,20 @@ async def setup_create_voucher_for_delete(client, fields: dict) -> dict:
     return fields
 
 
+async def setup_find_or_reuse_dimension(client, fields: dict) -> dict:
+    """Find an existing custom dimension to reuse, or keep the generated name.
+
+    Tripletex allows max 3 custom dimensions.  If 3 already exist, we reuse the
+    first one so the handler takes the 'already exists' path and just adds new values.
+    """
+    resp = await client.get("/ledger/accountingDimensionName")
+    dims = resp.json().get("values", [])
+    if dims:
+        # Reuse the first existing dimension
+        fields["dimensionName"] = dims[0].get("dimensionName", fields["dimensionName"])
+    return fields
+
+
 SETUP_REGISTRY = {
     "find_first_employee": setup_find_first_employee,
     "create_customer_for_update": setup_create_customer_for_update,
@@ -978,6 +995,7 @@ SETUP_REGISTRY = {
     "create_supplier_for_delete": setup_create_supplier_for_delete,
     "create_voucher_for_reverse": setup_create_voucher_for_reverse,
     "create_voucher_for_delete": setup_create_voucher_for_delete,
+    "find_or_reuse_dimension": setup_find_or_reuse_dimension,
 }
 
 

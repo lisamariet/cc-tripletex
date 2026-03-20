@@ -1,0 +1,155 @@
+{
+  "timestamp": "20260320_185755_878181",
+  "prompt": "Créez et envoyez une facture au client Prairie SARL (nº org. 818016662) de 7200 NOK hors TVA. La facture concerne Rapport d'analyse.",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Prairie SARL",
+      "customerOrgNumber": "818016662",
+      "lines": [
+        {
+          "description": "Rapport d'analyse",
+          "quantity": 1,
+          "unitPriceExcludingVat": 7200,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.93
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 190.5,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 175.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/456857503",
+      "status": 200,
+      "duration_ms": 187.6,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/ledger/account/456857503",
+      "status": 200,
+      "duration_ms": 216.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 184.9,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 260.3,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 342.6,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401965285/:invoice",
+      "status": 200,
+      "duration_ms": 487.2,
+      "error": null
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3790.5,
+  "result": {
+    "status": "completed",
+    "taskType": "create_invoice",
+    "created": {
+      "id": 2147537344,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147537344",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-20",
+      "customer": {
+        "id": 108260992,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108260992"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-03",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401965285,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401965285"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607511390,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607511390"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965736793,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965736793"
+        }
+      ],
+      "voucher": {
+        "id": 608833852,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608833852"
+      },
+      "deliveryDate": "2026-03-20",
+      "amount": 7200.0,
+      "amountCurrency": 7200.0,
+      "amountExcludingVat": 7200.0,
+      "amountExcludingVatCurrency": 7200.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 7200.0,
+      "amountCurrencyOutstanding": 7200.0,
+      "amountOutstandingTotal": 7200.0,
+      "amountCurrencyOutstandingTotal": 7200.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3844939101,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3844939101"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024157757
+    }
+  }
+}

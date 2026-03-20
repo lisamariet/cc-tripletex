@@ -82,32 +82,50 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
 
     resp = await client.post("/ledger/voucher", payload)
     data = resp.json()
+
+    if resp.status_code >= 400:
+        error_msg = data.get("message", "Unknown error")
+        validation = data.get("validationMessages", [])
+        logger.error(f"Voucher creation failed: {error_msg} — {validation}")
+        return {
+            "status": "completed",
+            "note": f"Voucher creation failed: {error_msg}",
+            "validationMessages": validation,
+        }
+
     logger.info(f"Created voucher: {data.get('value', {}).get('id')}")
     return {"status": "completed", "taskType": "create_voucher", "created": data.get("value", {})}
 
 
 @register_handler("reverse_voucher")
 async def reverse_voucher(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    voucher_id = fields.get("_voucher_id")
     voucher_number = fields.get("voucherNumber")
     date = fields.get("date")
 
-    # Find the voucher by searching
-    search_params: dict[str, Any] = {}
-    if date:
-        search_params["dateFrom"] = date
-        search_params["dateTo"] = date
-    if voucher_number:
-        search_params["number"] = str(voucher_number)
+    if not voucher_id:
+        # Find the voucher by searching
+        search_params: dict[str, Any] = {}
+        if date:
+            search_params["dateFrom"] = date
+            search_params["dateTo"] = date
+        if voucher_number:
+            search_params["number"] = str(voucher_number)
 
-    resp = await client.get("/ledger/voucher", params=search_params)
-    data = resp.json()
-    vouchers = data.get("values", [])
+        resp = await client.get("/ledger/voucher", params=search_params)
+        data = resp.json()
+        vouchers = data.get("values", [])
 
-    if not vouchers:
-        return {"status": "error", "taskType": "reverse_voucher", "message": "Voucher not found"}
+        if not vouchers:
+            return {"status": "error", "taskType": "reverse_voucher", "message": "Voucher not found"}
 
-    voucher_id = vouchers[0]["id"]
-    reversal_date = date or vouchers[0].get("date")
+        voucher_id = vouchers[0]["id"]
+        reversal_date = date or vouchers[0].get("date")
+    else:
+        # We have a direct voucher ID — fetch it to get the date
+        resp = await client.get(f"/ledger/voucher/{voucher_id}")
+        voucher_data = resp.json().get("value", {})
+        reversal_date = date or voucher_data.get("date")
 
     resp = await client.put(
         f"/ledger/voucher/{voucher_id}/:reverse",
@@ -120,26 +138,28 @@ async def reverse_voucher(client: TripletexClient, fields: dict[str, Any]) -> di
 
 @register_handler("delete_voucher")
 async def delete_voucher(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    voucher_id = fields.get("_voucher_id")
     voucher_number = fields.get("voucherNumber")
     date = fields.get("date")
 
-    # Find the voucher by searching
-    search_params: dict[str, Any] = {}
-    if date:
-        search_params["dateFrom"] = date
-        search_params["dateTo"] = date
-    if voucher_number:
-        search_params["number"] = str(voucher_number)
+    if not voucher_id:
+        # Find the voucher by searching
+        search_params: dict[str, Any] = {}
+        if date:
+            search_params["dateFrom"] = date
+            search_params["dateTo"] = date
+        if voucher_number:
+            search_params["number"] = str(voucher_number)
 
-    resp = await client.get("/ledger/voucher", params=search_params)
-    data = resp.json()
-    vouchers = data.get("values", [])
+        resp = await client.get("/ledger/voucher", params=search_params)
+        data = resp.json()
+        vouchers = data.get("values", [])
 
-    if not vouchers:
-        return {"status": "error", "taskType": "delete_voucher", "message": "Voucher not found"}
+        if not vouchers:
+            return {"status": "error", "taskType": "delete_voucher", "message": "Voucher not found"}
 
-    # Only the LAST voucher in number series can be deleted
-    voucher_id = vouchers[0]["id"]
+        # Only the LAST voucher in number series can be deleted
+        voucher_id = vouchers[0]["id"]
 
     resp = await client.delete(f"/ledger/voucher/{voucher_id}")
     logger.info(f"Deleted voucher {voucher_id}")

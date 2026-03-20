@@ -149,11 +149,12 @@ async def update_product(client: TripletexClient, fields: dict[str, Any]) -> dic
 
 @register_handler("delete_employee")
 async def delete_employee(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    employee = await _find_employee_by_fields(client, fields)
-    if not employee:
-        return {"status": "completed", "note": "Employee not found"}
-
-    employee_id = employee.get("id")
+    employee_id = fields.get("_employee_id")
+    if not employee_id:
+        employee = await _find_employee_by_fields(client, fields)
+        if not employee:
+            return {"status": "completed", "note": "Employee not found"}
+        employee_id = employee.get("id")
     resp = await client.delete(f"/employee/{employee_id}")
     logger.info(f"Deleted employee {employee_id}")
     return {"status": "completed", "taskType": "delete_employee", "deletedId": employee_id}
