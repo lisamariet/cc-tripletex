@@ -906,5 +906,14 @@
       "fix": "Forretningsregel: Startdato for prosjektet 99515 E2E Timefoering 1774047537 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
       "status": 422
     }
+  ],
+  "GET /salary/type": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Unauthorized",
+      "fix": "API-feil: Unauthorized",
+      "status": 401
+    }
   ]
 }

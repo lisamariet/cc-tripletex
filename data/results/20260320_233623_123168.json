@@ -1,0 +1,130 @@
+{
+  "timestamp": "20260320_233623_123168",
+  "prompt": "Create the customer Silveroak Ltd with organization number 993297909. The address is Solveien 1, 8006 Bodø. Email: post@silveroak.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Silveroak Ltd",
+      "organizationNumber": "993297909",
+      "email": "post@silveroak.no",
+      "invoiceEmail": "post@silveroak.no",
+      "address": {
+        "addressLine1": "Solveien 1",
+        "postalCode": "8006",
+        "city": "Bodø"
+      },
+      "overdueNoticeEmail": "post@silveroak.no"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 2044.7,
+      "error": null
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3652.9,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108295902,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108295902",
+      "name": "Silveroak Ltd",
+      "organizationNumber": "993297909",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@silveroak.no",
+      "invoiceEmail": "post@silveroak.no",
+      "overdueNoticeEmail": "post@silveroak.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Silveroak Ltd (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405442498,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405442498",
+        "addressLine1": "Solveien 1",
+        "addressLine2": "",
+        "postalCode": "8006",
+        "city": "Bodø",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Silveroak Ltd, Solveien 1, 8006 Bodø, Norge",
+        "addressAsString": "Solveien 1, 8006 Bodø, Norge",
+        "displayNameInklMatrikkel": "Silveroak Ltd, Solveien 1, 8006 Bodø, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "physicalAddress": {
+        "id": 405442497,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405442497",
+        "addressLine1": "Solveien 1",
+        "addressLine2": "",
+        "postalCode": "8006",
+        "city": "Bodø",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Silveroak Ltd, Solveien 1, 8006 Bodø, Norge",
+        "addressAsString": "Solveien 1, 8006 Bodø, Norge",
+        "displayNameInklMatrikkel": "Silveroak Ltd, Solveien 1, 8006 Bodø, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 390757831,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/390757831"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "timestamp": "20260320_230359_746450",
+  "prompt": "Erstellen und senden Sie eine Rechnung an den Kunden Flussgold GmbH (Org.-Nr. 965203516) über 19650 NOK ohne MwSt. Die Rechnung betrifft Cloud-Speicher.",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Flussgold GmbH",
+      "customerOrgNumber": "965203516",
+      "lines": [
+        {
+          "description": "Cloud-Speicher",
+          "quantity": 1,
+          "unitPriceExcludingVat": 19650,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.94
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2062.0,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 2052.5,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 2454.6,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401977114/:invoice",
+      "status": 200,
+      "duration_ms": 2502.8,
+      "error": null
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 16608.0,
+  "result": {
+    "status": "completed",
+    "taskType": "create_invoice",
+    "created": {
+      "id": 2147553903,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147553903",
+      "invoiceNumber": 5,
+      "invoiceDate": "2026-03-20",
+      "customer": {
+        "id": 108290490,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108290490"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-03",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401977114,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401977114"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607523654,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607523654"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965747149,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965747149"
+        }
+      ],
+      "voucher": {
+        "id": 608871137,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608871137"
+      },
+      "deliveryDate": "2026-03-20",
+      "amount": 19650.0,
+      "amountCurrency": 19650.0,
+      "amountExcludingVat": 19650.0,
+      "amountExcludingVatCurrency": 19650.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 19650.0,
+      "amountCurrencyOutstanding": 19650.0,
+      "amountOutstandingTotal": 19650.0,
+      "amountCurrencyOutstandingTotal": 19650.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845039074,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845039074"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024176661
+    }
+  }
+}

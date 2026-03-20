@@ -1,0 +1,92 @@
+{
+  "timestamp": "20260320_230438_662852",
+  "prompt": "Erstellen Sie einen Auftrag für den Kunden Waldstein GmbH (Org.-Nr. 975687821) mit den Produkten Netzwerkdienst (4366) zu 32750 NOK und Beratungsstunden (3402) zu 17450 NOK. Wandeln Sie den Auftrag in eine Rechnung um und registrieren Sie die vollständige Zahlung.",
+  "parsed_task": {
+    "task_type": "create_order",
+    "fields": {},
+    "confidence": 0.0
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 368.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 269.6,
+      "error": null
+    }
+  ],
+  "total_calls": 2,
+  "error_count_4xx": 0,
+  "total_duration_ms": 32128.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_order",
+    "created": {
+      "id": 401977147,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/order/401977147",
+      "customer": {
+        "id": 108290652,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108290652"
+      },
+      "contact": null,
+      "attn": null,
+      "displayName": "1 Ordre",
+      "receiverEmail": "",
+      "overdueNoticeEmail": "",
+      "number": "1",
+      "reference": "",
+      "department": null,
+      "orderDate": "2026-03-20",
+      "project": null,
+      "invoiceComment": "",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "isShowOpenPostsOnInvoices": false,
+      "isClosed": false,
+      "deliveryDate": "2026-03-20",
+      "deliveryAddress": null,
+      "deliveryComment": "",
+      "isPrioritizeAmountsIncludingVat": false,
+      "orderLineSorting": "PRODUCT",
+      "orderGroups": [],
+      "orderLines": [],
+      "isSubscription": false,
+      "subscriptionDuration": 0,
+      "subscriptionDurationType": "MONTHS",
+      "subscriptionPeriodsOnInvoice": 0,
+      "subscriptionPeriodsOnInvoiceType": "MONTHS",
+      "subscriptionInvoicingTimeInAdvanceOrArrears": "ADVANCE",
+      "subscriptionInvoicingTime": 0,
+      "subscriptionInvoicingTimeType": "MONTHS",
+      "isSubscriptionAutoInvoicing": false,
+      "preliminaryInvoice": {
+        "id": 2147553930,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147553930"
+      },
+      "attachment": [],
+      "sendMethodDescription": "Faktura må sendes manuelt.",
+      "invoiceOnAccountVatHigh": false,
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "markUpOrderLines": 0,
+      "discountPercentage": 0.0,
+      "customerName": "Unknown Customer",
+      "projectManagerNameAndNumber": "",
+      "travelReports": [],
+      "accountingDimensionValues": []
+    }
+  }
+}

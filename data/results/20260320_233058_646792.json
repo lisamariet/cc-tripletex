@@ -1,0 +1,129 @@
+{
+  "timestamp": "20260320_233058_646792",
+  "prompt": "Create the project \"Analysis Oakwood\" linked to the customer Oakwood Ltd (org no. 849612913). The project manager is Lucy Taylor (lucy.taylor@example.org).",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "name": "Analysis Oakwood",
+      "customerName": "Oakwood Ltd",
+      "customerOrgNumber": "849612913",
+      "projectManagerName": "Lucy Taylor"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 245.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 236.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 375.4,
+      "error": null
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 2124.9,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "created": {
+      "id": 401978073,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/401978073",
+      "name": "Analysis Oakwood",
+      "number": "1",
+      "displayName": "1 Analysis Oakwood",
+      "description": "",
+      "projectManager": {
+        "id": 18597332,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18597332"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-20",
+      "endDate": null,
+      "customer": {
+        "id": 108294982,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108294982"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": false,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 0,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11073810,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11073810"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15628354,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15628354"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "1 Analysis Oakwood",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Oakwood Ltd",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Lucy Taylor",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 0,
+      "accountingDimensionValues": []
+    }
+  }
+}

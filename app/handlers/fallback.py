@@ -43,7 +43,8 @@ Available Tripletex v2 endpoints (all via proxy base URL):
 | /ledger/account | GET | Query chart of accounts |
 | /ledger/posting | GET | Query ledger postings |
 | /ledger/voucher | GET, POST, PUT, DELETE | Manage vouchers |
-| /salary/type | GET | Salary types (read-only, BETA POST endpoints return 403) |
+| /salary/type | GET | Salary types (lookup by number, e.g. 2000=Fastlønn, 2002=Bonus) |
+| /salary/transaction | POST | Create salary transaction with payslips and specifications |
 | /employee/employment | GET, POST, PUT | Employment records (startDate, etc.) |
 | /employee/entitlement/:grantEntitlementsByTemplate | PUT | Grant roles (params: employeeId, template=ALL_PRIVILEGES) |
 | /currency | GET | Currency codes |
@@ -70,11 +71,10 @@ Key patterns:
 - Department POST body: {"name": "...", "departmentNumber": N}
 - Product POST body: {"name": "...", "number": N, "priceExcludingVat": N}
 - For travel expenses: POST /travelExpense with {"employee": {"id": EMP_ID}, "title": "...", "date": "YYYY-MM-DD"} then POST /travelExpense/cost
-- For salary/payroll: The salary/transaction API is [BETA] and returns 403. Use manual voucher posting instead:
-  POST /ledger/voucher with postings: debit account 5000 (lønn) for salary amount, credit account 1920 (bank) for total.
-  Look up account IDs via GET /ledger/account?number=5000 and GET /ledger/account?number=1920.
+- For salary/payroll: Use POST /salary/transaction with payslips and specifications.
+  GET /salary/type?number=2000 → Fastlønn, GET /salary/type?number=2002 → Bonus.
+  Payload: {"year": YYYY, "month": M, "payslips": [{"employee": {"id": EMP_ID}, "specifications": [{"salaryType": {"id": TYPE_ID}, "rate": amount, "count": 1, "amount": amount}]}]}
   Employee MUST have an employment record with a division. Check GET /employee/employment?employeeId=ID, create if missing.
-  Do NOT use POST /salary/transaction or POST /salary/payslip — they are BETA and will return 403.
 - Use ?fields=id,name,* to get all fields when searching
 
 Return ONLY a valid JSON array of API calls. Each call is an object:

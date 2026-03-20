@@ -1205,12 +1205,39 @@ def cmd_errors(args: argparse.Namespace) -> None:
             status = safe_int(call.get("status"))
             if 400 <= status < 500:
                 error_body = call.get("error") or call.get("response_body") or ""
+                error_str = str(error_body)[:500]
+                # Extract validationMessages from 422 responses
+                validation_msgs: list[str] = []
+                if status == 422:
+                    raw = call.get("error") or call.get("response_body")
+                    if isinstance(raw, dict):
+                        for vm in raw.get("validationMessages", []):
+                            msg_text = vm.get("message", "") if isinstance(vm, dict) else str(vm)
+                            field = vm.get("field", "") if isinstance(vm, dict) else ""
+                            if field:
+                                validation_msgs.append(f"{field}: {msg_text}")
+                            elif msg_text:
+                                validation_msgs.append(msg_text)
+                    elif isinstance(raw, str):
+                        try:
+                            import json as _json
+                            parsed = _json.loads(raw)
+                            for vm in parsed.get("validationMessages", []):
+                                msg_text = vm.get("message", "") if isinstance(vm, dict) else str(vm)
+                                field = vm.get("field", "") if isinstance(vm, dict) else ""
+                                if field:
+                                    validation_msgs.append(f"{field}: {msg_text}")
+                                elif msg_text:
+                                    validation_msgs.append(msg_text)
+                        except (ValueError, AttributeError):
+                            pass
                 all_errors.append({
                     "task_type": task_type,
                     "method": call.get("method", "?"),
                     "path": call.get("path", "?"),
                     "status": status,
-                    "error": str(error_body)[:200],
+                    "error": error_str,
+                    "validation_msgs": validation_msgs,
                     "timestamp": dt_log,
                     "recent": dt_log and dt_log > one_hour_ago if dt_log else False,
                 })
@@ -1262,7 +1289,7 @@ def cmd_errors(args: argparse.Namespace) -> None:
     # Group by error message
     by_msg: dict[str, int] = {}
     for e in all_errors:
-        msg = e["error"][:80] if e["error"] else "(ingen feilmelding)"
+        msg = e["error"][:500] if e["error"] else "(ingen feilmelding)"
         by_msg[msg] = by_msg.get(msg, 0) + 1
 
     print(f"\n  {BOLD}Vanligste feilmeldinger:{RESET}")
@@ -1276,7 +1303,10 @@ def cmd_errors(args: argparse.Namespace) -> None:
             ts = e["timestamp"].strftime("%H:%M:%S") if e["timestamp"] else "?"
             print(f"    {RED}[{ts}]{RESET} {e['method']} {e['path']} → {e['status']}  [{e['task_type']}]")
             if e["error"]:
-                print(f"           {DIM}{e['error'][:120]}{RESET}")
+                print(f"           {DIM}{e['error'][:500]}{RESET}")
+            if e.get("validation_msgs"):
+                for vm in e["validation_msgs"]:
+                    print(f"           {RED}↳ {vm}{RESET}")
 
     print()
 

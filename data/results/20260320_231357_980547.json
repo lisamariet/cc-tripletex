@@ -1,0 +1,48 @@
+{
+  "timestamp": "20260320_231357_980547",
+  "prompt": "Nous avons reçu la facture INV-2026-7606 du fournisseur Lumière SARL (nº org. 913175212) de 72350 NOK TTC. Le montant concerne des services de bureau (compte 6300). Enregistrez la facture fournisseur avec la TVA déductible correcte (25 %).",
+  "parsed_task": {
+    "task_type": "register_supplier_invoice",
+    "fields": {
+      "supplierName": "Lumière SARL",
+      "supplierOrgNumber": "913175212",
+      "organizationNumber": "913175212",
+      "amount": 72350,
+      "description": "services de bureau",
+      "expenseAccount": "6300",
+      "invoiceNumber": "INV-2026-7606",
+      "vatRate": 25
+    },
+    "confidence": 0.96
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 403,
+      "duration_ms": 74.7,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 403,
+      "duration_ms": 56.8,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 403,
+      "duration_ms": 63.1,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 3,
+  "total_duration_ms": 7062.6,
+  "result": {
+    "status": "completed",
+    "note": "Failed to create supplier: {\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+  }
+}

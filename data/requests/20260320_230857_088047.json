@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_230857_088047",
+  "prompt": "El cliente Olivares SL (org. nº 874863807) tiene una factura pendiente de 12700 NOK sin IVA por \"Servicio de red\". Registre el pago completo de esta factura.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "OaCq3IsjH160ya86uUsgA25be0HIfqgIzMWeUobAlEc"
+  }
+}
