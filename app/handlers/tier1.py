@@ -39,8 +39,19 @@ _CONTACT_KEYS = {
 }
 
 
+def _sync_email(fields: dict) -> None:
+    """If only one of email/invoiceEmail is set, copy to both."""
+    email = fields.get("email")
+    inv_email = fields.get("invoiceEmail")
+    if inv_email and not email:
+        fields["email"] = inv_email
+    elif email and not inv_email:
+        fields["invoiceEmail"] = email
+
+
 @register_handler("create_supplier")
 async def create_supplier(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    _sync_email(fields)
     payload = {"name": fields["name"]}
     payload.update(_pick(fields, "organizationNumber", "email", "invoiceEmail",
                          "phoneNumber", "phoneNumberMobile", "isPrivateIndividual",
@@ -62,6 +73,7 @@ async def create_supplier(client: TripletexClient, fields: dict[str, Any]) -> di
 
 @register_handler("create_customer")
 async def create_customer(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    _sync_email(fields)
     payload = {"name": fields["name"], "isCustomer": True}
     payload.update(_pick(fields, "organizationNumber", "email", "invoiceEmail",
                          "phoneNumber", "phoneNumberMobile", "isPrivateIndividual",

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260319_234203_448402",
+  "prompt": "O cliente Luz do Sol Lda (org. nº 939210970) tem uma fatura pendente de 23900 NOK sem IVA por \"Manutenção\". Registe o pagamento total desta fatura.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "lPy_3uthjyQOID3OQZa6CK_BbaPuyqMU30Q46LmOpt8"
+  }
+}

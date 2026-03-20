@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260319_233306_546665",
+  "prompt": "Create the project \"Integration Northwave\" linked to the customer Northwave Ltd (org no. 950072652). The project manager is James Johnson (james.johnson@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "8B6mFh7ubdyyChhbD8zpa5mfV2Kgr_O8_IwYOBg2ulU"
+  }
+}

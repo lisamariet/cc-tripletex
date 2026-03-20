@@ -1,0 +1,92 @@
+{
+  "timestamp": "20260319_235722_219962",
+  "prompt": "Opprett kunden Bølgekraft AS med organisasjonsnummer 988957747. Adressa er Kirkegata 23, 0182 Oslo. E-post: post@blgekraft.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Bølgekraft AS",
+      "organizationNumber": "988957747",
+      "email": "post@blgekraft.no",
+      "address": {
+        "addressLine1": "Kirkegata 23",
+        "postalCode": "0182",
+        "city": "Oslo"
+      }
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 1191.5,
+      "error": null
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 2968.5,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108173825,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108173825",
+      "name": "Bølgekraft AS",
+      "organizationNumber": "988957747",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@blgekraft.no",
+      "invoiceEmail": "",
+      "overdueNoticeEmail": "",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Bølgekraft AS (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405199143,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405199143"
+      },
+      "physicalAddress": {
+        "id": 405199142,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405199142"
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 349753983,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/349753983"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}
