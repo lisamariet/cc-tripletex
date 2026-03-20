@@ -1,0 +1,127 @@
+{
+  "timestamp": "20260320_230233_004288",
+  "prompt": "Erstellen und senden Sie eine Rechnung an den Kunden Bergwerk GmbH (Org.-Nr. 981122011) über 45150 NOK ohne MwSt. Die Rechnung betrifft Datenberatung.",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Bergwerk GmbH",
+      "customerOrgNumber": "981122011",
+      "lines": [
+        {
+          "description": "Datenberatung",
+          "quantity": 1,
+          "unitPriceExcludingVat": 45150,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 10780.0,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 2056.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 1973.4,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401977051/:invoice",
+      "status": 200,
+      "duration_ms": 2143.1,
+      "error": null
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 23825.4,
+  "result": {
+    "status": "completed",
+    "taskType": "create_invoice",
+    "created": {
+      "id": 2147553823,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147553823",
+      "invoiceNumber": 4,
+      "invoiceDate": "2026-03-20",
+      "customer": {
+        "id": 108290221,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108290221"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-03",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401977051,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401977051"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607523593,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607523593"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965747101,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965747101"
+        }
+      ],
+      "voucher": {
+        "id": 608870943,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608870943"
+      },
+      "deliveryDate": "2026-03-20",
+      "amount": 45150.0,
+      "amountCurrency": 45150.0,
+      "amountExcludingVat": 45150.0,
+      "amountExcludingVatCurrency": 45150.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 45150.0,
+      "amountCurrencyOutstanding": 45150.0,
+      "amountOutstandingTotal": 45150.0,
+      "amountCurrencyOutstandingTotal": 45150.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845038522,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845038522"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024176568
+    }
+  }
+}

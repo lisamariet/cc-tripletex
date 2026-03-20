@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_230239_879859",
+  "prompt": "Opprett ein faktura til kunden Fossekraft AS (org.nr 913494253) med tre produktlinjer: Skylagring (4508) til 1050 kr med 25 % MVA, Datarådgjeving (5948) til 9850 kr med 15 % MVA (næringsmiddel), og Programvarelisens (8253) til 16950 kr med 0 % MVA (avgiftsfri).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "xCbUYVURRJ8uqxeNMgHr6rzAFHQdV5FF8gNsBZGDA98"
+  }
+}

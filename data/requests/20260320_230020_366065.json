@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_230020_366065",
+  "prompt": "Create an order for the customer Ridgepoint Ltd (org no. 925103489) with the products Consulting Hours (5359) at 21150 NOK and Analysis Report (1028) at 1600 NOK. Convert the order to an invoice and register full payment.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "r_U8r-Lzd3gkdHr4ildT67K_tQSrLcfNMzVzoTAnskY"
+  }
+}
