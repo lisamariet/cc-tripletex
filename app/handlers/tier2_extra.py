@@ -759,16 +759,22 @@ async def _lookup_account_id(client: TripletexClient, account_number: int) -> in
     return None
 
 
+async def _get_salary_type_id(client: TripletexClient, number: str) -> int | None:
+    """Look up a salary type by its number (e.g. '2000' for Fastlønn). Returns ID."""
+    resp = await client.get_cached("/salary/type", params={"number": number})
+    values = resp.json().get("values", [])
+    if values:
+        return values[0]["id"]
+    return None
+
+
 @register_handler("run_payroll")
 async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Run payroll for an employee using manual voucher posting.
+    """Run payroll for an employee using the salary/transaction API (primary)
+    with voucher fallback.
 
-    The salary/transaction API is [BETA] and returns 403 in competition sandboxes.
-    Instead, we create a manual voucher (bilag) with:
-      - Debit account 5000 (lønn/salary) for base salary
-      - Debit account 5000 for bonus (or separate line)
-      - Credit account 1920 (bank) for total amount
-    The employee record and employment are still created/verified.
+    Primary: POST /salary/transaction with payslips and specifications.
+    Fallback: POST /ledger/voucher if salary API returns 403/422.
     """
     # 1. Find the employee
     employee = await _find_employee(client, fields)
@@ -778,7 +784,7 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     emp_name = f"{employee.get('firstName', '')} {employee.get('lastName', '')}"
     logger.info(f"Found employee {employee_id}: {emp_name}")
 
-    # 2. Ensure employee has dateOfBirth (required for employment)
+    # 2. Ensure employee has dateOfBirth (required for employment/salary)
     if not employee.get("dateOfBirth"):
         logger.info(f"Employee {employee_id} missing dateOfBirth — setting default")
         update_payload = {
@@ -824,7 +830,78 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     if total_amount <= 0:
         return {"status": "completed", "note": "No salary amounts specified"}
 
-    # 6. Look up account IDs for salary (5000) and bank (1920)
+    # ------------------------------------------------------------------
+    # PRIMARY: Try salary/transaction API
+    # ------------------------------------------------------------------
+    fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn (base salary)
+    bonus_type_id = await _get_salary_type_id(client, "2002")  # Bonus
+
+    if fastlonn_id:
+        # Build salary specifications
+        specifications = []
+        if base_salary:
+            specifications.append({
+                "salaryType": {"id": fastlonn_id},
+                "rate": base_salary,
+                "count": 1,
+                "amount": base_salary,
+            })
+        if bonus and bonus_type_id:
+            specifications.append({
+                "salaryType": {"id": bonus_type_id},
+                "rate": bonus,
+                "count": 1,
+                "amount": bonus,
+            })
+
+        if specifications:
+            payload = {
+                "year": year,
+                "month": month,
+                "payslips": [
+                    {
+                        "employee": {"id": employee_id},
+                        "specifications": specifications,
+                    }
+                ],
+            }
+
+            resp = await client.post("/salary/transaction", payload)
+            data = resp.json()
+
+            if resp.status_code in (200, 201):
+                created = data.get("value", {})
+                transaction_id = created.get("id")
+                payslips = created.get("payslips", [])
+                logger.info(
+                    f"Created salary transaction {transaction_id} for employee {employee_id}: "
+                    f"baseSalary={base_salary}, bonus={bonus}, month={month}/{year}"
+                )
+                return {
+                    "status": "completed",
+                    "taskType": "run_payroll",
+                    "transactionId": transaction_id,
+                    "payslips": payslips,
+                    "employeeId": employee_id,
+                    "baseSalary": base_salary,
+                    "bonus": bonus,
+                    "month": month,
+                    "year": year,
+                }
+
+            # Log failure and fall through to voucher fallback
+            error_msg = data.get("message", "Unknown error")
+            validation = data.get("validationMessages", [])
+            logger.warning(
+                f"Salary transaction API failed ({resp.status_code}): {error_msg} — {validation}. "
+                f"Falling back to voucher."
+            )
+
+    # ------------------------------------------------------------------
+    # FALLBACK: Manual voucher if salary API is unavailable or failed
+    # ------------------------------------------------------------------
+    logger.info("Using voucher fallback for payroll")
+
     salary_account_id = await _lookup_account_id(client, 5000)
     bank_account_id = await _lookup_account_id(client, 1920)
 
@@ -833,9 +910,7 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     if not bank_account_id:
         return {"status": "completed", "note": "Could not find bank account 1920"}
 
-    # 7. Build voucher postings
-    #    Debit 5000 (salary expense), Credit 1920 (bank)
-    voucher_date = f"{year}-{month:02d}-28"  # Last working day of the month
+    voucher_date = f"{year}-{month:02d}-28"
     description = f"Lønn {emp_name} {month:02d}/{year}"
     if bonus:
         description += f" (grunnlønn {base_salary} + bonus {bonus})"
@@ -843,7 +918,6 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     postings = []
     row = 1
 
-    # Debit salary account for base salary
     if base_salary:
         postings.append({
             "account": {"id": salary_account_id},
@@ -853,7 +927,6 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         })
         row += 1
 
-    # Debit salary account for bonus
     if bonus:
         postings.append({
             "account": {"id": salary_account_id},
@@ -863,7 +936,6 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         })
         row += 1
 
-    # Credit bank account for total
     postings.append({
         "account": {"id": bank_account_id},
         "amountGross": -total_amount,
@@ -871,13 +943,13 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         "row": row,
     })
 
-    payload = {
+    voucher_payload = {
         "date": voucher_date,
         "description": description,
         "postings": postings,
     }
 
-    resp = await client.post("/ledger/voucher", payload)
+    resp = await client.post("/ledger/voucher", voucher_payload)
     data = resp.json()
 
     if resp.status_code >= 400:
@@ -900,12 +972,12 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     return {
         "status": "completed",
         "taskType": "run_payroll",
-        "transactionId": voucher_id,  # Use voucher ID as transactionId for test compatibility
+        "transactionId": voucher_id,
         "voucherId": voucher_id,
         "employeeId": employee_id,
         "baseSalary": base_salary,
         "bonus": bonus,
         "month": month,
         "year": year,
-        "method": "manual_voucher",  # Flag that we used voucher instead of salary API
+        "method": "manual_voucher",
     }
