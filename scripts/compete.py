@@ -235,8 +235,12 @@ def match_log_to_submission(log: dict, submissions: list[dict]) -> dict | None:
     return best_match
 
 
-def get_task_type_for_sub(sub: dict, gcs_logs: list[dict]) -> str:
-    """Find task type from GCS logs for a submission."""
+def get_task_type_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[dict] | None = None) -> str:
+    """Find task type from GCS logs for a submission.
+
+    Returns the task_type if known. If unknown, returns a prompt snippet
+    formatted as '[first 30 chars...]' from the request log.
+    """
     sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
     if not sub_ts:
         return "?"
@@ -262,7 +266,50 @@ def get_task_type_for_sub(sub: dict, gcs_logs: list[dict]) -> str:
         except Exception:
             continue
 
+    # If task_type is still unknown, try to get a prompt snippet from request logs
+    if best_type in ("?", "", "unknown"):
+        prompt = _get_prompt_for_sub(sub, gcs_logs, request_logs)
+        if prompt:
+            snippet = prompt.replace("\n", " ").strip()[:30]
+            return f"[{snippet}...]"
+
     return best_type
+
+
+def _get_prompt_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[dict] | None = None) -> str | None:
+    """Find prompt text for a submission from GCS logs (result or request)."""
+    sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
+    if not sub_ts:
+        return None
+    try:
+        dt_sub = datetime.fromisoformat(sub_ts.replace("Z", "+00:00")).replace(tzinfo=None)
+    except Exception:
+        return None
+
+    best_prompt = None
+    best_delta = timedelta(minutes=10)
+
+    # Check all log sources for a prompt
+    all_logs = list(gcs_logs)
+    if request_logs:
+        all_logs.extend(request_logs)
+
+    for log in all_logs:
+        log_ts = log.get("timestamp", "")
+        if not log_ts:
+            continue
+        try:
+            dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
+            delta = abs(dt_log - dt_sub)
+            if delta < best_delta:
+                prompt = log.get("prompt", "")
+                if prompt:
+                    best_delta = delta
+                    best_prompt = prompt
+        except Exception:
+            continue
+
+    return best_prompt
 
 
 def get_log_for_sub(sub: dict, gcs_logs: list[dict]) -> dict | None:
@@ -317,8 +364,13 @@ def cmd_status(args: argparse.Namespace) -> None:
 
     # Try to fetch GCS logs for task type info (silently skip on error)
     gcs_logs = []
+    gcs_requests = []
     try:
         gcs_logs = fetch_gcs_logs("results")
+    except Exception:
+        pass
+    try:
+        gcs_requests = fetch_gcs_logs("requests")
     except Exception:
         pass
 
@@ -332,10 +384,10 @@ def cmd_status(args: argparse.Namespace) -> None:
         norm = safe_float(sub.get("normalized_score"))
         raw = safe_float(sub.get("score_raw"))
         mx = safe_float(sub.get("score_max"))
-        task_type = get_task_type_for_sub(sub, gcs_logs) if gcs_logs else "?"
+        task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
 
-        # Track best per task type
-        if task_type != "?":
+        # Track best per task type (only for real task types, not prompt snippets)
+        if task_type != "?" and not task_type.startswith("["):
             current_best = best_scores.get(task_type, 0.0)
             # Use the actual score (raw, which includes tier multiplier + efficiency)
             score_val = raw if raw is not None else 0.0
