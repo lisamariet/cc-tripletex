@@ -77,6 +77,14 @@ python3 scripts/compete.py poll --interval 5       # sjekk hvert 5s
 python3 scripts/compete.py poll --timeout 600      # 10 min timeout
 ```
 
+### 4xx-feilrapport
+
+```bash
+python3 scripts/compete.py errors
+```
+
+Viser detaljert 4xx-feilanalyse: totalt antall, siste timens feil, feil per endpoint, per oppgavetype, og vanligste feilmeldinger.
+
 ### Trigger ny submission
 
 ```bash
