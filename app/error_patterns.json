@@ -964,5 +964,14 @@
       "fix": "API-feil: Unauthorized",
       "status": 401
     }
+  ],
+  "PUT /supplierInvoice/voucher/{id}/postings": [
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Can not put postings on a voucher that already have postings",
+      "fix": "Valideringsfeil: Can not put postings on a voucher that already have postings",
+      "status": 422
+    }
   ]
 }
