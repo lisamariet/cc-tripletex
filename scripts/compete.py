@@ -237,11 +237,41 @@ def match_log_to_submission(log: dict, submissions: list[dict]) -> dict | None:
     return best_match
 
 
+def _infer_task_type_from_prompt(prompt: str) -> str | None:
+    """Infer task type from prompt keywords when parser returned unknown."""
+    import re
+    pl = prompt.lower()
+    # Order matters: more specific patterns first
+    patterns = [
+        ("fastpris|fixed price|prix fix|precio fijo|festpreis|preço fix|prix forfait", "set_project_fixed_price"),
+        ("dimensjon|dimension|dimensão|dimensión", "create_custom_dimension"),
+        ("lønn|payroll|salário|gehalt|salaire|nómina|gehaltsabrechnung", "run_payroll"),
+        ("timesheet|timer for|horas para|stunden für|heures pour|registrer.*timer|erfassen.*stunden", "register_timesheet"),
+        ("tre.*avdeling|three.*department|tres departamento|drei abteilung|trois département|três departamento", "batch_create_department"),
+        ("ordre|order|pedido|auftrag|commande|encomenda", "create_order"),
+        ("reiseregning|travel expense|gastos de viaje|frais de voyage|reisekosten|despesas de viagem", "create_travel_expense"),
+        ("kreditnota|credit note|nota de crédito|avoir|gutschrift", "create_credit_note"),
+        ("reverser.*betal|reverse.*payment|revertir.*pago|annuler.*paiement|stornieren.*zahlung", "reverse_payment"),
+        ("registrer.*betal|register.*payment|registrar.*pago|enregistrer.*paiement|zahlung.*registr", "register_payment"),
+        ("leverandørfaktura|supplier invoice|factura.*proveedor|facture.*fournisseur|lieferantenrechnung|fatura.*fornecedor", "register_supplier_invoice"),
+        ("faktura|invoice|factura|facture|rechnung|fatura", "create_invoice"),
+        ("prosjekt|project|proyecto|projet|projekt|projeto", "create_project"),
+        ("ansatt|employee|empleado|employé|mitarbeiter|empregado", "create_employee"),
+        ("kunde|customer|cliente|client|kund", "create_customer"),
+        ("leverandør|supplier|proveedor|fournisseur|lieferant|fornecedor", "create_supplier"),
+        ("produkt|product|producto|produit|produkt|produto", "create_product"),
+        ("avdeling|department|departamento|département|abteilung", "create_department"),
+    ]
+    for pattern, task_type in patterns:
+        if re.search(pattern, pl):
+            return task_type
+    return None
+
+
 def get_task_type_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[dict] | None = None) -> str:
     """Find task type from GCS logs for a submission.
 
-    Returns the task_type if known. If unknown, returns a prompt snippet
-    formatted as '[first 30 chars...]' from the request log.
+    Returns the task_type if known. If unknown, infers from prompt keywords.
     """
     sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
     if not sub_ts:
@@ -253,6 +283,7 @@ def get_task_type_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[di
 
     best_type = "?"
     best_delta = timedelta(minutes=10)
+    best_log = None
 
     for log in gcs_logs:
         log_ts = log.get("timestamp", "")
@@ -265,13 +296,22 @@ def get_task_type_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[di
                 best_delta = delta
                 task = log.get("parsed_task", {}) or {}
                 best_type = task.get("task_type", "?")
+                best_log = log
         except Exception:
             continue
 
-    # If task_type is still unknown, try to get a prompt snippet from request logs
+    # If task_type is still unknown, infer from prompt keywords
     if best_type in ("?", "", "unknown"):
-        prompt = _get_prompt_for_sub(sub, gcs_logs, request_logs)
+        prompt = None
+        if best_log:
+            prompt = best_log.get("prompt", "")
+        if not prompt:
+            prompt = _get_prompt_for_sub(sub, gcs_logs, request_logs)
         if prompt:
+            inferred = _infer_task_type_from_prompt(prompt)
+            if inferred:
+                return inferred
+            # Last resort: show snippet
             snippet = prompt.replace("\n", " ").strip()[:30]
             return f"[{snippet}...]"
 
@@ -390,10 +430,9 @@ def cmd_status(args: argparse.Namespace) -> None:
         mx = safe_float(sub.get("score_max"))
         task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
 
-        # Track best per task type (only for real task types, not prompt snippets)
+        # Track best per task type (for real task types, including keyword-inferred)
         if task_type != "?" and not task_type.startswith("["):
             current_best = best_scores.get(task_type, 0.0)
-            # Use the actual score (raw, which includes tier multiplier + efficiency)
             score_val = raw if raw is not None else 0.0
             if score_val > current_best:
                 best_scores[task_type] = score_val
@@ -677,6 +716,30 @@ def cmd_insights(args: argparse.Namespace) -> None:
             tb["best_max"] = mx
             tb["best_norm"] = norm
 
+    # ── Build handler stats map from GCS logs (needed for tables) ──
+    handler_stats_map: dict[str, dict] = {}
+    if gcs_logs:
+        for data in gcs_logs:
+            task = data.get("parsed_task", {}) or {}
+            task_type = task.get("task_type", "unknown")
+            # Resolve unknowns from prompt
+            if task_type in ("unknown", "?", ""):
+                prompt = data.get("prompt", "")
+                if prompt:
+                    inferred = _infer_task_type_from_prompt(prompt)
+                    if inferred:
+                        task_type = inferred
+            api_calls = data.get("api_calls") or []
+            n_calls = len(api_calls)
+            n_4xx = sum(1 for c in api_calls if 400 <= safe_int(c.get("status")) < 500)
+            if task_type not in handler_stats_map:
+                handler_stats_map[task_type] = {"runs": 0, "calls": 0, "errors_4xx": 0, "calls_list": []}
+            hs = handler_stats_map[task_type]
+            hs["runs"] += 1
+            hs["calls"] += n_calls
+            hs["errors_4xx"] += n_4xx
+            hs["calls_list"].append(n_calls)
+
     # Summary
     total = len(subs)
     perfect = sum(1 for s in subs if safe_float(s.get("normalized_score")) >= 1.0)
@@ -695,18 +758,29 @@ def cmd_insights(args: argparse.Namespace) -> None:
     print(f"    {BOLD}Sum beste poeng:{RESET}      {total_best:.1f}")
     print(f"    {BOLD}Unike oppgavetyper:{RESET}   {len(task_best)}/30")
 
-    # ── Per-task-type table ──
+    # ── Per-task-type table (sorted by best score descending) ──
     if task_best:
-        print(f"\n  {BOLD}Beste score per oppgavetype:{RESET}")
-        print(f"    {'Oppgavetype':<28} {'Beste':>8} {'Norm':>6} {'Forsøk':>7} {'Status'}")
-        print(f"    {'─'*65}")
+        print(f"\n  {BOLD}Beste score per oppgavetype (sortert etter score):{RESET}")
+        print(f"    {'Oppgavetype':<28} {'Beste':>8} {'Norm':>6} {'Forsøk':>7} {'Snitt 4xx':>10} {'Status'}")
+        print(f"    {'─'*80}")
 
-        for task_type in sorted(task_best.keys()):
+        # Sort by best_norm descending
+        sorted_tasks = sorted(task_best.keys(), key=lambda t: task_best[t]["best_norm"], reverse=True)
+
+        for task_type in sorted_tasks:
             tb = task_best[task_type]
             norm = tb["best_norm"]
             color = score_color(norm)
             raw_str = f"{tb['best_raw']:.1f}/{tb['best_max']:.0f}"
             norm_str = f"{norm:.0%}"
+
+            # Get 4xx stats from GCS logs for this task type
+            avg_4xx_str = "-"
+            for ht, hs in handler_stats_map.items():
+                if ht == task_type:
+                    avg_4xx = hs["errors_4xx"] / hs["runs"] if hs["runs"] > 0 else 0
+                    avg_4xx_str = f"{avg_4xx:.1f}"
+                    break
 
             if norm >= 1.0:
                 status = f"{GREEN}perfekt{RESET}"
@@ -715,7 +789,7 @@ def cmd_insights(args: argparse.Namespace) -> None:
             else:
                 status = f"{RED}feilet{RESET}"
 
-            print(f"    {task_type:<28} {color}{raw_str:>8}{RESET} {color}{norm_str:>6}{RESET} {tb['count']:>7} {status}")
+            print(f"    {task_type:<28} {color}{raw_str:>8}{RESET} {color}{norm_str:>6}{RESET} {tb['count']:>7} {avg_4xx_str:>10} {status}")
 
     # ── Missing task types ──
     seen_types = set(task_best.keys())
@@ -743,54 +817,38 @@ def cmd_insights(args: argparse.Namespace) -> None:
             print(f"    {RED}• {task_type}: {tb['count']} forsøk{RESET}")
 
     # ── GCS API efficiency analysis ──
-    if gcs_logs:
+    if gcs_logs and handler_stats_map:
         print(f"\n{BOLD}{'═'*70}{RESET}")
         print(f"{BOLD}  API-EFFEKTIVITET (fra GCS-logger){RESET}")
         print(f"{BOLD}{'═'*70}{RESET}")
 
-        total_api_calls = 0
-        total_4xx = 0
-        handler_stats: dict[str, dict] = {}
+        total_api_calls = sum(hs["calls"] for hs in handler_stats_map.values())
+        total_4xx = sum(hs["errors_4xx"] for hs in handler_stats_map.values())
+        total_runs = sum(hs["runs"] for hs in handler_stats_map.values())
 
-        for data in gcs_logs:
-            task = data.get("parsed_task", {}) or {}
-            task_type = task.get("task_type", "unknown")
-            api_calls = data.get("api_calls") or []
-            n_calls = len(api_calls)
-            n_4xx = sum(1 for c in api_calls if 400 <= safe_int(c.get("status")) < 500)
-            total_api_calls += n_calls
-            total_4xx += n_4xx
-
-            if task_type not in handler_stats:
-                handler_stats[task_type] = {
-                    "runs": 0, "calls": 0, "errors_4xx": 0,
-                    "calls_list": [],
-                }
-            hs = handler_stats[task_type]
-            hs["runs"] += 1
-            hs["calls"] += n_calls
-            hs["errors_4xx"] += n_4xx
-            hs["calls_list"].append(n_calls)
-
-        print(f"\n  Logger analysert:  {len(gcs_logs)}")
+        print(f"\n  Logger analysert:  {total_runs}")
         print(f"  Totalt API-kall:   {total_api_calls}")
         print(f"  Totalt 4xx-feil:   {total_4xx}")
         if total_api_calls > 0:
             print(f"  Global feilrate:   {total_4xx/total_api_calls:.0%}")
-        if gcs_logs:
-            avg_calls = total_api_calls / len(gcs_logs)
-            avg_4xx = total_4xx / len(gcs_logs)
-            print(f"  Snitt kall/oppgave: {avg_calls:.1f}")
-            print(f"  Snitt 4xx/oppgave:  {avg_4xx:.1f}")
+        if total_runs > 0:
+            print(f"  Snitt kall/oppgave: {total_api_calls / total_runs:.1f}")
+            print(f"  Snitt 4xx/oppgave:  {total_4xx / total_runs:.1f}")
 
-        print(f"\n    {'Handler':<25} {'Kjør':>5} {'Kall':>5} {'4xx':>4} {'Snitt':>6} {'Feilr':>6}")
+        print(f"\n    {'Handler':<28} {'Kjør':>5} {'Kall':>5} {'4xx':>4} {'Snitt':>6} {'Feilr':>6}")
         print(f"    {'─'*60}")
-        for task_type in sorted(handler_stats.keys()):
-            hs = handler_stats[task_type]
+        # Sort by error rate descending (highest first)
+        sorted_handlers = sorted(
+            handler_stats_map.keys(),
+            key=lambda t: (handler_stats_map[t]["errors_4xx"] / handler_stats_map[t]["calls"] if handler_stats_map[t]["calls"] > 0 else 0),
+            reverse=True,
+        )
+        for task_type in sorted_handlers:
+            hs = handler_stats_map[task_type]
             avg = hs["calls"] / hs["runs"] if hs["runs"] > 0 else 0
             err_rate = hs["errors_4xx"] / hs["calls"] if hs["calls"] > 0 else 0
             err_color = RED if err_rate > 0.2 else (YELLOW if err_rate > 0 else GREEN)
-            print(f"    {task_type:<25} {hs['runs']:>5} {hs['calls']:>5} {err_color}{hs['errors_4xx']:>4}{RESET} {avg:>5.1f} {err_color}{err_rate:>5.0%}{RESET}")
+            print(f"    {task_type:<28} {hs['runs']:>5} {hs['calls']:>5} {err_color}{hs['errors_4xx']:>4}{RESET} {avg:>5.1f} {err_color}{err_rate:>5.0%}{RESET}")
 
         # 4xx details
         if total_4xx > 0 and args.detail:
@@ -798,6 +856,12 @@ def cmd_insights(args: argparse.Namespace) -> None:
             for data in gcs_logs:
                 task = data.get("parsed_task", {}) or {}
                 task_type = task.get("task_type", "unknown")
+                if task_type in ("unknown", "?", ""):
+                    prompt = data.get("prompt", "")
+                    if prompt:
+                        inferred = _infer_task_type_from_prompt(prompt)
+                        if inferred:
+                            task_type = inferred
                 api_calls = data.get("api_calls") or []
                 errors = [c for c in api_calls if 400 <= safe_int(c.get("status")) < 500]
                 if errors:

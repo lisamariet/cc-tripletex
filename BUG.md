@@ -5,36 +5,44 @@
 
 ---
 
-## Oppgavetype-status (fra 111 submissions)
+## Oppgavetype-status (fra 120 submissions, ekskl. test)
 
-| Oppgavetype | Forsøk | Snitt | Perfekt | Null | Status | Hovedproblem |
-|-------------|--------|-------|---------|------|--------|-------------|
-| **create_invoice** | 15 | 22% | 1 | 12 | 🔴 KRITISK | Bankkontonummer blokkerer |
-| **unknown** (fallback) | 17 | 26% | 2 | 14 | 🔴 KRITISK | Fallback genererer feil feltnavn |
-| **create_supplier** | 6 | 48% | 1 | 4 | 🟠 | Gamle runs uten email-sync |
-| **batch_create_order** | 2 | 19% | 0 | 1 | 🟠 | Batch-logikk feil (fikset) |
-| **create_employee** | 7 | 67% | 3 | 4 | 🟡 | Gamle runs uten roller |
-| **create_project** | 3 | 67% | 1 | 2 | 🟡 | Gamle runs |
-| **register_payment** | 6 | 65% | 2 | 3 | 🟡 | Beløp-feil (fikset) |
-| **create_travel_expense** | 6 | 74% | 3 | 2 | 🟡 | 403 token-feil |
-| **batch_register_timesheet** | 5 | 80% | 4 | 1 | 🟢 | Batch per-item type (fikset) |
-| **register_supplier_invoice** | 5 | 80% | 2 | 3 | 🟢 | voucherType (fikset) |
-| **run_payroll** | 5 | 80% | 2 | 3 | 🟢 | dateOfBirth/payload (fikset) |
-| **create_product** | 8 | 88% | 4 | 4 | 🟢 | Gamle runs uten MVA-fix |
-| **create_credit_note** | 6 | 89% | 2 | 4 | 🟢 | date-param (fikset) |
-| **batch_create_department** | 5 | 93% | 3 | 2 | 🟢 | salesmodules 422 (fikset) |
-| **create_customer** | 7 | 114% | 4 | 3 | ✅ | OK |
-| **reverse_payment** | 8 | 169% | 8 | 0 | ✅ | PERFEKT |
+| Oppgavetype | Forsøk | Snitt kall | Snitt 4xx | Rene runs | Total 4xx | Status | Hovedproblem |
+|-------------|--------|------------|-----------|-----------|-----------|--------|-------------|
+| **register_timesheet** | 2 | 6.0 | 4.0 | 0 | 8 | 🔴 | Begge parsert som unknown, fallback med 4 4xx/run |
+| **set_project_fixed_price** | 6 | 5.7 | 3.2 | 0 | 19 | 🔴 | 5/6 parsert som unknown, 0 rene runs, høyest 4xx |
+| **batch_create_department** | 6 | 4.0 | 2.0 | 3 | 12 | 🟠 | salesModules 422 (snitt 2.0 4xx per run) |
+| **run_payroll** | 7 | 4.6 | 1.7 | 2 | 12 | 🟡 | Høy 4xx-rate, 2/7 parsert som unknown |
+| **register_supplier_invoice** | 5 | 3.8 | 1.6 | 1 | 8 | 🟡 | voucherType-feil (1/5 med created) |
+| **create_custom_dimension** | 6 | 1.8 | 1.3 | 1 | 8 | 🟡 | Alle 6 parsert som unknown, fallback feiler |
+| **register_payment** | 6 | 4.7 | 1.3 | 3 | 8 | 🟡 | Faktura-kjede feiler ofte |
+| **reverse_payment** | 8 | 6.6 | 1.0 | 5 | 8 | 🟡 | 3/8 runs med 4xx, men alle completed |
+| **create_invoice** | 17 | 4.4 | 0.9 | 4 | 15 | 🟢 | Bankkontonr blokkerer :invoice (4/17 med created) |
+| **create_credit_note** | 8 | 5.8 | 0.6 | 3 | 5 | 🟢 | Noen 422 paa :createCreditNote |
+| **create_employee** | 8 | 2.8 | 0.4 | 6 | 3 | 🟢 | Gamle runs med 422 (6/8 med created) |
+| **create_travel_expense** | 6 | 6.0 | 0.2 | 5 | 1 | 🟢 | OK (5/6 uten 4xx) |
+| **create_product** | 9 | 1.6 | 0.1 | 8 | 1 | ✅ | OK (8/9 med created) |
+| **create_customer** | 7 | 1.0 | 0.1 | 6 | 1 | ✅ | OK (6/7 med created) |
+| **create_supplier** | 7 | 1.0 | 0.1 | 6 | 1 | ✅ | OK (6/7 med created) |
+| **batch_register_timesheet** | 5 | 5.6 | 0.0 | 5 | 0 | ✅ | PERFEKT (0 4xx, alle completed) |
+| **batch_create_order** | 4 | 10.5 | 0.0 | 4 | 0 | ✅ | OK (0 4xx, mange kall men feilfri) |
+| **create_project** | 3 | 3.0 | 0.0 | 3 | 0 | ✅ | PERFEKT (3/3 med created, 0 4xx) |
 
 **Nøkkelinnsikter:**
-- 1 eneste 4xx-feil halverer scoren (85% → 34% snitt)
-- Confidence < 0.80 = 100% feil
-- create_invoice er desidert største blocker (12 av 15 = null)
-- reverse_payment er vår beste handler (169% snitt, 0 feil)
+- **120 submissions** totalt (ekskl. 2 test-requests), opp fra 111
+- Alle 18 oppgavetyper er naa klassifisert — ingen "unknown" gjenstaar
+- **6 handlers med 0 4xx:** create_project, batch_register_timesheet, batch_create_order (perfekte)
+- **Parser-hull:** create_custom_dimension (6/6), set_project_fixed_price (5/6), register_timesheet (2/2) parseres fortsatt som unknown
+- **set_project_fixed_price** er verste handler (snitt 3.2 4xx, 0 rene runs)
+- **create_invoice** har flest forsøk (17) men bare 4 med created-ressurs
+- Handlers som bruker fallback (unknown-parsert) har markant høyere 4xx-rate
 
 ---
 
 **Totalt registrerte bugs:** 25+
+**Submissions analysert:** 120 (ekskl. 2 test-requests)
+**Handlers med perfekt 4xx-rate (0):** create_project, batch_register_timesheet, batch_create_order
+**Handlers med størst parser-problem:** create_custom_dimension (6/6 unknown), set_project_fixed_price (5/6 unknown), register_timesheet (2/2 unknown)
 
 ---
 
@@ -385,19 +393,19 @@
 |-----------|-------------|-----------|---------------|
 | 20260319_231533 | create_product | POST /product 422 | BUG-004 |
 | 20260319_234203 | register_payment | GET /invoice 422 | BUG-008 |
-| 20260319_235440 | unknown (test) | Ingen kall | BUG-023 |
+| 20260319_235440 | test (ignorert) | Ingen kall | BUG-023 |
 | 20260320_000515 | create_employee | POST /employee 422 | BUG-005 |
-| 20260320_000731 | unknown (test) | Ingen kall | BUG-023 |
+| 20260320_000731 | test (ignorert) | Ingen kall | BUG-023 |
 | 20260320_071441 | create_invoice | POST /order 422, PUT /order/None/:invoice 404 | BUG-006, BUG-019 |
 | 20260320_073738 | register_payment (feilparsert) | Ingen 4xx, tom liste | BUG-003, BUG-009 |
 | 20260320_075419 | batch_create_department | Krasj — TypeError | BUG-001 |
-| 20260320_084027 | unknown (custom dimension) | Ingen kall | BUG-002 |
-| 20260320_092843 | unknown (payroll) | JSON parse error | BUG-002, BUG-016 |
-| 20260320_114805 | unknown (custom dimension) | POST /ledger/voucher 422 | BUG-002, BUG-015 |
+| 20260320_084027 | create_custom_dimension (parsert som unknown) | Ingen kall | BUG-002 |
+| 20260320_092843 | run_payroll (parsert som unknown) | JSON parse error | BUG-002, BUG-016 |
+| 20260320_114805 | create_custom_dimension (parsert som unknown) | POST /ledger/voucher 422 | BUG-002, BUG-015 |
 | 20260320_114811 | create_credit_note | PUT /:createCreditNote 422 | BUG-010 |
-| 20260320_115104 | unknown (ordre->faktura) | POST /order 422, POST /invoice 422, PUT /:payment 404 | BUG-002, BUG-017, BUG-018 |
+| 20260320_115104 | batch_create_order (parsert som unknown) | POST /order 422, POST /invoice 422, PUT /:payment 404 | BUG-002, BUG-017, BUG-018 |
 | 20260320_115144 | create_invoice | PUT /order/:invoice 422 | BUG-007, BUG-011 |
-| 20260320_131006 | unknown (timeregistrering) | GET /activity 400, 4x POST 422 | BUG-002, BUG-018 |
+| 20260320_131006 | register_timesheet (parsert som unknown) | GET /activity 400, 4x POST 422 | BUG-002, BUG-018 |
 
 **Vellykkede resultater (uten feil):**
 

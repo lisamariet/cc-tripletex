@@ -428,7 +428,11 @@ async def _find_or_create_activity(client: TripletexClient, name: str) -> int | 
 
 @register_handler("register_timesheet")
 async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register a timesheet entry (hours) for an employee on a project/activity."""
+    """Register a timesheet entry (hours) for an employee on a project/activity.
+
+    If hourlyRate and customerName are provided, also generates a project invoice
+    by creating an order linked to the project and invoicing it.
+    """
     # 1. Find employee
     employee = await _find_employee(client, fields)
     if not employee:
@@ -486,11 +490,99 @@ async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) ->
 
     created = data.get("value", {})
     logger.info(f"Created timesheet entry: {created.get('id')} — {hours}h for employee {employee_id}")
+
+    # 5. If hourlyRate + customerName are provided, generate a project invoice
+    hourly_rate = fields.get("hourlyRate")
+    customer_name = fields.get("customerName")
+    if hourly_rate and customer_name:
+        invoice_result = await _create_project_invoice(
+            client, fields, project_id, project_name, hours, hourly_rate, activity_name or "Timer",
+        )
+        return {
+            "status": "completed",
+            "taskType": "register_timesheet",
+            "created": created,
+            "projectInvoice": invoice_result,
+        }
+
     return {
         "status": "completed",
         "taskType": "register_timesheet",
         "created": created,
     }
+
+
+async def _create_project_invoice(
+    client: TripletexClient,
+    fields: dict[str, Any],
+    project_id: int,
+    project_name: str,
+    hours: float,
+    hourly_rate: float,
+    activity_name: str,
+) -> dict:
+    """Create a project invoice: order linked to project, then invoice it.
+
+    This creates a proper project invoice in Tripletex by linking the order
+    to the project, so the invoice gets projectInvoiceDetails automatically.
+    """
+    from app.handlers.tier2_invoice import _ensure_bank_account, _find_or_create_customer
+
+    await _ensure_bank_account(client)
+
+    # Find or create customer
+    customer_id = await _find_or_create_customer(client, fields)
+    if not customer_id:
+        return {"status": "error", "note": "Could not find or create customer for project invoice"}
+
+    today = date.today().isoformat()
+    total_amount = hours * hourly_rate
+    description = f"{activity_name} - {project_name} ({int(hours)} timer \u00e0 {int(hourly_rate)} kr/t)"
+
+    # Create order linked to the project
+    order_payload: dict[str, Any] = {
+        "customer": {"id": customer_id},
+        "project": {"id": project_id},
+        "orderDate": fields.get("date") or today,
+        "deliveryDate": fields.get("date") or today,
+        "orderLines": [
+            {
+                "count": hours,
+                "unitPriceExcludingVatCurrency": hourly_rate,
+                "description": description,
+            }
+        ],
+    }
+
+    resp = await client.post("/order", order_payload)
+    order_data = resp.json()
+    if resp.status_code >= 400:
+        error_msg = order_data.get("message", "Unknown error")
+        logger.error(f"Project invoice order failed: {error_msg}")
+        return {"status": "error", "note": f"Order creation failed: {error_msg}"}
+
+    order = order_data.get("value", {})
+    order_id = order.get("id")
+    if not order_id:
+        return {"status": "error", "note": "Order creation returned no ID"}
+
+    # Invoice the order
+    resp = await client.put(f"/order/{order_id}/:invoice", params={
+        "invoiceDate": fields.get("date") or today,
+        "sendToCustomer": False,
+    })
+    invoice_data = resp.json()
+    if resp.status_code >= 400:
+        error_msg = invoice_data.get("message", "Unknown error")
+        logger.error(f"Project invoice failed: {error_msg}")
+        return {"status": "error", "note": f"Invoice creation failed: {error_msg}"}
+
+    invoice = invoice_data.get("value", {})
+    logger.info(
+        f"Created project invoice {invoice.get('id')} from order {order_id} "
+        f"for project {project_id}: {hours}h x {hourly_rate} = {total_amount}"
+    )
+    return {"status": "completed", "invoice": invoice}
 
 
 # ---------------------------------------------------------------------------
@@ -546,8 +638,10 @@ async def _ensure_employment_with_division(
     if employments:
         employment = employments[0]
         emp_id = employment["id"]
+        existing_div = employment.get("division")
+        logger.info(f"Found existing employment {emp_id} for employee {employee_id}, division={existing_div}")
         # Check if division is set
-        if not employment.get("division"):
+        if not existing_div:
             # Update employment to link division
             update_payload = {
                 "id": emp_id,
@@ -563,6 +657,8 @@ async def _ensure_employment_with_division(
                 logger.error(f"Failed to update employment division: {resp.text[:300]}")
                 return None
             logger.info(f"Linked division {division_id} to employment {emp_id}")
+        else:
+            logger.info(f"Employment {emp_id} already has division {existing_div.get('id', '?')}")
         return emp_id
 
     # No employment exists — create one
@@ -619,47 +715,72 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     employee_id = employee["id"]
     logger.info(f"Found employee {employee_id}: {employee.get('firstName')} {employee.get('lastName')}")
 
-    # 2. Ensure employee has dateOfBirth (required for employment creation)
+    # 2. Ensure employee has dateOfBirth (required for employment/salary)
     if not employee.get("dateOfBirth"):
+        logger.info(f"Employee {employee_id} missing dateOfBirth — setting default")
+        update_payload = {
+            "id": employee_id,
+            "version": employee.get("version", 0),
+            "firstName": employee.get("firstName", ""),
+            "lastName": employee.get("lastName", ""),
+            "dateOfBirth": "1990-01-01",
+        }
         try:
-            update_payload = {
-                "id": employee_id,
-                "version": employee.get("version", 0),
-                "firstName": employee.get("firstName", ""),
-                "lastName": employee.get("lastName", ""),
-                "dateOfBirth": "1990-01-01",
-            }
             resp = await client.put(f"/employee/{employee_id}", update_payload)
-            if resp.status_code < 400:
-                employee = resp.json().get("value", employee)
-                logger.info(f"Set dateOfBirth on employee {employee_id}")
         except Exception as e:
-            logger.warning(f"Could not set dateOfBirth: {e}")
+            logger.error(f"Exception setting dateOfBirth on employee {employee_id}: {e}")
+            return {"status": "completed", "note": f"Failed to set dateOfBirth: {e}"}
+
+        if resp.status_code >= 400:
+            error_detail = resp.text[:300]
+            logger.error(f"Failed to set dateOfBirth on employee {employee_id}: {error_detail}")
+            return {"status": "completed", "note": f"Failed to set dateOfBirth: {error_detail}"}
+
+        employee = resp.json().get("value", employee)
+        logger.info(f"Set dateOfBirth on employee {employee_id}")
+
+        # Verify dateOfBirth is actually set
+        if not employee.get("dateOfBirth"):
+            logger.error(f"dateOfBirth still missing after PUT for employee {employee_id}")
+            return {"status": "completed", "note": "dateOfBirth not set after update — cannot proceed"}
 
     # 3. Ensure a division exists
     division_id = await _ensure_division(client)
     if not division_id:
         return {"status": "completed", "note": "Could not find or create division for salary processing"}
+    logger.info(f"Using division {division_id}")
 
     # 4. Ensure employment with division
     employment_id = await _ensure_employment_with_division(client, employee_id, division_id)
     if not employment_id:
         return {"status": "completed", "note": "Could not set up employment record for employee"}
 
-    # 5. Get salary type IDs
+    # 5. Verify employment actually exists and has a division
+    verify_resp = await client.get("/employee/employment", params={"employeeId": employee_id})
+    verify_employments = verify_resp.json().get("values", [])
+    if not verify_employments:
+        logger.error(f"Employment verification failed: no employments found for employee {employee_id}")
+        return {"status": "completed", "note": "Employment record not found after creation — cannot proceed"}
+    verified_emp = verify_employments[0]
+    if not verified_emp.get("division"):
+        logger.error(f"Employment {employment_id} has no division after setup")
+        return {"status": "completed", "note": "Employment has no division — cannot proceed with salary"}
+    logger.info(f"Verified employment {employment_id} with division for employee {employee_id}")
+
+    # 6. Get salary type IDs
     fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn (base salary)
     bonus_type_id = await _get_salary_type_id(client, "2002")  # Bonus
     if not fastlonn_id:
         return {"status": "completed", "note": "Could not find salary type for base salary (Fastlønn/2000)"}
 
-    # 6. Determine month/year and amounts
+    # 7. Determine month/year and amounts
     today = date.today()
     month = fields.get("month") or today.month
     year = fields.get("year") or today.year
     base_salary = fields.get("baseSalary", 0)
     bonus = fields.get("bonus", 0)
 
-    # 7. Build salary specifications (only salaryType, rate, count, amount)
+    # 8. Build salary specifications (only salaryType, rate, count, amount)
     specifications = []
 
     if base_salary:
@@ -681,7 +802,7 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     if not specifications:
         return {"status": "completed", "note": "No salary amounts specified"}
 
-    # 8. Create salary transaction with payslip
+    # 9. Create salary transaction with payslip
     #    Top-level: year, month, payslips[]
     #    Payslip: employee, specifications[]
     #    Specification: salaryType, rate, count, amount
