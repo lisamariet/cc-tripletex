@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_133812_730362",
+  "prompt": "Registe o fornecedor Floresta Lda com número de organização 981154614. E-mail: faktura@florestalda.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "kadrwnVO1Q-bx8KdDeab7h-uKdGlz_7RLVFSFpSpl04"
+  }
+}

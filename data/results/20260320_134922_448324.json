@@ -1,0 +1,129 @@
+{
+  "timestamp": "20260320_134922_448324",
+  "prompt": "Opprett prosjektet \"Analyse Fjordkraft\" knyttet til kunden Fjordkraft AS (org.nr 944845712). Prosjektleder er Hilde Johansen (hilde.johansen@example.org).",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "name": "Analyse Fjordkraft",
+      "customerName": "Fjordkraft AS",
+      "customerOrgNumber": "944845712",
+      "projectManagerName": "Hilde Johansen"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1544.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1344.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 1210.1,
+      "error": null
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 5826.2,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "created": {
+      "id": 401957712,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/401957712",
+      "name": "Analyse Fjordkraft",
+      "number": "1",
+      "displayName": "1 Analyse Fjordkraft",
+      "description": "",
+      "projectManager": {
+        "id": 18168308,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18168308"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-20",
+      "endDate": null,
+      "customer": {
+        "id": 107825999,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/107825999"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": false,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 0,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11068875,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11068875"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15623396,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15623396"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "1 Analyse Fjordkraft",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Fjordkraft AS",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Hilde Johansen",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 0,
+      "accountingDimensionValues": []
+    }
+  }
+}

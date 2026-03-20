@@ -97,7 +97,10 @@ Supported task types and their fields:
 26. "create_invoice_from_pdf" — Create an invoice from an attached PDF (scanned invoice)
     Fields: customerName, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines (array of {description, quantity, unitPriceExcludingVat, vatCode}), totalAmount (number)
 
-27. "unknown" — If you cannot determine the task type
+27. "run_payroll" — Run payroll / salary payment for an employee (Gehaltsabrechnung, lønnskjøring, payroll)
+    Fields: employeeName*, employeeEmail, baseSalary* (number in NOK), bonus (number in NOK, optional one-time bonus), month (integer 1-12, default current month), year (integer, default current year)
+
+28. "unknown" — If you cannot determine the task type
 
 Examples:
 
@@ -124,6 +127,12 @@ Output: [{"taskType": "create_department", "fields": {"name": "Utvikling"}, "con
 
 Prompt: "Kunden Vestfjord AS (org.nr 860678403) har reklamert på fakturaen for \"Skylagring\" (45350 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen."
 Output: {"taskType": "create_credit_note", "fields": {"customerName": "Vestfjord AS", "customerOrgNumber": "860678403", "invoiceDescription": "Skylagring", "amount": 45350, "lines": [{"description": "Skylagring", "quantity": 1, "unitPriceExcludingVat": 45350, "vatCode": "3"}]}, "confidence": 0.94, "reasoning": "Norwegian Nynorsk prompt to create a full credit note reversing an invoice."}
+
+Prompt: "Führen Sie die Gehaltsabrechnung für Laura Schneider (laura.schneider@example.org) für diesen Monat durch. Das Grundgehalt beträgt 33000 NOK. Fügen Sie einen einmaligen Bonus von 17850 NOK zum Grundgehalt hinzu."
+Output: {"taskType": "run_payroll", "fields": {"employeeName": "Laura Schneider", "employeeEmail": "laura.schneider@example.org", "baseSalary": 33000, "bonus": 17850}, "confidence": 0.95, "reasoning": "German prompt to run payroll with base salary and one-time bonus."}
+
+Prompt: "Run payroll for William Taylor (william.taylor@example.org) for this month. The base salary is 39400 NOK. Add a one-time bonus of 11800 NOK on top of the base salary."
+Output: {"taskType": "run_payroll", "fields": {"employeeName": "William Taylor", "employeeEmail": "william.taylor@example.org", "baseSalary": 39400, "bonus": 11800}, "confidence": 0.95, "reasoning": "English prompt to run payroll with base salary and bonus."}
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt

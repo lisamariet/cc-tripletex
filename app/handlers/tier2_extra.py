@@ -1,6 +1,7 @@
-"""Extra Tier 2 handlers — update/delete operations and supplier invoices."""
+"""Extra Tier 2 handlers — update/delete operations, supplier invoices, and payroll."""
 from __future__ import annotations
 
+import calendar
 import logging
 from datetime import date
 from typing import Any
@@ -266,15 +267,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     voucher_payload = {
         "date": invoice_date,
         "description": f"Leverandørfaktura: {description}",
+        "supplier": {"id": supplier_id},
         "postings": [
             {
                 "account": {"id": expense_id},
+                "supplier": {"id": supplier_id},
                 "amountGross": amount,
                 "amountGrossCurrency": amount,
                 "row": 1,
             },
             {
                 "account": {"id": payable_id},
+                "supplier": {"id": supplier_id},
                 "amountGross": -amount,
                 "amountGrossCurrency": -amount,
                 "row": 2,
@@ -428,4 +432,223 @@ async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) ->
         "status": "completed",
         "taskType": "register_timesheet",
         "created": created,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Payroll / salary (lønnskjøring)
+# ---------------------------------------------------------------------------
+
+async def _ensure_division(client: TripletexClient) -> int | None:
+    """Get or create a default division for salary processing. Returns division ID."""
+    resp = await client.get("/division", params={"count": 1})
+    divisions = resp.json().get("values", [])
+    if divisions:
+        return divisions[0]["id"]
+
+    # Need a municipality for the division — use Oslo (id=262) as default,
+    # but fall back to first available municipality
+    muni_resp = await client.get("/municipality", params={"count": 5})
+    munis = muni_resp.json().get("values", [])
+    # Prefer a municipality with a payrollTaxZone set
+    muni_id = None
+    for m in munis:
+        if m.get("payrollTaxZone"):
+            muni_id = m["id"]
+            break
+    if not muni_id and munis:
+        muni_id = munis[0]["id"]
+    if not muni_id:
+        logger.error("No municipality found — cannot create division")
+        return None
+
+    div_payload = {
+        "name": "Hovedvirksomhet",
+        "startDate": "2026-01-01",
+        "organizationNumber": "999999999",
+        "municipality": {"id": muni_id},
+        "municipalityDate": "2026-01-01",
+    }
+    resp = await client.post("/division", div_payload)
+    if resp.status_code >= 400:
+        logger.error(f"Failed to create division: {resp.text[:300]}")
+        return None
+    div = resp.json().get("value", {})
+    logger.info(f"Created division {div.get('id')} for salary processing")
+    return div.get("id")
+
+
+async def _ensure_employment_with_division(
+    client: TripletexClient, employee_id: int, division_id: int
+) -> int | None:
+    """Ensure the employee has an employment record linked to a division. Returns employment ID."""
+    resp = await client.get("/employee/employment", params={"employeeId": employee_id})
+    employments = resp.json().get("values", [])
+
+    if employments:
+        employment = employments[0]
+        emp_id = employment["id"]
+        # Check if division is set
+        if not employment.get("division"):
+            # Update employment to link division
+            update_payload = {
+                "id": emp_id,
+                "version": employment.get("version", 0),
+                "employee": {"id": employee_id},
+                "startDate": employment.get("startDate", date.today().isoformat()),
+                "division": {"id": division_id},
+                "isMainEmployer": employment.get("isMainEmployer", True),
+                "taxDeductionCode": employment.get("taxDeductionCode", "loennFraHovedarbeidsgiver"),
+            }
+            resp = await client.put(f"/employee/employment/{emp_id}", update_payload)
+            if resp.status_code >= 400:
+                logger.error(f"Failed to update employment division: {resp.text[:300]}")
+                return None
+            logger.info(f"Linked division {division_id} to employment {emp_id}")
+        return emp_id
+
+    # No employment exists — create one
+    emp_payload = {
+        "employee": {"id": employee_id},
+        "startDate": date.today().replace(month=1, day=1).isoformat(),
+        "division": {"id": division_id},
+        "isMainEmployer": True,
+        "taxDeductionCode": "loennFraHovedarbeidsgiver",
+    }
+    resp = await client.post("/employee/employment", emp_payload)
+    if resp.status_code >= 400:
+        logger.error(f"Failed to create employment: {resp.text[:300]}")
+        return None
+    created = resp.json().get("value", {})
+    emp_id = created.get("id")
+    logger.info(f"Created employment {emp_id} for employee {employee_id}")
+    return emp_id
+
+
+async def _get_salary_type_id(client: TripletexClient, number: str) -> int | None:
+    """Look up a salary type by its number (e.g. '2000' for Fastlønn). Returns ID."""
+    resp = await client.get_cached("/salary/type", params={"number": number})
+    values = resp.json().get("values", [])
+    if values:
+        return values[0]["id"]
+    return None
+
+
+@register_handler("run_payroll")
+async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Run payroll for an employee: create a salary transaction with payslip."""
+    # 1. Find the employee
+    employee = await _find_employee(client, fields)
+    if not employee:
+        return {"status": "completed", "note": "Employee not found"}
+    employee_id = employee["id"]
+    logger.info(f"Found employee {employee_id}: {employee.get('firstName')} {employee.get('lastName')}")
+
+    # 2. Ensure a division exists
+    division_id = await _ensure_division(client)
+    if not division_id:
+        return {"status": "completed", "note": "Could not find or create division for salary processing"}
+
+    # 3. Ensure employment with division
+    employment_id = await _ensure_employment_with_division(client, employee_id, division_id)
+    if not employment_id:
+        return {"status": "completed", "note": "Could not set up employment record for employee"}
+
+    # 4. Get salary type IDs
+    fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn (base salary)
+    bonus_type_id = await _get_salary_type_id(client, "2002")  # Bonus
+    if not fastlonn_id:
+        return {"status": "completed", "note": "Could not find salary type for base salary (Fastlønn/2000)"}
+
+    # 5. Determine month/year and amounts
+    today = date.today()
+    month = fields.get("month") or today.month
+    year = fields.get("year") or today.year
+    base_salary = fields.get("baseSalary", 0)
+    bonus = fields.get("bonus", 0)
+
+    # Build the last day of the month as the voucher date
+    last_day = calendar.monthrange(year, month)[1]
+    voucher_date = f"{year}-{month:02d}-{last_day:02d}"
+
+    # 6. Build salary specifications
+    specifications = []
+
+    # Base salary specification
+    if base_salary:
+        specifications.append({
+            "salaryType": {"id": fastlonn_id},
+            "rate": base_salary,
+            "count": 1,
+            "amount": base_salary,
+            "year": year,
+            "month": month,
+            "employee": {"id": employee_id},
+        })
+
+    # Bonus specification
+    if bonus and bonus_type_id:
+        specifications.append({
+            "salaryType": {"id": bonus_type_id},
+            "rate": bonus,
+            "count": 1,
+            "amount": bonus,
+            "year": year,
+            "month": month,
+            "employee": {"id": employee_id},
+        })
+
+    if not specifications:
+        return {"status": "completed", "note": "No salary amounts specified"}
+
+    # 7. Create salary transaction with payslip
+    payload = {
+        "date": voucher_date,
+        "year": year,
+        "month": month,
+        "payslips": [
+            {
+                "employee": {"id": employee_id},
+                "date": voucher_date,
+                "year": year,
+                "month": month,
+                "specifications": specifications,
+            }
+        ],
+    }
+
+    resp = await client.post(
+        "/salary/transaction",
+        payload,
+    )
+    data = resp.json()
+
+    if resp.status_code >= 400:
+        error_msg = data.get("message", "Unknown error")
+        validation = data.get("validationMessages", [])
+        logger.error(f"Salary transaction failed: {error_msg} — {validation}")
+        return {
+            "status": "completed",
+            "note": f"Salary transaction failed: {error_msg}",
+            "validationMessages": validation,
+        }
+
+    created = data.get("value", {})
+    transaction_id = created.get("id")
+    payslips = created.get("payslips", [])
+    logger.info(
+        f"Created salary transaction {transaction_id} for employee {employee_id}: "
+        f"baseSalary={base_salary}, bonus={bonus}, month={month}/{year}"
+    )
+
+    return {
+        "status": "completed",
+        "taskType": "run_payroll",
+        "transactionId": transaction_id,
+        "payslips": payslips,
+        "employeeId": employee_id,
+        "baseSalary": base_salary,
+        "bonus": bonus,
+        "month": month,
+        "year": year,
     }
