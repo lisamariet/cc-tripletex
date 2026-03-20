@@ -29,8 +29,26 @@
 - [x] Error logging: 4xx response body lagres i GCS tracker
 - [x] Systemdokumentasjon + analyse-rapport
 - [x] Show oversetter automatisk ikke-norske prompts
+- [x] Embedding-basert pre-klassifisering (Vertex AI text-embedding-005, 128 prompts, 17 typer)
+- [x] Gemini 2.0 Flash parser-alternativ (PARSER_BACKEND=gemini)
+- [x] RAG for Tripletex API-dokumentasjon (751 chunks)
+- [x] Error pattern learning (112 mønstre)
+- [x] API-kall-planlegging (call_planner.py)
+- [x] 18 few-shot eksempler i parser
+- [x] Keyword-fallback for custom_dimension, payroll, timesheet, etc.
+- [x] E2E testsuite (32 tester, alle grønne, 132-138 API-kall)
+- [x] Invoice bankkontonummer-fix (multi-strategi)
+- [x] POST /employee/employment med startDate
+- [x] create_invoice_from_pdf handler
+- [x] set_project_fixed_price med delfakturering
+- [x] create_custom_dimension handler
+- [x] run_payroll handler
+- [x] register_timesheet handler
+- [x] Voucher handlers (create, reverse, delete)
+- [x] CLI: errors-kommando (4xx-feilrapport)
+- [x] build_embeddings.py, build_api_rag.py, build_error_patterns.py scripts
 
-**Totalt: 26 registrerte handlers + 1 fallback**
+**Totalt: 30 registrerte handlers (inkl. unknown-fallback)**
 
 ---
 
@@ -38,65 +56,32 @@
 
 ## KRITISK 🔴 (forventet +10-20 poeng)
 
-### 1. Bank reconciliation (Tier 3 — åpner i morgen)
+### 1. Bank reconciliation (Tier 3 — åpner 2026-03-21)
 - [ ] POST /bank/statement/import (multipart CSV-upload)
 - [ ] POST /bank/reconciliation + match
 **Impact: Tier 3 × 3 = opptil 6 poeng**
 
-### 2. POST /employee/employment med startDate
-- [ ] Etter POST /employee, opprett employment med startDate
-- [ ] Parser ekstrakter allerede startDate men det sendes ikke til API
-**Impact: 1-2 poeng per employee-oppgave**
-
-### 3. Invoice bankkontonummer-problemet
-- [ ] PUT /order/:invoice feiler med "selskapet har ikke registrert bankkontonummer"
-- [ ] Kan ikke settes via API — undersøk om det finnes en workaround
-- [ ] Eller: test om konkurransen alltid har det konfigurert (kanskje vi var uheldige)
-**Impact: create_invoice gir alltid 0 poeng uten dette**
-
 ## HØY PRIORITET 🟠 (forventet +5-10 poeng)
 
-### 4. Flere few-shot examples i parser
-- [ ] Utvid fra 3 til 5-8 eksempler
-- [ ] Legg til eksempler for: timesheet, voucher, batch, credit note
-**Impact: bedre parsing-presisjon**
-
-### 5. Effektivitetsoptimalisering (dobler score ved perfekt)
+### 2. Effektivitetsoptimalisering (dobler score ved perfekt)
 - [ ] Cache vatType, paymentType, costCategory per request
 - [ ] I fersk sandbox: POST customer direkte, ikke søk først
 - [ ] Parallelliser uavhengige kall med asyncio.gather()
 - [ ] Legg til ?fields=id,name på GET-kall
 **Impact: dobler score på perfekte oppgaver**
 
-### 6. create_invoice_from_pdf
-- [ ] Parse PDF-vedlegg for fakturadata
-- [ ] Bruk file_processor.py (allerede støtter PDF)
-**Impact: 1 ny oppgavetype**
-
-## MEDIUM PRIORITET 🟡
-
-### 7. E2E test-suite med verifikasjons-GET
-- [ ] Test hele flyten: prompt → parse → execute → GET-verifiser
-- [ ] Bruk ekte prompts fra data/requests/
-- [ ] Verifiser at felt faktisk lagres korrekt (ikke bare 2xx)
-
-### 8. Self-verifikasjon i handlers
+### 3. Self-verifikasjon i handlers
 - [ ] GET etter POST for å sjekke at felt ble lagret
 - [ ] Korrigerende PUT ved avvik
 
-### 9. Lokal scoring-verifikator
+## MEDIUM PRIORITET 🟡
+
+### 4. Lokal scoring-verifikator
 - [ ] Speiler konkurranse-scoring felt-for-felt
 
-### 10. Kjør batch submissions for å treffe flere oppgavetyper
-- [ ] Vi har 180/dag, bare brukt ~20
-- [ ] Mål: treffe alle 30 oppgavetyper
-- [ ] Analyser resultater og fiks
-
-### 11. Pakk synkrone kall i asyncio.to_thread
+### 5. Pakk synkrone kall i asyncio.to_thread
 - [ ] GCS-kall (save_to_gcs) — blokkerer FastAPI worker
 - [ ] Anthropic API-kall (parse_task) — blokkerer
 
 ## LAV PRIORITET 🟢
-- [ ] Flytt datetime-import til topp av filer
 - [ ] Validér ANTHROPIC_API_KEY ved oppstart
-- [ ] .gitignore for __pycache__

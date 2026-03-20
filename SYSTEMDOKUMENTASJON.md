@@ -1,6 +1,6 @@
 # Systemdokumentasjon — Tripletex AI Accounting Agent
 
-Sist oppdatert: 2026-03-20
+Sist oppdatert: 2026-03-20 (rev 2)
 
 ---
 
@@ -39,16 +39,23 @@ Sist oppdatert: 2026-03-20
                     +---------+---------+
                     |                   |
                     v                   v
-          +----------------+   +------------------+
-          |    Parser       |   |  File Processor  |
-          |  (app/parser.py)|   | (file_processor) |
-          |  Claude Haiku   |   | PDF/bilde/CSV    |
-          |  + Sonnet fb    |   +------------------+
-          +----------------+            |
-                    |                   |
-                    v                   |
-          +------------------+          |
-          |   ParsedTask     |<---------+
+          +-------------------+  +------------------+
+          |  Multi-stage      |  |  File Processor  |
+          |  Parser Pipeline  |  | (file_processor) |
+          |                   |  | PDF/bilde/CSV    |
+          | 1. Embedding-     |  +------------------+
+          |    klassifisering |          |
+          |    (Vertex AI)    |          |
+          | 2. LLM (Haiku/   |          |
+          |    Gemini) med    |          |
+          |    few-shot       |          |
+          | 3. Keyword-       |          |
+          |    fallback       |          |
+          +-------------------+          |
+                    |                    |
+                    v                    |
+          +------------------+           |
+          |   ParsedTask     |<----------+
           |  task_type +     |
           |  fields + conf   |
           +------------------+
@@ -60,12 +67,12 @@ Sist oppdatert: 2026-03-20
           |  - batch-stotte  |
           +------------------+
                     |
-         +----------+----------+----------+
-         |          |          |          |
-         v          v          v          v
-     tier1.py  tier2_invoice tier2_travel tier2_project
-         |          |          |          |
-         +----------+----------+----------+
+         +-----+-----+-----+-----+-----+-----+
+         |     |     |     |     |     |     |
+         v     v     v     v     v     v     v
+      tier1  t2_inv t2_tra t2_prj tier3 t2_ext fallback
+         |     |     |     |     |     |     |
+         +-----+-----+-----+-----+-----+-----+
                     |
                     v
           +------------------+
@@ -92,7 +99,7 @@ Sist oppdatert: 2026-03-20
 
 1. NM i AI-plattformen sender `POST /solve` med prompt, eventuelle filer og Tripletex-credentials.
 2. `main.py` lagrer hele requesten til GCS (`requests/{timestamp}.json`).
-3. Prompten (og eventuelle filer) sendes til **parseren** som bruker Claude Haiku til a ekstrahere task_type og felter.
+3. Prompten (og eventuelle filer) sendes til **parseren** som bruker en multi-stage pipeline (embedding → LLM → keyword) til a ekstrahere task_type og felter.
 4. `execute_task()` slaar opp riktig handler i registryet basert pa task_type.
 5. Handleren utforer et eller flere API-kall mot Tripletex via `TripletexClient`.
 6. Alle API-kall spores av `CallTracker` (metode, sti, statuskode, varighet).
@@ -101,11 +108,13 @@ Sist oppdatert: 2026-03-20
 
 ### Designvalg
 
-- **Parse en gang, utfor deterministisk**: LLM brukes kun til parsing — aldri til API-kallgenerering. Handlers er hardkodet og forutsigbare.
+- **Parse en gang, utfor deterministisk**: LLM brukes kun til parsing — aldri til API-kallgenerering (unntatt fallback-handler for ukjente oppgavetyper). Handlers er hardkodet og forutsigbare.
 - **Alltid HTTP 200**: Uansett feil returnerer `/solve` statuskode 200 med `status: completed`. Feil logges, men bryter aldri responsen.
 - **GCS-logging av alt**: Bade innkommende requests og resultater (inkl. API-kall) lagres for analyse.
 - **Batch-stotte**: Parser kan returnere lister (f.eks. "opprett 3 avdelinger"), som wrappet til `batch_create_department` og kjores iterativt.
-- **Modell-fallback**: Haiku forsokes forst (raskere, billigere). Ved feil prover Sonnet.
+- **Multi-stage parsing**: Embedding-klassifisering (Vertex AI) → LLM med few-shot eksempler → keyword-fallback.
+- **Modell-fallback**: Haiku forsokes forst (raskere, billigere). Ved lav konfidenssscore (< 0.90) prover Sonnet.
+- **Konfigurerbar parser-backend**: PARSER_BACKEND env var: `haiku` (default), `gemini`, `embedding`, `auto`.
 
 ---
 
@@ -135,10 +144,31 @@ Sist oppdatert: 2026-03-20
 | `LLM_MODEL` | `claude-haiku-4-5-20251001` | Primaermodell for parsing |
 | `LLM_FALLBACK_MODEL` | `claude-sonnet-4-20250514` | Fallback-modell (hardkodet) |
 | `API_KEY` | `""` | Bearer-token for endepunktbeskyttelse |
+| `PARSER_BACKEND` | `haiku` | Parser-backend: `haiku`, `gemini`, `embedding`, `auto` |
 
-### `app/parser.py` — LLM-parser
+### `app/parser.py` — Multi-stage parser
 
-Bruker Anthropic Claude API til a tolke fritekstprompter og returnere strukturert `ParsedTask`. Se [seksjon 4](#4-parser) for detaljer.
+Multi-stage parser som bruker embedding-klassifisering, LLM (Haiku/Gemini) med few-shot eksempler, og keyword-fallback. Se [seksjon 4](#4-parser) for detaljer.
+
+### `app/embeddings.py` — Vertex AI embedding-klassifisering
+
+Pre-klassifiserer prompts ved cosinus-likhet mot en forhåndsbygget indeks (128 prompts, 17 oppgavetyper). Bruker Vertex AI `text-embedding-005`. Indeks: `app/embeddings_index.json`.
+
+### `app/parser_gemini.py` — Gemini 2.0 Flash parser
+
+Alternativ parser-backend som bruker Vertex AI Gemini 2.0 Flash. Aktiveres med `PARSER_BACKEND=gemini` eller som del av `auto`-pipelinen.
+
+### `app/api_rag.py` — RAG for Tripletex API-dokumentasjon
+
+Retrieval-Augmented Generation for oppslag i Tripletex API-dokumentasjon. Finner relevante API-dokumentasjonsbiter basert pa endepunkt, metode og feilmeldinger. Indeks: `app/api_rag_index.json` (751 chunks).
+
+### `app/error_patterns.py` — Error pattern learning
+
+Laerer av tidligere 4xx-feil og gir fikse-forslag. Sjekker payloads mot kjente feilmonstre for proaktiv feilen. Database: `app/error_patterns.json` (112 monstre).
+
+### `app/call_planner.py` — API-kall-planlegging
+
+Hardkodede optimale API-kallsekvenser per oppgavetype. Brukes til dokumentasjon, optimalisering og debugging.
 
 ### `app/models.py` — Datamodeller
 
@@ -175,7 +205,7 @@ Konverterer innkommende filvedlegg til Anthropic message content blocks:
 - **`HANDLER_REGISTRY`**: Dict som mapper `task_type` (str) til async handler-funksjoner.
 - **`register_handler(task_type)`**: Dekorator for a registrere en handler.
 - **`execute_task(task_type, client, fields)`**: Slaar opp handler og kjorer den. Stotter batch-oppgaver (`batch_<task_type>`) ved a iterere over `fields["items"]`.
-- Importerer alle handler-moduler ved lasting: `tier1`, `tier2_invoice`, `tier2_travel`, `tier2_project`.
+- Importerer alle handler-moduler ved lasting: `tier1`, `tier2_invoice`, `tier2_travel`, `tier2_project`, `tier3`, `tier2_extra`, `fallback`.
 
 ---
 
@@ -320,19 +350,56 @@ Konverterer innkommende filvedlegg til Anthropic message content blocks:
 - **Logikk**: Finner eller oppretter prosjektleder (bruker forste tilgjengelige ansatt som fallback). Kobler kunde hvis angitt. Setter `isInternal: false` og `startDate` (default: dagens dato).
 - **Begrensninger**: Ingen
 
+### Tier 2 — Ekstra operasjoner (`tier2_extra.py`)
+
+Handlers for oppdatering og sletting av leverandorer, produkter, kunder, ordreopprettelse, leverandorfaktura, og timeregistrering:
+
+- `update_supplier`, `update_product`, `delete_employee`, `delete_customer`, `delete_supplier`
+- `create_order` — Opprett ordre med ordrelinjer
+- `register_supplier_invoice` — Registrer leverandorfaktura (bilag)
+- `register_timesheet` — Timeregistrering pa prosjekt
+
+### Tier 3 — Bilag og avanserte operasjoner (`tier3.py`)
+
+- `create_voucher` — Opprett bilag/bilagsfoering
+- `reverse_voucher` — Reverser bilag
+- `delete_voucher` — Slett bilag
+
+### Spesialhandlers
+
+- `set_project_fixed_price` (`tier2_project.py`) — Sett fastpris pa prosjekt, stotter delfakturering
+- `run_payroll` (`tier2_extra.py`) — Loennskjoering med grunnloenn og bonus
+- `create_custom_dimension` (`tier2_extra.py`) — Opprett regnskapsdimensjon med verdier
+- `create_invoice_from_pdf` (`tier2_extra.py`) — Opprett faktura fra PDF-vedlegg
+- `unknown` (`fallback.py`) — LLM-basert fallback for ukjente oppgavetyper
+
+### Fullstendig handleroversikt
+
+Totalt **30 registrerte handlers** (inkl. `unknown`-fallback) for **29 oppgavetyper** + 1 fallback:
+
+| Handler-modul | Handlers |
+|---------------|----------|
+| `tier1.py` | create_supplier, create_customer, create_employee, create_product, create_department |
+| `tier2_invoice.py` | create_invoice, register_payment, reverse_payment, create_credit_note, update_customer |
+| `tier2_travel.py` | create_travel_expense, delete_travel_expense, update_employee |
+| `tier2_project.py` | create_project, set_project_fixed_price |
+| `tier2_extra.py` | update_supplier, update_product, delete_employee, delete_customer, delete_supplier, create_order, register_supplier_invoice, register_timesheet, create_invoice_from_pdf, run_payroll, create_custom_dimension |
+| `tier3.py` | create_voucher, reverse_voucher, delete_voucher |
+| `fallback.py` | unknown (LLM-basert fallback) |
+
 ---
 
 ## 4. Parser
 
 ### System-prompt
 
-Parseren bruker en detaljert systemprompt (`SYSTEM_PROMPT` i `app/parser.py`) som instruerer Claude til a:
+Parseren bruker en detaljert systemprompt (`SYSTEM_PROMPT` i `app/parser.py`) med 18 few-shot eksempler som instruerer LLM til a:
 
 1. Tolke oppgaveprompt pa et av 7 sprak: norsk bokmal, nynorsk, engelsk, spansk, portugisisk, tysk, fransk
 2. Ekstrahere `taskType` og relevante `fields`
 3. Returnere strukturert JSON
 
-### Stottede oppgavetyper (18 stk.)
+### Stottede oppgavetyper (29 stk.)
 
 | # | taskType | Beskrivelse |
 |---|----------|-------------|
@@ -348,31 +415,49 @@ Parseren bruker en detaljert systemprompt (`SYSTEM_PROMPT` i `app/parser.py`) so
 | 10 | `create_travel_expense` | Registrer reiseregning |
 | 11 | `delete_travel_expense` | Slett reiseregning |
 | 12 | `create_project` | Opprett prosjekt |
-| 13 | `update_employee` | Oppdater ansatt |
-| 14 | `update_customer` | Oppdater kunde |
-| 15 | `create_voucher` | Opprett bilag/bilagsfoering |
-| 16 | `reverse_voucher` | Reverser bilag |
-| 17 | `delete_voucher` | Slett bilag |
-| 18 | `unknown` | Ukjent oppgavetype |
+| 13 | `set_project_fixed_price` | Sett fastpris pa prosjekt |
+| 14 | `update_employee` | Oppdater ansatt |
+| 15 | `update_customer` | Oppdater kunde |
+| 16 | `update_supplier` | Oppdater leverandor |
+| 17 | `update_product` | Oppdater produkt |
+| 18 | `delete_employee` | Slett ansatt |
+| 19 | `delete_customer` | Slett kunde |
+| 20 | `delete_supplier` | Slett leverandor |
+| 21 | `create_voucher` | Opprett bilag/bilagsfoering |
+| 22 | `reverse_voucher` | Reverser bilag |
+| 23 | `delete_voucher` | Slett bilag |
+| 24 | `create_order` | Opprett ordre |
+| 25 | `register_supplier_invoice` | Registrer leverandorfaktura |
+| 26 | `register_timesheet` | Registrer timer |
+| 27 | `create_invoice_from_pdf` | Opprett faktura fra PDF |
+| 28 | `run_payroll` | Kjor lonnsavregning |
+| 29 | `create_custom_dimension` | Opprett regnskapsdimensjon |
 
-**Merk**: Oppgavetype 15-17 (`create_voucher`, `reverse_voucher`, `delete_voucher`) er definert i parseren men har INGEN tilhorende handler. Oppgaver av denne typen vil returnere "No handler for task type".
+Alle 29 oppgavetyper har tilhorende handler. I tillegg finnes en `unknown`-fallback (LLM-basert) for oppgaver som ikke klassifiseres.
 
-### Parsing-prosess
+### Parsing-prosess (multi-stage)
 
-1. Bygg `user_content` med prompttekst + eventuelle filblokker (via `file_processor.py`)
-2. Kall Claude Haiku med systemprompten
-3. Ved feil: fall tilbake til Claude Sonnet
-4. Ekstraher JSON fra LLM-responsen (handterer markdown code fences)
-5. Hvis responsen er en liste:
-   - 1 element → bruk direkte
-   - Flere elementer → wrap som batch (`batch_{task_type}`)
-6. Returner `ParsedTask(task_type, fields, confidence, reasoning)`
+Konfigurerbar via `PARSER_BACKEND` env var (`haiku`, `gemini`, `embedding`, `auto`).
+
+**Default (`haiku`) pipeline:**
+
+1. **Embedding pre-klassifisering**: Cosinus-likhet mot indeks (128 prompts). Hvis konfidenssscore > 0.85, brukes resultatet som hint.
+2. **LLM-parsing**: Bygg `user_content` med prompttekst + eventuelle filblokker + 18 few-shot eksempler. Kall Claude Haiku.
+3. **Konfidensbasert fallback**: Hvis konfidenssscore < 0.90 eller task_type == "unknown", prover Claude Sonnet.
+4. **Keyword-fallback**: Regex-baserte regler for oppgavetyper som LLM ofte bommer pa (custom_dimension, payroll, timesheet, etc.).
+5. Ekstraher JSON fra LLM-responsen (handterer markdown code fences).
+6. Hvis responsen er en liste: wrap som batch (`batch_{task_type}`).
+7. Returner `ParsedTask(task_type, fields, confidence, reasoning)`.
+
+**`auto` pipeline:**
+
+1. Embedding-klassifisering → Gemini 2.0 Flash → Haiku → keyword-fallback.
 
 ### Konfidenshandtering
 
 - Parseren returnerer `confidence` (0.0-1.0) fra LLM-responsen
 - Ved JSON-parsefeil: returnerer `ParsedTask(task_type="unknown", confidence=0.0)`
-- **Konfidensbasert fallback til Sonnet er IKKE implementert** (definert som backlog-oppgave i TODO.md)
+- Konfidensbasert fallback til Sonnet: aktiveres ved confidence < 0.90
 
 ### Spesielle parser-regler
 
@@ -541,14 +626,32 @@ python3 scripts/test_handlers.py --tier2                  # Inkluderer tier 2 te
 
 **Forskjell fra pre_deploy_test**: Henter IKKE credentials automatisk — krever `--from-gcs` eller `--token`. Viser detaljert API-kall-logg per kall.
 
+### test_e2e.py — End-to-end testsuite
+
+**Plassering**: `scripts/test_e2e.py`
+
+**Formal**: Full pipeline-testing: prompt → parse_task() → handler → verifikasjons-GET.
+
+**Kjoring**:
+```bash
+python3 scripts/test_e2e.py           # Alle tester
+python3 scripts/test_e2e.py --tier2   # Kun tier 2
+python3 scripts/test_e2e.py --plan    # Vis testplan uten a kjore
+```
+
+**Testcaser**: 32 E2E-tester (tier 1 + tier 2), 132-138 API-kall. Alle gronne.
+
+### test_parser.py — Parser-testsuite
+
+**Plassering**: `scripts/test_parser.py`
+
+**Formal**: Verifiserer at parseren klassifiserer prompts korrekt. 26 ekte + 70 genererte prompts.
+
 ### Hva testes IKKE
 
-- **End-to-end-flyt**: Ingen test av prompt → parse → execute. Parseren testes ikke.
-- **Feltverifisering**: Testene sjekker kun at 2xx returneres og at ID finnes — ikke at korrekte verdier ble lagret.
-- **Alle oppgavetyper**: register_payment, reverse_payment, create_credit_note, delete_travel_expense mangler dedikerte tester i pre_deploy_test.
-- **Sprakhandtering**: Ingen tester med ikke-norske prompts.
+- **Sprakhandtering**: Ingen dedikerte tester med ikke-norske prompts (men E2E dekker noe).
 - **Filvedlegg**: Ingen tester med PDF/bilde-input.
-- **Batch-oppgaver**: Ingen tester for batch_create_*-flyten.
+- **Batch-oppgaver**: Begrenset testing av batch_create_*-flyten.
 
 ---
 
@@ -695,6 +798,40 @@ python3 scripts/compete.py submit --no-poll         # Ikke vent pa resultat
 
 Sender endpoint-URL til NM i AI-plattformen for a trigge en ny submission. Poller for resultat med okende intervall (5-15 sekunder, maks 5 minutter).
 
+#### `errors` — 4xx-feilrapport
+
+```bash
+python3 scripts/compete.py errors
+```
+
+Viser detaljert 4xx-feilanalyse: totalt antall, siste timens feil, feil per endpoint, per oppgavetype, og vanligste feilmeldinger.
+
+### ML-verktoy
+
+#### `scripts/build_embeddings.py` — Bygg embedding-indeks
+
+```bash
+python3 scripts/build_embeddings.py
+```
+
+Bygger embedding-indeks for prompt-klassifisering. Genererer `app/embeddings_index.json` (128 prompts, 17 oppgavetyper).
+
+#### `scripts/build_api_rag.py` — Bygg RAG-indeks
+
+```bash
+python3 scripts/build_api_rag.py
+```
+
+Bygger RAG-indeks fra Tripletex API-dokumentasjon. Genererer `app/api_rag_index.json` (751 chunks).
+
+#### `scripts/build_error_patterns.py` — Bygg error pattern database
+
+```bash
+python3 scripts/build_error_patterns.py
+```
+
+Bygger error pattern database fra GCS-logger. Genererer `app/error_patterns.json` (112 monstre).
+
 ### Hjelpefunksjoner i compete.py
 
 - **GCS-log-henting**: `fetch_gcs_logs()` bruker `gsutil` for a laste ned og parse JSON-logger fra GCS.
@@ -706,34 +843,13 @@ Sender endpoint-URL til NM i AI-plattformen for a trigge en ny submission. Polle
 
 ## 10. Kjente begrensninger
 
-### Manglende handlers (12 av 30 oppgavetyper)
+### Handler-dekning
 
-Folgende oppgavetyper har INGEN handler og gir 0 poeng:
+Alle 29 definerte oppgavetyper har handler. I tillegg fanges ukjente oppgavetyper av en LLM-basert fallback-handler. Mulige oppgavetyper fra konkurransen som ikke har dedikert handler (fanges av fallback):
 
-| Oppgavetype | Kategori |
-|-------------|----------|
-| `create_voucher` | Bilag (definert i parser, ingen handler) |
-| `reverse_voucher` | Bilag (definert i parser, ingen handler) |
-| `delete_voucher` | Bilag (definert i parser, ingen handler) |
-| `create_order` | Ordre |
-| `create_contact` | Kontakt |
-| `update_contact` | Kontakt |
-| `delete_invoice` | Faktura |
-| `invoice_with_payment` | Kompleks faktura |
-| `multi_step_invoice` | Kompleks faktura |
-| `credit_note` | Kreditnota (ulik fra `create_credit_note`?) |
-| `project_billing` | Prosjektfakturering |
-| `bank_reconciliation` | Bankavtemming |
-| `error_correction` | Feilretting i regnskap |
-| `year_end_closing` | Arsavslutning |
-| `create_invoice_from_pdf` | PDF-basert faktura |
-| `expense_report` | Utgiftsrapport |
-| `enable_department_accounting` | Modulaktivering |
-| `assign_role` | Rolletildeling |
-| `create_product_with_vat` | Produkt med MVA |
-| `batch_create_employees` | Batch-opprettelse |
-
-**Merk**: Noen av disse kan vaere varianter av eksisterende handlers som treffes av parseren under et annet task_type-navn.
+- `bank_reconciliation` — Bankavtemming (Tier 3, apner 2026-03-21)
+- `error_correction` — Feilretting i regnskap
+- `year_end_closing` — Arsavslutning
 
 ### Kjente issues i handlers
 
@@ -749,11 +865,7 @@ Folgende oppgavetyper har INGEN handler og gir 0 poeng:
 
 ### Kjente issues i parser
 
-1. **Konfidensbasert fallback mangler**: Haiku brukes alltid forst, Sonnet kun ved API-feil — ikke ved lav konfidenssscore.
-
-2. **Ingen few-shot-eksempler**: Systemprompt har kun instruksjoner, ingen eksempler fra faktiske prompts.
-
-3. **Voucher-typer mangler handlers**: Parser stotter `create_voucher`, `reverse_voucher`, `delete_voucher`, men ingen handler tar imot dem.
+1. **Noen oppgavetyper bommer fortsatt**: `create_custom_dimension`, `set_project_fixed_price`, og `register_timesheet` klassifiseres fortsatt noen ganger som `unknown` — keyword-fallback kompenserer delvis.
 
 ### Infrastruktur-begrensninger
 
@@ -776,22 +888,40 @@ cc-accounting-ai-tripletex/
 |   |-- __init__.py               # Tom init
 |   |-- main.py                   # FastAPI-app, /health og /solve endepunkter
 |   |-- config.py                 # Miljovariabler (ANTHROPIC_API_KEY, GCS_BUCKET, etc.)
-|   |-- parser.py                 # LLM-parser med systemprompt, Claude Haiku/Sonnet
+|   |-- parser.py                 # Multi-stage parser (embedding + LLM + keyword)
+|   |-- parser_gemini.py          # Gemini 2.0 Flash parser-alternativ
+|   |-- embeddings.py             # Vertex AI embedding-klassifisering
+|   |-- embeddings_index.json     # Embedding-indeks (128 prompts, 17 typer)
+|   |-- api_rag.py                # RAG for Tripletex API-dokumentasjon
+|   |-- api_rag_index.json        # RAG-indeks (751 chunks)
+|   |-- error_patterns.py         # Error pattern learning
+|   |-- error_patterns.json       # Error pattern database (112 monstre)
+|   |-- call_planner.py           # API-kall-planlegging
 |   |-- models.py                 # Dataklasser: ParsedTask, APICallRecord, CallTracker
 |   |-- tripletex.py              # Async Tripletex API-klient med kallsporing
 |   |-- storage.py                # GCS-logging (save_to_gcs)
 |   |-- file_processor.py         # Konverterer filvedlegg til LLM content blocks
-|   |-- handlers/                 # Handler-moduler
+|   |-- api_validator.py          # API-respons-validering
+|   |-- handlers/                 # Handler-moduler (30 handlers + 1 fallback)
 |       |-- __init__.py           # Handler-register, batch-stotte, execute_task()
 |       |-- tier1.py              # Tier 1: supplier, customer, employee, product, department
 |       |-- tier2_invoice.py      # Tier 2: invoice, payment, credit note, update_customer
 |       |-- tier2_travel.py       # Tier 2: travel expense, delete TE, update_employee
-|       |-- tier2_project.py      # Tier 2: project
+|       |-- tier2_project.py      # Tier 2: project, set_project_fixed_price
+|       |-- tier2_extra.py        # Tier 2: update/delete, order, supplier invoice, timesheet, payroll, custom dimension
+|       |-- tier3.py              # Tier 3: voucher handlers
+|       |-- fallback.py           # LLM-basert fallback for ukjente oppgavetyper
 |
 |-- scripts/                      # Verktoy (deployes IKKE)
-|   |-- compete.py                # Konkurranse-CLI (status, show, insights, poll, submit)
+|   |-- compete.py                # Konkurranse-CLI (status, show, insights, poll, submit, errors)
 |   |-- pre_deploy_test.py        # Pre-deploy testsuite (10 tester mot sandbox)
+|   |-- test_e2e.py               # E2E testsuite (32 tester, full pipeline)
+|   |-- test_parser.py            # Parser-testsuite (96 prompts)
 |   |-- test_handlers.py          # Manuell handler-testing
+|   |-- validate_handlers.py      # Handler-validering
+|   |-- build_embeddings.py       # Bygg embedding-indeks
+|   |-- build_api_rag.py          # Bygg RAG-indeks
+|   |-- build_error_patterns.py   # Bygg error pattern database
 |
 |-- docs/                         # Konkurransedokumentasjon
 |   |-- 01-overview.md            # Oversikt over konkurransen
@@ -811,6 +941,8 @@ cc-accounting-ai-tripletex/
 |-- TODO.md                       # Backlog og plan
 |-- BRUKERVEILEDNING.md           # Brukerveiledning for utviklerteamet
 |-- SYSTEMDOKUMENTASJON.md        # Denne filen
+|-- SYSTEMSTATUS.md               # Score-status og oppgaveoversikt
+|-- BUG.md                        # Buglogg
 |-- .env                          # Miljovariabler (IKKE i git)
 |-- .gitignore                    # Git-ignorering
 |-- .dockerignore                 # Docker-ignorering

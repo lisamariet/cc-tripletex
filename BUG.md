@@ -32,7 +32,7 @@
 - **120 submissions** totalt (ekskl. 2 test-requests), opp fra 111
 - Alle 18 oppgavetyper er naa klassifisert — ingen "unknown" gjenstaar
 - **6 handlers med 0 4xx:** create_project, batch_register_timesheet, batch_create_order (perfekte)
-- **Parser-hull:** create_custom_dimension (6/6), set_project_fixed_price (5/6), register_timesheet (2/2) parseres fortsatt som unknown
+- **Parser-hull (historisk):** create_custom_dimension, set_project_fixed_price, register_timesheet parseres noen ganger som unknown — keyword-fallback og embedding-klassifisering kompenserer
 - **set_project_fixed_price** er verste handler (snitt 3.2 4xx, 0 rene runs)
 - **create_invoice** har flest forsøk (17) men bare 4 med created-ressurs
 - Handlers som bruker fallback (unknown-parsert) har markant høyere 4xx-rate
@@ -42,7 +42,7 @@
 **Totalt registrerte bugs:** 25+
 **Submissions analysert:** 120 (ekskl. 2 test-requests)
 **Handlers med perfekt 4xx-rate (0):** create_project, batch_register_timesheet, batch_create_order
-**Handlers med størst parser-problem:** create_custom_dimension (6/6 unknown), set_project_fixed_price (5/6 unknown), register_timesheet (2/2 unknown)
+**Parser-forbedringer:** Embedding-klassifisering + keyword-fallback lagt til for bedre treffsikkerhet
 
 ---
 

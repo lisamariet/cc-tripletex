@@ -1,6 +1,16 @@
 # Systemstatus — Tripletex AI Accounting Agent
 
-Oppdatert: 2026-03-20
+Oppdatert: 2026-03-20 (rev 2)
+
+## Systeminfo
+
+- **Parser**: Embedding-klassifisering (Vertex AI) → LLM med few-shot → keyword-fallback
+- **LLM**: Claude Haiku (default), Gemini 2.0 Flash tilgjengelig via PARSER_BACKEND=gemini
+- **Handlers**: 30 registrerte handlers for 29 oppgavetyper + 1 fallback
+- **ML-moduler**: embeddings (128 prompts), RAG (751 chunks), error patterns (112 mønstre), call planner
+- **E2E-tester**: 32 tester, alle grønne, 132-138 API-kall
+- **Deploy**: Cloud Run europe-west1, prosjekt ai-nm26osl-1771
+- **Tier 3**: Åpner 2026-03-21
 
 ## Oppgavetype status
 

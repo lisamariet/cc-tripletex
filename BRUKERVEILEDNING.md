@@ -24,6 +24,7 @@ Env vars er allerede satt på Cloud Run-servicen — ikke bruk `--set-env-vars`:
 | `GCS_BUCKET` | GCS-bøtte for logging (`tripletex-agent-requests`) |
 | `LLM_MODEL` | Modell for parsing (`claude-haiku-4-5-20251001`) |
 | `API_KEY` | Bearer-token for `/solve`-endepunktet |
+| `PARSER_BACKEND` | Parser-backend: `haiku` (default), `gemini`, `embedding`, `auto` |
 
 ## Pre-deploy testing
 
@@ -107,14 +108,25 @@ Satt som `API_KEY` env var på Cloud Run. Endepunktet `/solve` krever `Authoriza
 | GET | `/health` | Helsesjekk |
 | POST | `/solve` | Mottar oppgave, parser med LLM, kjører handler, returnerer resultat |
 
-## Registrerte handlers
+## Registrerte handlers (30 stk.)
 
 Handlers registreres via `@register_handler` i `app/handlers/`:
 
-- **tier1**: `create_employee`, `create_customer`, `create_product`, `create_supplier`, `create_department`
-- **tier2_invoice**: invoice-relaterte oppgaver
-- **tier2_travel**: `create_travel_expense`, `update_employee`, `update_customer`
-- **tier2_project**: `create_project`
+- **tier1.py**: `create_supplier`, `create_customer`, `create_employee`, `create_product`, `create_department`
+- **tier2_invoice.py**: `create_invoice`, `register_payment`, `reverse_payment`, `create_credit_note`, `update_customer`
+- **tier2_travel.py**: `create_travel_expense`, `delete_travel_expense`, `update_employee`
+- **tier2_project.py**: `create_project`, `set_project_fixed_price`
+- **tier2_extra.py**: `update_supplier`, `update_product`, `delete_employee`, `delete_customer`, `delete_supplier`, `create_order`, `register_supplier_invoice`, `register_timesheet`, `create_invoice_from_pdf`, `run_payroll`, `create_custom_dimension`
+- **tier3.py**: `create_voucher`, `reverse_voucher`, `delete_voucher`
+- **fallback.py**: `unknown` (LLM-basert fallback for ukjente oppgavetyper)
+
+## Viktige konkurranse-regler
+
+- **BETA-endepunkter** i Tripletex kan gi 403 — bruk alltid alternativ ved feil
+- **Ny session token per submission** — aldri gjenbruk tokens
+- **120s timeout** (Cloudflare) — ikke 5 min som tidligere antatt
+- **MVA ma aktiveres**: PUT /ledger/vatSettings med vatRegistrationStatus=VAT_REGISTERED
+- **Tier 3 apner**: 2026-03-21
 
 ## Logger
 
@@ -142,6 +154,24 @@ gcloud logging read 'resource.labels.service_name="tripletex-agent" resource.lab
 # Kun feil
 gcloud logging read 'resource.labels.service_name="tripletex-agent" resource.labels.location="europe-west1" severity>=ERROR' \
   --limit 20 --format=json --freshness=1h
+```
+
+## E2E-testing
+
+```bash
+python3 scripts/test_e2e.py           # Alle 32 tester
+python3 scripts/test_e2e.py --tier2   # Kun tier 2
+python3 scripts/test_e2e.py --plan    # Vis testplan uten å kjøre
+```
+
+Full pipeline-test: prompt → parse_task() → handler → verifikasjons-GET. 32 tester, 132-138 API-kall.
+
+## ML-verktøy
+
+```bash
+python3 scripts/build_embeddings.py       # Bygg embedding-indeks (128 prompts, 17 typer)
+python3 scripts/build_api_rag.py          # Bygg RAG-indeks (751 chunks)
+python3 scripts/build_error_patterns.py   # Bygg error pattern database (112 mønstre)
 ```
 
 ## Sandbox-testing
