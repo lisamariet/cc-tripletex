@@ -409,6 +409,9 @@ def cmd_status(args: argparse.Namespace) -> None:
     print(f"  {'#':>3}  {'Tid':<10} {'Oppgavetype':<25} {'Score':>12} {'Varighet':>8}  {'Status'}")
     print(f"  {'─'*80}")
 
+    # ANSI italic
+    ITALIC = "\033[3m"
+
     for i, sub in enumerate(submissions[:25], 1):
         ts = format_ts_short(sub.get("queued_at"))
         raw = sub.get("score_raw")
@@ -416,7 +419,15 @@ def cmd_status(args: argparse.Namespace) -> None:
         norm = sub.get("normalized_score")
         duration = safe_int(sub.get("duration_ms"))
         status = sub.get("status", "-")
-        task_type = get_task_type_for_sub(sub, gcs_logs) if gcs_logs else "?"
+        task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
+
+        # Format task type: dim+italic for prompt snippets
+        if task_type.startswith("["):
+            task_display = f"{DIM}{ITALIC}{task_type[:25]}{RESET}"
+            task_visible = task_type[:25]
+        else:
+            task_display = task_type[:25]
+            task_visible = task_type[:25]
 
         if raw is not None and mx is not None:
             norm_f = safe_float(norm)
@@ -434,7 +445,11 @@ def cmd_status(args: argparse.Namespace) -> None:
         visible_pad = 12 - len(score_pad)
         score_display = " " * max(0, visible_pad) + score_str
 
-        print(f"  {i:>3}  {ts:<10} {task_type:<25} {score_display} {dur_str:>8}  {status}")
+        # Pad task_display to 25 visible chars (compensate for ANSI if present)
+        task_pad = 25 - len(task_visible)
+        task_col = task_display + " " * max(0, task_pad)
+
+        print(f"  {i:>3}  {ts:<10} {task_col} {score_display} {dur_str:>8}  {status}")
 
 
 # ──────────────────────────────────────────────
@@ -999,11 +1014,7 @@ Kommandoer:
         type=int,
         help="Submission-nummer (1=nyeste)",
     )
-    show_parser.add_argument(
-        "--translate", "-t",
-        action="store_true",
-        help="Oversett prompt til norsk (bruker Claude)",
-    )
+    # Translation is now always automatic for non-Norwegian prompts
 
     # submit command
     submit_parser = subparsers.add_parser("submit", help="Trigger ny submission")
