@@ -43,10 +43,18 @@ Available Tripletex v2 endpoints (all via proxy base URL):
 | /ledger/posting | GET | Query ledger postings |
 | /ledger/voucher | GET, POST, PUT, DELETE | Manage vouchers |
 | /salary/type | GET | Salary types |
+| /salary/transaction | GET, POST | Salary transactions |
+| /salary/payslip | GET, POST | Payslips |
+| /salary/settings | GET, PUT | Salary settings |
+| /employee/employment | GET, POST, PUT | Employment records (startDate, etc.) |
+| /employee/entitlement/:grantEntitlementsByTemplate | PUT | Grant roles (params: employeeId, template=ALL_PRIVILEGES) |
 | /currency | GET | Currency codes |
 | /activity | GET, POST | Activities |
 | /contact | GET, POST, PUT | Contact persons |
 | /address | GET, PUT | Addresses |
+| /company/salesmodules | POST | Enable modules (e.g. department) |
+| /ledger/vatType | GET | VAT type lookup (params: number) |
+| /invoice/paymentType | GET | Payment types for invoices |
 
 Key patterns:
 - List responses: {"fullResultSize": N, "values": [...]}
@@ -110,20 +118,48 @@ def _resolve_placeholder(value: Any, results: list[dict]) -> Any:
 
 
 def _parse_json_response(raw: str) -> list[dict]:
-    """Extract JSON array from LLM response, stripping markdown fences."""
+    """Extract JSON array from LLM response, stripping markdown fences and text."""
+    import re
     text = raw.strip()
+
+    # Strip markdown fences
     if text.startswith("```"):
         text = text.split("\n", 1)[1] if "\n" in text else text[3:]
         if text.endswith("```"):
             text = text[:-3]
         text = text.strip()
-    parsed = json.loads(text)
-    if isinstance(parsed, dict):
-        # LLM returned a single call, wrap it
-        parsed = [parsed]
-    if not isinstance(parsed, list):
-        raise ValueError(f"Expected JSON array, got {type(parsed)}")
-    return parsed
+
+    # Try direct parse first
+    try:
+        parsed = json.loads(text)
+        if isinstance(parsed, dict):
+            parsed = [parsed]
+        if isinstance(parsed, list):
+            return parsed
+    except json.JSONDecodeError:
+        pass
+
+    # Try to find JSON array in the text
+    match = re.search(r'\[.*\]', text, re.DOTALL)
+    if match:
+        try:
+            parsed = json.loads(match.group())
+            if isinstance(parsed, list):
+                return parsed
+        except json.JSONDecodeError:
+            pass
+
+    # Try to find JSON object in the text
+    match = re.search(r'\{.*\}', text, re.DOTALL)
+    if match:
+        try:
+            parsed = json.loads(match.group())
+            if isinstance(parsed, dict):
+                return [parsed]
+        except json.JSONDecodeError:
+            pass
+
+    raise ValueError(f"Could not extract JSON from response: {text[:200]}")
 
 
 @register_handler("unknown")
@@ -140,9 +176,9 @@ async def handle_unknown(client: TripletexClient, fields: dict[str, Any], prompt
         llm_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=30.0)
         message = llm_client.messages.create(
             model=FALLBACK_MODEL,
-            max_tokens=1024,
+            max_tokens=2048,
             system=FALLBACK_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": f"Task: {prompt}"}],
+            messages=[{"role": "user", "content": f"Task: {prompt}\n\nRespond with ONLY a JSON array. No explanation."}],
         )
         raw_text = message.content[0].text
         logger.info(f"Fallback LLM response: {raw_text[:1000]}")
