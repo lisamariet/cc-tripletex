@@ -38,7 +38,7 @@ PRIORITY_PATHS = {
     "/customer", "/supplier", "/employee", "/project", "/invoice",
     "/order", "/order/orderline", "/product", "/department",
     "/ledger/voucher", "/ledger/account", "/ledger/vatType",
-    "/salary/transaction", "/salary/type", "/salary/payslip",
+    "/salary/type",  # read-only; POST /salary/transaction and /salary/payslip are BETA (403)
     "/contact", "/currency", "/supplierInvoice",
     "/travelExpense", "/travelExpense/cost",
     "/travelExpense/mileageAllowance",
@@ -53,8 +53,7 @@ PRIORITY_PATHS = {
     "/ledger/paymentTypeOut",
     "/ledger/accountingDimensionName",
     "/ledger/accountingDimensionValue",
-    "/salary/settings", "/salary/settings/holiday",
-    "/salary/settings/pensionScheme",
+    # "/salary/settings" — BETA, returns 403
     "/employee/employment/leaveOfAbsence",
     "/incomingInvoice",
     "/customer/category",
@@ -396,11 +395,7 @@ def run_tests() -> bool:
         "/customer", "POST",
         ["name", "customer"]
     )
-    check(
-        "POST /salary/transaction should mention employee/date",
-        "/salary/transaction", "POST",
-        ["salary", "transaction"]
-    )
+    # Skipped: POST /salary/transaction is BETA (403) — using voucher instead
     check(
         "POST /ledger/voucher should mention postings",
         "/ledger/voucher", "POST",

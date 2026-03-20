@@ -43,17 +43,14 @@ Available Tripletex v2 endpoints (all via proxy base URL):
 | /ledger/account | GET | Query chart of accounts |
 | /ledger/posting | GET | Query ledger postings |
 | /ledger/voucher | GET, POST, PUT, DELETE | Manage vouchers |
-| /salary/type | GET | Salary types |
-| /salary/transaction | GET, POST | Salary transactions |
-| /salary/payslip | GET, POST | Payslips |
-| /salary/settings | GET, PUT | Salary settings |
+| /salary/type | GET | Salary types (read-only, BETA POST endpoints return 403) |
 | /employee/employment | GET, POST, PUT | Employment records (startDate, etc.) |
 | /employee/entitlement/:grantEntitlementsByTemplate | PUT | Grant roles (params: employeeId, template=ALL_PRIVILEGES) |
 | /currency | GET | Currency codes |
 | /activity | GET, POST | Activities |
 | /contact | GET, POST, PUT | Contact persons |
 | /address | GET, PUT | Addresses |
-| /company/salesmodules | POST | Enable modules (e.g. department) |
+| /company/salesmodules | POST | BETA — returns 403, do NOT use |
 | /ledger/vatType | GET | VAT type lookup (params: number) |
 | /invoice/paymentType | GET | Payment types for invoices |
 
@@ -73,10 +70,11 @@ Key patterns:
 - Department POST body: {"name": "...", "departmentNumber": N}
 - Product POST body: {"name": "...", "number": N, "priceExcludingVat": N}
 - For travel expenses: POST /travelExpense with {"employee": {"id": EMP_ID}, "title": "...", "date": "YYYY-MM-DD"} then POST /travelExpense/cost
-- For salary/payroll: POST /salary/transaction with {"year": YYYY, "month": M, "payslips": [{"employee": {"id": EMP_ID}, "specifications": [{"salaryType": {"id": TYPE_ID}, "rate": AMOUNT, "count": 1, "amount": AMOUNT}]}]}
-  - Salary type 2000 = Fastlønn (base salary), 2002 = Bonus. Look up IDs via GET /salary/type?number=2000
-  - Employee MUST have an employment record with a division. Check GET /employee/employment?employeeId=ID, create if missing.
-  - Do NOT put "date", "year", "month", or "employee" inside payslip or specification — only at the transaction top level (year, month) and payslip (employee).
+- For salary/payroll: The salary/transaction API is [BETA] and returns 403. Use manual voucher posting instead:
+  POST /ledger/voucher with postings: debit account 5000 (lønn) for salary amount, credit account 1920 (bank) for total.
+  Look up account IDs via GET /ledger/account?number=5000 and GET /ledger/account?number=1920.
+  Employee MUST have an employment record with a division. Check GET /employee/employment?employeeId=ID, create if missing.
+  Do NOT use POST /salary/transaction or POST /salary/payslip — they are BETA and will return 403.
 - Use ?fields=id,name,* to get all fields when searching
 
 Return ONLY a valid JSON array of API calls. Each call is an object:

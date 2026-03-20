@@ -258,8 +258,8 @@ KNOWN_PAYLOADS: list[dict] = [
     {
         "handler": "run_payroll",
         "method": "POST",
-        "path": "/salary/transaction",
-        "keys": {"year", "month", "payslips"},
+        "path": "/ledger/voucher",
+        "keys": {"date", "description", "postings"},
     },
     # tier2_extra.py — employment
     {
