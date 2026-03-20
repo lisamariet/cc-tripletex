@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_221710_891737",
+  "prompt": "Crie uma fatura para o cliente Floresta Lda (org. nº 919172657) com três linhas de produto: Sessão de formação (4783) a 24900 NOK com 25 % IVA, Armazenamento na nuvem (3343) a 14050 NOK com 15 % IVA (alimentos), e Serviço de rede (4380) a 15750 NOK com 0 % IVA (isento).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "LkfpWxZzIRgOwhyNwYY5SpqVUmzXQ0_xBeh9wMVD9ok"
+  }
+}

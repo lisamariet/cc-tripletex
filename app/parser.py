@@ -123,7 +123,8 @@ Supported task types and their fields:
    Fields: name*, departmentNumber
 
 6. "create_invoice" — Create an invoice for a customer
-   Fields: customerName*, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines* (array of {description, quantity, unitPriceExcludingVat, vatCode — use "3" for 25%, "31" for 15%, "33" for 12%, "5" for 0%})
+   Fields: customerName*, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines* (array of {description, productNumber (extract the number in parentheses if present, e.g. "Konsulenttimer (9497)" → productNumber: "9497"), quantity, unitPriceExcludingVat, vatCode — use "3" for 25%, "31" for 15%, "33" for 12%, "5" for 0%})
+   IMPORTANT: If the prompt mentions product numbers like "(4783)" next to product names, include productNumber in each line.
 
 7. "register_payment" — Register payment on an existing invoice (customer pays)
    Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount, paymentDate (YYYY-MM-DD), invoiceDescription (what the invoice was for, e.g. "Maintenance"), lines (array of {description, quantity, unitPriceExcludingVat, vatCode} — extract if the prompt describes invoice line items)

@@ -252,6 +252,33 @@ def build_tier2_tests() -> list[E2ETestCase]:
             tier=2,
         ),
 
+        # T2-1b: create_invoice with product numbers
+        E2ETestCase(
+            name="t2_create_invoice_with_products",
+            expected_task_type="create_invoice",
+            expected_fields={},
+            prompt=(
+                f'Opprett en faktura til kunden "E2E ProdFaktura {ts}" med 2 linjer: '
+                f'"Konsulenttimer" ({ts[-4:]}) 12000 kr ekskl. MVA 25%, '
+                f'"Hosting" ({int(ts[-4:])+1}) 5000 kr ekskl. MVA 25%.'
+            ),
+            direct_fields={
+                "customerName": f"E2E ProdFaktura {ts}",
+                "lines": [
+                    {"description": "Konsulenttimer", "productNumber": ts[-4:], "quantity": 1, "unitPriceExcludingVat": 12000, "vatCode": "3"},
+                    {"description": "Hosting", "productNumber": str(int(ts[-4:])+1), "quantity": 1, "unitPriceExcludingVat": 5000, "vatCode": "3"},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/invoice",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("amountExcludingVatCurrency", 17000.0, mode="gte"),
+                ],
+            ),
+            tier=2,
+        ),
+
         # T2-2: register_payment — Portuguese prompt, create invoice + pay it
         E2ETestCase(
             name="t2_register_payment",

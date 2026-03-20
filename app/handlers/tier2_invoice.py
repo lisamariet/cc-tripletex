@@ -337,7 +337,7 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
     if not customer_id:
         return {"status": "completed", "note": "Could not find or create customer"}
 
-    # Build order lines
+    # Build order lines — create products if productNumber is specified
     order_lines = []
     for line in fields.get("lines", []):
         order_line: dict[str, Any] = {
@@ -347,8 +347,26 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
         if line.get("description"):
             order_line["description"] = line["description"]
         if line.get("vatCode"):
-            # Use number-based reference — id-based fails in sandbox
             order_line["vatType"] = {"number": str(line["vatCode"])}
+
+        # If productNumber is given, create the product and link it
+        product_number = line.get("productNumber")
+        if product_number:
+            product_payload: dict[str, Any] = {
+                "name": line.get("description", f"Product {product_number}"),
+                "number": str(product_number),
+                "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
+            }
+            # Don't set vatType on product — let the order line control VAT
+            prod_resp = await client.post("/product", product_payload)
+            if prod_resp.status_code in (200, 201):
+                product_id = prod_resp.json().get("value", {}).get("id")
+                if product_id:
+                    order_line["product"] = {"id": product_id}
+                    logger.info(f"Created product {product_number} (id={product_id})")
+            else:
+                logger.warning(f"Failed to create product {product_number}: {prod_resp.text[:200]}")
+
         order_lines.append(order_line)
 
     # Create order — orderDate and deliveryDate are required
