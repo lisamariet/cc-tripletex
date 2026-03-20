@@ -142,13 +142,29 @@ def safe_int(val, default=0) -> int:
 # ──────────────────────────────────────────────
 
 def _needs_translation(text: str) -> bool:
-    """Check if text is likely not Norwegian or English."""
-    norwegian_words = {"opprett", "kunden", "med", "og", "fra", "til", "for", "er", "skal", "den", "det", "har"}
-    english_words = {"create", "the", "with", "and", "from", "for", "is", "customer", "employee"}
-    words = set(text.lower().split()[:20])
-    if words & norwegian_words:
+    """Check if text is likely not Norwegian or English.
+
+    Uses distinct words unlikely to appear in other languages (especially
+    German, which shares many short words with Norwegian like 'den', 'for',
+    'med', 'kunden').  Requires at least 2 matches to avoid false negatives.
+    """
+    # Words that are distinctly Norwegian (not shared with German/other langs)
+    norwegian_distinct = {
+        "opprett", "og", "fra", "skal", "det", "har", "som", "ikke",
+        "denne", "kunde", "ansatt", "faktura", "bestilling", "produkt",
+        "leverandør", "betaling", "registrer", "konverter", "ordre",
+    }
+    # Words that are distinctly English
+    english_distinct = {
+        "create", "the", "with", "and", "from", "customer", "employee",
+        "invoice", "order", "product", "convert", "payment", "register",
+    }
+    words = set(text.lower().split()[:30])
+    no_hits = len(words & norwegian_distinct)
+    en_hits = len(words & english_distinct)
+    if no_hits >= 2:
         return False
-    if words & english_words:
+    if en_hits >= 2:
         return False
     return True
 
