@@ -1,0 +1,40 @@
+{
+  "timestamp": "20260320_114805_458894",
+  "prompt": "Créez une dimension comptable personnalisée \"Kostsenter\" avec les valeurs \"Kundeservice\" et \"Økonomi\". Puis comptabilisez une pièce sur le compte 7300 pour 10550 NOK, liée à la valeur de dimension \"Kundeservice\".",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 422,
+      "duration_ms": 4398.0,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1725.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1845.4,
+      "error": null
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 1,
+  "total_duration_ms": 14047.1,
+  "result": {
+    "status": "completed",
+    "fallback": true,
+    "calls_made": 3
+  }
+}

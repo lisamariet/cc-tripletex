@@ -60,6 +60,9 @@ class TripletexClient:
             raise
 
         duration = (time.monotonic() - t0) * 1000
-        self.tracker.record(method, path, resp.status_code, duration)
+        error_body = None
+        if 400 <= resp.status_code < 500:
+            error_body = resp.text[:500]
+        self.tracker.record(method, path, resp.status_code, duration, error=error_body)
         logger.info(f"Response {resp.status_code} ({duration:.0f}ms): {resp.text[:500]}")
         return resp

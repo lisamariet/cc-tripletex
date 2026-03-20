@@ -286,3 +286,146 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     data = resp.json()
     logger.info(f"Created supplier invoice voucher: {data.get('value', {}).get('id')}")
     return {"status": "completed", "taskType": "register_supplier_invoice", "created": data.get("value", {})}
+
+
+# ---------------------------------------------------------------------------
+# Timesheet / hour registration
+# ---------------------------------------------------------------------------
+
+async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> dict | None:
+    """Find employee by name or email."""
+    # Try email first (most precise)
+    email = fields.get("employeeEmail") or fields.get("email")
+    if email:
+        resp = await client.get("/employee", params={"email": email})
+        values = resp.json().get("values", [])
+        if values:
+            return values[0]
+
+    # Fall back to name search
+    return await _find_employee_by_fields(client, fields)
+
+
+async def _find_project(client: TripletexClient, name: str) -> dict | None:
+    """Find a project by name."""
+    resp = await client.get("/project", params={"name": name})
+    values = resp.json().get("values", [])
+    return values[0] if values else None
+
+
+async def _find_or_create_project(client: TripletexClient, name: str) -> int | None:
+    """Find project by name or create a new one. Returns project ID."""
+    project = await _find_project(client, name)
+    if project:
+        return project["id"]
+
+    # Need a project manager — use the first employee
+    resp = await client.get("/employee", params={"count": 1})
+    employees = resp.json().get("values", [])
+    pm_id = employees[0]["id"] if employees else None
+
+    payload: dict[str, Any] = {
+        "name": name,
+        "isInternal": False,
+        "startDate": date.today().isoformat(),
+    }
+    if pm_id:
+        payload["projectManager"] = {"id": pm_id}
+
+    resp = await client.post("/project", payload)
+    created = resp.json().get("value", {})
+    return created.get("id")
+
+
+async def _find_activity(client: TripletexClient, name: str) -> dict | None:
+    """Find an activity by name."""
+    resp = await client.get("/activity", params={"name": name})
+    values = resp.json().get("values", [])
+    # Prefer exact match
+    for v in values:
+        if v.get("name", "").lower() == name.lower():
+            return v
+    return values[0] if values else None
+
+
+async def _find_or_create_activity(client: TripletexClient, name: str) -> int | None:
+    """Find activity by name or create a new PROJECT_GENERAL_ACTIVITY. Returns activity ID."""
+    activity = await _find_activity(client, name)
+    if activity:
+        return activity["id"]
+
+    # Create as project general activity so it can be used on any project
+    payload = {
+        "name": name,
+        "activityType": "PROJECT_GENERAL_ACTIVITY",
+    }
+    resp = await client.post("/activity", payload)
+    created = resp.json().get("value", {})
+    return created.get("id")
+
+
+@register_handler("register_timesheet")
+async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Register a timesheet entry (hours) for an employee on a project/activity."""
+    # 1. Find employee
+    employee = await _find_employee(client, fields)
+    if not employee:
+        return {"status": "completed", "note": "Employee not found"}
+    employee_id = employee["id"]
+
+    # 2. Find or create project
+    project_name = fields.get("projectName") or fields.get("project")
+    if not project_name:
+        return {"status": "completed", "note": "Project name is required"}
+    project_id = await _find_or_create_project(client, project_name)
+    if not project_id:
+        return {"status": "completed", "note": "Could not find or create project"}
+
+    # 3. Find or create activity
+    activity_name = fields.get("activityName") or fields.get("activity")
+    if not activity_name:
+        # Default to first available activity for the project
+        resp = await client.get("/activity/%3EforTimeSheet", params={"projectId": project_id})
+        activities = resp.json().get("values", [])
+        if activities:
+            activity_id = activities[0]["id"]
+        else:
+            return {"status": "completed", "note": "No activity specified and none available for project"}
+    else:
+        activity_id = await _find_or_create_activity(client, activity_name)
+        if not activity_id:
+            return {"status": "completed", "note": "Could not find or create activity"}
+
+    # 4. Build and POST timesheet entry
+    hours = fields.get("hours", 0)
+    entry_date = fields.get("date") or date.today().isoformat()
+
+    entry_payload: dict[str, Any] = {
+        "employee": {"id": employee_id},
+        "project": {"id": project_id},
+        "activity": {"id": activity_id},
+        "date": entry_date,
+        "hours": hours,
+    }
+    if fields.get("comment"):
+        entry_payload["comment"] = fields["comment"]
+
+    resp = await client.post("/timesheet/entry", entry_payload)
+    data = resp.json()
+
+    if resp.status_code >= 400:
+        error_msg = data.get("message", "Unknown error")
+        validation = data.get("validationMessages", [])
+        return {
+            "status": "completed",
+            "note": f"Timesheet entry failed: {error_msg}",
+            "validationMessages": validation,
+        }
+
+    created = data.get("value", {})
+    logger.info(f"Created timesheet entry: {created.get('id')} — {hours}h for employee {employee_id}")
+    return {
+        "status": "completed",
+        "taskType": "register_timesheet",
+        "created": created,
+    }

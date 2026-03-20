@@ -91,7 +91,10 @@ Supported task types and their fields:
 24. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
     Fields: supplierName, supplierOrgNumber, organizationNumber, amount, description, invoiceDate (YYYY-MM-DD), expenseAccount (account number, default "4000")
 
-25. "unknown" — If you cannot determine the task type
+25. "register_timesheet" — Register hours/timesheet entry for an employee
+    Fields: employeeName, employeeEmail, projectName, activityName, hours* (number), date (YYYY-MM-DD), comment
+
+26. "unknown" — If you cannot determine the task type
 
 Examples:
 

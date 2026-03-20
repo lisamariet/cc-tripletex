@@ -58,7 +58,11 @@ async def _find_customer_id(client: TripletexClient, fields: dict[str, Any]) -> 
 
 
 async def _find_invoice(client: TripletexClient, fields: dict[str, Any], customer_id: int | None = None) -> dict | None:
-    """Find an invoice by customerId and optionally invoiceNumber. Returns invoice dict or None."""
+    """Find an invoice by customerId and optionally invoiceNumber/amount. Returns invoice dict or None.
+
+    When multiple invoices match, try to pick the one whose amountExcludingVat
+    is closest to the amount mentioned in the prompt.
+    """
     search_params: dict[str, Any] = {
         "invoiceDateFrom": "2000-01-01",
         "invoiceDateTo": date.today().isoformat(),
@@ -74,7 +78,36 @@ async def _find_invoice(client: TripletexClient, fields: dict[str, Any], custome
 
     resp = await client.get("/invoice", params=search_params)
     invoices = resp.json().get("values", [])
-    return invoices[0] if invoices else None
+    if not invoices:
+        return None
+
+    # If only one invoice, return it
+    if len(invoices) == 1:
+        return invoices[0]
+
+    # Multiple invoices — try to match by amount (excl. VAT) from the prompt
+    target_amount = fields.get("amount")
+    if target_amount:
+        target = abs(target_amount)
+        # Try matching on amountExcludingVat first, then amountCurrency
+        best = None
+        best_diff = float("inf")
+        for inv in invoices:
+            excl_vat = inv.get("amountExcludingVat") or inv.get("amountExcludingVatCurrency") or 0
+            diff = abs(excl_vat - target)
+            if diff < best_diff:
+                best_diff = diff
+                best = inv
+            # Also check gross amount (in case prompt gave incl. VAT amount)
+            gross = inv.get("amountCurrency") or inv.get("amount") or 0
+            diff_gross = abs(gross - target)
+            if diff_gross < best_diff:
+                best_diff = diff_gross
+                best = inv
+        if best:
+            return best
+
+    return invoices[0]
 
 
 async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]) -> dict | None:
@@ -149,7 +182,11 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
         return None
 
     logger.info(f"Created invoice {invoice_id} from order {order_id} in pipeline")
-    return invoice_data
+
+    # Fetch full invoice to get computed amounts (amount, amountExcludingVat, etc.)
+    detail_resp = await client.get(f"/invoice/{invoice_id}")
+    full_invoice = detail_resp.json().get("value")
+    return full_invoice if full_invoice else invoice_data
 
 
 async def _get_bank_payment_type_id(client: TripletexClient) -> int | None:
@@ -225,13 +262,35 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
 
     invoice_id = invoice.get("id")
 
+    # If the invoice dict doesn't already have amount fields, fetch full details
+    if not invoice.get("amountCurrency") and not invoice.get("amount"):
+        detail_resp = await client.get(f"/invoice/{invoice_id}")
+        invoice = detail_resp.json().get("value", invoice)
+
     # Get payment type (bank)
     payment_type_id = await _get_bank_payment_type_id(client)
 
-    # Use amount from fields, or fall back to invoice amount
-    amount = fields.get("amount")
-    if amount is None or amount == 0:
-        amount = invoice.get("amount", 0)
+    # Use the invoice's gross amount (including VAT) for paidAmount.
+    # The paidAmount parameter is "in invoice currency" and must cover the full
+    # outstanding amount to register a full payment.
+    # Use amountOutstanding first (handles partially paid invoices), then gross total.
+    # Must check `is not None` because 0.0 is a valid amount (fully paid).
+    amount_outstanding = invoice.get("amountOutstanding")
+    if amount_outstanding is None:
+        amount_outstanding = invoice.get("amountOutstandingCurrency")
+    amount_gross = invoice.get("amountCurrency") or invoice.get("amount") or 0
+
+    # Prefer outstanding amount (it accounts for any prior partial payments).
+    # If outstanding is 0 but gross is positive, it means invoice is already paid —
+    # use gross in that case (we're registering the payment).
+    if amount_outstanding is not None and amount_outstanding != 0:
+        amount = amount_outstanding
+    elif amount_gross:
+        amount = amount_gross
+    else:
+        # Fallback: parsed excl-VAT amount scaled up by 1.25 (standard 25% MVA)
+        parsed_amount = fields.get("amount", 0)
+        amount = abs(parsed_amount) * 1.25 if parsed_amount else 0
     # Ensure positive amount for payment
     amount = abs(amount)
 
@@ -256,11 +315,24 @@ async def reverse_payment(client: TripletexClient, fields: dict[str, Any]) -> di
         return {"status": "completed", "note": "No matching invoice found and could not create one"}
 
     invoice_id = invoice.get("id")
+
+    # If the invoice dict doesn't already have amount fields, fetch full details
+    if not invoice.get("amountCurrency") and not invoice.get("amount"):
+        detail_resp = await client.get(f"/invoice/{invoice_id}")
+        invoice = detail_resp.json().get("value", invoice)
+
     payment_type_id = await _get_bank_payment_type_id(client)
 
-    amount = fields.get("amount")
-    if amount is None or amount == 0:
-        amount = invoice.get("amount", 0)
+    # Use the invoice's gross amount (including VAT)
+    amount = (
+        invoice.get("amountCurrency")
+        or invoice.get("amount")
+        or 0
+    )
+    if amount == 0:
+        parsed_amount = fields.get("amount", 0)
+        amount = abs(parsed_amount) * 1.25 if parsed_amount else 0
+    amount = abs(amount)
 
     payment_date = fields.get("paymentDate") or date.today().isoformat()
 
@@ -268,7 +340,7 @@ async def reverse_payment(client: TripletexClient, fields: dict[str, Any]) -> di
     await client.put(f"/invoice/{invoice_id}/:payment", params={
         "paymentDate": payment_date,
         "paymentTypeId": payment_type_id,
-        "paidAmount": abs(amount),
+        "paidAmount": amount,
     })
     logger.info(f"Registered initial payment on invoice {invoice_id} before reversal")
 
@@ -276,9 +348,9 @@ async def reverse_payment(client: TripletexClient, fields: dict[str, Any]) -> di
     resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
         "paymentDate": payment_date,
         "paymentTypeId": payment_type_id,
-        "paidAmount": -abs(amount),
+        "paidAmount": -amount,
     })
-    logger.info(f"Reversed payment on invoice {invoice_id}, amount={-abs(amount)}")
+    logger.info(f"Reversed payment on invoice {invoice_id}, amount={-amount}")
     return {"status": "completed", "taskType": "reverse_payment", "invoiceId": invoice_id}
 
 
@@ -291,7 +363,11 @@ async def create_credit_note(client: TripletexClient, fields: dict[str, Any]) ->
         return {"status": "completed", "note": "No matching invoice found and could not create one"}
 
     invoice_id = invoice.get("id")
-    credit_params: dict[str, Any] = {}
+    today = date.today().isoformat()
+    credit_params: dict[str, Any] = {
+        "date": fields.get("creditNoteDate") or today,
+        "sendToCustomer": False,
+    }
     if fields.get("comment"):
         credit_params["comment"] = fields["comment"]
 

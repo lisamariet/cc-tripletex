@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from typing import Any
 
 import anthropic
@@ -119,7 +120,6 @@ def _resolve_placeholder(value: Any, results: list[dict]) -> Any:
 
 def _parse_json_response(raw: str) -> list[dict]:
     """Extract JSON array from LLM response, stripping markdown fences and text."""
-    import re
     text = raw.strip()
 
     # Strip markdown fences
@@ -216,7 +216,11 @@ async def handle_unknown(client: TripletexClient, fields: dict[str, Any], prompt
             body = _resolve_placeholder(body, results)
         if params:
             params = _resolve_placeholder(params, results)
-        path = str(_resolve_placeholder(path, results)) if "$PREV_" in path else path
+        if "$PREV_" in path:
+            for match in re.findall(r'\$PREV_\d+(?:\.\w+)*', path):
+                resolved = _resolve_placeholder(match, results)
+                if resolved is not match:
+                    path = path.replace(match, str(resolved))
 
         logger.info(f"Fallback call {i}/{len(api_calls)}: {method} {path} — {description}")
         if body:

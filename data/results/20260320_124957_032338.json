@@ -1,0 +1,60 @@
+{
+  "timestamp": "20260320_124957_032338",
+  "prompt": "O cliente Floresta Lda (org. nº 916058896) tem uma fatura pendente de 30450 NOK sem IVA por \"Desenvolvimento de sistemas\". Registe o pagamento total desta fatura.",
+  "parsed_task": {
+    "task_type": "register_payment",
+    "fields": {
+      "customerName": "Floresta Lda",
+      "customerOrgNumber": "916058896",
+      "amount": 30450,
+      "invoiceDescription": "Desenvolvimento de sistemas",
+      "lines": [
+        {
+          "description": "Desenvolvimento de sistemas",
+          "quantity": 1,
+          "unitPriceExcludingVat": 30450,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.93
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1676.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 1473.0,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/paymentType",
+      "status": 200,
+      "duration_ms": 1342.0,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147489422/:payment",
+      "status": 200,
+      "duration_ms": 1429.9,
+      "error": null
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 7861.3,
+  "result": {
+    "status": "completed",
+    "taskType": "register_payment",
+    "invoiceId": 2147489422
+  }
+}
