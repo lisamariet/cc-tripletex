@@ -38,13 +38,13 @@ Supported task types and their fields:
    Fields: customerName*, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines* (array of {description, quantity, unitPriceExcludingVat, vatCode — use "3" for 25%, "31" for 15%, "33" for 12%, "5" for 0%})
 
 7. "register_payment" — Register payment on an existing invoice (customer pays)
-   Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount, paymentDate (YYYY-MM-DD)
+   Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount, paymentDate (YYYY-MM-DD), invoiceDescription (what the invoice was for, e.g. "Maintenance"), lines (array of {description, quantity, unitPriceExcludingVat, vatCode} — extract if the prompt describes invoice line items)
 
 8. "reverse_payment" — Reverse/cancel a payment on an invoice (e.g. returned by bank, undo payment)
-   Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount
+   Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount, paymentDate (YYYY-MM-DD), invoiceDescription, lines (array of {description, quantity, unitPriceExcludingVat, vatCode})
 
 9. "create_credit_note" — Create a credit note for an invoice
-   Fields: customerName, customerOrgNumber, invoiceNumber, comment
+   Fields: customerName, customerOrgNumber, invoiceNumber, comment, amount, invoiceDescription, lines (array of {description, quantity, unitPriceExcludingVat, vatCode})
 
 10. "create_travel_expense" — Register a travel expense
    Fields: employeeName*, employeeFirstName, employeeLastName, title*, date (YYYY-MM-DD), costs (array of {description, amount, vatCode, currency})

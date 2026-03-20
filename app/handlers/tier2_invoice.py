@@ -77,6 +77,91 @@ async def _find_invoice(client: TripletexClient, fields: dict[str, Any], custome
     return invoices[0] if invoices else None
 
 
+async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]) -> dict | None:
+    """Find an existing invoice or create one from scratch (customer → order → invoice).
+
+    On a fresh sandbox there are no invoices, so we must create the full chain.
+    Returns the invoice dict or None on failure.
+    """
+    # Try to find existing invoice first
+    customer_id = await _find_customer_id(client, fields)
+    invoice = await _find_invoice(client, fields, customer_id)
+    if invoice:
+        return invoice
+
+    # No invoice found — create the full chain
+    customer_id = await _find_or_create_customer(client, fields)
+    if not customer_id:
+        return None
+
+    today = date.today().isoformat()
+
+    # Build order lines from fields
+    order_lines = []
+    if fields.get("lines"):
+        for line in fields["lines"]:
+            order_line: dict[str, Any] = {
+                "count": line.get("quantity", 1),
+                "unitPriceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
+            }
+            if line.get("description"):
+                order_line["description"] = line["description"]
+            if line.get("vatCode"):
+                vat_resp = await client.get("/ledger/vatType", params={"number": line["vatCode"]})
+                vat_types = vat_resp.json().get("values", [])
+                if vat_types:
+                    order_line["vatType"] = {"id": vat_types[0]["id"]}
+            order_lines.append(order_line)
+    elif fields.get("amount"):
+        # Single line from amount + description
+        description = fields.get("invoiceDescription") or fields.get("description") or "Invoice"
+        order_lines.append({
+            "count": 1,
+            "unitPriceExcludingVatCurrency": abs(fields["amount"]),
+            "description": description,
+        })
+    else:
+        return None
+
+    # Create order
+    order_payload = {
+        "customer": {"id": customer_id},
+        "orderDate": today,
+        "deliveryDate": today,
+        "orderLines": order_lines,
+    }
+    resp = await client.post("/order", order_payload)
+    order = resp.json().get("value", {})
+    order_id = order.get("id")
+    if not order_id:
+        logger.error("Failed to create order for invoice pipeline")
+        return None
+
+    # Invoice the order
+    resp = await client.put(f"/order/{order_id}/:invoice", params={
+        "invoiceDate": today,
+        "sendToCustomer": False,
+    })
+    invoice_data = resp.json().get("value", {})
+    invoice_id = invoice_data.get("id")
+    if not invoice_id:
+        logger.error("Failed to invoice order in pipeline")
+        return None
+
+    logger.info(f"Created invoice {invoice_id} from order {order_id} in pipeline")
+    return invoice_data
+
+
+async def _get_bank_payment_type_id(client: TripletexClient) -> int | None:
+    """Get the bank payment type ID."""
+    payment_type_resp = await client.get("/invoice/paymentType")
+    payment_types = payment_type_resp.json().get("values", [])
+    for pt in payment_types:
+        if "bank" in pt.get("description", "").lower():
+            return pt["id"]
+    return payment_types[0]["id"] if payment_types else None
+
+
 @register_handler("create_invoice")
 async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
     customer_id = await _find_or_create_customer(client, fields)
@@ -131,25 +216,17 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
 
 @register_handler("register_payment")
 async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    customer_id = await _find_customer_id(client, fields)
-    invoice = await _find_invoice(client, fields, customer_id)
+    # Ensure invoice exists (create customer → order → invoice if needed)
+    invoice = await _ensure_invoice_exists(client, fields)
 
     if not invoice:
-        logger.error(f"No invoice found for payment: customer_id={customer_id}")
-        return {"status": "completed", "note": "No matching invoice found"}
+        logger.error("No invoice found or created for payment")
+        return {"status": "completed", "note": "No matching invoice found and could not create one"}
 
     invoice_id = invoice.get("id")
 
     # Get payment type (bank)
-    payment_type_resp = await client.get("/invoice/paymentType")
-    payment_types = payment_type_resp.json().get("values", [])
-    payment_type_id = None
-    for pt in payment_types:
-        if "bank" in pt.get("description", "").lower():
-            payment_type_id = pt["id"]
-            break
-    if not payment_type_id and payment_types:
-        payment_type_id = payment_types[0]["id"]
+    payment_type_id = await _get_bank_payment_type_id(client)
 
     # Use amount from fields, or fall back to invoice amount
     amount = fields.get("amount")
@@ -171,50 +248,47 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
 
 @register_handler("reverse_payment")
 async def reverse_payment(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Reverse a payment on an invoice — makes it outstanding again."""
-    customer_id = await _find_customer_id(client, fields)
-    invoice = await _find_invoice(client, fields, customer_id)
+    """Reverse a payment on an invoice — creates invoice, pays it, then reverses."""
+    # Ensure invoice exists (create customer → order → invoice if needed)
+    invoice = await _ensure_invoice_exists(client, fields)
 
     if not invoice:
-        return {"status": "completed", "note": "No matching invoice found for reversal"}
+        return {"status": "completed", "note": "No matching invoice found and could not create one"}
 
     invoice_id = invoice.get("id")
-
-    # Reverse payment by registering a negative payment
-    payment_type_resp = await client.get("/invoice/paymentType")
-    payment_types = payment_type_resp.json().get("values", [])
-    payment_type_id = None
-    for pt in payment_types:
-        if "bank" in pt.get("description", "").lower():
-            payment_type_id = pt["id"]
-            break
-    if not payment_type_id and payment_types:
-        payment_type_id = payment_types[0]["id"]
+    payment_type_id = await _get_bank_payment_type_id(client)
 
     amount = fields.get("amount")
     if amount is None or amount == 0:
         amount = invoice.get("amount", 0)
-    # Negative amount to reverse
-    amount = -abs(amount)
 
     payment_date = fields.get("paymentDate") or date.today().isoformat()
 
+    # First register the initial payment (positive amount)
+    await client.put(f"/invoice/{invoice_id}/:payment", params={
+        "paymentDate": payment_date,
+        "paymentTypeId": payment_type_id,
+        "paidAmount": abs(amount),
+    })
+    logger.info(f"Registered initial payment on invoice {invoice_id} before reversal")
+
+    # Now reverse with negative amount
     resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
         "paymentDate": payment_date,
         "paymentTypeId": payment_type_id,
-        "paidAmount": amount,
+        "paidAmount": -abs(amount),
     })
-    logger.info(f"Reversed payment on invoice {invoice_id}, amount={amount}")
+    logger.info(f"Reversed payment on invoice {invoice_id}, amount={-abs(amount)}")
     return {"status": "completed", "taskType": "reverse_payment", "invoiceId": invoice_id}
 
 
 @register_handler("create_credit_note")
 async def create_credit_note(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    customer_id = await _find_customer_id(client, fields)
-    invoice = await _find_invoice(client, fields, customer_id)
+    # Ensure invoice exists (create customer → order → invoice if needed)
+    invoice = await _ensure_invoice_exists(client, fields)
 
     if not invoice:
-        return {"status": "completed", "note": "No matching invoice found for credit note"}
+        return {"status": "completed", "note": "No matching invoice found and could not create one"}
 
     invoice_id = invoice.get("id")
     credit_params: dict[str, Any] = {}

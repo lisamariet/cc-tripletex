@@ -1,110 +1,104 @@
 # Plan: Tripletex AI Accounting Agent
 
-## Fase 1: Infrastruktur-refaktor ✅
-- [x] `app/config.py` — env vars
-- [x] `app/models.py` — ParsedTask, APICallRecord, CallTracker
-- [x] `app/tripletex.py` — TripletexClient med delt httpx, call tracking
-- [x] `app/storage.py` — save_to_gcs()
-- [x] `app/parser.py` — parse_task() med Haiku + Sonnet fallback
-- [x] `app/file_processor.py` — base64 decode, bilde/PDF/CSV content blocks
-- [x] `app/handlers/__init__.py` — HANDLER_REGISTRY + decorator
-- [x] `app/main.py` — slanket til FastAPI + orchestration
-- [x] Bugfiks: Alltid HTTP 200 + {"status": "completed"}
-- [x] Bugfiks: Full session token i GCS
-- [x] Bugfiks: Fjernet verifikasjons-GET
-
-## Fase 2: Tier 1 handlers (×1 poeng) ✅
-- [x] `create_supplier` — POST /supplier (1 kall) — verifisert mot sandbox
-- [x] `create_customer` — POST /customer (1 kall) — verifisert mot sandbox
-- [x] `create_employee` — GET /department + POST /employee (2 kall) — verifisert mot sandbox
-- [x] `create_product` — GET /ledger/vatType + POST /product (1-2 kall) — verifisert mot sandbox
-- [x] `create_department` — POST /company/salesmodules + POST /department (1-2 kall) — verifisert mot sandbox
-
-## Fase 3: Parser-forbedring ✅
-- [x] System prompt med alle 17 oppgavetyper
-- [x] Claude Haiku som primærmodell, Sonnet som fallback
-- [x] Støtte for filer: bilder, PDF, CSV
-- [x] Alt i ett LLM-kall
-
-## Fase 4: Tier 2 handlers (×2 poeng) ⚡ Implementert, ikke sandbox-testet
-- [x] `create_invoice` — POST /customer → POST /order → PUT /order/:invoice (3 kall)
-- [x] `register_payment` — GET /invoice → PUT /invoice/:payment (2 kall)
-- [x] `create_credit_note` — GET /invoice → PUT /invoice/:createCreditNote (2 kall)
-- [x] `create_travel_expense` — GET /employee → POST /travelExpense → POST /travelExpense/cost (3+ kall)
-- [x] `delete_travel_expense` — GET /travelExpense → DELETE /travelExpense/{id} (2 kall)
-- [x] `create_project` — GET /employee + POST /project (2 kall) — verifisert mot sandbox
-- [x] `update_employee` — GET /employee → PUT /employee/{id} (2 kall)
-- [x] `update_customer` — GET /customer → PUT /customer/{id} (2 kall)
-
-## Infrastruktur ✅
-- [x] Deploy til Cloud Run (europe-west1)
-- [x] ANTHROPIC_API_KEY satt som env var
-- [x] GCS logging (requests + results)
-- [x] CLI-script: `scripts/compete.py` (status + submit)
-- [x] Test-script: `scripts/test_handlers.py` (sandbox-verifisering)
-- [x] API key beskyttelse — Bearer token auth på /solve
-
-## Fikset i code review ✅
-- [x] C4: `create_credit_note` bruker nå query params (ikke POST body)
-- [x] C5: Parser har 30s timeout + JSON parse fallback
-- [x] C2: `_find_or_create_customer` None-sjekk
-- [x] H3: `dueDate` sendes nå til `:invoice`
+## Ferdig ✅
+- [x] Infrastruktur-refaktor (config, models, tripletex client, parser, storage, handlers)
+- [x] Tier 1 handlers: supplier, customer, employee, product, department
+- [x] Tier 2 handlers: invoice, payment, credit note, travel expense, project, updates
+- [x] Parser med 18 oppgavetyper, Haiku + Sonnet fallback, 30s timeout
+- [x] Deploy pipeline (Cloud Run europe-west1, API key, GCS logging)
+- [x] CLI: status, show, insights, poll kommandoer
+- [x] Pre-deploy test suite (10 tester)
+- [x] Code review fikser (query params, None-sjekk, dueDate, JSON fallback)
+- [x] MVA-koder i parser (3=25%, 31=15%, 33=12%)
+- [x] Batch-oppgaver (parser + handler for "create 3 departments")
+- [x] reverse_payment handler
+- [x] Adresse-støtte på customer/supplier
 
 ---
 
-# Forbedringsplan — prioritert
+# Backlog — prioritert etter poenggevinst
 
-## KRITISK / HØY PRIORITET 🔴
+## KRITISK 🔴 (forventet +10-20 poeng)
 
-### H6: Rolle/entitlement-støtte for employee (5 av 10 poeng!)
+### 1. register_payment/credit_note MÅ opprette forutsetninger først
+Sandboxen er TOM for hver submission. Disse handlerene antar at det finnes faktura.
+- [ ] register_payment: opprett kunde → ordre → faktura → registrer betaling
+- [ ] create_credit_note: opprett kunde → ordre → faktura → kreditnota
+- [ ] reverse_payment: opprett kunde → ordre → faktura → registrer betaling → reverser
+**Impact: 3 oppgavetyper × Tier 2 (×2) = opptil 12 poeng**
+
+### 2. Employee roller/entitlements (50% av employee-poengene!)
+Scoring-eksempel: "Administrator role assigned" = 5 av 10 poeng.
+- [ ] Legg til `role`/`userType` felt i parser
+- [ ] Undersøk API: `/employee/{id}/entitlement` eller liknende
+- [ ] Sett rolle etter opprettelse
 - [ ] POST /employee/employment med startDate
-- [ ] Sett roller og tilganger på ansatt
-- [ ] Verifiser i sandbox
+**Impact: 5 poeng per employee-oppgave**
 
-### Parser-forbedringer
-- [ ] Few-shot examples i parser system prompt fra loggede prompts
-- [ ] Konfidensbasert Sonnet-fallback (confidence < 0.85 → re-parse med Sonnet)
+### 3. LLM fallback-agent for ukjente oppgavetyper
+16 av 30 oppgavetyper har ingen handler. Vi returnerer "No handler" = 0 poeng.
+- [ ] Når task_type er "unknown" eller ikke har handler: bruk LLM til å generere API-kall
+- [ ] Send prompt + Tripletex API-docs til LLM, la den bestemme kall-sekvens
+- [ ] Selv 30% correctness > 0 poeng
+**Impact: opptil 16 nye oppgavetyper × 0.5-2.0 poeng = 8-32 poeng**
 
-### Tier 3 handlers (×3 poeng)
-- [ ] `create_voucher` — POST /ledger/voucher med postings
-- [ ] `reverse_voucher` — GET /ledger/voucher → PUT /:reverse
-- [ ] `delete_voucher` — GET /ledger/voucher → DELETE
-- [ ] Bank reconciliation — parse CSV + opprett vouchers
-- [ ] Year-end closing
+### 4. Implementer Tier 3 handlers (åpner lørdag 2026-03-21)
+- [ ] `create_voucher` — POST /ledger/voucher med postings (bruk amountGross, row>=1)
+- [ ] `reverse_voucher` — PUT /ledger/voucher/{id}/:reverse?date=
+- [ ] `delete_voucher` — DELETE /ledger/voucher/{id} (kun siste i serien)
+- [ ] Bank reconciliation — POST /bank/statement/import + match
+**Impact: Tier 3 × 3 = opptil 6 poeng per oppgave**
 
-### Self-verifikasjon
-- [ ] GET etter POST for å sjekke at felt ble lagret korrekt
-- [ ] Logg avvik mellom sendt og lagret data
+## HØY PRIORITET 🟠 (forventet +5-10 poeng)
 
-### Testing
-- [ ] E2E test med ekte prompts (parse → execute → verify i sandbox)
-- [ ] Regresjonstester fra feilede submissions
+### 5. Few-shot examples i parser
+- [ ] Legg til 2-3 eksempler per task_type fra loggede prompts
+- [ ] Prioriter oppgaver som har feilet (register_payment, create_employee)
+- [ ] Hold under 3000 tokens totalt
+
+### 6. Konfidensbasert Sonnet-fallback
+- [ ] Etter Haiku-parse, sjekk confidence
+- [ ] Confidence < 0.85 → re-parse med Sonnet
+- [ ] Koster ~1s ekstra men gir bedre resultat
+
+### 7. Nye handler-typer vi mangler
+- [ ] `update_supplier` — GET /supplier → PUT
+- [ ] `update_product` — GET /product → PUT
+- [ ] `create_order` — POST /order (uten fakturering)
+- [ ] `register_supplier_invoice` — leverandørfaktura
+- [ ] `delete_employee` / `deactivate_employee`
+- [ ] `delete_customer` / `delete_supplier`
+- [ ] `create_invoice_from_pdf` — parse PDF-vedlegg
+
+### 8. Effektivitetsoptimalisering (dobler score ved perfekt)
+- [ ] Cache vatType, paymentType, costCategory (ikke hent på nytt hver gang)
+- [ ] Dropp GET /department for employee (bruk direkte POST)
+- [ ] I fersk sandbox: POST customer direkte, ikke søk først
+- [ ] Parallelliser uavhengige kall med asyncio.gather()
+- [ ] Legg til ?fields=id,name på GET-kall
 
 ## MEDIUM PRIORITET 🟡
 
-### API-ytelse
-- [ ] Fjern unødvendige GET-kall (cache department, vatType, paymentType)
-- [ ] Legg til `?fields=id,name` på GET-kall for effektivitet
-- [ ] Parallelliser uavhengige API-kall med `asyncio.gather()`
-- [ ] Pakk GCS-kall i `asyncio.to_thread`
+### 9. E2E test-suite
+- [ ] Test hele flyten: prompt → parse → execute → verify-GET
+- [ ] Bruk ekte prompts fra data/requests/ + genererte for alle 7 språk
+- [ ] Verifiser at felt faktisk lagres korrekt (ikke bare at 2xx returneres)
+- [ ] Regresjonstester fra feilede submissions
 
-### Verifikasjon og scoring
-- [ ] Lokal verifikator som speiler konkurranse-scoring
-- [ ] Feltdekningsverifisering (test at alle parser-felt brukes i handlers)
+### 10. Self-verifikasjon i handlers
+- [ ] GET etter POST for å sjekke at felt ble lagret
+- [ ] Logg avvik mellom sendt og lagret data
+- [ ] Korrigerende PUT ved avvik
 
-### Utvidet testing
-- [ ] Språk-stresstesting (7 språk fixtures)
-- [ ] PDF/filvedlegg-tester
-- [ ] Sandbox-teste Tier 2 handlers (invoice, payment, travel expense)
+### 11. Lokal scoring-verifikator
+- [ ] Speiler konkurranse-scoring felt-for-felt
+- [ ] Prediker score lokalt før submission
 
-### Analyse
-- [ ] Insights dashboard — analyse av API-kall: unødvendige kall, 4xx-feil, effektivitet per handler
-- [ ] Kjøre submissions og analysere resultater
-- [ ] Finjustere parser basert på feilede oppgaver
+### 12. Pakk synkrone kall i asyncio.to_thread
+- [ ] GCS-kall (save_to_gcs)
+- [ ] Anthropic API-kall (parse_task)
 
 ## LAV PRIORITET 🟢
-
-### Kodekvalitet
-- [ ] Flytt datetime-import til topp av fil
+- [ ] Flytt datetime-import til topp av filer
 - [ ] Validér ANTHROPIC_API_KEY ved oppstart
-- [ ] `.gitignore` for `__pycache__`
+- [ ] .gitignore for __pycache__
