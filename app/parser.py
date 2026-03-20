@@ -309,8 +309,29 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
             emb_type, emb_conf = classify_prompt(prompt)
             if emb_type and emb_type != "unknown" and emb_conf > 0.90:
                 logger.info(f"[auto] Embedding resolved: {emb_type} (conf={emb_conf:.4f}), using Gemini for fields")
+                # Add few-shot examples to prompt for better field extraction
+                augmented_prompt = prompt
+                try:
+                    from app.embeddings import get_similar_examples
+                    examples = get_similar_examples(prompt, emb_type, top_k=3)
+                    if examples:
+                        few_shot_parts = []
+                        for i, ex in enumerate(examples, 1):
+                            fields_json = json.dumps(ex["fields"], ensure_ascii=False)
+                            few_shot_parts.append(
+                                f"Eksempel {i}:\nPrompt: {ex['prompt']}\nFelter: {fields_json}"
+                            )
+                        augmented_prompt = (
+                            f'This task is of type "{emb_type}". Extract the fields.\n\n'
+                            f"Her er lignende oppgaver og korrekte felt:\n\n"
+                            + "\n\n".join(few_shot_parts)
+                            + f"\n\nOriginal prompt: {prompt}"
+                        )
+                        logger.info(f"[auto] Added {len(examples)} few-shot examples for {emb_type}")
+                except Exception as e:
+                    logger.warning(f"[auto] Few-shot retrieval failed: {e}")
                 from app.parser_gemini import parse_task_gemini
-                result = parse_task_gemini(prompt, files)
+                result = parse_task_gemini(augmented_prompt, files)
                 if result.task_type != "unknown":
                     return result
         except Exception as e:
@@ -345,12 +366,36 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=30.0)
     user_content = _build_user_content(prompt, files or [])
 
-    # If embedding gave high confidence, add type hint to the LLM prompt
+    # If embedding gave high confidence, add type hint + few-shot examples to the LLM prompt
     if embedding_type and embedding_type != "unknown" and embedding_confidence > 0.85:
         logger.info(f"Using embedding hint: {embedding_type} (confidence={embedding_confidence:.4f})")
+
+        # Try to retrieve few-shot examples for better field extraction
+        few_shot_text = ""
+        try:
+            from app.embeddings import get_similar_examples
+            examples = get_similar_examples(prompt, embedding_type, top_k=3)
+            if examples:
+                few_shot_parts = []
+                for i, ex in enumerate(examples, 1):
+                    fields_json = json.dumps(ex["fields"], ensure_ascii=False)
+                    few_shot_parts.append(
+                        f"Eksempel {i}:\nPrompt: {ex['prompt']}\nFelter: {fields_json}"
+                    )
+                few_shot_text = (
+                    "\n\nHer er lignende oppgaver og korrekte felt:\n\n"
+                    + "\n\n".join(few_shot_parts)
+                    + "\n\n"
+                )
+                logger.info(f"Added {len(examples)} few-shot examples for {embedding_type}")
+        except Exception as e:
+            logger.warning(f"Few-shot retrieval failed (continuing without): {e}")
+
         hint_text = (
             f'This task is of type "{embedding_type}". '
-            f"Extract the fields for this task type.\n\nOriginal prompt: {prompt}"
+            f"Extract the fields for this task type."
+            f"{few_shot_text}"
+            f"\n\nOriginal prompt: {prompt}"
         )
         hint_content = [{"type": "text", "text": hint_text}]
         if files:

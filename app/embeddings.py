@@ -195,6 +195,62 @@ def classify_prompt(text: str) -> tuple[str, float]:
     return (best_type, best_similarity)
 
 
+def get_similar_examples(prompt: str, task_type: str, top_k: int = 3) -> list[dict]:
+    """Find the top_k most similar prompts of the SAME task_type from the index.
+
+    Returns a list of {"prompt": ..., "fields": ...} dicts suitable for few-shot
+    injection. Returns an empty list if the index is unavailable or embedding fails.
+    """
+    global _index, _index_matrix, _index_types
+
+    # Lazy-load index
+    if _index is None:
+        _load_index()
+
+    if not _index or _index_matrix is None or _index_matrix.size == 0:
+        return []
+
+    try:
+        query_embedding = np.array(embed_text(prompt), dtype=np.float32)
+    except Exception as e:
+        logger.warning(f"Embedding failed in get_similar_examples: {e}")
+        return []
+
+    # Normalize query
+    query_norm = np.linalg.norm(query_embedding)
+    if query_norm == 0:
+        return []
+    query_normalized = query_embedding / query_norm
+
+    # Cosine similarity against all entries
+    similarities = _index_matrix @ query_normalized
+
+    # Filter to same task_type and sort by similarity (descending)
+    candidates = []
+    for i, (sim, entry) in enumerate(zip(similarities, _index)):
+        if entry["task_type"] == task_type:
+            candidates.append((float(sim), i))
+
+    if not candidates:
+        return []
+
+    # Sort descending by similarity, take top_k
+    candidates.sort(key=lambda x: -x[0])
+    results = []
+    for sim, idx in candidates[:top_k]:
+        entry = _index[idx]
+        # Skip if this is the exact same prompt
+        if entry["prompt"].strip() == prompt.strip():
+            continue
+        results.append({
+            "prompt": entry["prompt"],
+            "fields": entry.get("fields", {}),
+        })
+
+    logger.info(f"Found {len(results)} similar examples for task_type={task_type}")
+    return results
+
+
 def build_index() -> list[dict[str, Any]]:
     """Build the embedding index from data/results/ and data/requests/.
 
@@ -247,7 +303,9 @@ def build_index() -> list[dict[str, Any]]:
                 logger.info(f"Skipping unknown-type prompt (no inference): {prompt[:60]}")
                 continue
 
-        entries.append({"prompt": prompt, "task_type": task_type})
+        # Extract fields for few-shot retrieval
+        fields = parsed_task.get("fields", {})
+        entries.append({"prompt": prompt, "task_type": task_type, "fields": fields})
 
     logger.info(f"Collected {len(entries)} prompts for embedding")
 
@@ -263,6 +321,7 @@ def build_index() -> list[dict[str, Any]]:
         index.append({
             "prompt": entry["prompt"],
             "task_type": entry["task_type"],
+            "fields": entry.get("fields", {}),
             "embedding": embedding,
         })
 
