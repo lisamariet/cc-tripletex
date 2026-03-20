@@ -93,6 +93,17 @@ Supported task types and their fields:
 
 25. "unknown" — If you cannot determine the task type
 
+Examples:
+
+Prompt: "Registre el proveedor Dorada SL con número de organización 853166553. Correo electrónico: faktura@doradasl.no."
+Output: {"taskType": "create_supplier", "fields": {"name": "Dorada SL", "organizationNumber": "853166553", "email": "faktura@doradasl.no", "invoiceEmail": "faktura@doradasl.no"}, "confidence": 0.95, "reasoning": "Spanish prompt requesting supplier registration with org number and email."}
+
+Prompt: "Le client Océan SARL (nº org. 924390735) a une facture impayée de 39300 NOK hors TVA pour \"Maintenance\". Enregistrez le paiement intégral de cette facture."
+Output: {"taskType": "register_payment", "fields": {"customerName": "Océan SARL", "customerOrgNumber": "924390735", "amount": 39300, "invoiceDescription": "Maintenance", "lines": [{"description": "Maintenance", "quantity": 1, "unitPriceExcludingVat": 39300, "vatCode": "3"}]}, "confidence": 0.92, "reasoning": "French prompt to register full payment on an unpaid invoice for Maintenance."}
+
+Prompt: "Nous avons un nouvel employé nommé Sarah Richard, né le 15. August 1980. Veuillez le créer en tant qu'employé avec l'e-mail sarah.richard@example.org et la date de début 29. June 2026."
+Output: {"taskType": "create_employee", "fields": {"firstName": "Sarah", "lastName": "Richard", "dateOfBirth": "1980-08-15", "email": "sarah.richard@example.org", "startDate": "2026-06-29"}, "confidence": 0.95, "reasoning": "French prompt to create employee with name, DOB, email, and start date."}
+
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt
 - Organization numbers should be strings (preserve leading zeros)
@@ -188,4 +199,31 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
         reasoning=parsed.get("reasoning", ""),
     )
     logger.info(f"Parsed: type={task.task_type}, confidence={task.confidence}")
+
+    # Confidence-based Sonnet fallback: re-parse with stronger model if confidence is low
+    if task.confidence < 0.80 and message.model != LLM_FALLBACK_MODEL:
+        logger.info(f"Low confidence ({task.confidence}), re-parsing with {LLM_FALLBACK_MODEL}")
+        try:
+            fallback_message = client.messages.create(
+                model=LLM_FALLBACK_MODEL,
+                max_tokens=1024,
+                system=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": user_content}],
+            )
+            fallback_raw = fallback_message.content[0].text
+            logger.info(f"Fallback LLM response: {fallback_raw}")
+            fallback_parsed = _parse_json_response(fallback_raw)
+            if isinstance(fallback_parsed, dict):
+                fallback_task = ParsedTask(
+                    task_type=fallback_parsed.get("taskType", "unknown"),
+                    fields=fallback_parsed.get("fields", {}),
+                    confidence=fallback_parsed.get("confidence", 0.0),
+                    reasoning=fallback_parsed.get("reasoning", ""),
+                )
+                if fallback_task.confidence > task.confidence:
+                    logger.info(f"Fallback improved confidence: {task.confidence} → {fallback_task.confidence}")
+                    return fallback_task
+        except Exception as e:
+            logger.warning(f"Fallback re-parse failed: {e}")
+
     return task
