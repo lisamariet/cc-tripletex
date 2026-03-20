@@ -989,6 +989,28 @@ Kommandoer:
         help="Maks ventetid i sekunder (default: 1800 = 30 min)",
     )
 
+    # batch command
+    batch_parser = subparsers.add_parser("batch", help="Submit N ganger med pause mellom")
+    batch_parser.add_argument("count", type=int, help="Antall submissions")
+    batch_parser.add_argument("--interval", type=int, default=60,
+                              help="Sekunder mellom submissions (default: 60)")
+
+    args = parser.parse_args()
+
+    if args.command == "status":
+        cmd_status(args)
+    elif args.command == "show":
+        cmd_show(args)
+    elif args.command == "submit":
+        cmd_submit(args)
+    elif args.command == "batch":
+        cmd_batch(args)
+    elif args.command == "insights":
+        cmd_insights(args)
+    elif args.command == "poll":
+        cmd_poll(args)
+
+
 def cmd_batch(args: argparse.Namespace) -> None:
     """Submit multiple times with interval between each."""
     count = args.count
@@ -1024,28 +1046,6 @@ def cmd_batch(args: argparse.Namespace) -> None:
                 time.sleep(interval)
 
     print(f"\n{BOLD}Ferdig. Sjekk resultater: python3 scripts/compete.py status{RESET}")
-
-
-    # batch command
-    batch_parser = subparsers.add_parser("batch", help="Submit N ganger med pause mellom")
-    batch_parser.add_argument("count", type=int, help="Antall submissions")
-    batch_parser.add_argument("--interval", type=int, default=60,
-                              help="Sekunder mellom submissions (default: 60)")
-
-    args = parser.parse_args()
-
-    if args.command == "status":
-        cmd_status(args)
-    elif args.command == "show":
-        cmd_show(args)
-    elif args.command == "submit":
-        cmd_submit(args)
-    elif args.command == "batch":
-        cmd_batch(args)
-    elif args.command == "insights":
-        cmd_insights(args)
-    elif args.command == "poll":
-        cmd_poll(args)
 
 
 if __name__ == "__main__":
