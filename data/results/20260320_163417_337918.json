@@ -1,0 +1,117 @@
+{
+  "timestamp": "20260320_163417_337918",
+  "prompt": "Registre 34 horas para Carmen Pérez (carmen.perez@example.org) en la actividad \"Design\" del proyecto \"Migración de datos\" para Solmar SL (org. nº 920251684). Tarifa por hora: 1100 NOK/h. Genere una factura de proyecto al cliente basada en las horas registradas.",
+  "parsed_task": {
+    "task_type": "batch_register_timesheet",
+    "fields": {
+      "items": [
+        {
+          "taskType": "register_timesheet",
+          "fields": {
+            "employeeName": "Carmen Pérez",
+            "employeeEmail": "carmen.perez@example.org",
+            "activityName": "Design",
+            "projectName": "Migración de datos",
+            "hours": 34
+          },
+          "confidence": 0.95,
+          "reasoning": "Spanish prompt to register 34 timesheet hours for Carmen Pérez on the Design activity of the Migración de datos project."
+        },
+        {
+          "taskType": "create_invoice",
+          "fields": {
+            "customerName": "Solmar SL",
+            "customerOrgNumber": "920251684",
+            "lines": [
+              {
+                "description": "Design - Migración de datos",
+                "quantity": 34,
+                "unitPriceExcludingVat": 1100,
+                "vatCode": "3"
+              }
+            ]
+          },
+          "confidence": 0.93,
+          "reasoning": "Spanish prompt to generate a project invoice for Solmar SL based on 34 hours at 1100 NOK/h for the Design activity on the Migración de datos project. Total: 37400 NOK excluding VAT (25%)."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1431.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 1395.3,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/activity",
+      "status": 200,
+      "duration_ms": 1377.3,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 1536.1,
+      "error": null
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 8501.3,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_register_timesheet",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "register_timesheet",
+        "created": {
+          "id": 175904651,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175904651",
+          "project": {
+            "id": 401935906,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/project/401935906"
+          },
+          "activity": {
+            "id": 5080305,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/activity/5080305"
+          },
+          "date": "2026-03-20",
+          "hours": 34.0,
+          "chargeableHours": 34.0,
+          "employee": {
+            "id": 18187294,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18187294"
+          },
+          "timeClocks": [],
+          "comment": "",
+          "locked": false,
+          "chargeable": false,
+          "invoice": null,
+          "hourlyRate": 0.0,
+          "hourlyCost": 0.0,
+          "hourlyCostPercentage": 0,
+          "projectChargeableHours": 34.0
+        }
+      },
+      {
+        "status": "completed",
+        "note": "Employee not found"
+      }
+    ]
+  }
+}

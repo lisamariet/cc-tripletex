@@ -482,8 +482,9 @@ def cmd_show(args: argparse.Namespace) -> None:
 
     sub = submissions[n - 1]
 
-    # Fetch GCS logs
-    print("Henter GCS-logger...")
+    # Sync and fetch GCS logs
+    print("Synkroniserer data...")
+    sync_gcs_data()
     gcs_logs = fetch_gcs_logs("results")
     gcs_requests = fetch_gcs_logs("requests")
 
@@ -503,7 +504,11 @@ def cmd_show(args: argparse.Namespace) -> None:
     duration = safe_int(sub.get("duration_ms"))
     status = sub.get("status", "-")
 
+    # Task type from GCS log
+    task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests)
+
     print(f"  Tidspunkt:  {ts}")
+    print(f"  Oppgave:    {CYAN}{task_type}{RESET}")
     print(f"  Status:     {status}")
     if raw is not None:
         norm_f = safe_float(norm)
@@ -512,6 +517,25 @@ def cmd_show(args: argparse.Namespace) -> None:
     else:
         print(f"  Score:      {DIM}(ikke ferdig){RESET}")
     print(f"  Varighet:   {duration / 1000:.1f}s" if duration else "  Varighet:   -")
+
+    # ── Prompt (show early for context) ──
+    prompt = None
+    if req_log:
+        prompt = req_log.get("prompt", "")
+    if not prompt and log:
+        prompt = log.get("prompt", "")
+
+    if prompt:
+        print(f"\n  {BOLD}Prompt:{RESET}")
+        for line in prompt.split("\n"):
+            print(f"    {line}")
+
+        if _needs_translation(prompt):
+            translated = _translate_prompt(prompt)
+            if translated:
+                print(f"\n  {BOLD}Oversettelse:{RESET}")
+                for line in translated.split("\n"):
+                    print(f"    {DIM}{line}{RESET}")
 
     # ── Feedback / Checks ──
     feedback = sub.get("feedback") or {}
@@ -534,26 +558,6 @@ def cmd_show(args: argparse.Namespace) -> None:
                     print(f"    {icon} {name}: {points}/{max_pts}")
                 else:
                     print(f"    {check}")
-
-    # ── Prompt (from request log) ──
-    prompt = None
-    if req_log:
-        prompt = req_log.get("prompt", "")
-    if not prompt and log:
-        prompt = log.get("prompt", "")
-
-    if prompt:
-        print(f"\n  {BOLD}Prompt:{RESET}")
-        for line in prompt.split("\n"):
-            print(f"    {line}")
-
-        # Always translate if not Norwegian/English
-        if _needs_translation(prompt):
-            translated = _translate_prompt(prompt)
-            if translated:
-                print(f"\n  {BOLD}Oversettelse:{RESET}")
-                for line in translated.split("\n"):
-                    print(f"    {DIM}{line}{RESET}")
 
     # ── Parsed task ──
     if log:

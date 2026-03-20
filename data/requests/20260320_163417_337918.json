@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_163417_337918",
+  "prompt": "Registre 34 horas para Carmen Pérez (carmen.perez@example.org) en la actividad \"Design\" del proyecto \"Migración de datos\" para Solmar SL (org. nº 920251684). Tarifa por hora: 1100 NOK/h. Genere una factura de proyecto al cliente basada en las horas registradas.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "g3uUG9R1G-mHjBytccSqDeGPr2EU13k0toTcEs_Ghp8"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_163141_399695",
+  "prompt": "Erstellen Sie das Produkt \"Orangensaft\" mit der Produktnummer 1256. Der Preis beträgt 17450 NOK ohne MwSt., mit dem MwSt.-Satz für Lebensmittel von 15 %.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "k5Wk0n70fZxc7ME7ZUKjs6ujguV60wOkknuBqHwl9mU"
+  }
+}
