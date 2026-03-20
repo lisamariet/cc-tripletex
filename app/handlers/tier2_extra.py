@@ -209,24 +209,32 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
         if line.get("vatCode"):
             order_line["vatType"] = {"number": str(line["vatCode"])}
 
-        # Create product if productNumber is given
+        # Find or create product if productNumber is given
         product_number = line.get("productNumber")
         if product_number:
-            product_payload: dict[str, Any] = {
-                "name": line.get("description", f"Product {product_number}"),
-                "number": str(product_number),
-                "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
-            }
-            vat_code = line.get("vatCode", "3")
-            vat_id = await _resolve_vat_type_id(client, str(vat_code))
-            if vat_id is not None:
-                product_payload["vatType"] = {"id": vat_id}
-            prod_resp = await client.post("/product", product_payload)
-            if prod_resp.status_code in (200, 201):
-                product_id = prod_resp.json().get("value", {}).get("id")
-                if product_id:
-                    order_line["product"] = {"id": product_id}
-                    logger.info(f"Created product {product_number} (id={product_id})")
+            # Try to find existing product first (competition pre-creates them)
+            search_resp = await client.get("/product", params={"number": str(product_number), "fields": "id,number"})
+            existing = search_resp.json().get("values", [])
+            if existing:
+                product_id = existing[0]["id"]
+                order_line["product"] = {"id": product_id}
+                logger.info(f"Found existing product {product_number} (id={product_id})")
+            else:
+                product_payload: dict[str, Any] = {
+                    "name": line.get("description", f"Product {product_number}"),
+                    "number": str(product_number),
+                    "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
+                }
+                vat_code = line.get("vatCode", "3")
+                vat_id = await _resolve_vat_type_id(client, str(vat_code))
+                if vat_id is not None:
+                    product_payload["vatType"] = {"id": vat_id}
+                prod_resp = await client.post("/product", product_payload)
+                if prod_resp.status_code in (200, 201):
+                    product_id = prod_resp.json().get("value", {}).get("id")
+                    if product_id:
+                        order_line["product"] = {"id": product_id}
+                        logger.info(f"Created product {product_number} (id={product_id})")
 
         order_lines.append(order_line)
 

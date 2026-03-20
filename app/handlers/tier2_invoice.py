@@ -350,27 +350,35 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
         if line.get("vatCode"):
             order_line["vatType"] = {"number": str(line["vatCode"])}
 
-        # If productNumber is given, create the product and link it
+        # If productNumber is given, find or create the product and link it
         product_number = line.get("productNumber")
         if product_number:
-            product_payload: dict[str, Any] = {
-                "name": line.get("description", f"Product {product_number}"),
-                "number": str(product_number),
-                "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
-            }
-            # vatType is REQUIRED for POST /product — resolve from vatCode
-            vat_code = line.get("vatCode", "3")  # default to 25% standard
-            vat_id = await _resolve_vat_type_id(client, str(vat_code))
-            if vat_id is not None:
-                product_payload["vatType"] = {"id": vat_id}
-            prod_resp = await client.post("/product", product_payload)
-            if prod_resp.status_code in (200, 201):
-                product_id = prod_resp.json().get("value", {}).get("id")
-                if product_id:
-                    order_line["product"] = {"id": product_id}
-                    logger.info(f"Created product {product_number} (id={product_id})")
+            # First, try to find existing product by number
+            search_resp = await client.get("/product", params={"number": str(product_number), "fields": "id,number"})
+            existing = search_resp.json().get("values", [])
+            if existing:
+                product_id = existing[0]["id"]
+                order_line["product"] = {"id": product_id}
+                logger.info(f"Found existing product {product_number} (id={product_id})")
             else:
-                logger.warning(f"Failed to create product {product_number}: {prod_resp.text[:200]}")
+                # Create new product
+                product_payload: dict[str, Any] = {
+                    "name": line.get("description", f"Product {product_number}"),
+                    "number": str(product_number),
+                    "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
+                }
+                vat_code = line.get("vatCode", "3")
+                vat_id = await _resolve_vat_type_id(client, str(vat_code))
+                if vat_id is not None:
+                    product_payload["vatType"] = {"id": vat_id}
+                prod_resp = await client.post("/product", product_payload)
+                if prod_resp.status_code in (200, 201):
+                    product_id = prod_resp.json().get("value", {}).get("id")
+                    if product_id:
+                        order_line["product"] = {"id": product_id}
+                        logger.info(f"Created product {product_number} (id={product_id})")
+                else:
+                    logger.warning(f"Failed to create product {product_number}: {prod_resp.text[:200]}")
 
         order_lines.append(order_line)
 

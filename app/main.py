@@ -79,18 +79,6 @@ async def solve(request: Request):
             result["note"] = "Missing credentials"
         else:
             client = TripletexClient(base_url, session_token)
-
-            # Ensure VAT is registered — competition sandbox may start as VAT_NOT_REGISTERED
-            try:
-                vat_resp = await client.get("/ledger/vatSettings")
-                vat_data = vat_resp.json().get("value", {})
-                if vat_data.get("vatRegistrationStatus") != "VAT_REGISTERED":
-                    vat_data["vatRegistrationStatus"] = "VAT_REGISTERED"
-                    await client.put("/ledger/vatSettings", vat_data)
-                    logger.info("Activated VAT registration in sandbox")
-            except Exception as e:
-                logger.warning(f"VAT settings check failed (non-fatal): {e}")
-
             result = await execute_task(parsed_task.task_type, client, parsed_task.fields, prompt=prompt)
             # Ensure status is always "completed"
             result["status"] = "completed"
