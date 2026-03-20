@@ -83,10 +83,8 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
             "travelExpense": {"id": te_id},
             "date": cost.get("date", fields.get("date", "")),
             "amountCurrencyIncVat": cost.get("amount", 0),
-            "currency": {"id": cost.get("currencyId", 1)},  # 1 = NOK
         }
-        if cost.get("description"):
-            cost_payload["description"] = cost["description"]
+        # Note: "description" does NOT exist on travelExpense/cost — don't send it
         if cost_category_id:
             cost_payload["costCategory"] = {"id": cost_category_id}
         if payment_type_id:

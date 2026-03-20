@@ -15,11 +15,44 @@ def _pick(fields: dict, *keys: str) -> dict[str, Any]:
     return {k: fields[k] for k in keys if fields.get(k) is not None}
 
 
+def _build_address(fields: dict) -> dict[str, Any] | None:
+    """Build a Tripletex Address object from parsed address fields."""
+    addr = fields.get("address")
+    if not addr:
+        return None
+    return _pick(addr, "addressLine1", "addressLine2", "postalCode", "city") or None
+
+
+def _warn_unused(handler_name: str, fields: dict, used_keys: set) -> None:
+    """Log warning for any parsed fields that weren't used by the handler."""
+    unused = {k for k in fields if k not in used_keys and fields[k] is not None}
+    if unused:
+        logger.warning(f"[{handler_name}] Unused parsed fields: {unused}")
+
+
+# All field keys that supplier/customer handlers map
+_CONTACT_KEYS = {
+    "name", "organizationNumber", "email", "invoiceEmail", "phoneNumber",
+    "phoneNumberMobile", "isPrivateIndividual", "description", "isSupplier",
+    "isCustomer", "bankAccount", "website", "address", "overdueNoticeEmail",
+    "language",
+}
+
+
 @register_handler("create_supplier")
 async def create_supplier(client: TripletexClient, fields: dict[str, Any]) -> dict:
     payload = {"name": fields["name"]}
     payload.update(_pick(fields, "organizationNumber", "email", "invoiceEmail",
-                         "phoneNumber", "isPrivateIndividual", "description", "bankAccount"))
+                         "phoneNumber", "phoneNumberMobile", "isPrivateIndividual",
+                         "description", "bankAccount", "website", "overdueNoticeEmail",
+                         "language"))
+
+    address = _build_address(fields)
+    if address:
+        payload["postalAddress"] = address
+        payload["physicalAddress"] = address
+
+    _warn_unused("create_supplier", fields, _CONTACT_KEYS)
 
     resp = await client.post("/supplier", payload)
     data = resp.json()
@@ -31,7 +64,16 @@ async def create_supplier(client: TripletexClient, fields: dict[str, Any]) -> di
 async def create_customer(client: TripletexClient, fields: dict[str, Any]) -> dict:
     payload = {"name": fields["name"], "isCustomer": True}
     payload.update(_pick(fields, "organizationNumber", "email", "invoiceEmail",
-                         "phoneNumber", "isPrivateIndividual", "description", "isSupplier"))
+                         "phoneNumber", "phoneNumberMobile", "isPrivateIndividual",
+                         "description", "isSupplier", "website", "overdueNoticeEmail",
+                         "language"))
+
+    address = _build_address(fields)
+    if address:
+        payload["postalAddress"] = address
+        payload["physicalAddress"] = address
+
+    _warn_unused("create_customer", fields, _CONTACT_KEYS)
 
     resp = await client.post("/customer", payload)
     data = resp.json()
@@ -39,10 +81,20 @@ async def create_customer(client: TripletexClient, fields: dict[str, Any]) -> di
     return {"status": "completed", "taskType": "create_customer", "created": data.get("value", {})}
 
 
+_EMPLOYEE_KEYS = {
+    "firstName", "lastName", "email", "phoneNumberMobile", "dateOfBirth",
+    "startDate", "userType", "departmentId", "address", "employeeNumber",
+    "nationalIdentityNumber", "bankAccountNumber", "iban",
+}
+
+
 @register_handler("create_employee")
 async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> dict:
     payload = {"firstName": fields["firstName"], "lastName": fields["lastName"]}
-    payload.update(_pick(fields, "email", "phoneNumberMobile", "dateOfBirth", "startDate"))
+    # Note: startDate belongs on Employment, not Employee — don't send it here
+    payload.update(_pick(fields, "email", "phoneNumberMobile", "dateOfBirth",
+                         "employeeNumber", "nationalIdentityNumber",
+                         "bankAccountNumber", "iban"))
 
     # userType is required — default to STANDARD
     payload["userType"] = fields.get("userType", "STANDARD")
@@ -56,15 +108,22 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
         if depts:
             payload["department"] = {"id": depts[0]["id"]}
 
-    if fields.get("address"):
-        addr = fields["address"]
-        payload["address"] = _pick(addr, "addressLine1", "postalCode", "city", "country")
+    address = _build_address(fields)
+    if address:
+        payload["address"] = address
+
+    _warn_unused("create_employee", fields, _EMPLOYEE_KEYS)
 
     resp = await client.post("/employee", payload)
     data = resp.json()
-    employee_id = data.get("value", {}).get("id")
-    logger.info(f"Created employee: {employee_id}")
+    logger.info(f"Created employee: {data.get('value', {}).get('id')}")
     return {"status": "completed", "taskType": "create_employee", "created": data.get("value", {})}
+
+
+_PRODUCT_KEYS = {
+    "name", "number", "description", "isInactive", "priceExcludingVat",
+    "priceIncludingVat", "vatCode", "costExcludingVat",
+}
 
 
 @register_handler("create_product")
@@ -77,6 +136,8 @@ async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dic
         payload["priceExcludingVatCurrency"] = fields["priceExcludingVat"]
     if fields.get("priceIncludingVat") is not None:
         payload["priceIncludingVatCurrency"] = fields["priceIncludingVat"]
+    if fields.get("costExcludingVat") is not None:
+        payload["costExcludingVatCurrency"] = fields["costExcludingVat"]
 
     # If vatCode specified, look up the vatType
     if fields.get("vatCode"):
@@ -85,6 +146,8 @@ async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dic
         vat_types = vat_data.get("values", [])
         if vat_types:
             payload["vatType"] = {"id": vat_types[0]["id"]}
+
+    _warn_unused("create_product", fields, _PRODUCT_KEYS)
 
     resp = await client.post("/product", payload)
     data = resp.json()

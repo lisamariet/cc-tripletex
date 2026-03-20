@@ -20,16 +20,16 @@ Extract the task type and relevant fields. Return ONLY valid JSON.
 Supported task types and their fields:
 
 1. "create_supplier" — Register a new supplier
-   Fields: name*, organizationNumber, email, invoiceEmail, phoneNumber, isPrivateIndividual (bool), description, bankAccount
+   Fields: name*, organizationNumber, email, invoiceEmail, phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, bankAccount, website, address (object with addressLine1, addressLine2, postalCode, city)
 
 2. "create_customer" — Register a new customer
-   Fields: name*, organizationNumber, email, invoiceEmail, phoneNumber, isPrivateIndividual (bool), description, isSupplier (bool)
+   Fields: name*, organizationNumber, email, invoiceEmail, phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, isSupplier (bool), website, address (object with addressLine1, addressLine2, postalCode, city)
 
 3. "create_employee" — Register a new employee
-   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), address (object with addressLine1, postalCode, city, country)
+   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber, bankAccountNumber, address (object with addressLine1, postalCode, city)
 
 4. "create_product" — Register a new product
-   Fields: name*, number, priceExcludingVat (number), priceIncludingVat (number), description, vatCode (string, e.g. "3" for 25% MVA), isInactive (bool)
+   Fields: name*, number, priceExcludingVat (number), priceIncludingVat (number), costExcludingVat (number), description, vatCode (string, e.g. "3" for 25% MVA), isInactive (bool)
 
 5. "create_department" — Create a department
    Fields: name*, departmentNumber

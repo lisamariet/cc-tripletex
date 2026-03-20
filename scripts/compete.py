@@ -26,9 +26,9 @@ COMMON_HEADERS = {
 
 
 def get_token() -> str:
-    token = os.environ.get("NMIAI_TRIPLETEX_ACCESS_TOKEN")
+    token = os.environ.get("NMIAI_ACCESS_TOKEN")
     if not token:
-        print("Error: NMIAI_TRIPLETEX_ACCESS_TOKEN not found in .env")
+        print("Error: NMIAI_ACCESS_TOKEN not found in .env")
         sys.exit(1)
     return token
 
@@ -196,28 +196,77 @@ def poll_for_result(client: httpx.Client, submission_id: str, max_wait: int = 30
 
 
 def cmd_insights(args: argparse.Namespace) -> None:
-    """Analyze GCS result logs for efficiency insights."""
+    """Combined analysis: competition scores + GCS API call logs."""
     import json
     import subprocess
 
-    print("Henter resultat-logger fra GCS...\n")
+    # --- Part 1: Competition scores ---
+    print(f"{'='*70}")
+    print("  KONKURRANSE-OVERSIKT")
+    print(f"{'='*70}")
+
+    with make_client() as client:
+        subs = fetch_submissions(client)
+    if isinstance(subs, dict):
+        subs = subs.get("submissions") or subs.get("data") or [subs]
+
+    total_score = 0
+    perfect = 0
+    failed = 0
+    task_best: dict[str, float] = {}
+
+    for s in subs:
+        raw = s.get("score_raw", 0)
+        mx = s.get("score_max", 0)
+        norm = s.get("normalized_score", 0)
+        if norm >= 1.0:
+            perfect += 1
+        elif raw == 0:
+            failed += 1
+
+    print(f"  Submissions:      {len(subs)}")
+    print(f"  Perfekt (100%+):  {perfect}")
+    print(f"  Feilet (0%):      {failed}")
+    print(f"  Delvis:           {len(subs) - perfect - failed}")
+    print()
+
+    # Show each submission with prompt snippet
+    print(f"  {'Tid':<12} {'Score':>10} {'Checks':<22} {'Dur':>6}")
+    print(f"  {'-'*55}")
+    for s in sorted(subs, key=lambda x: x.get("queued_at", ""), reverse=True):
+        ts = s.get("queued_at", "")
+        ts_short = ts[11:16] if len(ts) > 16 else ts[:5]
+        raw = s.get("score_raw", 0)
+        mx = s.get("score_max", 0)
+        norm = s.get("normalized_score", 0)
+        fb = s.get("feedback", {}).get("comment", "")
+        dur = s.get("duration_ms", 0)
+        score_str = f"{raw}/{mx} ({norm:.0%})"
+        print(f"  {ts_short:<12} {score_str:>10} {fb:<22} {dur/1000:>5.1f}s")
+
+    # --- Part 2: GCS API call analysis ---
+    print(f"\n{'='*70}")
+    print("  API-KALL ANALYSE (fra GCS-logger)")
+    print(f"{'='*70}")
+
     result = subprocess.run(
         ["gsutil", "ls", "gs://tripletex-agent-requests/results/"],
         capture_output=True, text=True,
     )
-    if result.returncode != 0:
-        print("Ingen resultat-logger funnet.")
+    if result.returncode != 0 or not result.stdout.strip():
+        print("  Ingen resultat-logger funnet.\n")
         return
 
     files = sorted(result.stdout.strip().split("\n"))
     if not files or files == [""]:
-        print("Ingen resultat-logger funnet.")
+        print("  Ingen resultat-logger funnet.\n")
         return
 
     total_submissions = 0
     total_api_calls = 0
     total_4xx = 0
     handler_stats: dict[str, dict] = {}
+    all_entries: list[dict] = []
 
     for f in files:
         r = subprocess.run(["gsutil", "cat", f], capture_output=True, text=True)
@@ -229,51 +278,90 @@ def cmd_insights(args: argparse.Namespace) -> None:
             continue
 
         total_submissions += 1
-        task = data.get("parsed_task", {})
+        task = data.get("parsed_task", {}) or {}
         task_type = task.get("task_type", "unknown")
+        fields = task.get("fields", {})
         api_calls = data.get("api_calls", [])
         n_calls = len(api_calls)
         n_4xx = sum(1 for c in api_calls if 400 <= c.get("status", 0) < 500)
         total_api_calls += n_calls
         total_4xx += n_4xx
+        total_ms = data.get("total_duration_ms", 0)
 
         if task_type not in handler_stats:
-            handler_stats[task_type] = {"runs": 0, "calls": 0, "errors_4xx": 0, "calls_detail": []}
-        handler_stats[task_type]["runs"] += 1
-        handler_stats[task_type]["calls"] += n_calls
-        handler_stats[task_type]["errors_4xx"] += n_4xx
+            handler_stats[task_type] = {
+                "runs": 0, "calls": 0, "errors_4xx": 0,
+                "calls_detail": [], "prompts": [], "fields_used": set(),
+            }
+        hs = handler_stats[task_type]
+        hs["runs"] += 1
+        hs["calls"] += n_calls
+        hs["errors_4xx"] += n_4xx
+        hs["prompts"].append(data.get("prompt", "")[:80])
+        hs["fields_used"].update(fields.keys())
 
         for c in api_calls:
             status = c.get("status", 0)
             detail = f"{c['method']:6} {c['path']:40} {status} ({c.get('duration_ms', 0):.0f}ms)"
             if 400 <= status < 500:
-                detail += "  ⚠️  4xx ERROR"
-            handler_stats[task_type]["calls_detail"].append(detail)
+                detail += "  !! 4xx"
+            hs["calls_detail"].append(detail)
 
-    # Summary
-    print(f"{'='*60}")
-    print(f"  INSIGHTS — {total_submissions} submissions analysert")
-    print(f"{'='*60}")
+        all_entries.append({
+            "task_type": task_type,
+            "n_calls": n_calls,
+            "n_4xx": n_4xx,
+            "total_ms": total_ms,
+            "prompt": data.get("prompt", "")[:80],
+            "fields": list(fields.keys()),
+            "result_note": data.get("result", {}).get("note", ""),
+        })
+
+    print(f"  Logger analysert: {total_submissions}")
     print(f"  Totalt API-kall:  {total_api_calls}")
     print(f"  Totalt 4xx-feil:  {total_4xx}")
     if total_api_calls > 0:
         print(f"  Feilrate:         {total_4xx/total_api_calls:.0%}")
     print()
 
-    # Per handler
-    print(f"{'Handler':<25} {'Kjøringer':>9} {'API-kall':>9} {'4xx':>5} {'Snitt kall':>11}")
-    print("-" * 65)
+    # Per handler summary
+    print(f"  {'Handler':<25} {'Runs':>5} {'Kall':>5} {'4xx':>4} {'Snitt':>6} {'Felt brukt'}")
+    print(f"  {'-'*75}")
     for task_type in sorted(handler_stats.keys()):
         s = handler_stats[task_type]
         avg = s["calls"] / s["runs"] if s["runs"] > 0 else 0
-        err_marker = "  ⚠️" if s["errors_4xx"] > 0 else ""
-        print(f"{task_type:<25} {s['runs']:>9} {s['calls']:>9} {s['errors_4xx']:>5} {avg:>10.1f}{err_marker}")
+        err = f" !!" if s["errors_4xx"] > 0 else ""
+        fields_str = ", ".join(sorted(s["fields_used"]))[:40]
+        print(f"  {task_type:<25} {s['runs']:>5} {s['calls']:>5} {s['errors_4xx']:>4} {avg:>5.1f} {fields_str}{err}")
 
-    # Detailed call log per handler
+    # 4xx error details
+    if total_4xx > 0:
+        print(f"\n  {'='*70}")
+        print("  4xx FEIL-DETALJER (disse koster effektivitetspoeng)")
+        print(f"  {'='*70}")
+        for task_type in sorted(handler_stats.keys()):
+            s = handler_stats[task_type]
+            errors = [d for d in s["calls_detail"] if "4xx" in d]
+            if errors:
+                print(f"\n  [{task_type}]")
+                for e in errors:
+                    print(f"    {e}")
+
+    # Detailed per-submission log
     if args.detail:
-        print(f"\n{'='*60}")
-        print("  DETALJERT API-KALL-LOGG")
-        print(f"{'='*60}")
+        print(f"\n{'='*70}")
+        print("  DETALJERT PER-SUBMISSION LOGG")
+        print(f"{'='*70}")
+        for entry in all_entries:
+            print(f"\n  [{entry['task_type']}] {entry['n_calls']} kall, {entry['n_4xx']} 4xx, {entry['total_ms']:.0f}ms")
+            print(f"  Prompt: {entry['prompt']}")
+            print(f"  Felt:   {entry['fields']}")
+            if entry['result_note']:
+                print(f"  Note:   {entry['result_note']}")
+
+        print(f"\n  {'='*70}")
+        print("  ALLE API-KALL PER HANDLER")
+        print(f"  {'='*70}")
         for task_type in sorted(handler_stats.keys()):
             s = handler_stats[task_type]
             print(f"\n  [{task_type}]")
