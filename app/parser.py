@@ -26,7 +26,7 @@ Supported task types and their fields:
    Fields: name*, organizationNumber, email, invoiceEmail, phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, isSupplier (bool), website, address (object with addressLine1, addressLine2, postalCode, city)
 
 3. "create_employee" — Register a new employee
-   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber, bankAccountNumber, address (object with addressLine1, postalCode, city)
+   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber, bankAccountNumber, address (object with addressLine1, postalCode, city), role (string — extract if the prompt mentions a role like "administrator", "kontoadministrator", "accountant", "regnskapsfører", "faktureringsansvarlig", "avdelingsleder", etc.)
 
 4. "create_product" — Register a new product
    Fields: name*, number, priceExcludingVat (number), priceIncludingVat (number), costExcludingVat (number), description, vatCode (string — Tripletex codes: "3" = 25% standard, "31" = 15% food/middels, "33" = 12% low/transport, "5" = 0% exempt, "6" = 0% outside VAT law), isInactive (bool)

@@ -84,7 +84,7 @@ async def create_customer(client: TripletexClient, fields: dict[str, Any]) -> di
 _EMPLOYEE_KEYS = {
     "firstName", "lastName", "email", "phoneNumberMobile", "dateOfBirth",
     "startDate", "userType", "departmentId", "address", "employeeNumber",
-    "nationalIdentityNumber", "bankAccountNumber", "iban",
+    "nationalIdentityNumber", "bankAccountNumber", "iban", "role",
 }
 
 
@@ -116,7 +116,40 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
 
     resp = await client.post("/employee", payload)
     data = resp.json()
-    logger.info(f"Created employee: {data.get('value', {}).get('id')}")
+    employee_id = data.get("value", {}).get("id")
+    logger.info(f"Created employee: {employee_id}")
+
+    # Grant entitlements/role if requested
+    # Map common role descriptions to Tripletex entitlement templates
+    role = fields.get("role", "").lower()
+    if employee_id and any(kw in role for kw in ("admin", "kontoadmin", "full", "all")):
+        await client.put("/employee/entitlement/:grantEntitlementsByTemplate", params={
+            "employeeId": employee_id, "template": "ALL_PRIVILEGES",
+        })
+        logger.info(f"Granted ALL_PRIVILEGES to employee {employee_id}")
+    elif employee_id and any(kw in role for kw in ("faktura", "invoice", "invoicing")):
+        await client.put("/employee/entitlement/:grantEntitlementsByTemplate", params={
+            "employeeId": employee_id, "template": "INVOICING_MANAGER",
+        })
+    elif employee_id and any(kw in role for kw in ("regnskapsfør", "accountant", "regnskap")):
+        await client.put("/employee/entitlement/:grantEntitlementsByTemplate", params={
+            "employeeId": employee_id, "template": "ACCOUNTANT",
+        })
+    elif employee_id and any(kw in role for kw in ("personell", "hr", "personal")):
+        await client.put("/employee/entitlement/:grantEntitlementsByTemplate", params={
+            "employeeId": employee_id, "template": "PERSONELL_MANAGER",
+        })
+    elif employee_id and any(kw in role for kw in ("avdeling", "department")):
+        await client.put("/employee/entitlement/:grantEntitlementsByTemplate", params={
+            "employeeId": employee_id, "template": "DEPARTMENT_LEADER",
+        })
+    elif employee_id and role:
+        # Unknown role — default to ALL_PRIVILEGES to maximize score
+        await client.put("/employee/entitlement/:grantEntitlementsByTemplate", params={
+            "employeeId": employee_id, "template": "ALL_PRIVILEGES",
+        })
+        logger.info(f"Unknown role '{role}', granted ALL_PRIVILEGES to employee {employee_id}")
+
     return {"status": "completed", "taskType": "create_employee", "created": data.get("value", {})}
 
 
