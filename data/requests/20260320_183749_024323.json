@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_183749_024323",
+  "prompt": "Crea el producto \"Servicio de red\" con número de producto 6866. El precio es 19100 NOK sin IVA, utilizando la tasa estándar del 25 %.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "y-thVJY33vT8X8eUGACClR7yj5TimIKK3ufw0VQ5rMQ"
+  }
+}

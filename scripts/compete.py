@@ -349,6 +349,8 @@ def get_log_for_sub(sub: dict, gcs_logs: list[dict]) -> dict | None:
 
 def cmd_status(args: argparse.Namespace) -> None:
     """Fetch and display recent submissions with summary."""
+    # Always sync GCS data so task types are available
+    sync_gcs_data()
     with make_client() as client:
         print("Henter submissions...")
         submissions = normalize_submissions(fetch_submissions(client))

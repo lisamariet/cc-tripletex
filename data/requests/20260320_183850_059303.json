@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_183850_059303",
+  "prompt": "Register the supplier Northwave Ltd with organization number 949044378. Email: faktura@northwaveltd.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "td2H3rnCFti7lHfhYL0R2CPYoLyFp70YpcOMk3ZBYHc"
+  }
+}

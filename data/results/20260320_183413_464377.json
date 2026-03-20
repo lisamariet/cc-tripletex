@@ -1,0 +1,130 @@
+{
+  "timestamp": "20260320_183413_464377",
+  "prompt": "Create the customer Oakwood Ltd with organization number 980094863. The address is Torggata 10, 6003 Ålesund. Email: post@oakwood.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Oakwood Ltd",
+      "organizationNumber": "980094863",
+      "email": "post@oakwood.no",
+      "invoiceEmail": "post@oakwood.no",
+      "address": {
+        "addressLine1": "Torggata 10",
+        "postalCode": "6003",
+        "city": "Ålesund"
+      },
+      "overdueNoticeEmail": "post@oakwood.no"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 2054.5,
+      "error": null
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3835.8,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108257651,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108257651",
+      "name": "Oakwood Ltd",
+      "organizationNumber": "980094863",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@oakwood.no",
+      "invoiceEmail": "post@oakwood.no",
+      "overdueNoticeEmail": "post@oakwood.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Oakwood Ltd (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405366452,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405366452",
+        "addressLine1": "Torggata 10",
+        "addressLine2": "",
+        "postalCode": "6003",
+        "city": "Ålesund",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Oakwood Ltd, Torggata 10, 6003 Ålesund, Norge",
+        "addressAsString": "Torggata 10, 6003 Ålesund, Norge",
+        "displayNameInklMatrikkel": "Oakwood Ltd, Torggata 10, 6003 Ålesund, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "physicalAddress": {
+        "id": 405366451,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405366451",
+        "addressLine1": "Torggata 10",
+        "addressLine2": "",
+        "postalCode": "6003",
+        "city": "Ålesund",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Oakwood Ltd, Torggata 10, 6003 Ålesund, Norge",
+        "addressAsString": "Torggata 10, 6003 Ålesund, Norge",
+        "displayNameInklMatrikkel": "Oakwood Ltd, Torggata 10, 6003 Ålesund, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 350095188,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/350095188"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}

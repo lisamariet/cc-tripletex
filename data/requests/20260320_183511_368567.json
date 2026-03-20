@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_183511_368567",
+  "prompt": "Wir haben einen neuen Mitarbeiter namens Sophia Hoffmann, geboren am 7. January 1995. Bitte legen Sie ihn als Mitarbeiter mit der E-Mail sophia.hoffmann@example.org und dem Startdatum 3. June 2026 an.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "BIudrKaNabe3oW23m7DWoPp2Vol2WgmpfZ5lMeAxguM"
+  }
+}
