@@ -29,8 +29,8 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
             pm_id = employees[0]["id"]
 
     if pm_id is None:
-        # Use first available employee
-        resp = await client.get("/employee", params={"count": 1})
+        # Use first available employee (cached — same across session)
+        resp = await client.get_cached("/employee", params={"count": 1})
         employees = resp.json().get("values", [])
         if employees:
             pm_id = employees[0]["id"]
@@ -78,7 +78,7 @@ async def _find_project_manager(client: TripletexClient, name: str | None) -> in
             pm_id = employees[0]["id"]
 
     if pm_id is None:
-        resp = await client.get("/employee", params={"count": 1})
+        resp = await client.get_cached("/employee", params={"count": 1})
         employees = resp.json().get("values", [])
         if employees:
             pm_id = employees[0]["id"]

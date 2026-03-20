@@ -1,0 +1,78 @@
+{
+  "timestamp": "20260320_215355_655657",
+  "prompt": "Registrieren Sie den Lieferanten Waldstein GmbH mit der Organisationsnummer 874546445. E-Mail: faktura@waldsteingmbh.no.",
+  "parsed_task": {
+    "task_type": "create_supplier",
+    "fields": {
+      "name": "Waldstein GmbH",
+      "organizationNumber": "874546445",
+      "email": "faktura@waldsteingmbh.no",
+      "invoiceEmail": "faktura@waldsteingmbh.no",
+      "overdueNoticeEmail": "faktura@waldsteingmbh.no"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 201,
+      "duration_ms": 2623.6,
+      "error": null
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 9912.5,
+  "result": {
+    "status": "completed",
+    "taskType": "create_supplier",
+    "created": {
+      "id": 108276823,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108276823",
+      "name": "Waldstein GmbH",
+      "organizationNumber": "874546445",
+      "supplierNumber": 20001,
+      "customerNumber": 0,
+      "isSupplier": true,
+      "isCustomer": false,
+      "isInactive": false,
+      "email": "faktura@waldsteingmbh.no",
+      "invoiceEmail": "faktura@waldsteingmbh.no",
+      "overdueNoticeEmail": "faktura@waldsteingmbh.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "isPrivateIndividual": false,
+      "showProducts": false,
+      "accountManager": null,
+      "postalAddress": {
+        "id": 405404539,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405404539"
+      },
+      "physicalAddress": {
+        "id": 405404538,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405404538"
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "bankAccountPresentation": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "ledgerAccount": {
+        "id": 361944374,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/361944374"
+      },
+      "language": "NO",
+      "isWholesaler": false,
+      "displayName": "Waldstein GmbH (20001)",
+      "locale": "no_NO",
+      "website": ""
+    }
+  }
+}

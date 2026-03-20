@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 async def _lookup_account(client: TripletexClient, account_number: int) -> int:
-    """Look up a Tripletex account ID by account number."""
-    resp = await client.get("/ledger/account", params={"number": str(account_number)})
+    """Look up a Tripletex account ID by account number (cached)."""
+    resp = await client.get_cached("/ledger/account", params={"number": str(account_number)})
     data = resp.json()
     values = data.get("values", [])
     if not values:
@@ -21,9 +21,9 @@ async def _lookup_account(client: TripletexClient, account_number: int) -> int:
 
 
 async def _lookup_vat_type(client: TripletexClient, account_number: int) -> dict[str, Any] | None:
-    """For revenue/sales accounts (3000-series), look up the default VAT type."""
+    """For revenue/sales accounts (3000-series), look up the default VAT type (cached)."""
     if 3000 <= account_number < 4000:
-        resp = await client.get("/ledger/vatType", params={"number": "3"})  # Standard MVA 25%
+        resp = await client.get_cached("/ledger/vatType", params={"number": "3"})  # Standard MVA 25%
         data = resp.json()
         vat_types = data.get("values", [])
         if vat_types:

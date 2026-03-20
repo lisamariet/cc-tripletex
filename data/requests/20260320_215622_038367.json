@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_215622_038367",
+  "prompt": "O pagamento de Luz do Sol Lda (org. nº 856642402) referente à fatura \"Horas de consultoria\" (9000 NOK sem IVA) foi devolvido pelo banco. Reverta o pagamento para que a fatura volte a mostrar o montante em aberto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "wimQwT7ij1fauFaSw4gM_v85LCMFjUEz_yt520r82Y0"
+  }
+}

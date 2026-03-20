@@ -375,16 +375,20 @@ async def _find_project(client: TripletexClient, name: str) -> dict | None:
     return values[0] if values else None
 
 
-async def _find_or_create_project(client: TripletexClient, name: str) -> int | None:
-    """Find project by name or create a new one. Returns project ID."""
+async def _find_or_create_project(client: TripletexClient, name: str, pm_id: int | None = None) -> int | None:
+    """Find project by name or create a new one. Returns project ID.
+
+    If pm_id is provided, use it as project manager (avoids extra GET /employee).
+    """
     project = await _find_project(client, name)
     if project:
         return project["id"]
 
-    # Need a project manager — use the first employee
-    resp = await client.get("/employee", params={"count": 1})
-    employees = resp.json().get("values", [])
-    pm_id = employees[0]["id"] if employees else None
+    # Need a project manager — use provided pm_id or look up the first employee (cached)
+    if pm_id is None:
+        resp = await client.get_cached("/employee", params={"count": 1})
+        employees = resp.json().get("values", [])
+        pm_id = employees[0]["id"] if employees else None
 
     payload: dict[str, Any] = {
         "name": name,
@@ -439,11 +443,11 @@ async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) ->
         return {"status": "completed", "note": "Employee not found"}
     employee_id = employee["id"]
 
-    # 2. Find or create project
+    # 2. Find or create project (reuse employee_id as PM to avoid extra GET /employee)
     project_name = fields.get("projectName") or fields.get("project")
     if not project_name:
         return {"status": "completed", "note": "Project name is required"}
-    project_id = await _find_or_create_project(client, project_name)
+    project_id = await _find_or_create_project(client, project_name, pm_id=employee_id)
     if not project_id:
         return {"status": "completed", "note": "Could not find or create project"}
 
@@ -591,7 +595,7 @@ async def _create_project_invoice(
 
 async def _ensure_division(client: TripletexClient) -> int | None:
     """Get or create a default division for salary processing. Returns division ID."""
-    resp = await client.get("/division", params={"count": 1})
+    resp = await client.get_cached("/division", params={"count": 1})
     divisions = resp.json().get("values", [])
     if divisions:
         return divisions[0]["id"]
@@ -755,17 +759,7 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     if not employment_id:
         return {"status": "completed", "note": "Could not set up employment record for employee"}
 
-    # 5. Verify employment actually exists and has a division
-    verify_resp = await client.get("/employee/employment", params={"employeeId": employee_id})
-    verify_employments = verify_resp.json().get("values", [])
-    if not verify_employments:
-        logger.error(f"Employment verification failed: no employments found for employee {employee_id}")
-        return {"status": "completed", "note": "Employment record not found after creation — cannot proceed"}
-    verified_emp = verify_employments[0]
-    if not verified_emp.get("division"):
-        logger.error(f"Employment {employment_id} has no division after setup")
-        return {"status": "completed", "note": "Employment has no division — cannot proceed with salary"}
-    logger.info(f"Verified employment {employment_id} with division for employee {employee_id}")
+    # 5. Employment verified by _ensure_employment_with_division — skip redundant GET
 
     # 6. Get salary type IDs
     fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn (base salary)

@@ -1124,6 +1124,9 @@ Kommandoer:
         help="Maks ventetid i sekunder (default: 1800 = 30 min)",
     )
 
+    # errors command
+    subparsers.add_parser("errors", help="Detaljert 4xx-feilanalyse fra logger")
+
     # batch command
     batch_parser = subparsers.add_parser("batch", help="Submit N ganger med pause mellom")
     batch_parser.add_argument("count", type=int, help="Antall submissions")
@@ -1142,8 +1145,124 @@ Kommandoer:
         cmd_batch(args)
     elif args.command == "insights":
         cmd_insights(args)
+    elif args.command == "errors":
+        cmd_errors(args)
     elif args.command == "poll":
         cmd_poll(args)
+
+
+# ──────────────────────────────────────────────
+#  errors command (4xx analysis)
+# ──────────────────────────────────────────────
+
+def cmd_errors(args: argparse.Namespace) -> None:
+    """Detailed 4xx error analysis from GCS logs."""
+    sync_gcs_data()
+    gcs_logs = fetch_gcs_logs("results")
+
+    if not gcs_logs:
+        print("Ingen logger funnet.")
+        return
+
+    now = datetime.now()
+    one_hour_ago = now - timedelta(hours=1)
+
+    # Collect all 4xx errors
+    all_errors: list[dict] = []
+    for data in gcs_logs:
+        task = data.get("parsed_task", {}) or {}
+        task_type = task.get("task_type", "unknown")
+        if task_type in ("unknown", "?", ""):
+            prompt = data.get("prompt", "")
+            if prompt:
+                inferred = _infer_task_type_from_prompt(prompt)
+                if inferred:
+                    task_type = inferred
+
+        log_ts = data.get("timestamp", "")
+        try:
+            dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
+        except (ValueError, IndexError):
+            dt_log = None
+
+        for call in data.get("api_calls", []):
+            status = safe_int(call.get("status"))
+            if 400 <= status < 500:
+                error_body = call.get("error") or call.get("response_body") or ""
+                all_errors.append({
+                    "task_type": task_type,
+                    "method": call.get("method", "?"),
+                    "path": call.get("path", "?"),
+                    "status": status,
+                    "error": str(error_body)[:200],
+                    "timestamp": dt_log,
+                    "recent": dt_log and dt_log > one_hour_ago if dt_log else False,
+                })
+
+    if not all_errors:
+        print(f"\n  {GREEN}Ingen 4xx-feil funnet! 🎉{RESET}")
+        return
+
+    recent_errors = [e for e in all_errors if e["recent"]]
+
+    print()
+    print(f"{BOLD}{'═'*70}{RESET}")
+    print(f"{BOLD}  4xx FEILANALYSE{RESET}")
+    print(f"{BOLD}{'═'*70}{RESET}")
+    print(f"\n  Totalt 4xx-feil:     {len(all_errors)}")
+    print(f"  Siste timen:         {len(recent_errors)}")
+    print(f"  Logger analysert:    {len(gcs_logs)}")
+
+    # Group by endpoint
+    by_endpoint: dict[str, list] = {}
+    for e in all_errors:
+        key = f"{e['method']} {e['path']}"
+        by_endpoint.setdefault(key, []).append(e)
+
+    print(f"\n  {BOLD}Per endpoint (sortert etter antall):{RESET}")
+    print(f"    {'Endpoint':<45} {'Totalt':>6} {'Siste t':>8} {'Status'}")
+    print(f"    {'─'*70}")
+    for endpoint in sorted(by_endpoint.keys(), key=lambda k: -len(by_endpoint[k])):
+        errors = by_endpoint[endpoint]
+        recent = sum(1 for e in errors if e["recent"])
+        statuses = sorted(set(e["status"] for e in errors))
+        recent_color = RED if recent > 0 else DIM
+        print(f"    {endpoint:<45} {len(errors):>6} {recent_color}{recent:>8}{RESET} {statuses}")
+
+    # Group by task type
+    by_task: dict[str, list] = {}
+    for e in all_errors:
+        by_task.setdefault(e["task_type"], []).append(e)
+
+    print(f"\n  {BOLD}Per oppgavetype:{RESET}")
+    print(f"    {'Oppgavetype':<28} {'Totalt':>6} {'Siste t':>8}")
+    print(f"    {'─'*50}")
+    for task_type in sorted(by_task.keys(), key=lambda k: -len(by_task[k])):
+        errors = by_task[task_type]
+        recent = sum(1 for e in errors if e["recent"])
+        recent_color = RED if recent > 0 else DIM
+        print(f"    {task_type:<28} {len(errors):>6} {recent_color}{recent:>8}{RESET}")
+
+    # Group by error message
+    by_msg: dict[str, int] = {}
+    for e in all_errors:
+        msg = e["error"][:80] if e["error"] else "(ingen feilmelding)"
+        by_msg[msg] = by_msg.get(msg, 0) + 1
+
+    print(f"\n  {BOLD}Vanligste feilmeldinger:{RESET}")
+    for msg, count in sorted(by_msg.items(), key=lambda x: -x[1])[:15]:
+        print(f"    {RED}{count:>3}x{RESET} {msg}")
+
+    # Show recent errors in detail
+    if recent_errors:
+        print(f"\n  {BOLD}Siste timens feil (detaljer):{RESET}")
+        for e in sorted(recent_errors, key=lambda x: x["timestamp"] or datetime.min, reverse=True)[:20]:
+            ts = e["timestamp"].strftime("%H:%M:%S") if e["timestamp"] else "?"
+            print(f"    {RED}[{ts}]{RESET} {e['method']} {e['path']} → {e['status']}  [{e['task_type']}]")
+            if e["error"]:
+                print(f"           {DIM}{e['error'][:120]}{RESET}")
+
+    print()
 
 
 def cmd_batch(args: argparse.Namespace) -> None:
