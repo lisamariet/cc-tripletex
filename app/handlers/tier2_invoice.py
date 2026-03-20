@@ -357,7 +357,8 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
                 "number": str(product_number),
                 "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
             }
-            # Don't set vatType on product — let the order line control VAT
+            # Note: vatType {"id": N} fails on POST /product in our sandbox (422 vatTypeId)
+            # but may work in competition sandbox. Try it, fall through if it fails.
             prod_resp = await client.post("/product", product_payload)
             if prod_resp.status_code in (200, 201):
                 product_id = prod_resp.json().get("value", {}).get("id")

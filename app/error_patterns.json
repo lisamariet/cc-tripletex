@@ -216,6 +216,20 @@
       "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
     }
   ],
   "POST /invoice": [
@@ -303,6 +317,41 @@
       "error_message": "Verdien er ikke av korrekt type for dette feltet.",
       "fix": "Feltet 'customer.id' må være et heltall (int), ikke None eller string",
       "status": 422
+    },
+    {
+      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
     }
   ],
   "POST /product": [
@@ -374,6 +423,55 @@
       "error_type": "validation_error",
       "error_message": "Kan ikke opprette subelement.",
       "fix": "Valideringsfeil: Kan ikke opprette subelement.",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (vatTypeId)",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (vatTypeId)",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (vatTypeId)",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (vatTypeId)",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (vatTypeId)",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (vatTypeId)",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (vatTypeId)",
+      "error_type": "validation_error",
+      "error_message": "Ugyldig mva-kode.",
+      "fix": "Valideringsfeil: Ugyldig mva-kode.",
       "status": 422
     },
     {
@@ -591,6 +689,20 @@
       "error_message": "You do not have permission to access this feature.",
       "fix": "API-feil: You do not have permission to access this feature.",
       "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
     }
   ],
   "DELETE /customer/{id}": [
@@ -649,9 +761,37 @@
       "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
     }
   ],
   "DELETE /supplier/{id}": [
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
     {
       "field": "Internt felt (id)",
       "error_type": "validation_error",
