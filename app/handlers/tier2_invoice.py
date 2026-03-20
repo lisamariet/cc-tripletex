@@ -17,13 +17,13 @@ async def _find_or_create_customer(client: TripletexClient, fields: dict[str, An
     org_nr = fields.get("customerOrgNumber")
 
     if org_nr:
-        resp = await client.get("/customer", params={"organizationNumber": org_nr})
+        resp = await client.get("/customer", params={"organizationNumber": org_nr, "fields": "id,name,organizationNumber"})
         values = resp.json().get("values", [])
         if values:
             return values[0]["id"]
 
     if name:
-        resp = await client.get("/customer", params={"name": name})
+        resp = await client.get("/customer", params={"name": name, "fields": "id,name,organizationNumber"})
         values = resp.json().get("values", [])
         if values:
             return values[0]["id"]
@@ -37,19 +37,31 @@ async def _find_or_create_customer(client: TripletexClient, fields: dict[str, An
     return value.get("id") if value else None
 
 
+async def _create_customer_directly(client: TripletexClient, fields: dict[str, Any]) -> int | None:
+    """Create customer directly without searching first. Use in fresh sandbox (create_invoice)."""
+    name = fields.get("customerName", "") or "Unknown Customer"
+    org_nr = fields.get("customerOrgNumber")
+    payload: dict[str, Any] = {"name": name, "isCustomer": True}
+    if org_nr:
+        payload["organizationNumber"] = org_nr
+    resp = await client.post("/customer", payload)
+    value = resp.json().get("value", {})
+    return value.get("id") if value else None
+
+
 async def _find_customer_id(client: TripletexClient, fields: dict[str, Any]) -> int | None:
     """Find customer by orgNr or name. Returns ID or None. Does NOT create."""
     org_nr = fields.get("customerOrgNumber")
     name = fields.get("customerName")
 
     if org_nr:
-        resp = await client.get("/customer", params={"organizationNumber": org_nr})
+        resp = await client.get("/customer", params={"organizationNumber": org_nr, "fields": "id,name,organizationNumber"})
         values = resp.json().get("values", [])
         if values:
             return values[0]["id"]
 
     if name:
-        resp = await client.get("/customer", params={"name": name})
+        resp = await client.get("/customer", params={"name": name, "fields": "id,name,organizationNumber"})
         values = resp.json().get("values", [])
         if values:
             return values[0]["id"]
@@ -66,6 +78,7 @@ async def _find_invoice(client: TripletexClient, fields: dict[str, Any], custome
     search_params: dict[str, Any] = {
         "invoiceDateFrom": "2000-01-01",
         "invoiceDateTo": date.today().isoformat(),
+        "fields": "id,amount,amountCurrency,amountOutstanding,amountOutstandingCurrency,amountExcludingVat,amountExcludingVatCurrency",
     }
 
     if customer_id:
@@ -140,7 +153,7 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
             if line.get("description"):
                 order_line["description"] = line["description"]
             if line.get("vatCode"):
-                vat_resp = await client.get("/ledger/vatType", params={"number": line["vatCode"]})
+                vat_resp = await client.get_cached("/ledger/vatType", params={"number": line["vatCode"]})
                 vat_types = vat_resp.json().get("values", [])
                 if vat_types:
                     order_line["vatType"] = {"id": vat_types[0]["id"]}
@@ -191,7 +204,7 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
 
 async def _get_bank_payment_type_id(client: TripletexClient) -> int | None:
     """Get the bank payment type ID."""
-    payment_type_resp = await client.get("/invoice/paymentType")
+    payment_type_resp = await client.get_cached("/invoice/paymentType")
     payment_types = payment_type_resp.json().get("values", [])
     for pt in payment_types:
         if "bank" in pt.get("description", "").lower():
@@ -201,7 +214,8 @@ async def _get_bank_payment_type_id(client: TripletexClient) -> int | None:
 
 @register_handler("create_invoice")
 async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    customer_id = await _find_or_create_customer(client, fields)
+    # Fresh sandbox: POST customer directly — no existing customers to search for
+    customer_id = await _create_customer_directly(client, fields)
     if not customer_id:
         return {"status": "completed", "note": "Could not find or create customer"}
 
@@ -215,7 +229,7 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
         if line.get("description"):
             order_line["description"] = line["description"]
         if line.get("vatCode"):
-            vat_resp = await client.get("/ledger/vatType", params={"number": line["vatCode"]})
+            vat_resp = await client.get_cached("/ledger/vatType", params={"number": line["vatCode"]})
             vat_types = vat_resp.json().get("values", [])
             if vat_types:
                 order_line["vatType"] = {"id": vat_types[0]["id"]}
@@ -377,6 +391,13 @@ async def create_credit_note(client: TripletexClient, fields: dict[str, Any]) ->
     return {"status": "completed", "taskType": "create_credit_note", "invoiceId": invoice_id}
 
 
+@register_handler("create_invoice_from_pdf")
+async def create_invoice_from_pdf(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Create an invoice from PDF-extracted data. The parser extracts fields from the PDF."""
+    # Same as create_invoice — the parser already extracted data from the PDF
+    return await create_invoice(client, fields)
+
+
 @register_handler("update_customer")
 async def update_customer(client: TripletexClient, fields: dict[str, Any]) -> dict:
     params: dict[str, Any] = {}
@@ -385,6 +406,7 @@ async def update_customer(client: TripletexClient, fields: dict[str, Any]) -> di
     elif fields.get("customerName"):
         params["name"] = fields["customerName"]
 
+    # Don't restrict fields here — we need the full object for PUT update
     resp = await client.get("/customer", params=params)
     customers = resp.json().get("values", [])
     if not customers:

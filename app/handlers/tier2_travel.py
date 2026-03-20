@@ -29,6 +29,7 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> int
         else:
             params["firstName"] = name
 
+    params["fields"] = "id,firstName,lastName,email"
     resp = await client.get("/employee", params=params)
     employees = resp.json().get("values", [])
     if employees:
@@ -38,7 +39,7 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> int
 
 async def _get_cost_category(client: TripletexClient) -> int | None:
     """Get first available cost category ID."""
-    resp = await client.get("/travelExpense/costCategory")
+    resp = await client.get_cached("/travelExpense/costCategory")
     cats = resp.json().get("values", [])
     # Prefer "Kontorrekvisita" or similar generic category
     for cat in cats:
@@ -49,7 +50,7 @@ async def _get_cost_category(client: TripletexClient) -> int | None:
 
 async def _get_payment_type_private(client: TripletexClient) -> int | None:
     """Get payment type ID for private expense (Privat utlegg)."""
-    resp = await client.get("/travelExpense/paymentType")
+    resp = await client.get_cached("/travelExpense/paymentType")
     types = resp.json().get("values", [])
     for t in types:
         if "privat" in t.get("description", "").lower():

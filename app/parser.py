@@ -94,7 +94,10 @@ Supported task types and their fields:
 25. "register_timesheet" — Register hours/timesheet entry for an employee
     Fields: employeeName, employeeEmail, projectName, activityName, hours* (number), date (YYYY-MM-DD), comment
 
-26. "unknown" — If you cannot determine the task type
+26. "create_invoice_from_pdf" — Create an invoice from an attached PDF (scanned invoice)
+    Fields: customerName, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines (array of {description, quantity, unitPriceExcludingVat, vatCode}), totalAmount (number)
+
+27. "unknown" — If you cannot determine the task type
 
 Examples:
 
@@ -106,6 +109,21 @@ Output: {"taskType": "register_payment", "fields": {"customerName": "Océan SARL
 
 Prompt: "Nous avons un nouvel employé nommé Sarah Richard, né le 15. August 1980. Veuillez le créer en tant qu'employé avec l'e-mail sarah.richard@example.org et la date de début 29. June 2026."
 Output: {"taskType": "create_employee", "fields": {"firstName": "Sarah", "lastName": "Richard", "dateOfBirth": "1980-08-15", "email": "sarah.richard@example.org", "startDate": "2026-06-29"}, "confidence": 0.95, "reasoning": "French prompt to create employee with name, DOB, email, and start date."}
+
+Prompt: "Erstellen Sie das Produkt \"Orangensaft\" mit der Produktnummer 1256. Der Preis beträgt 17450 NOK ohne MwSt., mit dem MwSt.-Satz für Lebensmittel von 15 %."
+Output: {"taskType": "create_product", "fields": {"name": "Orangensaft", "number": "1256", "priceExcludingVat": 17450, "vatCode": "31"}, "confidence": 0.95, "reasoning": "German prompt to create a food product with 15% VAT (code 31)."}
+
+Prompt: "O cliente Floresta Lda (org. nº 916058896) tem uma fatura pendente de 30450 NOK sem IVA por \"Desenvolvimento de sistemas\". Registe o pagamento total desta fatura."
+Output: {"taskType": "register_payment", "fields": {"customerName": "Floresta Lda", "customerOrgNumber": "916058896", "amount": 30450, "invoiceDescription": "Desenvolvimento de sistemas", "lines": [{"description": "Desenvolvimento de sistemas", "quantity": 1, "unitPriceExcludingVat": 30450, "vatCode": "3"}]}, "confidence": 0.93, "reasoning": "Portuguese prompt to register full payment on a pending invoice."}
+
+Prompt: "Registe 4 horas para Maria Ferreira (maria.ferreira@example.org) na atividade \"Utvikling\" do projeto \"App-utvikling\" para hoje."
+Output: {"taskType": "register_timesheet", "fields": {"employeeName": "Maria Ferreira", "employeeEmail": "maria.ferreira@example.org", "activityName": "Utvikling", "projectName": "App-utvikling", "hours": 4}, "confidence": 0.94, "reasoning": "Portuguese prompt to register 4 timesheet hours for an employee on a project activity."}
+
+Prompt: "Create three departments in Tripletex: \"Utvikling\", \"Lager\", and \"Regnskap\"."
+Output: [{"taskType": "create_department", "fields": {"name": "Utvikling"}, "confidence": 0.95, "reasoning": "Batch: department 1 of 3."}, {"taskType": "create_department", "fields": {"name": "Lager"}, "confidence": 0.95, "reasoning": "Batch: department 2 of 3."}, {"taskType": "create_department", "fields": {"name": "Regnskap"}, "confidence": 0.95, "reasoning": "Batch: department 3 of 3."}]
+
+Prompt: "Kunden Vestfjord AS (org.nr 860678403) har reklamert på fakturaen for \"Skylagring\" (45350 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen."
+Output: {"taskType": "create_credit_note", "fields": {"customerName": "Vestfjord AS", "customerOrgNumber": "860678403", "invoiceDescription": "Skylagring", "amount": 45350, "lines": [{"description": "Skylagring", "quantity": 1, "unitPriceExcludingVat": 45350, "vatCode": "3"}]}, "confidence": 0.94, "reasoning": "Norwegian Nynorsk prompt to create a full credit note reversing an invoice."}
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt

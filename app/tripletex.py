@@ -19,6 +19,17 @@ class TripletexClient:
         self.auth = httpx.BasicAuth(username="0", password=session_token)
         self.tracker = CallTracker()
         self._client = httpx.AsyncClient(timeout=30.0, auth=self.auth)
+        self._cache: dict[str, httpx.Response] = {}
+
+    async def get_cached(self, path: str, params: dict[str, Any] | None = None) -> httpx.Response:
+        """GET with caching — use for reference-data lookups (vatType, paymentType, costCategory, department)."""
+        cache_key = f"{path}?{sorted(params.items()) if params else ''}"
+        if cache_key in self._cache:
+            return self._cache[cache_key]
+        resp = await self.get(path, params=params)
+        if resp.status_code == 200:
+            self._cache[cache_key] = resp
+        return resp
 
     async def close(self) -> None:
         await self._client.aclose()

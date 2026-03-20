@@ -115,7 +115,7 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
     if fields.get("departmentId"):
         payload["department"] = {"id": fields["departmentId"]}
     else:
-        dept_resp = await client.get("/department", params={"count": 1})
+        dept_resp = await client.get_cached("/department", params={"count": 1, "fields": "id,name"})
         depts = dept_resp.json().get("values", [])
         if depts:
             payload["department"] = {"id": depts[0]["id"]}
@@ -162,6 +162,18 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
         })
         logger.info(f"Unknown role '{role}', granted ALL_PRIVILEGES to employee {employee_id}")
 
+    # Create employment record with startDate if provided
+    if employee_id and fields.get("startDate"):
+        employment_payload = {
+            "employee": {"id": employee_id},
+            "startDate": fields["startDate"],
+        }
+        emp_resp = await client.post("/employee/employment", employment_payload)
+        if emp_resp.status_code < 400:
+            logger.info(f"Created employment for {employee_id} with startDate={fields['startDate']}")
+        else:
+            logger.warning(f"Failed to create employment: {emp_resp.text[:200]}")
+
     return {"status": "completed", "taskType": "create_employee", "created": data.get("value", {})}
 
 
@@ -186,7 +198,7 @@ async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dic
 
     # If vatCode specified, look up the vatType
     if fields.get("vatCode"):
-        vat_resp = await client.get("/ledger/vatType", params={"number": fields["vatCode"]})
+        vat_resp = await client.get_cached("/ledger/vatType", params={"number": fields["vatCode"]})
         vat_data = vat_resp.json()
         vat_types = vat_data.get("values", [])
         if vat_types:
