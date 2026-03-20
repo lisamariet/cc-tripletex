@@ -6,6 +6,7 @@ from typing import Any
 
 import httpx
 
+from app.api_validator import validate_payload
 from app.models import CallTracker
 
 logger = logging.getLogger(__name__)
@@ -40,13 +41,30 @@ class TripletexClient:
         return await self._request("GET", path, params=params)
 
     async def post(self, path: str, payload: dict[str, Any] | None = None) -> httpx.Response:
+        self._warn_invalid_fields("POST", path, payload)
         return await self._request("POST", path, json_body=payload)
 
     async def put(self, path: str, payload: dict[str, Any] | None = None, params: dict[str, Any] | None = None) -> httpx.Response:
+        self._warn_invalid_fields("PUT", path, payload)
         return await self._request("PUT", path, json_body=payload, params=params)
 
     async def delete(self, path: str) -> httpx.Response:
         return await self._request("DELETE", path)
+
+    # -- payload validation ---------------------------------------------------
+
+    @staticmethod
+    def _warn_invalid_fields(method: str, path: str, payload: dict[str, Any] | None) -> None:
+        """Validate payload fields against OpenAPI spec and log warnings."""
+        if not payload:
+            return
+        try:
+            errors = validate_payload(method, path, payload)
+            for err in errors:
+                logger.warning(f"[API Validator] {method} {path}: {err}")
+        except Exception as exc:
+            # Never let validation break the actual request
+            logger.debug(f"Payload validation error (non-fatal): {exc}")
 
     # -- internal -------------------------------------------------------------
 

@@ -66,7 +66,7 @@ def _warn_unused(handler_name: str, fields: dict, used_keys: set) -> None:
 _CONTACT_KEYS = {
     "name", "organizationNumber", "email", "invoiceEmail", "phoneNumber",
     "phoneNumberMobile", "isPrivateIndividual", "description", "isSupplier",
-    "isCustomer", "bankAccount", "website", "address", "overdueNoticeEmail",
+    "isCustomer", "bankAccounts", "website", "address", "overdueNoticeEmail",
     "language",
 }
 
@@ -92,7 +92,7 @@ async def create_supplier(client: TripletexClient, fields: dict[str, Any]) -> di
     payload = {"name": fields["name"]}
     payload.update(_pick(fields, "organizationNumber", "email", "invoiceEmail",
                          "phoneNumber", "phoneNumberMobile", "isPrivateIndividual",
-                         "description", "bankAccount", "website", "overdueNoticeEmail",
+                         "description", "bankAccounts", "website", "overdueNoticeEmail",
                          "language"))
 
     address = _build_address(fields)
