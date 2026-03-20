@@ -9,6 +9,20 @@ import httpx
 from app.api_validator import validate_payload
 from app.models import CallTracker
 
+# Graceful imports — RAG and error patterns are optional enhancements
+try:
+    from app.error_patterns import check_payload as _ep_check_payload
+    from app.error_patterns import record_error as _ep_record_error
+    _HAS_ERROR_PATTERNS = True
+except Exception:  # pragma: no cover
+    _HAS_ERROR_PATTERNS = False
+
+try:
+    from app.api_rag import suggest_fix as _rag_suggest_fix
+    _HAS_RAG = True
+except Exception:  # pragma: no cover
+    _HAS_RAG = False
+
 logger = logging.getLogger(__name__)
 
 
@@ -42,14 +56,30 @@ class TripletexClient:
 
     async def post(self, path: str, payload: dict[str, Any] | None = None, params: dict[str, Any] | None = None) -> httpx.Response:
         self._warn_invalid_fields("POST", path, payload)
+        self._check_error_patterns("POST", path, payload)
         return await self._request("POST", path, json_body=payload, params=params)
 
     async def put(self, path: str, payload: dict[str, Any] | None = None, params: dict[str, Any] | None = None) -> httpx.Response:
         self._warn_invalid_fields("PUT", path, payload)
+        self._check_error_patterns("PUT", path, payload)
         return await self._request("PUT", path, json_body=payload, params=params)
 
     async def delete(self, path: str) -> httpx.Response:
         return await self._request("DELETE", path)
+
+    # -- error pattern pre-flight ---------------------------------------------
+
+    @staticmethod
+    def _check_error_patterns(method: str, path: str, payload: dict[str, Any] | None) -> None:
+        """Run pre-flight check against known error patterns (non-blocking)."""
+        if not _HAS_ERROR_PATTERNS or not payload:
+            return
+        try:
+            warnings = _ep_check_payload(path, method, payload)
+            for w in warnings:
+                logger.warning(f"[Error Patterns] {w}")
+        except Exception as exc:
+            logger.debug(f"Error pattern check failed (non-fatal): {exc}")
 
     # -- payload validation ---------------------------------------------------
 
@@ -94,4 +124,29 @@ class TripletexClient:
             error_body = resp.text[:500]
         self.tracker.record(method, path, resp.status_code, duration, error=error_body)
         logger.info(f"Response {resp.status_code} ({duration:.0f}ms): {resp.text[:500]}")
+
+        # --- Error pattern recording (4xx) ---
+        if error_body and _HAS_ERROR_PATTERNS:
+            try:
+                _ep_record_error(path, method, resp.status_code, error_body, json_body)
+            except Exception as exc:
+                logger.debug(f"Error pattern recording failed (non-fatal): {exc}")
+
+        # --- RAG suggest_fix logging (422 on POST/PUT) ---
+        if resp.status_code == 422 and method in ("POST", "PUT") and _HAS_RAG:
+            try:
+                import json as _json
+                try:
+                    err_parsed = _json.loads(resp.text[:2000])
+                except (ValueError, TypeError):
+                    err_parsed = resp.text[:500]
+                suggestion = _rag_suggest_fix(path, method, err_parsed)
+                if suggestion:
+                    logger.info(
+                        f"[RAG] Fix suggestion for {method} {path}: "
+                        f"{suggestion.get('suggestion', '')}"
+                    )
+            except Exception as exc:
+                logger.debug(f"RAG suggest_fix failed (non-fatal): {exc}")
+
         return resp
