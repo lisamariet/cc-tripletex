@@ -68,4 +68,5 @@ from app.handlers import tier2_invoice  # noqa: E402,F401
 from app.handlers import tier2_travel  # noqa: E402,F401
 from app.handlers import tier2_project  # noqa: E402,F401
 from app.handlers import tier3  # noqa: E402,F401
+from app.handlers import tier2_extra  # noqa: E402,F401
 from app.handlers import fallback  # noqa: E402,F401

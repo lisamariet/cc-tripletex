@@ -70,7 +70,28 @@ Supported task types and their fields:
 17. "delete_voucher" — Delete a voucher
     Fields: voucherNumber, date
 
-18. "unknown" — If you cannot determine the task type
+18. "update_supplier" — Update supplier details
+    Fields: supplierName, supplierOrgNumber, organizationNumber, changes (object with fields to update)
+
+19. "update_product" — Update product details
+    Fields: productName, productNumber, number, changes (object with fields to update)
+
+20. "delete_employee" — Delete an employee
+    Fields: employeeName, employeeFirstName, employeeLastName
+
+21. "delete_customer" — Delete a customer
+    Fields: customerName, customerOrgNumber
+
+22. "delete_supplier" — Delete a supplier
+    Fields: supplierName, supplierOrgNumber
+
+23. "create_order" — Create an order (without invoicing)
+    Fields: customerName*, customerOrgNumber, orderDate (YYYY-MM-DD), deliveryDate (YYYY-MM-DD), lines (array of {description, quantity, unitPriceExcludingVat})
+
+24. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
+    Fields: supplierName, supplierOrgNumber, organizationNumber, amount, description, invoiceDate (YYYY-MM-DD), expenseAccount (account number, default "4000")
+
+25. "unknown" — If you cannot determine the task type
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt
