@@ -23,13 +23,18 @@ def register_handler(task_type: str):
     return decorator
 
 
-async def execute_task(task_type: str, client: TripletexClient, fields: dict[str, Any]) -> dict[str, Any]:
+async def execute_task(task_type: str, client: TripletexClient, fields: dict[str, Any], prompt: str = "") -> dict[str, Any]:
     """Look up and run the handler for task_type. Returns result dict."""
     # Handle batch tasks: batch_create_department → run create_department for each item
     if task_type.startswith("batch_"):
         base_type = task_type[6:]  # Remove "batch_" prefix
         handler = HANDLER_REGISTRY.get(base_type)
         if handler is None:
+            # Try fallback for unhandled batch types
+            fallback = HANDLER_REGISTRY.get("unknown")
+            if fallback and prompt:
+                logger.info(f"No handler for batch base type {base_type}, using fallback")
+                return await fallback(client, fields, prompt=prompt)
             logger.warning(f"No handler for batch base type: {base_type}")
             return {"status": "completed", "note": f"No handler for batch type: {base_type}"}
         items = fields.get("items", [])
@@ -42,8 +47,18 @@ async def execute_task(task_type: str, client: TripletexClient, fields: dict[str
 
     handler = HANDLER_REGISTRY.get(task_type)
     if handler is None:
+        # Use fallback handler for unregistered task types
+        fallback = HANDLER_REGISTRY.get("unknown")
+        if fallback and prompt:
+            logger.info(f"No handler for task type {task_type}, using fallback")
+            return await fallback(client, fields, prompt=prompt)
         logger.warning(f"No handler for task type: {task_type}")
         return {"status": "completed", "note": f"No handler for task type: {task_type}"}
+
+    # For the "unknown" task type, pass the prompt
+    if task_type == "unknown":
+        return await handler(client, fields, prompt=prompt)
+
     return await handler(client, fields)
 
 
@@ -52,3 +67,5 @@ from app.handlers import tier1  # noqa: E402,F401
 from app.handlers import tier2_invoice  # noqa: E402,F401
 from app.handlers import tier2_travel  # noqa: E402,F401
 from app.handlers import tier2_project  # noqa: E402,F401
+from app.handlers import tier3  # noqa: E402,F401
+from app.handlers import fallback  # noqa: E402,F401

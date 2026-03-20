@@ -474,8 +474,8 @@ def cmd_show(args: argparse.Namespace) -> None:
         for line in prompt.split("\n"):
             print(f"    {line}")
 
-        # Translate if not Norwegian/English
-        if args.translate and _needs_translation(prompt):
+        # Always translate if not Norwegian/English
+        if _needs_translation(prompt):
             translated = _translate_prompt(prompt)
             if translated:
                 print(f"\n  {BOLD}Oversettelse:{RESET}")
