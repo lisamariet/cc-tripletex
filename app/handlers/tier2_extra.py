@@ -190,8 +190,9 @@ async def delete_supplier(client: TripletexClient, fields: dict[str, Any]) -> di
 
 @register_handler("create_order")
 async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    # Find or create customer
-    from app.handlers.tier2_invoice import _find_or_create_customer
+    from app.handlers.tier2_invoice import _find_or_create_customer, _ensure_bank_account, _get_bank_payment_type_id
+    from app.handlers.tier1 import _resolve_vat_type_id
+
     customer_id = await _find_or_create_customer(client, fields)
     if not customer_id:
         return {"status": "completed", "note": "Could not find or create customer"}
@@ -205,6 +206,28 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
         }
         if line.get("description"):
             order_line["description"] = line["description"]
+        if line.get("vatCode"):
+            order_line["vatType"] = {"number": str(line["vatCode"])}
+
+        # Create product if productNumber is given
+        product_number = line.get("productNumber")
+        if product_number:
+            product_payload: dict[str, Any] = {
+                "name": line.get("description", f"Product {product_number}"),
+                "number": str(product_number),
+                "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
+            }
+            vat_code = line.get("vatCode", "3")
+            vat_id = await _resolve_vat_type_id(client, str(vat_code))
+            if vat_id is not None:
+                product_payload["vatType"] = {"id": vat_id}
+            prod_resp = await client.post("/product", product_payload)
+            if prod_resp.status_code in (200, 201):
+                product_id = prod_resp.json().get("value", {}).get("id")
+                if product_id:
+                    order_line["product"] = {"id": product_id}
+                    logger.info(f"Created product {product_number} (id={product_id})")
+
         order_lines.append(order_line)
 
     order_payload = {
@@ -215,8 +238,44 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
     }
     resp = await client.post("/order", order_payload)
     data = resp.json()
-    logger.info(f"Created order: {data.get('value', {}).get('id')}")
-    return {"status": "completed", "taskType": "create_order", "created": data.get("value", {})}
+    order = data.get("value", {})
+    order_id = order.get("id")
+    logger.info(f"Created order: {order_id}")
+
+    result: dict[str, Any] = {"status": "completed", "taskType": "create_order", "created": order}
+
+    # Convert to invoice if requested
+    if order_id and fields.get("convertToInvoice"):
+        await _ensure_bank_account(client)
+        inv_resp = await client.put(f"/order/{order_id}/:invoice", params={
+            "invoiceDate": today,
+            "sendToCustomer": False,
+        })
+        if inv_resp.status_code < 400:
+            invoice = inv_resp.json().get("value", {})
+            invoice_id = invoice.get("id")
+            result["invoice"] = invoice
+            logger.info(f"Converted order {order_id} to invoice {invoice_id}")
+
+            # Register payment if requested
+            if invoice_id and fields.get("registerPayment"):
+                # Get full invoice to find amount
+                detail_resp = await client.get(f"/invoice/{invoice_id}")
+                full_invoice = detail_resp.json().get("value", {})
+                amount = full_invoice.get("amountCurrency") or full_invoice.get("amount") or 0
+                amount = abs(amount)
+
+                payment_type_id = await _get_bank_payment_type_id(client)
+                pay_resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
+                    "paymentDate": today,
+                    "paymentTypeId": payment_type_id,
+                    "paidAmount": amount,
+                })
+                if pay_resp.status_code < 400:
+                    result["payment"] = {"status": "paid", "amount": amount}
+                    logger.info(f"Registered payment on invoice {invoice_id}, amount={amount}")
+
+    return result
 
 
 # ---------------------------------------------------------------------------

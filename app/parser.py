@@ -177,8 +177,8 @@ Supported task types and their fields:
 23. "delete_supplier" — Delete a supplier
     Fields: supplierName, supplierOrgNumber
 
-24. "create_order" — Create an order / Auftrag / pedido / commande (without invoicing)
-    Fields: customerName*, customerOrgNumber, orderDate (YYYY-MM-DD), deliveryDate (YYYY-MM-DD), lines (array of {description, quantity, unitPriceExcludingVat})
+24. "create_order" — Create an order for a customer, optionally convert to invoice and register payment
+    Fields: customerName*, customerOrgNumber, orderDate (YYYY-MM-DD), deliveryDate (YYYY-MM-DD), lines (array of {description, productNumber (if given in parentheses), quantity, unitPriceExcludingVat, vatCode}), convertToInvoice (bool — true if prompt asks to convert/invoice), registerPayment (bool — true if prompt asks to register payment)
 
 25. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
     Fields: supplierName, supplierOrgNumber, organizationNumber, amount (gross total including VAT), description, invoiceDate (YYYY-MM-DD), expenseAccount (account number, default "4000"), invoiceNumber (the supplier's invoice reference, e.g. "INV-2026-4855"), vatRate (integer percent, e.g. 25 for 25%, default 25)
