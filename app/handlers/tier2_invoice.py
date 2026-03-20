@@ -29,7 +29,7 @@ async def _try_update_existing_account(client: TripletexClient) -> bool:
 
     Returns True if successful.
     """
-    resp = await client.get(
+    resp = await client.get_cached(
         "/ledger/account",
         params={"number": "1920", "fields": "id,bankAccountNumber,isBankAccount,isInvoiceAccount"},
     )
@@ -95,8 +95,15 @@ async def _ensure_bank_account(client: TripletexClient) -> None:
     If not ready, tries multiple approaches:
       1. PUT bankAccountNumber on existing ledger account 1920
       2. POST a new ledger account with bank details (1921-1929)
+
+    Uses a per-client flag to avoid redundant checks within the same session.
     """
+    # Skip if we already confirmed bank account is ready in this session
+    if getattr(client, '_bank_account_confirmed', False):
+        return
+
     if await _is_bank_account_ready(client):
+        client._bank_account_confirmed = True  # type: ignore[attr-defined]
         return
 
     logger.info("bankAccountReady is False — setting up bank account for invoicing")
@@ -104,12 +111,14 @@ async def _ensure_bank_account(client: TripletexClient) -> None:
     # Strategy 1: update existing account 1920
     if await _try_update_existing_account(client):
         if await _is_bank_account_ready(client):
+            client._bank_account_confirmed = True  # type: ignore[attr-defined]
             return
         logger.warning("Updated account 1920 but bankAccountReady still False")
 
     # Strategy 2: create a new bank account
     if await _try_create_bank_account(client):
         if await _is_bank_account_ready(client):
+            client._bank_account_confirmed = True  # type: ignore[attr-defined]
             return
         logger.warning("Created bank account but bankAccountReady still False")
 
@@ -236,14 +245,16 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
     """
     await _ensure_bank_account(client)
 
-    # Try to find existing invoice first
+    # Try to find existing invoice first — reuse customer_id for creation if needed
     customer_id = await _find_customer_id(client, fields)
     invoice = await _find_invoice(client, fields, customer_id)
     if invoice:
         return invoice
 
-    # No invoice found — create the full chain
-    customer_id = await _find_or_create_customer(client, fields)
+    # No invoice found — create the full chain.
+    # If we already found the customer above, skip the redundant search in _find_or_create_customer.
+    if not customer_id:
+        customer_id = await _create_customer_directly(client, fields)
     if not customer_id:
         return None
 
@@ -435,10 +446,9 @@ async def reverse_payment(client: TripletexClient, fields: dict[str, Any]) -> di
 
     invoice_id = invoice.get("id")
 
-    # If the invoice dict doesn't already have amount fields, fetch full details
-    if not invoice.get("amountCurrency") and not invoice.get("amount"):
-        detail_resp = await client.get(f"/invoice/{invoice_id}")
-        invoice = detail_resp.json().get("value", invoice)
+    # Always fetch full invoice details to get amountOutstanding reliably
+    detail_resp = await client.get(f"/invoice/{invoice_id}")
+    invoice = detail_resp.json().get("value", invoice)
 
     payment_type_id = await _get_bank_payment_type_id(client)
 
@@ -456,7 +466,10 @@ async def reverse_payment(client: TripletexClient, fields: dict[str, Any]) -> di
     payment_date = fields.get("paymentDate") or date.today().isoformat()
 
     # Check if invoice already has a payment (amountOutstanding == 0 means fully paid)
-    outstanding = invoice.get("amountOutstanding") or invoice.get("amountCurrencyOutstanding")
+    # Note: use `is not None` checks — 0 is falsy in Python but valid here
+    outstanding = invoice.get("amountCurrencyOutstanding")
+    if outstanding is None:
+        outstanding = invoice.get("amountOutstanding")
     if outstanding is not None and float(outstanding) == 0:
         # Invoice already paid — just reverse (negative amount)
         logger.info(f"Invoice {invoice_id} already paid, reversing directly")
