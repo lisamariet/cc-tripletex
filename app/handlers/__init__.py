@@ -28,20 +28,28 @@ async def execute_task(task_type: str, client: TripletexClient, fields: dict[str
     # Handle batch tasks: batch_create_department → run create_department for each item
     if task_type.startswith("batch_"):
         base_type = task_type[6:]  # Remove "batch_" prefix
-        handler = HANDLER_REGISTRY.get(base_type)
-        if handler is None:
-            # Try fallback for unhandled batch types
-            fallback = HANDLER_REGISTRY.get("unknown")
-            if fallback and prompt:
-                logger.info(f"No handler for batch base type {base_type}, using fallback")
-                return await fallback(client, fields, prompt=prompt)
-            logger.warning(f"No handler for batch base type: {base_type}")
-            return {"status": "completed", "note": f"No handler for batch type: {base_type}"}
         items = fields.get("items", [])
         results = []
         for item in items:
-            item_fields = item.get("fields", item) if isinstance(item, dict) else {}
-            result = await handler(client, item_fields)
+            # Each item may have its own taskType — use it if available
+            if isinstance(item, dict):
+                item_type = item.get("taskType", base_type)
+                item_fields = item.get("fields", item)
+            else:
+                item_type = base_type
+                item_fields = {}
+
+            item_handler = HANDLER_REGISTRY.get(item_type)
+            if item_handler is None:
+                # Fallback to base_type handler
+                item_handler = HANDLER_REGISTRY.get(base_type)
+            if item_handler is None:
+                logger.warning(f"No handler for batch item type: {item_type}")
+                results.append({"status": "completed", "note": f"No handler for: {item_type}"})
+                continue
+
+            logger.info(f"Batch item {len(results)+1}/{len(items)}: {item_type}")
+            result = await item_handler(client, item_fields)
             results.append(result)
         return {"status": "completed", "taskType": task_type, "batch_results": results}
 

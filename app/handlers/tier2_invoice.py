@@ -393,20 +393,31 @@ async def reverse_payment(client: TripletexClient, fields: dict[str, Any]) -> di
 
     payment_date = fields.get("paymentDate") or date.today().isoformat()
 
-    # First register the initial payment (positive amount)
-    await client.put(f"/invoice/{invoice_id}/:payment", params={
-        "paymentDate": payment_date,
-        "paymentTypeId": payment_type_id,
-        "paidAmount": amount,
-    })
-    logger.info(f"Registered initial payment on invoice {invoice_id} before reversal")
+    # Check if invoice already has a payment (amountOutstanding == 0 means fully paid)
+    outstanding = invoice.get("amountOutstanding") or invoice.get("amountCurrencyOutstanding")
+    if outstanding is not None and float(outstanding) == 0:
+        # Invoice already paid — just reverse (negative amount)
+        logger.info(f"Invoice {invoice_id} already paid, reversing directly")
+        resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
+            "paymentDate": payment_date,
+            "paymentTypeId": payment_type_id,
+            "paidAmount": -amount,
+        })
+    else:
+        # Invoice not yet paid — pay first, then reverse
+        await client.put(f"/invoice/{invoice_id}/:payment", params={
+            "paymentDate": payment_date,
+            "paymentTypeId": payment_type_id,
+            "paidAmount": amount,
+        })
+        logger.info(f"Registered initial payment on invoice {invoice_id} before reversal")
 
-    # Now reverse with negative amount
-    resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
-        "paymentDate": payment_date,
-        "paymentTypeId": payment_type_id,
-        "paidAmount": -amount,
-    })
+        resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
+            "paymentDate": payment_date,
+            "paymentTypeId": payment_type_id,
+            "paidAmount": -amount,
+        })
+
     logger.info(f"Reversed payment on invoice {invoice_id}, amount={-amount}")
     return {"status": "completed", "taskType": "reverse_payment", "invoiceId": invoice_id}
 
