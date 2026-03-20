@@ -55,6 +55,9 @@ Supported task types and their fields:
 12. "create_project" — Create a project
     Fields: name*, customerName, customerOrgNumber, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), projectManagerName, isClosed (bool)
 
+30. "set_project_fixed_price" — Create a project linked to a customer with a fixed price amount (keywords: fastpris, fixed price, preço fixo, Festpreis, prix fixe, precio fijo)
+    Fields: projectName*, customerName*, customerOrgNumber, fixedPrice* (number — the fixed price amount in NOK), projectManagerName, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD)
+
 13. "update_employee" — Update employee details
     Fields: employeeName, employeeFirstName, employeeLastName, changes (object with fields to update)
 
@@ -100,9 +103,18 @@ Supported task types and their fields:
 27. "run_payroll" — Run payroll / salary payment for an employee (Gehaltsabrechnung, lønnskjøring, payroll)
     Fields: employeeName*, employeeEmail, baseSalary* (number in NOK), bonus (number in NOK, optional one-time bonus), month (integer 1-12, default current month), year (integer, default current year)
 
-28. "unknown" — If you cannot determine the task type
+28. "create_custom_dimension" — Create a custom accounting dimension with values, then optionally post a voucher linked to a dimension value
+    Fields: dimensionName* (name of the dimension, e.g. "Region", "Kostsenter"), values* (array of strings, e.g. ["Sør-Norge", "Nord-Norge"]), voucherDate (YYYY-MM-DD), voucherDescription (string), accountNumber (integer, the expense/cost account), amount (number in NOK), dimensionValue (string — which value from the values array to link to the voucher posting), creditAccount (integer, default 1920 for bank)
+
+31. "unknown" — If you cannot determine the task type
 
 Examples:
+
+Prompt: "Crie uma dimensão contabilística personalizada 'Region' com os valores 'Sør-Norge' e 'Nord-Norge'. Em seguida, lance um documento na conta 7140 por 23050 NOK, vinculado ao valor de dimensão 'Sør-Norge'."
+Output: {"taskType": "create_custom_dimension", "fields": {"dimensionName": "Region", "values": ["Sør-Norge", "Nord-Norge"], "voucherDate": "2026-03-20", "voucherDescription": "Voucher linked to dimension Sør-Norge", "accountNumber": 7140, "amount": 23050, "dimensionValue": "Sør-Norge"}, "confidence": 0.95, "reasoning": "Portuguese prompt to create a custom accounting dimension 'Region' with values, then post a voucher on account 7140 linked to dimension value 'Sør-Norge'."}
+
+Prompt: "Créez une dimension comptable personnalisée 'Kostsenter' avec les valeurs 'Kundeservice' et 'Økonomi'. Puis comptabilisez un document sur le compte 6300 pour 15000 NOK, lié à la valeur 'Økonomi'."
+Output: {"taskType": "create_custom_dimension", "fields": {"dimensionName": "Kostsenter", "values": ["Kundeservice", "Økonomi"], "voucherDate": "2026-03-20", "voucherDescription": "Voucher linked to dimension Økonomi", "accountNumber": 6300, "amount": 15000, "dimensionValue": "Økonomi"}, "confidence": 0.95, "reasoning": "French prompt to create custom dimension 'Kostsenter' with values and post a voucher linked to 'Økonomi'."}
 
 Prompt: "Registre el proveedor Dorada SL con número de organización 853166553. Correo electrónico: faktura@doradasl.no."
 Output: {"taskType": "create_supplier", "fields": {"name": "Dorada SL", "organizationNumber": "853166553", "email": "faktura@doradasl.no", "invoiceEmail": "faktura@doradasl.no"}, "confidence": 0.95, "reasoning": "Spanish prompt requesting supplier registration with org number and email."}
@@ -133,6 +145,12 @@ Output: {"taskType": "run_payroll", "fields": {"employeeName": "Laura Schneider"
 
 Prompt: "Run payroll for William Taylor (william.taylor@example.org) for this month. The base salary is 39400 NOK. Add a one-time bonus of 11800 NOK on top of the base salary."
 Output: {"taskType": "run_payroll", "fields": {"employeeName": "William Taylor", "employeeEmail": "william.taylor@example.org", "baseSalary": 39400, "bonus": 11800}, "confidence": 0.95, "reasoning": "English prompt to run payroll with base salary and bonus."}
+
+Prompt: "Sett fastpris 430750 kr på prosjektet 'Automatisering' for Havbris AS (org.nr 967636665). Prosjektleder er Kari Olsen."
+Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Automatisering", "customerName": "Havbris AS", "customerOrgNumber": "967636665", "fixedPrice": 430750, "projectManagerName": "Kari Olsen"}, "confidence": 0.96, "reasoning": "Norwegian prompt to create a project with a fixed price for a customer."}
+
+Prompt: "Defina um preço fixo de 114250 NOK no projeto 'Implementação ERP' para Luz do Sol Lda (org. nº 898537447)."
+Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Implementação ERP", "customerName": "Luz do Sol Lda", "customerOrgNumber": "898537447", "fixedPrice": 114250}, "confidence": 0.95, "reasoning": "Portuguese prompt to set a fixed price on a project for a customer."}
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt

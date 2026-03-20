@@ -224,11 +224,14 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
 
 @register_handler("register_supplier_invoice")
 async def register_supplier_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register a supplier invoice (innkjøpsfaktura) as a voucher with correct VAT handling."""
-    # Find or create the supplier
+    """Register a supplier invoice (innkjøpsfaktura) as a voucher with correct VAT and voucherType.
+
+    Uses POST /ledger/voucher with voucherType = "Leverandørfaktura" so the voucher
+    is properly classified as a supplier invoice in Tripletex.
+    """
+    # 1. Find or create the supplier
     supplier = await _find_supplier(client, fields)
     if not supplier:
-        # Create supplier
         supplier_payload: dict[str, Any] = {
             "name": fields.get("supplierName") or fields.get("name", "Unknown Supplier"),
         }
@@ -252,7 +255,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     invoice_date = fields.get("invoiceDate") or today
     invoice_number = fields.get("invoiceNumber") or ""
 
-    # Look up accounts
+    # 2. Look up accounts
     from app.handlers.tier3 import _lookup_account
     expense_account_nr = int(fields.get("expenseAccount", "4000"))
     expense_id = await _lookup_account(client, expense_account_nr)
@@ -261,7 +264,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if not expense_id or not payable_id:
         return {"status": "completed", "note": "Could not find ledger accounts"}
 
-    # Look up the correct input VAT type based on the rate from the prompt.
+    # 3. Look up the "Leverandørfaktura" voucher type
+    resp = await client.get_cached("/ledger/voucherType", params={"name": "Leverandørfaktura"})
+    vt_values = resp.json().get("values", [])
+    voucher_type_ref = None
+    for vt in vt_values:
+        if vt.get("name") == "Leverandørfaktura":
+            voucher_type_ref = {"id": vt["id"]}
+            break
+    if not voucher_type_ref and vt_values:
+        voucher_type_ref = {"id": vt_values[0]["id"]}
+
+    # 4. Look up the correct input VAT type based on the rate from the prompt.
     # Norwegian input VAT (inngående MVA) codes:
     #   "1"  = 25% høy sats
     #   "11" = 15% middels sats
@@ -282,7 +296,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         if vat_values:
             vat_type_ref = {"id": vat_values[0]["id"]}
 
-    # Build the expense posting (debit) — with VAT type so Tripletex auto-creates the
+    # 5. Build the expense posting (debit) — with VAT type so Tripletex auto-creates the
     # MVA posting.  amountGross is the full amount INCLUDING VAT.
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
@@ -296,7 +310,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if invoice_number:
         expense_posting["invoiceNumber"] = str(invoice_number)
 
-    # Build the AP posting (credit 2400) — no VAT type, full gross amount
+    # 6. Build the AP posting (credit 2400) — no VAT type, full gross amount
     ap_posting: dict[str, Any] = {
         "account": {"id": payable_id},
         "supplier": {"id": supplier_id},
@@ -307,11 +321,15 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if invoice_number:
         ap_posting["invoiceNumber"] = str(invoice_number)
 
-    voucher_payload = {
+    voucher_payload: dict[str, Any] = {
         "date": invoice_date,
         "description": f"Leverandørfaktura: {description}",
         "postings": [expense_posting, ap_posting],
     }
+    if voucher_type_ref:
+        voucher_payload["voucherType"] = voucher_type_ref
+    if invoice_number:
+        voucher_payload["externalVoucherNumber"] = str(invoice_number)
 
     resp = await client.post("/ledger/voucher", voucher_payload)
     data = resp.json()

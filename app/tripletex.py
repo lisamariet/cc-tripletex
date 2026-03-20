@@ -40,9 +40,9 @@ class TripletexClient:
     async def get(self, path: str, params: dict[str, Any] | None = None) -> httpx.Response:
         return await self._request("GET", path, params=params)
 
-    async def post(self, path: str, payload: dict[str, Any] | None = None) -> httpx.Response:
+    async def post(self, path: str, payload: dict[str, Any] | None = None, params: dict[str, Any] | None = None) -> httpx.Response:
         self._warn_invalid_fields("POST", path, payload)
-        return await self._request("POST", path, json_body=payload)
+        return await self._request("POST", path, json_body=payload, params=params)
 
     async def put(self, path: str, payload: dict[str, Any] | None = None, params: dict[str, Any] | None = None) -> httpx.Response:
         self._warn_invalid_fields("PUT", path, payload)

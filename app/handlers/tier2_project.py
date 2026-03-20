@@ -59,3 +59,87 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
     data = resp.json()
     logger.info(f"Created project: {data.get('value', {}).get('id')}")
     return {"status": "completed", "taskType": "create_project", "created": data.get("value", {})}
+
+
+async def _find_project_manager(client: TripletexClient, name: str | None) -> int | None:
+    """Find a project manager employee by name, or fall back to first employee."""
+    pm_id = None
+    if name:
+        parts = name.strip().split()
+        params: dict[str, Any] = {}
+        if len(parts) >= 2:
+            params["firstName"] = parts[0]
+            params["lastName"] = " ".join(parts[1:])
+        else:
+            params["firstName"] = parts[0]
+        resp = await client.get("/employee", params=params)
+        employees = resp.json().get("values", [])
+        if employees:
+            pm_id = employees[0]["id"]
+
+    if pm_id is None:
+        resp = await client.get("/employee", params={"count": 1})
+        employees = resp.json().get("values", [])
+        if employees:
+            pm_id = employees[0]["id"]
+
+    return pm_id
+
+
+@register_handler("set_project_fixed_price")
+async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Create a project linked to a customer with a fixed price amount."""
+    from datetime import date as date_cls
+
+    project_name = fields.get("projectName") or fields.get("name", "Unnamed Project")
+    fixed_price = fields.get("fixedPrice", 0)
+
+    # 1. Find or create customer
+    customer_id = await _find_or_create_customer(client, fields)
+
+    # 2. Find project manager
+    pm_id = await _find_project_manager(client, fields.get("projectManagerName"))
+
+    # 3. Create project with isFixedPrice=true
+    project_payload: dict[str, Any] = {
+        "name": project_name,
+        "isInternal": False,
+        "isFixedPrice": True,
+        "fixedprice": fixed_price,
+        "startDate": fields.get("startDate") or date_cls.today().isoformat(),
+    }
+
+    if pm_id:
+        project_payload["projectManager"] = {"id": pm_id}
+    if customer_id:
+        project_payload["customer"] = {"id": customer_id}
+    if fields.get("endDate"):
+        project_payload["endDate"] = fields["endDate"]
+
+    resp = await client.post("/project", project_payload)
+    data = resp.json()
+    project = data.get("value", {})
+    project_id = project.get("id")
+    logger.info(f"Created fixed-price project: {project_id}")
+
+    # 4. If the fixedprice wasn't set on create (some API versions require PUT), update it
+    if project_id and project.get("fixedprice", 0) != fixed_price:
+        logger.info(f"Updating fixedprice to {fixed_price} via PUT")
+        # Fetch full project to get all required fields for PUT
+        get_resp = await client.get(f"/project/{project_id}")
+        full_project = get_resp.json().get("value", {})
+        if full_project:
+            full_project["isFixedPrice"] = True
+            full_project["fixedprice"] = fixed_price
+            put_resp = await client.put(f"/project/{project_id}", full_project)
+            if put_resp.status_code < 400:
+                project = put_resp.json().get("value", project)
+                logger.info(f"Updated project {project_id} with fixedprice={fixed_price}")
+            else:
+                logger.warning(f"PUT update failed: {put_resp.status_code} {put_resp.text[:300]}")
+
+    return {
+        "status": "completed",
+        "taskType": "set_project_fixed_price",
+        "created": project,
+    }

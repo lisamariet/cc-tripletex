@@ -10,48 +10,110 @@ from app.tripletex import TripletexClient
 
 logger = logging.getLogger(__name__)
 
-_bank_account_ensured = False
+# Valid Norwegian bank account numbers (pass mod-11 check)
+_BANK_ACCOUNT_NUMBER = "12345678903"
+_BANK_ACCOUNT_NUMBER_ALT = "60110000009"
 
 
-async def _ensure_bank_account(client: TripletexClient) -> None:
-    """Ensure the company has a bank account configured on ledger account 1920.
+async def _is_bank_account_ready(client: TripletexClient) -> bool:
+    """Check if the company has a bank account configured for invoicing."""
+    resp = await client.get("/invoice/settings", params={"fields": "bankAccountReady"})
+    if resp.status_code == 200:
+        value = resp.json().get("value", {})
+        return bool(value.get("bankAccountReady"))
+    return False
 
-    On a fresh sandbox this field is empty, which prevents invoice creation.
-    Only runs once per session (cached via module-level flag).
+
+async def _try_update_existing_account(client: TripletexClient) -> bool:
+    """Try to set bankAccountNumber on existing ledger account 1920 via PUT.
+
+    Returns True if successful.
     """
-    global _bank_account_ensured
-    if _bank_account_ensured:
-        return
-
-    resp = await client.get("/ledger/account", params={"number": "1920", "fields": "id,version,bankAccountNumber,isBankAccount,isInvoiceAccount"})
+    resp = await client.get(
+        "/ledger/account",
+        params={"number": "1920", "fields": "id,bankAccountNumber,isBankAccount,isInvoiceAccount"},
+    )
     accounts = resp.json().get("values", [])
     if not accounts:
-        logger.warning("Ledger account 1920 not found — cannot ensure bank account")
-        _bank_account_ensured = True
-        return
+        logger.warning("Ledger account 1920 not found")
+        return False
 
     acct = accounts[0]
     if acct.get("bankAccountNumber"):
-        _bank_account_ensured = True
-        return
+        logger.info("Ledger account 1920 already has bankAccountNumber set")
+        return True
 
-    # Set a dummy bank account number so invoicing works
     acct_id = acct["id"]
-    # Fetch full account for PUT (need all fields)
     full_resp = await client.get(f"/ledger/account/{acct_id}")
     full_acct = full_resp.json().get("value", {})
-    full_acct["bankAccountNumber"] = "12345678903"
+    if not full_acct:
+        return False
+
+    full_acct["bankAccountNumber"] = _BANK_ACCOUNT_NUMBER
     full_acct["isBankAccount"] = True
     full_acct["isInvoiceAccount"] = True
 
     resp = await client.put(f"/ledger/account/{acct_id}", full_acct)
-    if resp.status_code >= 400:
-        logger.error(f"Failed to set bank account on 1920: {resp.text[:300]}")
-        # Try alternative: PUT /company with the bank account
-        # or just log and continue — invoicing may still fail
-    else:
-        logger.info("Configured bank account on ledger account 1920 for invoicing")
-    _bank_account_ensured = True
+    if resp.status_code < 400:
+        logger.info("Set bankAccountNumber on ledger account 1920 via PUT")
+        return True
+
+    logger.warning(f"PUT /ledger/account/{acct_id} failed ({resp.status_code}): {resp.text[:300]}")
+    return False
+
+
+async def _try_create_bank_account(client: TripletexClient) -> bool:
+    """Fallback: create a new ledger account with bank details via POST.
+
+    Tries account numbers 1921-1929 until one succeeds.
+    Returns True if successful.
+    """
+    for num in range(1921, 1930):
+        resp = await client.post("/ledger/account", {
+            "number": num,
+            "name": f"Bankkonto {num}",
+            "type": "ASSETS",
+            "isBankAccount": True,
+            "isInvoiceAccount": True,
+            "bankAccountNumber": _BANK_ACCOUNT_NUMBER_ALT,
+            "currency": {"id": 1},
+            "bankAccountCountry": {"id": 161},
+        })
+        if resp.status_code < 400:
+            logger.info(f"Created new bank account on ledger account {num}")
+            return True
+        logger.debug(f"POST /ledger/account {num} failed: {resp.text[:200]}")
+
+    logger.warning("Failed to create any bank account (1921-1929)")
+    return False
+
+
+async def _ensure_bank_account(client: TripletexClient) -> None:
+    """Ensure the company has a bank account configured for invoicing.
+
+    Checks the actual invoice settings (bankAccountReady) as source of truth.
+    If not ready, tries multiple approaches:
+      1. PUT bankAccountNumber on existing ledger account 1920
+      2. POST a new ledger account with bank details (1921-1929)
+    """
+    if await _is_bank_account_ready(client):
+        return
+
+    logger.info("bankAccountReady is False — setting up bank account for invoicing")
+
+    # Strategy 1: update existing account 1920
+    if await _try_update_existing_account(client):
+        if await _is_bank_account_ready(client):
+            return
+        logger.warning("Updated account 1920 but bankAccountReady still False")
+
+    # Strategy 2: create a new bank account
+    if await _try_create_bank_account(client):
+        if await _is_bank_account_ready(client):
+            return
+        logger.warning("Created bank account but bankAccountReady still False")
+
+    logger.error("Could not ensure bank account — invoice creation may fail")
 
 
 async def _find_or_create_customer(client: TripletexClient, fields: dict[str, Any]) -> int | None:
