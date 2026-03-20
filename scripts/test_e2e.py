@@ -536,6 +536,258 @@ def build_tier2_tests() -> list[E2ETestCase]:
             verify=None,  # Payroll verification is complex; check handler result
             tier=2,
         ),
+
+        # ---- New tests: missing handler coverage ----
+
+        # T2-14: create_employee with role (5/10 points for role)
+        E2ETestCase(
+            name="t2_create_employee_with_role",
+            expected_task_type="create_employee",
+            expected_fields={},
+            prompt=f'Opprett ansatt "E2EAnsatt{ts}" "Rolle{ts}" med rolle admin.',
+            direct_fields={
+                "firstName": f"E2EAnsatt{ts}",
+                "lastName": f"Rolle{ts}",
+                "email": f"e2e.ansatt.{ts}@test.no",
+                "role": "admin",
+                "startDate": "2026-03-20",
+            },
+            verify=VerifySpec(
+                endpoint="/employee",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("firstName", f"E2EAnsatt{ts}"),
+                    FieldCheck("lastName", f"Rolle{ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-15: create_department
+        E2ETestCase(
+            name="t2_create_department",
+            expected_task_type="create_department",
+            expected_fields={},
+            prompt=f'Opprett avdelingen "E2E Avdeling {ts}".',
+            direct_fields={
+                "name": f"E2E Avdeling {ts}",
+            },
+            verify=VerifySpec(
+                endpoint="/department",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("name", f"E2E Avdeling {ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-16: set_project_fixed_price
+        E2ETestCase(
+            name="t2_set_project_fixed_price",
+            expected_task_type="set_project_fixed_price",
+            expected_fields={},
+            prompt=f'Opprett prosjektet "E2E Fastpris {ts}" med fastpris 150000 kr for kunden "E2E FPKunde {ts}".',
+            direct_fields={
+                "projectName": f"E2E Fastpris {ts}",
+                "fixedPrice": 150000,
+                "customerName": f"E2E FPKunde {ts}",
+                "startDate": "2026-03-20",
+            },
+            verify=VerifySpec(
+                endpoint="/project",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("name", f"E2E Fastpris {ts}"),
+                    FieldCheck("isFixedPrice", True),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-17: create_custom_dimension
+        E2ETestCase(
+            name="t2_create_custom_dimension",
+            expected_task_type="create_custom_dimension",
+            expected_fields={},
+            prompt=f'Opprett dimensjonen "E2EDim{ts}" med verdiene "VerdiA{ts}" og "VerdiB{ts}".',
+            direct_fields={
+                "dimensionName": f"E2EDim{ts}",
+                "values": [f"VerdiA{ts}", f"VerdiB{ts}"],
+            },
+            verify=None,  # custom check: dimension + values in handler result
+            tier=2,
+        ),
+
+        # T2-18: create_voucher (use expense 6300 + bank 1920 to avoid supplier/customer requirements)
+        E2ETestCase(
+            name="t2_create_voucher",
+            expected_task_type="create_voucher",
+            expected_fields={},
+            prompt=f'Opprett et bilag datert 2026-03-20 med debet konto 6300 og kredit konto 1920, beloep 5000 kr.',
+            direct_fields={
+                "description": f"E2E Bilag {ts}",
+                "date": "2026-03-20",
+                "postings": [
+                    {"debitAccount": "6300", "creditAccount": "1920", "amount": 5000},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-19: reverse_voucher (create one first, then reverse)
+        # Note: don't pass date — handler searches by voucherNumber only to avoid
+        # Tripletex dateFrom==dateTo validation error
+        E2ETestCase(
+            name="t2_reverse_voucher",
+            expected_task_type="reverse_voucher",
+            expected_fields={},
+            prompt=f'Reverser bilaget.',
+            direct_fields={},
+            setup="create_voucher_for_reverse",
+            verify=None,  # custom check in post-checks
+            tier=2,
+        ),
+
+        # T2-20: delete_voucher (create one first, then delete)
+        E2ETestCase(
+            name="t2_delete_voucher",
+            expected_task_type="delete_voucher",
+            expected_fields={},
+            prompt=f'Slett bilaget.',
+            direct_fields={},
+            setup="create_voucher_for_delete",
+            verify=None,  # verified by deletedId in handler result
+            tier=2,
+        ),
+
+        # T2-21: create_invoice_from_pdf (delegates to create_invoice)
+        E2ETestCase(
+            name="t2_create_invoice_from_pdf",
+            expected_task_type="create_invoice_from_pdf",
+            expected_fields={},
+            prompt=f'Opprett en faktura fra PDF-data til kunden "E2E PDFKunde {ts}" med en linje "Konsulentarbeid" 20000 kr.',
+            direct_fields={
+                "customerName": f"E2E PDFKunde {ts}",
+                "lines": [
+                    {"description": "Konsulentarbeid", "quantity": 1, "unitPriceExcludingVat": 20000, "vatCode": "3"},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/invoice",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-22: update_supplier (create first, then update)
+        E2ETestCase(
+            name="t2_update_supplier",
+            expected_task_type="update_supplier",
+            expected_fields={},
+            prompt=f'Oppdater beskrivelsen til leverandoeren "E2E OppdaterLev {ts}".',
+            direct_fields={
+                "supplierName": f"E2E OppdaterLev {ts}",
+                "changes": {"description": f"Oppdatert leverandoer {ts}"},
+            },
+            setup="create_supplier_for_update",
+            verify=VerifySpec(
+                endpoint="/supplier",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("description", f"Oppdatert leverandoer {ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-23: update_product (create first, then update)
+        E2ETestCase(
+            name="t2_update_product",
+            expected_task_type="update_product",
+            expected_fields={},
+            prompt=f'Oppdater produktet "E2E OppdaterProd {ts}" med ny pris.',
+            direct_fields={
+                "productName": f"E2E OppdaterProd {ts}",
+                "changes": {"priceExcludingVat": 29900},
+            },
+            setup="create_product_for_update",
+            verify=VerifySpec(
+                endpoint="/product",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("priceExcludingVatCurrency", 29900.0),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-24: delete_employee (create first, then delete)
+        E2ETestCase(
+            name="t2_delete_employee",
+            expected_task_type="delete_employee",
+            expected_fields={},
+            prompt=f'Slett den ansatte.',
+            direct_fields={},
+            setup="create_employee_for_delete",
+            verify=None,  # verified by deletedId in handler result
+            tier=2,
+        ),
+
+        # T2-25: delete_customer (create first, then delete)
+        E2ETestCase(
+            name="t2_delete_customer",
+            expected_task_type="delete_customer",
+            expected_fields={},
+            prompt=f'Slett kunden "E2E SlettKunde {ts}".',
+            direct_fields={
+                "customerName": f"E2E SlettKunde {ts}",
+            },
+            setup="create_customer_for_delete",
+            verify=None,  # verified by deletedId in handler result
+            tier=2,
+        ),
+
+        # T2-26: delete_supplier (create first, then delete)
+        E2ETestCase(
+            name="t2_delete_supplier",
+            expected_task_type="delete_supplier",
+            expected_fields={},
+            prompt=f'Slett leverandoeren "E2E SlettLev {ts}".',
+            direct_fields={
+                "supplierName": f"E2E SlettLev {ts}",
+            },
+            setup="create_supplier_for_delete",
+            verify=None,  # verified by deletedId in handler result
+            tier=2,
+        ),
+
+        # T2-27: batch_create_department (3 items)
+        E2ETestCase(
+            name="t2_batch_create_department",
+            expected_task_type="batch_create_department",
+            expected_fields={},
+            prompt=f'Opprett tre avdelinger: "E2E BatchAvd1 {ts}", "E2E BatchAvd2 {ts}", "E2E BatchAvd3 {ts}".',
+            direct_fields={
+                "items": [
+                    {"taskType": "create_department", "fields": {"name": f"E2E BatchAvd1 {ts}"}},
+                    {"taskType": "create_department", "fields": {"name": f"E2E BatchAvd2 {ts}"}},
+                    {"taskType": "create_department", "fields": {"name": f"E2E BatchAvd3 {ts}"}},
+                ],
+            },
+            verify=None,  # custom check: all 3 created
+            tier=2,
+        ),
     ]
 
 
@@ -594,10 +846,138 @@ async def setup_create_travel_expense_for_delete(client, fields: dict) -> dict:
     return fields
 
 
+async def setup_create_supplier_for_update(client, fields: dict) -> dict:
+    """Create a supplier that will be updated in the test."""
+    name = fields.get("supplierName", f"E2E Supplier {_ts()}")
+    payload = {"name": name, "description": "Before update"}
+    resp = await client.post("/supplier", payload)
+    created = resp.json().get("value", {})
+    fields["_supplier_id"] = created.get("id")
+    return fields
+
+
+async def setup_create_product_for_update(client, fields: dict) -> dict:
+    """Create a product that will be updated in the test."""
+    name = fields.get("productName", f"E2E Product {_ts()}")
+    payload = {"name": name}
+    resp = await client.post("/product", payload)
+    created = resp.json().get("value", {})
+    fields["_product_id"] = created.get("id")
+    return fields
+
+
+async def setup_create_employee_for_delete(client, fields: dict) -> dict:
+    """Create an employee that will be deleted in the test."""
+    ts = _ts()
+    first = f"E2EDelEmp{ts}"
+    last = "Test"
+    # Get a department for the employee (required)
+    dept_resp = await client.get("/department", params={"count": 1})
+    depts = dept_resp.json().get("values", [])
+    if not depts:
+        # Create a department first
+        dept_create = await client.post("/department", {"name": f"E2E TmpDept {ts}"})
+        dept = dept_create.json().get("value", {})
+        dept_id = dept.get("id")
+    else:
+        dept_id = depts[0]["id"]
+
+    payload: dict = {
+        "firstName": first,
+        "lastName": last,
+        "email": f"e2e.del.{ts}@test.no",
+        "userType": "STANDARD",
+        "dateOfBirth": "1990-01-01",
+    }
+    if dept_id:
+        payload["department"] = {"id": dept_id}
+    resp = await client.post("/employee", payload)
+    created = resp.json().get("value", {})
+    if not created.get("id"):
+        raise RuntimeError(f"Failed to create employee for delete: {resp.text[:300]}")
+    fields["employeeFirstName"] = first
+    fields["employeeLastName"] = last
+    fields["_employee_id"] = created.get("id")
+    return fields
+
+
+async def setup_create_customer_for_delete(client, fields: dict) -> dict:
+    """Create a customer that will be deleted in the test."""
+    name = fields.get("customerName", f"E2E DelCust {_ts()}")
+    payload = {"name": name, "isCustomer": True}
+    resp = await client.post("/customer", payload)
+    created = resp.json().get("value", {})
+    fields["_customer_id"] = created.get("id")
+    return fields
+
+
+async def setup_create_supplier_for_delete(client, fields: dict) -> dict:
+    """Create a supplier that will be deleted in the test."""
+    name = fields.get("supplierName", f"E2E DelSupp {_ts()}")
+    payload = {"name": name}
+    resp = await client.post("/supplier", payload)
+    created = resp.json().get("value", {})
+    fields["_supplier_id"] = created.get("id")
+    return fields
+
+
+async def setup_create_voucher_for_reverse(client, fields: dict) -> dict:
+    """Create a voucher that will be reversed in the test.
+    Uses expense account 6300 + bank 1920 to avoid supplier/customer requirements."""
+    from app.handlers.tier3 import _lookup_account
+    debit_id = await _lookup_account(client, 6300)
+    credit_id = await _lookup_account(client, 1920)
+    payload = {
+        "date": "2026-03-20",
+        "description": f"E2E Reverse Voucher {_ts()}",
+        "postings": [
+            {"account": {"id": debit_id}, "amountGross": 1000, "amountGrossCurrency": 1000, "row": 1},
+            {"account": {"id": credit_id}, "amountGross": -1000, "amountGrossCurrency": -1000, "row": 2},
+        ],
+    }
+    resp = await client.post("/ledger/voucher", payload)
+    created = resp.json().get("value", {})
+    if not created.get("id"):
+        raise RuntimeError(f"Failed to create voucher for reverse: {resp.text[:300]}")
+    fields["_voucher_id"] = created.get("id")
+    fields["voucherNumber"] = created.get("number")
+    return fields
+
+
+async def setup_create_voucher_for_delete(client, fields: dict) -> dict:
+    """Create a voucher that will be deleted in the test.
+    Uses expense account 6300 + bank 1920 to avoid supplier/customer requirements."""
+    from app.handlers.tier3 import _lookup_account
+    debit_id = await _lookup_account(client, 6300)
+    credit_id = await _lookup_account(client, 1920)
+    payload = {
+        "date": "2026-03-20",
+        "description": f"E2E Delete Voucher {_ts()}",
+        "postings": [
+            {"account": {"id": debit_id}, "amountGross": 500, "amountGrossCurrency": 500, "row": 1},
+            {"account": {"id": credit_id}, "amountGross": -500, "amountGrossCurrency": -500, "row": 2},
+        ],
+    }
+    resp = await client.post("/ledger/voucher", payload)
+    created = resp.json().get("value", {})
+    if not created.get("id"):
+        raise RuntimeError(f"Failed to create voucher for delete: {resp.text[:300]}")
+    fields["_voucher_id"] = created.get("id")
+    fields["voucherNumber"] = created.get("number")
+    return fields
+
+
 SETUP_REGISTRY = {
     "find_first_employee": setup_find_first_employee,
     "create_customer_for_update": setup_create_customer_for_update,
     "create_travel_expense_for_delete": setup_create_travel_expense_for_delete,
+    "create_supplier_for_update": setup_create_supplier_for_update,
+    "create_product_for_update": setup_create_product_for_update,
+    "create_employee_for_delete": setup_create_employee_for_delete,
+    "create_customer_for_delete": setup_create_customer_for_delete,
+    "create_supplier_for_delete": setup_create_supplier_for_delete,
+    "create_voucher_for_reverse": setup_create_voucher_for_reverse,
+    "create_voucher_for_delete": setup_create_voucher_for_delete,
 }
 
 
@@ -820,6 +1200,8 @@ async def run_one_test(
                 or handler_result.get("transactionId")
                 or handler_result.get("employeeId")
                 or handler_result.get("customerId")
+                or handler_result.get("supplierId")
+                or handler_result.get("productId")
                 or handler_result.get("deletedId")
             )
 
@@ -896,6 +1278,74 @@ async def run_one_test(
                 verify_results.append(CheckResult(
                     field="transactionId", expected="exists", actual=None,
                     passed=False, detail=f"no transactionId: {note}",
+                ))
+
+        # For reverse_voucher, check handler returned reversed dict
+        if tc.expected_task_type == "reverse_voucher":
+            reversed_v = handler_result.get("reversed", {})
+            if reversed_v and isinstance(reversed_v, dict) and reversed_v.get("id"):
+                verify_results.append(CheckResult(
+                    field="reversed.id", expected="exists",
+                    actual=reversed_v["id"],
+                    passed=True, detail="voucher reversed",
+                ))
+            elif handler_result.get("status") == "error":
+                verify_results.append(CheckResult(
+                    field="reversed", expected="exists", actual=None,
+                    passed=False, detail=f"reverse failed: {handler_result.get('message', '')}",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="reversed", expected="exists", actual=None,
+                    passed=False, detail="no reversed voucher in result",
+                ))
+
+        # For create_custom_dimension, check dimension and values in result
+        if tc.expected_task_type == "create_custom_dimension":
+            dim = handler_result.get("dimension", {})
+            vals = handler_result.get("values", [])
+            if dim and dim.get("id"):
+                verify_results.append(CheckResult(
+                    field="dimension.id", expected="exists",
+                    actual=dim["id"],
+                    passed=True, detail=f"dimension created: {dim.get('name')}",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="dimension.id", expected="exists", actual=None,
+                    passed=False, detail="no dimension in result",
+                ))
+            if len(vals) >= 2:
+                verify_results.append(CheckResult(
+                    field="values_count", expected=2,
+                    actual=len(vals),
+                    passed=True, detail="dimension values created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="values_count", expected=2,
+                    actual=len(vals),
+                    passed=False, detail=f"expected 2 values, got {len(vals)}",
+                ))
+
+        # For batch_create_department, check all 3 items succeeded
+        if tc.expected_task_type == "batch_create_department":
+            batch_results = handler_result.get("batch_results", [])
+            succeeded = sum(
+                1 for r in batch_results
+                if isinstance(r, dict) and r.get("created", {}).get("id")
+            )
+            if succeeded == 3:
+                verify_results.append(CheckResult(
+                    field="batch_count", expected=3,
+                    actual=succeeded,
+                    passed=True, detail="all 3 departments created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="batch_count", expected=3,
+                    actual=succeeded,
+                    passed=False, detail=f"only {succeeded}/3 departments created",
                 ))
 
     elapsed = time.time() - t0

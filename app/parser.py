@@ -55,8 +55,8 @@ Supported task types and their fields:
 12. "create_project" — Create a project
     Fields: name*, customerName, customerOrgNumber, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), projectManagerName, isClosed (bool)
 
-30. "set_project_fixed_price" — Create a project linked to a customer with a fixed price amount (keywords: fastpris, fixed price, preço fixo, Festpreis, prix fixe, precio fijo)
-    Fields: projectName*, customerName*, customerOrgNumber, fixedPrice* (number — the fixed price amount in NOK), projectManagerName, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD)
+30. "set_project_fixed_price" — Create a project linked to a customer with a fixed price amount, and optionally invoice a percentage as partial payment (keywords: fastpris, fixed price, preço fixo, Festpreis, prix fixe, precio fijo, delbetaling, partial payment, pago parcial, pagamento parcial, Teilzahlung, paiement partiel)
+    Fields: projectName*, customerName*, customerOrgNumber, fixedPrice* (number — the fixed price amount in NOK), projectManagerName, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), invoicePercentage (number — if the prompt asks to invoice X% of the fixed price as partial payment, extract the percentage here, e.g. 50 for 50%)
 
 13. "update_employee" — Update employee details
     Fields: employeeName, employeeFirstName, employeeLastName, changes (object with fields to update)
@@ -151,6 +151,12 @@ Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Autom
 
 Prompt: "Defina um preço fixo de 114250 NOK no projeto 'Implementação ERP' para Luz do Sol Lda (org. nº 898537447)."
 Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Implementação ERP", "customerName": "Luz do Sol Lda", "customerOrgNumber": "898537447", "fixedPrice": 114250}, "confidence": 0.95, "reasoning": "Portuguese prompt to set a fixed price on a project for a customer."}
+
+Prompt: "Sett fastpris 430750 kr på prosjektet 'Automatiseringsprosjekt' for Fossekraft AS (org.nr 907433498). Prosjektleiar er Solveig Eide. Fakturer kunden for 50 % av fastprisen som ei delbetaling."
+Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Automatiseringsprosjekt", "customerName": "Fossekraft AS", "customerOrgNumber": "907433498", "fixedPrice": 430750, "projectManagerName": "Solveig Eide", "invoicePercentage": 50}, "confidence": 0.96, "reasoning": "Norwegian Nynorsk prompt to create a fixed-price project and invoice 50% as partial payment."}
+
+Prompt: "Establezca un precio fijo de 152400 NOK en el proyecto 'Mejora de infraestructura' para Estrella SL. Facture al cliente el 75 % del precio fijo como pago parcial."
+Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Mejora de infraestructura", "customerName": "Estrella SL", "fixedPrice": 152400, "invoicePercentage": 75}, "confidence": 0.95, "reasoning": "Spanish prompt to set fixed price on project and invoice 75% as partial payment."}
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt

@@ -6,7 +6,7 @@ from typing import Any
 
 from app.handlers import register_handler
 from app.tripletex import TripletexClient
-from app.handlers.tier2_invoice import _find_or_create_customer
+from app.handlers.tier2_invoice import _find_or_create_customer, _ensure_bank_account
 
 logger = logging.getLogger(__name__)
 
@@ -138,8 +138,56 @@ async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any
             else:
                 logger.warning(f"PUT update failed: {put_resp.status_code} {put_resp.text[:300]}")
 
-    return {
+    # 5. If invoicePercentage is provided, create a partial invoice
+    invoice_percentage = fields.get("invoicePercentage")
+    invoice_data = None
+    if invoice_percentage and fixed_price and customer_id:
+        try:
+            percentage = float(invoice_percentage)
+            partial_amount = fixed_price * percentage / 100
+
+            # Ensure bank account is configured for invoicing
+            await _ensure_bank_account(client)
+
+            today = date_cls.today().isoformat()
+
+            # Create order with 1 line for partial payment
+            description = f"Delbetaling {int(percentage)}%" if percentage == int(percentage) else f"Delbetaling {percentage}%"
+            order_payload = {
+                "customer": {"id": customer_id},
+                "orderDate": today,
+                "deliveryDate": today,
+                "orderLines": [
+                    {
+                        "count": 1,
+                        "unitPriceExcludingVatCurrency": partial_amount,
+                        "description": description,
+                    }
+                ],
+            }
+            order_resp = await client.post("/order", order_payload)
+            order = order_resp.json().get("value", {})
+            order_id = order.get("id")
+
+            if order_id:
+                # Invoice the order
+                inv_resp = await client.put(f"/order/{order_id}/:invoice", params={
+                    "invoiceDate": today,
+                    "sendToCustomer": False,
+                })
+                invoice_data = inv_resp.json().get("value", {})
+                invoice_id = invoice_data.get("id")
+                logger.info(f"Created partial invoice {invoice_id} for {percentage}% of fixed price ({partial_amount} NOK)")
+            else:
+                logger.warning("Failed to create order for partial invoice")
+        except Exception as e:
+            logger.error(f"Failed to create partial invoice: {e}")
+
+    result: dict[str, Any] = {
         "status": "completed",
         "taskType": "set_project_fixed_price",
         "created": project,
     }
+    if invoice_data:
+        result["invoice"] = invoice_data
+    return result
