@@ -134,6 +134,40 @@ def safe_int(val, default=0) -> int:
 
 
 # ──────────────────────────────────────────────
+#  Translation helpers
+# ──────────────────────────────────────────────
+
+def _needs_translation(text: str) -> bool:
+    """Check if text is likely not Norwegian or English."""
+    norwegian_words = {"opprett", "kunden", "med", "og", "fra", "til", "for", "er", "skal", "den", "det", "har"}
+    english_words = {"create", "the", "with", "and", "from", "for", "is", "customer", "employee"}
+    words = set(text.lower().split()[:20])
+    if words & norwegian_words:
+        return False
+    if words & english_words:
+        return False
+    return True
+
+
+def _translate_prompt(prompt: str) -> str | None:
+    """Translate a prompt to Norwegian using Claude."""
+    try:
+        import anthropic
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if not api_key:
+            return None
+        client = anthropic.Anthropic(api_key=api_key, timeout=10.0)
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=300,
+            messages=[{"role": "user", "content": f"Oversett til norsk. Kun oversettelsen, ingen forklaring:\n\n{prompt}"}],
+        )
+        return msg.content[0].text.strip()
+    except Exception:
+        return None
+
+
+# ──────────────────────────────────────────────
 #  GCS log helpers
 # ──────────────────────────────────────────────
 
@@ -437,9 +471,16 @@ def cmd_show(args: argparse.Namespace) -> None:
 
     if prompt:
         print(f"\n  {BOLD}Prompt:{RESET}")
-        # Show full prompt, wrapped
         for line in prompt.split("\n"):
             print(f"    {line}")
+
+        # Translate if not Norwegian/English
+        if args.translate and _needs_translation(prompt):
+            translated = _translate_prompt(prompt)
+            if translated:
+                print(f"\n  {BOLD}Oversettelse:{RESET}")
+                for line in translated.split("\n"):
+                    print(f"    {DIM}{line}{RESET}")
 
     # ── Parsed task ──
     if log:
@@ -906,6 +947,11 @@ Kommandoer:
         "number",
         type=int,
         help="Submission-nummer (1=nyeste)",
+    )
+    show_parser.add_argument(
+        "--translate", "-t",
+        action="store_true",
+        help="Oversett prompt til norsk (bruker Claude)",
     )
 
     # submit command

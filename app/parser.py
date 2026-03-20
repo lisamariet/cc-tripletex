@@ -29,13 +29,13 @@ Supported task types and their fields:
    Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber, bankAccountNumber, address (object with addressLine1, postalCode, city)
 
 4. "create_product" — Register a new product
-   Fields: name*, number, priceExcludingVat (number), priceIncludingVat (number), costExcludingVat (number), description, vatCode (string, e.g. "3" for 25% MVA), isInactive (bool)
+   Fields: name*, number, priceExcludingVat (number), priceIncludingVat (number), costExcludingVat (number), description, vatCode (string — Tripletex codes: "3" = 25% standard, "31" = 15% food/middels, "33" = 12% low/transport, "5" = 0% exempt, "6" = 0% outside VAT law), isInactive (bool)
 
 5. "create_department" — Create a department
    Fields: name*, departmentNumber
 
 6. "create_invoice" — Create an invoice for a customer
-   Fields: customerName*, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines* (array of {description, quantity, unitPriceExcludingVat, vatCode})
+   Fields: customerName*, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines* (array of {description, quantity, unitPriceExcludingVat, vatCode — use "3" for 25%, "31" for 15%, "33" for 12%, "5" for 0%})
 
 7. "register_payment" — Register payment on an existing invoice (customer pays)
    Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount, paymentDate (YYYY-MM-DD)
