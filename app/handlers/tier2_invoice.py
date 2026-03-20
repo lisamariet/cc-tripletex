@@ -153,10 +153,8 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
             if line.get("description"):
                 order_line["description"] = line["description"]
             if line.get("vatCode"):
-                vat_resp = await client.get_cached("/ledger/vatType", params={"number": line["vatCode"]})
-                vat_types = vat_resp.json().get("values", [])
-                if vat_types:
-                    order_line["vatType"] = {"id": vat_types[0]["id"]}
+                # Use number-based reference — id-based fails in sandbox
+                order_line["vatType"] = {"number": str(line["vatCode"])}
             order_lines.append(order_line)
     elif fields.get("amount"):
         # Single line from amount + description
@@ -229,10 +227,8 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
         if line.get("description"):
             order_line["description"] = line["description"]
         if line.get("vatCode"):
-            vat_resp = await client.get_cached("/ledger/vatType", params={"number": line["vatCode"]})
-            vat_types = vat_resp.json().get("values", [])
-            if vat_types:
-                order_line["vatType"] = {"id": vat_types[0]["id"]}
+            # Use number-based reference — id-based fails in sandbox
+            order_line["vatType"] = {"number": str(line["vatCode"])}
         order_lines.append(order_line)
 
     # Create order — orderDate and deliveryDate are required

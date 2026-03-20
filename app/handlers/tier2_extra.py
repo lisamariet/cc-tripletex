@@ -267,7 +267,6 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     voucher_payload = {
         "date": invoice_date,
         "description": f"Leverandørfaktura: {description}",
-        "supplier": {"id": supplier_id},
         "postings": [
             {
                 "account": {"id": expense_id},

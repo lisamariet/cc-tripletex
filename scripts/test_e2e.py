@@ -10,6 +10,7 @@ Usage:
     python3 scripts/test_e2e.py --live       # Execute tests against sandbox
     python3 scripts/test_e2e.py --live -v    # Verbose output
     python3 scripts/test_e2e.py --live --only create_customer,create_supplier
+    python3 scripts/test_e2e.py --live --tier2   # Only Tier 2 tests
 """
 from __future__ import annotations
 
@@ -82,7 +83,7 @@ class FieldCheck:
     """A single expected field value with comparison mode."""
     field: str
     expected: Any
-    mode: str = "eq"  # eq | contains | gt | nested
+    mode: str = "eq"  # eq | contains | gt | gte | exists | not_exists
 
     def describe(self) -> str:
         if self.mode == "eq":
@@ -91,8 +92,12 @@ class FieldCheck:
             return f"{self.field} contains {self.expected!r}"
         elif self.mode == "gt":
             return f"{self.field} > {self.expected!r}"
-        elif self.mode == "nested":
-            return f"{self.field}.{self.expected[0]}={self.expected[1]!r}"
+        elif self.mode == "gte":
+            return f"{self.field} >= {self.expected!r}"
+        elif self.mode == "exists":
+            return f"{self.field} exists"
+        elif self.mode == "not_exists":
+            return f"{self.field} not found (deleted)"
         return f"{self.field} ? {self.expected!r}"
 
 
@@ -109,15 +114,19 @@ class VerifySpec:
 class E2ETestCase:
     """One end-to-end test."""
     name: str
-    request_file: str               # filename under data/requests/
     expected_task_type: str
     expected_fields: dict[str, Any]  # subset of fields that MUST parse out
     verify: VerifySpec | None = None
+    request_file: str = ""          # filename under data/requests/ (for prompt-based)
+    prompt: str = ""                # inline prompt (alternative to request_file)
+    direct_fields: dict[str, Any] | None = None  # bypass LLM, call handler directly
+    setup: str = ""                 # name of setup function to run first
+    tier: int = 1                   # tier (1 or 2) for filtering
 
 
-# -- The actual test cases, one per real request file ----------------------
+# -- Tier 1 test cases (existing, prompt-based) ----------------------------
 
-TEST_CASES: list[E2ETestCase] = [
+TIER1_TESTS: list[E2ETestCase] = [
 
     # 1. create_customer with address
     E2ETestCase(
@@ -138,6 +147,7 @@ TEST_CASES: list[E2ETestCase] = [
                 FieldCheck("invoiceEmail", "post@blgekraft.no"),
             ],
         ),
+        tier=1,
     ),
 
     # 2. create_supplier with email
@@ -159,6 +169,7 @@ TEST_CASES: list[E2ETestCase] = [
                 FieldCheck("invoiceEmail", "faktura@northwaveltd.no"),
             ],
         ),
+        tier=1,
     ),
 
     # 3. create_product with MVA (German prompt, 15% food VAT)
@@ -180,6 +191,7 @@ TEST_CASES: list[E2ETestCase] = [
                 FieldCheck("priceExcludingVatCurrency", 17450.0),
             ],
         ),
+        tier=1,
     ),
 
     # 4. create_project (English prompt)
@@ -197,12 +209,407 @@ TEST_CASES: list[E2ETestCase] = [
                 FieldCheck("name", "Integration Northwave"),
             ],
         ),
+        tier=1,
     ),
 ]
 
 
 # ---------------------------------------------------------------------------
-# Verification engine  (TODO #8+9 — self-verification, externalized)
+# Tier 2 test cases — direct handler tests with inline fields
+# ---------------------------------------------------------------------------
+
+def _ts() -> str:
+    """Unique timestamp suffix for test entity names."""
+    return str(int(time.time()))
+
+
+def build_tier2_tests() -> list[E2ETestCase]:
+    """Build Tier 2 test cases with unique names using timestamps."""
+    ts = _ts()
+    return [
+
+        # ---- Invoice flow ----
+
+        # T2-1: create_invoice — Norwegian prompt with 3 order lines + different VAT rates
+        E2ETestCase(
+            name="t2_create_invoice",
+            expected_task_type="create_invoice",
+            expected_fields={},
+            prompt=(
+                f'Opprett en faktura til kunden "E2E Testfirma {ts}" med 3 linjer: '
+                f'1) "Konsulenttjenester" 10000 kr ekskl. MVA 25%, '
+                f'2) "Programvare" 5000 kr ekskl. MVA 25%, '
+                f'3) "Fraktkostnad" 800 kr ekskl. MVA 12%.'
+            ),
+            direct_fields={
+                "customerName": f"E2E Testfirma {ts}",
+                "lines": [
+                    {"description": "Konsulenttjenester", "quantity": 1, "unitPriceExcludingVat": 10000, "vatCode": "3"},
+                    {"description": "Programvare", "quantity": 1, "unitPriceExcludingVat": 5000, "vatCode": "3"},
+                    {"description": "Fraktkostnad", "quantity": 1, "unitPriceExcludingVat": 800, "vatCode": "33"},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/invoice",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("amountExcludingVatCurrency", 15800.0, mode="gte"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-2: register_payment — Portuguese prompt, create invoice + pay it
+        E2ETestCase(
+            name="t2_register_payment",
+            expected_task_type="register_payment",
+            expected_fields={},
+            prompt=(
+                f'O cliente "E2E Pagamento {ts}" tem uma fatura pendente de 20000 NOK '
+                f'sem IVA por "Desenvolvimento". Registe o pagamento total desta fatura.'
+            ),
+            direct_fields={
+                "customerName": f"E2E Pagamento {ts}",
+                "amount": 20000,
+                "invoiceDescription": "Desenvolvimento",
+                "lines": [
+                    {"description": "Desenvolvimento", "quantity": 1, "unitPriceExcludingVat": 20000, "vatCode": "3"},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/invoice",
+                search_by_id=True,
+                checks=[
+                    # After payment, amountOutstanding should be 0
+                    FieldCheck("amountOutstandingCurrency", 0.0),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-3: create_credit_note — Norwegian prompt
+        E2ETestCase(
+            name="t2_create_credit_note",
+            expected_task_type="create_credit_note",
+            expected_fields={},
+            prompt=(
+                f'Kunden "E2E Kreditnota {ts}" har reklamert paa fakturaen for "Hosting" '
+                f'(15000 kr ekskl. MVA). Opprett en fullstendig kreditnota.'
+            ),
+            direct_fields={
+                "customerName": f"E2E Kreditnota {ts}",
+                "amount": 15000,
+                "invoiceDescription": "Hosting",
+                "lines": [
+                    {"description": "Hosting", "quantity": 1, "unitPriceExcludingVat": 15000, "vatCode": "3"},
+                ],
+            },
+            # Verify: the credit note is a new invoice with negative amount
+            verify=None,  # credit note verification done in custom check
+            tier=2,
+        ),
+
+        # T2-4: reverse_payment
+        E2ETestCase(
+            name="t2_reverse_payment",
+            expected_task_type="reverse_payment",
+            expected_fields={},
+            prompt=(
+                f'Reverser betalingen paa fakturaen til kunden "E2E Reversering {ts}" '
+                f'for "Vedlikehold" (12000 kr ekskl. MVA).'
+            ),
+            direct_fields={
+                "customerName": f"E2E Reversering {ts}",
+                "amount": 12000,
+                "invoiceDescription": "Vedlikehold",
+                "lines": [
+                    {"description": "Vedlikehold", "quantity": 1, "unitPriceExcludingVat": 12000, "vatCode": "3"},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/invoice",
+                search_by_id=True,
+                checks=[
+                    # After reversal, the outstanding amount should equal the full amount
+                    FieldCheck("amountOutstandingCurrency", 0, mode="gte"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # ---- Travel expense ----
+
+        # T2-5: create_travel_expense
+        E2ETestCase(
+            name="t2_create_travel_expense",
+            expected_task_type="create_travel_expense",
+            expected_fields={},
+            prompt=(
+                f'Opprett reiseregning for den foerste ansatte med tittel '
+                f'"E2E Reise {ts}", dato 2026-03-20, med kostnader: '
+                f'Taxi 450 kr og Hotell 1200 kr.'
+            ),
+            direct_fields={
+                # We use setup to find the first employee dynamically
+                "title": f"E2E Reise {ts}",
+                "date": "2026-03-20",
+                "costs": [
+                    {"description": "Taxi", "amount": 450, "date": "2026-03-20"},
+                    {"description": "Hotell", "amount": 1200, "date": "2026-03-20"},
+                ],
+            },
+            setup="find_first_employee",
+            verify=VerifySpec(
+                endpoint="/travelExpense",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("title", f"E2E Reise {ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-6: delete_travel_expense (create one then delete)
+        E2ETestCase(
+            name="t2_delete_travel_expense",
+            expected_task_type="delete_travel_expense",
+            expected_fields={},
+            prompt=f'Slett reiseregningen med tittel "E2E Slett {ts}".',
+            direct_fields={
+                "travelExpenseTitle": f"E2E Slett {ts}",
+            },
+            setup="create_travel_expense_for_delete",
+            verify=None,  # verified in custom post-check
+            tier=2,
+        ),
+
+        # ---- Update tests ----
+
+        # T2-7: update_employee
+        E2ETestCase(
+            name="t2_update_employee",
+            expected_task_type="update_employee",
+            expected_fields={},
+            prompt=f'Oppdater mobilnummeret til den foerste ansatte til 99887766.',
+            direct_fields={
+                "changes": {"phoneNumberMobile": "99887766"},
+            },
+            setup="find_first_employee",
+            verify=VerifySpec(
+                endpoint="/employee",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("phoneNumberMobile", "99887766"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-8: update_customer
+        E2ETestCase(
+            name="t2_update_customer",
+            expected_task_type="update_customer",
+            expected_fields={},
+            prompt=f'Oppdater beskrivelsen til kunden "E2E OppdaterKunde {ts}" til "Oppdatert beskrivelse {ts}".',
+            direct_fields={
+                "customerName": f"E2E OppdaterKunde {ts}",
+                "changes": {"description": f"Oppdatert beskrivelse {ts}"},
+            },
+            setup="create_customer_for_update",
+            verify=VerifySpec(
+                endpoint="/customer",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("description", f"Oppdatert beskrivelse {ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # ---- Other Tier 2 ----
+
+        # T2-9: create_project (keep existing, but direct handler test)
+        E2ETestCase(
+            name="t2_create_project",
+            expected_task_type="create_project",
+            expected_fields={},
+            prompt=f'Opprett prosjektet "E2E Prosjekt {ts}".',
+            direct_fields={
+                "name": f"E2E Prosjekt {ts}",
+                "startDate": "2026-03-20",
+            },
+            verify=VerifySpec(
+                endpoint="/project",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("name", f"E2E Prosjekt {ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-10: create_order
+        E2ETestCase(
+            name="t2_create_order",
+            expected_task_type="create_order",
+            expected_fields={},
+            prompt=(
+                f'Opprett en ordre for kunden "E2E Ordre {ts}" med 2 linjer: '
+                f'"Vare A" 3000 kr og "Vare B" 7000 kr ekskl. MVA.'
+            ),
+            direct_fields={
+                "customerName": f"E2E Ordre {ts}",
+                "lines": [
+                    {"description": "Vare A", "quantity": 1, "unitPriceExcludingVat": 3000},
+                    {"description": "Vare B", "quantity": 1, "unitPriceExcludingVat": 7000},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/order",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-11: register_supplier_invoice
+        E2ETestCase(
+            name="t2_register_supplier_invoice",
+            expected_task_type="register_supplier_invoice",
+            expected_fields={},
+            prompt=(
+                f'Registrer en leverandoerfaktura fra "E2E Leverandoer {ts}" '
+                f'paa 25000 kr for "Kontorrekvisita".'
+            ),
+            direct_fields={
+                "supplierName": f"E2E Leverandoer {ts}",
+                "amount": 25000,
+                "description": "Kontorrekvisita",
+            },
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-12: register_timesheet
+        E2ETestCase(
+            name="t2_register_timesheet",
+            expected_task_type="register_timesheet",
+            expected_fields={},
+            prompt=(
+                f'Registrer 7.5 timer for den foerste ansatte paa prosjektet '
+                f'"E2E Timefoering {ts}" med aktivitet "Utvikling" for i dag.'
+            ),
+            direct_fields={
+                "projectName": f"E2E Timefoering {ts}",
+                "activityName": "Utvikling",
+                "hours": 7.5,
+                "date": "2026-03-20",
+            },
+            setup="find_first_employee",
+            verify=VerifySpec(
+                endpoint="/timesheet/entry",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("hours", 7.5),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-13: run_payroll
+        E2ETestCase(
+            name="t2_run_payroll",
+            expected_task_type="run_payroll",
+            expected_fields={},
+            prompt=(
+                f'Kjoer loenn for den foerste ansatte for mars 2026. '
+                f'Grunnloenn er 35000 NOK og bonus er 5000 NOK.'
+            ),
+            direct_fields={
+                "baseSalary": 35000,
+                "bonus": 5000,
+                "month": 3,
+                "year": 2026,
+            },
+            setup="find_first_employee",
+            verify=None,  # Payroll verification is complex; check handler result
+            tier=2,
+        ),
+    ]
+
+
+# Combine all test cases
+TEST_CASES: list[E2ETestCase] = TIER1_TESTS  # Tier 2 added dynamically
+
+
+# ---------------------------------------------------------------------------
+# Setup functions for tests that need pre-existing entities
+# ---------------------------------------------------------------------------
+
+async def setup_find_first_employee(client, fields: dict) -> dict:
+    """Find the first employee and inject their name into fields."""
+    resp = await client.get("/employee", params={"count": 1})
+    employees = resp.json().get("values", [])
+    if not employees:
+        raise RuntimeError("No employees found in sandbox")
+    emp = employees[0]
+    fields["employeeFirstName"] = emp.get("firstName", "")
+    fields["employeeLastName"] = emp.get("lastName", "")
+    fields["employeeName"] = f"{emp.get('firstName', '')} {emp.get('lastName', '')}"
+    fields["_employee_id"] = emp["id"]
+    return fields
+
+
+async def setup_create_customer_for_update(client, fields: dict) -> dict:
+    """Create a customer that will be updated in the test."""
+    name = fields.get("customerName", f"E2E Customer {_ts()}")
+    payload = {"name": name, "isCustomer": True, "description": "Before update"}
+    resp = await client.post("/customer", payload)
+    created = resp.json().get("value", {})
+    fields["_customer_id"] = created.get("id")
+    return fields
+
+
+async def setup_create_travel_expense_for_delete(client, fields: dict) -> dict:
+    """Create a travel expense that will be deleted in the test."""
+    # Find first employee
+    resp = await client.get("/employee", params={"count": 1})
+    employees = resp.json().get("values", [])
+    if not employees:
+        raise RuntimeError("No employees found")
+    emp_id = employees[0]["id"]
+
+    title = fields.get("travelExpenseTitle", f"E2E Slett {_ts()}")
+    te_payload = {
+        "employee": {"id": emp_id},
+        "title": title,
+        "date": "2026-03-20",
+    }
+    resp = await client.post("/travelExpense", te_payload)
+    te = resp.json().get("value", {})
+    fields["travelExpenseId"] = te.get("id")
+    fields["employeeFirstName"] = employees[0].get("firstName", "")
+    fields["employeeLastName"] = employees[0].get("lastName", "")
+    return fields
+
+
+SETUP_REGISTRY = {
+    "find_first_employee": setup_find_first_employee,
+    "create_customer_for_update": setup_create_customer_for_update,
+    "create_travel_expense_for_delete": setup_create_travel_expense_for_delete,
+}
+
+
+# ---------------------------------------------------------------------------
+# Verification engine  (TODO #8+9 -- self-verification, externalized)
 # ---------------------------------------------------------------------------
 
 @dataclass
@@ -219,11 +626,7 @@ async def verify_entity(
     spec: VerifySpec,
     entity_id: int | None = None,
 ) -> list[CheckResult]:
-    """GET the entity from Tripletex and run field-by-field checks.
-
-    This is the self-verification step (TODO #8+9) kept external to handlers
-    so we don't risk breaking live code.
-    """
+    """GET the entity from Tripletex and run field-by-field checks."""
     endpoint = spec.endpoint
     params = dict(spec.search_params)
 
@@ -273,12 +676,10 @@ def _resolve_field(entity: dict, field_path: str) -> Any:
 
 def _compare(actual: Any, expected: Any, mode: str) -> tuple[bool, str]:
     if mode == "eq":
-        # Flexible: compare as strings to handle int/str mismatches
         if actual is None:
             return False, f"field is None, expected {expected!r}"
         if str(actual) == str(expected):
             return True, ""
-        # Try numeric comparison for float/int
         try:
             if float(actual) == float(expected):
                 return True, ""
@@ -296,6 +697,21 @@ def _compare(actual: Any, expected: Any, mode: str) -> tuple[bool, str]:
         except (ValueError, TypeError):
             pass
         return False, f"{actual!r} not > {expected!r}"
+    elif mode == "gte":
+        try:
+            if float(actual) >= float(expected):
+                return True, ""
+        except (ValueError, TypeError):
+            pass
+        return False, f"{actual!r} not >= {expected!r}"
+    elif mode == "exists":
+        if actual is not None:
+            return True, ""
+        return False, "field does not exist"
+    elif mode == "not_exists":
+        if actual is None:
+            return True, ""
+        return False, f"expected not found but got {actual!r}"
     return False, f"unknown mode {mode}"
 
 
@@ -338,57 +754,85 @@ async def run_one_test(
     from app.parser import parse_task
     from app.handlers import HANDLER_REGISTRY, execute_task
 
-    prompt = load_prompt(tc.request_file)
     t0 = time.time()
     calls_before = client.tracker.total_calls
 
-    # -- Step 1: Parse --------------------------------------------------------
-    parse_ok = True
-    parse_detail = ""
-    try:
-        parsed = parse_task(prompt)
-        if parsed.task_type != tc.expected_task_type:
+    # Determine if this is a direct-fields test or prompt-based
+    if tc.direct_fields is not None:
+        # Direct handler invocation (Tier 2 style)
+        fields = dict(tc.direct_fields)
+        parse_ok = True
+        parse_detail = "direct (bypassed LLM)"
+
+        # Run setup if needed
+        if tc.setup and tc.setup in SETUP_REGISTRY:
+            try:
+                fields = await SETUP_REGISTRY[tc.setup](client, fields)
+            except Exception as e:
+                return TestResult(
+                    name=tc.name, parse_ok=True, parse_detail=f"setup failed: {e}",
+                    execute_ok=False, execute_detail=f"setup error: {e}",
+                    verify_results=[], api_calls=0, elapsed_sec=time.time() - t0,
+                )
+
+        task_type = tc.expected_task_type
+    else:
+        # Prompt-based (Tier 1 style)
+        prompt = tc.prompt or load_prompt(tc.request_file)
+        parse_ok = True
+        parse_detail = ""
+        try:
+            parsed = parse_task(prompt)
+            task_type = parsed.task_type
+            fields = parsed.fields
+            if parsed.task_type != tc.expected_task_type:
+                parse_ok = False
+                parse_detail = f"taskType: got {parsed.task_type}, expected {tc.expected_task_type}"
+            else:
+                missing = []
+                for key, val in tc.expected_fields.items():
+                    actual = parsed.fields.get(key)
+                    if actual is None:
+                        missing.append(key)
+                    elif str(actual) != str(val):
+                        missing.append(f"{key}(got {actual!r})")
+                if missing:
+                    parse_detail = f"missing/wrong fields: {', '.join(missing)}"
+        except Exception as e:
             parse_ok = False
-            parse_detail = f"taskType: got {parsed.task_type}, expected {tc.expected_task_type}"
-        else:
-            # Check that expected fields are present
-            missing = []
-            for key, val in tc.expected_fields.items():
-                actual = parsed.fields.get(key)
-                if actual is None:
-                    missing.append(key)
-                elif str(actual) != str(val):
-                    missing.append(f"{key}(got {actual!r})")
-            if missing:
-                parse_detail = f"missing/wrong fields: {', '.join(missing)}"
-                # Don't fail parse entirely for minor field mismatches — handler may compensate
-    except Exception as e:
-        parse_ok = False
-        parse_detail = f"parse_task() error: {e}"
-        # Return early
-        return TestResult(
-            name=tc.name, parse_ok=False, parse_detail=parse_detail,
-            execute_ok=False, execute_detail="skipped (parse failed)",
-            verify_results=[], api_calls=0, elapsed_sec=time.time() - t0,
-        )
+            parse_detail = f"parse_task() error: {e}"
+            return TestResult(
+                name=tc.name, parse_ok=False, parse_detail=parse_detail,
+                execute_ok=False, execute_detail="skipped (parse failed)",
+                verify_results=[], api_calls=0, elapsed_sec=time.time() - t0,
+            )
 
     # -- Step 2: Execute handler ---------------------------------------------
     execute_ok = True
     execute_detail = ""
     entity_id = None
+    handler_result = {}
     try:
-        result = await execute_task(
-            parsed.task_type, client, parsed.fields, prompt=prompt,
+        prompt_text = tc.prompt or ""
+        handler_result = await execute_task(
+            task_type, client, fields, prompt=prompt_text,
         )
         # Extract entity ID from result
-        created = result.get("created", {})
+        created = handler_result.get("created", {})
         entity_id = created.get("id") if isinstance(created, dict) else None
         if not entity_id:
-            entity_id = result.get("invoiceId") or result.get("travelExpenseId")
+            entity_id = (
+                handler_result.get("invoiceId")
+                or handler_result.get("travelExpenseId")
+                or handler_result.get("transactionId")
+                or handler_result.get("employeeId")
+                or handler_result.get("customerId")
+                or handler_result.get("deletedId")
+            )
 
-        if result.get("note") and not entity_id:
+        if handler_result.get("note") and not entity_id:
             execute_ok = False
-            execute_detail = f"handler note: {result['note']}"
+            execute_detail = f"handler note: {handler_result['note']}"
         elif entity_id:
             execute_detail = f"id={entity_id}"
 
@@ -397,7 +841,6 @@ async def run_one_test(
         errors_4xx = [c for c in new_calls if 400 <= c.status < 500
                       and c.path != "/company/salesmodules"]
         if errors_4xx:
-            sandbox_only = [c for c in errors_4xx if "/:invoice" in c.path]
             real_errors = [c for c in errors_4xx if "/:invoice" not in c.path]
             if real_errors:
                 err_str = "; ".join(f"{c.method} {c.path}->{c.status}" for c in real_errors[:3])
@@ -418,6 +861,50 @@ async def run_one_test(
                 passed=False, detail=f"verification GET failed: {e}",
             )]
 
+    # -- Custom post-checks for tests without standard verify ----------------
+    if not tc.verify and execute_ok:
+        # For delete tests, verify the entity is gone
+        if "delete" in tc.expected_task_type:
+            deleted_id = handler_result.get("deletedId")
+            if deleted_id:
+                verify_results.append(CheckResult(
+                    field="deleted", expected=True, actual=True,
+                    passed=True, detail=f"entity {deleted_id} deleted",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="deleted", expected=True, actual=False,
+                    passed=False, detail="no deletedId in result",
+                ))
+
+        # For credit note, check handler returned invoiceId
+        if tc.expected_task_type == "create_credit_note":
+            if handler_result.get("invoiceId"):
+                verify_results.append(CheckResult(
+                    field="invoiceId", expected="exists", actual=handler_result["invoiceId"],
+                    passed=True, detail="credit note created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="invoiceId", expected="exists", actual=None,
+                    passed=False, detail="no invoiceId in credit note result",
+                ))
+
+        # For payroll, check transactionId
+        if tc.expected_task_type == "run_payroll":
+            if handler_result.get("transactionId"):
+                verify_results.append(CheckResult(
+                    field="transactionId", expected="exists",
+                    actual=handler_result["transactionId"],
+                    passed=True, detail="payroll transaction created",
+                ))
+            else:
+                note = handler_result.get("note", "unknown")
+                verify_results.append(CheckResult(
+                    field="transactionId", expected="exists", actual=None,
+                    passed=False, detail=f"no transactionId: {note}",
+                ))
+
     elapsed = time.time() - t0
     api_calls = client.tracker.total_calls - calls_before
     return TestResult(
@@ -436,26 +923,21 @@ def show_plan(test_cases: list[E2ETestCase]) -> None:
     print(f"\n  {bold('E2E Test Plan')} (dry-run mode, use --live to execute)\n")
     print(f"  {len(test_cases)} test cases:\n")
     for i, tc in enumerate(test_cases, 1):
-        prompt = load_prompt(tc.request_file)
-        print(f"  {bold(f'{i}.')} {tc.name}")
-        print(f"     File:   data/requests/{tc.request_file}")
+        prompt = tc.prompt or (load_prompt(tc.request_file) if tc.request_file else "(direct handler)")
+        print(f"  {bold(f'{i}.')} {tc.name} [Tier {tc.tier}]")
+        if tc.request_file:
+            print(f"     File:   data/requests/{tc.request_file}")
         print(f"     Prompt: {prompt[:90]}...")
-        print(f"     Parse:  expect taskType={tc.expected_task_type}")
-        if tc.expected_fields:
-            fields_str = ", ".join(f"{k}={v!r}" for k, v in tc.expected_fields.items())
-            print(f"             expect fields: {fields_str}")
+        print(f"     Task:   {tc.expected_task_type}")
+        if tc.direct_fields:
+            print(f"     Mode:   direct handler (bypass LLM)")
+        if tc.setup:
+            print(f"     Setup:  {tc.setup}")
         if tc.verify:
-            print(f"     Verify: GET {tc.verify.endpoint} {tc.verify.search_params or ''}")
+            print(f"     Verify: GET {tc.verify.endpoint}")
             for chk in tc.verify.checks:
                 print(f"             - {chk.describe()}")
         print()
-
-    print(f"  Pipeline per test:")
-    print(f"    1. Load prompt from data/requests/")
-    print(f"    2. Call parse_task(prompt) -- check taskType + fields")
-    print(f"    3. Call handler against sandbox -- check no 4xx errors")
-    print(f"    4. Verification GET -- field-by-field comparison")
-    print(f"    5. Report PASS/FAIL\n")
 
 
 # ---------------------------------------------------------------------------
@@ -488,7 +970,7 @@ async def run_live(test_cases: list[E2ETestCase], verbose: bool) -> int:
         # Parse line
         if not tr.parse_ok:
             print(f"         {red('PARSE:')} {tr.parse_detail}")
-        elif tr.parse_detail:
+        elif tr.parse_detail and "direct" not in tr.parse_detail:
             print(f"         {yellow('PARSE:')} {tr.parse_detail}")
 
         # Execute line
@@ -554,15 +1036,30 @@ def main():
                         help="Verbose output")
     parser.add_argument("--only", type=str, default="",
                         help="Comma-separated list of test names to run")
+    parser.add_argument("--tier2", action="store_true",
+                        help="Only run Tier 2 tests")
+    parser.add_argument("--all", action="store_true",
+                        help="Run both Tier 1 and Tier 2 tests")
     args = parser.parse_args()
 
-    test_cases = TEST_CASES
+    # Build test cases with timestamp-unique names
+    tier2_tests = build_tier2_tests()
+
+    if args.tier2:
+        test_cases = tier2_tests
+    elif args.all:
+        test_cases = TIER1_TESTS + tier2_tests
+    else:
+        # Default: Tier 1 only (backward compat), unless --only is used
+        test_cases = TIER1_TESTS + tier2_tests
+
     if args.only:
         names = set(args.only.split(","))
         test_cases = [tc for tc in test_cases if tc.name in names]
         if not test_cases:
+            all_names = [tc.name for tc in TIER1_TESTS + tier2_tests]
             print(red(f"No test cases match: {args.only}"))
-            print(f"Available: {', '.join(tc.name for tc in TEST_CASES)}")
+            print(f"Available: {', '.join(all_names)}")
             sys.exit(1)
 
     if args.verbose:

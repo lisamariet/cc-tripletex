@@ -1,0 +1,326 @@
+{
+  "timestamp": "20260320_135229_658275",
+  "prompt": "Crea un pedido para el cliente Luna SL (org. nº 989093630) con los productos Almacenamiento en la nube (5981) a 29950 NOK y Diseño web (6784) a 20450 NOK. Convierte el pedido en factura y registra el pago completo.",
+  "parsed_task": {
+    "task_type": "batch_create_order",
+    "fields": {
+      "items": [
+        {
+          "taskType": "create_order",
+          "fields": {
+            "customerName": "Luna SL",
+            "customerOrgNumber": "989093630",
+            "lines": [
+              {
+                "description": "Almacenamiento en la nube",
+                "quantity": 1,
+                "unitPriceExcludingVat": 29950
+              },
+              {
+                "description": "Diseño web",
+                "quantity": 1,
+                "unitPriceExcludingVat": 20450
+              }
+            ]
+          },
+          "confidence": 0.95,
+          "reasoning": "Spanish prompt to create an order for Luna SL with two services and their prices."
+        },
+        {
+          "taskType": "create_invoice",
+          "fields": {
+            "customerName": "Luna SL",
+            "customerOrgNumber": "989093630",
+            "lines": [
+              {
+                "description": "Almacenamiento en la nube",
+                "quantity": 1,
+                "unitPriceExcludingVat": 29950,
+                "vatCode": "3"
+              },
+              {
+                "description": "Diseño web",
+                "quantity": 1,
+                "unitPriceExcludingVat": 20450,
+                "vatCode": "3"
+              }
+            ]
+          },
+          "confidence": 0.95,
+          "reasoning": "Convert the order into an invoice with the same lines and standard 25% VAT."
+        },
+        {
+          "taskType": "register_payment",
+          "fields": {
+            "customerName": "Luna SL",
+            "customerOrgNumber": "989093630",
+            "amount": 50400,
+            "invoiceDescription": "Almacenamiento en la nube y Diseño web",
+            "lines": [
+              {
+                "description": "Almacenamiento en la nube",
+                "quantity": 1,
+                "unitPriceExcludingVat": 29950,
+                "vatCode": "3"
+              },
+              {
+                "description": "Diseño web",
+                "quantity": 1,
+                "unitPriceExcludingVat": 20450,
+                "vatCode": "3"
+              }
+            ]
+          },
+          "confidence": 0.93,
+          "reasoning": "Register full payment (29950 + 20450 = 50400 NOK) for the invoice."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1443.4,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 1707.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1500.7,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 1579.0,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1388.3,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 1383.3,
+      "error": null
+    }
+  ],
+  "total_calls": 6,
+  "error_count_4xx": 0,
+  "total_duration_ms": 12435.3,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_create_order",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "create_order",
+        "created": {
+          "id": 401957774,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401957774",
+          "customer": {
+            "id": 107830648,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/customer/107830648"
+          },
+          "contact": null,
+          "attn": null,
+          "displayName": "1 Ordre",
+          "receiverEmail": "",
+          "overdueNoticeEmail": "",
+          "number": "1",
+          "reference": "",
+          "department": null,
+          "orderDate": "2026-03-20",
+          "project": null,
+          "invoiceComment": "",
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "invoicesDueIn": 14,
+          "invoicesDueInType": "DAYS",
+          "isShowOpenPostsOnInvoices": false,
+          "isClosed": false,
+          "deliveryDate": "2026-03-20",
+          "deliveryAddress": null,
+          "deliveryComment": "",
+          "isPrioritizeAmountsIncludingVat": false,
+          "orderLineSorting": "PRODUCT",
+          "orderGroups": [],
+          "orderLines": [],
+          "isSubscription": false,
+          "subscriptionDuration": 0,
+          "subscriptionDurationType": "MONTHS",
+          "subscriptionPeriodsOnInvoice": 0,
+          "subscriptionPeriodsOnInvoiceType": "MONTHS",
+          "subscriptionInvoicingTimeInAdvanceOrArrears": "ADVANCE",
+          "subscriptionInvoicingTime": 0,
+          "subscriptionInvoicingTimeType": "MONTHS",
+          "isSubscriptionAutoInvoicing": false,
+          "preliminaryInvoice": {
+            "id": 2147527025,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147527025"
+          },
+          "attachment": [],
+          "sendMethodDescription": "Faktura må sendes manuelt.",
+          "invoiceOnAccountVatHigh": false,
+          "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+          "invoiceSendSMSNotification": false,
+          "invoiceSMSNotificationNumber": "",
+          "markUpOrderLines": 0,
+          "discountPercentage": 0.0,
+          "customerName": "Luna SL",
+          "projectManagerNameAndNumber": "",
+          "travelReports": [],
+          "accountingDimensionValues": []
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_order",
+        "created": {
+          "id": 401957779,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401957779",
+          "customer": {
+            "id": 107830648,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/customer/107830648"
+          },
+          "contact": null,
+          "attn": null,
+          "displayName": "2 Ordre",
+          "receiverEmail": "",
+          "overdueNoticeEmail": "",
+          "number": "2",
+          "reference": "",
+          "department": null,
+          "orderDate": "2026-03-20",
+          "project": null,
+          "invoiceComment": "",
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "invoicesDueIn": 14,
+          "invoicesDueInType": "DAYS",
+          "isShowOpenPostsOnInvoices": false,
+          "isClosed": false,
+          "deliveryDate": "2026-03-20",
+          "deliveryAddress": null,
+          "deliveryComment": "",
+          "isPrioritizeAmountsIncludingVat": false,
+          "orderLineSorting": "PRODUCT",
+          "orderGroups": [],
+          "orderLines": [],
+          "isSubscription": false,
+          "subscriptionDuration": 0,
+          "subscriptionDurationType": "MONTHS",
+          "subscriptionPeriodsOnInvoice": 0,
+          "subscriptionPeriodsOnInvoiceType": "MONTHS",
+          "subscriptionInvoicingTimeInAdvanceOrArrears": "ADVANCE",
+          "subscriptionInvoicingTime": 0,
+          "subscriptionInvoicingTimeType": "MONTHS",
+          "isSubscriptionAutoInvoicing": false,
+          "preliminaryInvoice": {
+            "id": 2147527032,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147527032"
+          },
+          "attachment": [],
+          "sendMethodDescription": "Faktura må sendes manuelt.",
+          "invoiceOnAccountVatHigh": false,
+          "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+          "invoiceSendSMSNotification": false,
+          "invoiceSMSNotificationNumber": "",
+          "markUpOrderLines": 0,
+          "discountPercentage": 0.0,
+          "customerName": "Luna SL",
+          "projectManagerNameAndNumber": "",
+          "travelReports": [],
+          "accountingDimensionValues": []
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_order",
+        "created": {
+          "id": 401957782,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401957782",
+          "customer": {
+            "id": 107830648,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/customer/107830648"
+          },
+          "contact": null,
+          "attn": null,
+          "displayName": "3 Ordre",
+          "receiverEmail": "",
+          "overdueNoticeEmail": "",
+          "number": "3",
+          "reference": "",
+          "department": null,
+          "orderDate": "2026-03-20",
+          "project": null,
+          "invoiceComment": "",
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "invoicesDueIn": 14,
+          "invoicesDueInType": "DAYS",
+          "isShowOpenPostsOnInvoices": false,
+          "isClosed": false,
+          "deliveryDate": "2026-03-20",
+          "deliveryAddress": null,
+          "deliveryComment": "",
+          "isPrioritizeAmountsIncludingVat": false,
+          "orderLineSorting": "PRODUCT",
+          "orderGroups": [],
+          "orderLines": [],
+          "isSubscription": false,
+          "subscriptionDuration": 0,
+          "subscriptionDurationType": "MONTHS",
+          "subscriptionPeriodsOnInvoice": 0,
+          "subscriptionPeriodsOnInvoiceType": "MONTHS",
+          "subscriptionInvoicingTimeInAdvanceOrArrears": "ADVANCE",
+          "subscriptionInvoicingTime": 0,
+          "subscriptionInvoicingTimeType": "MONTHS",
+          "isSubscriptionAutoInvoicing": false,
+          "preliminaryInvoice": {
+            "id": 2147527034,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147527034"
+          },
+          "attachment": [],
+          "sendMethodDescription": "Faktura må sendes manuelt.",
+          "invoiceOnAccountVatHigh": false,
+          "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+          "invoiceSendSMSNotification": false,
+          "invoiceSMSNotificationNumber": "",
+          "markUpOrderLines": 0,
+          "discountPercentage": 0.0,
+          "customerName": "Luna SL",
+          "projectManagerNameAndNumber": "",
+          "travelReports": [],
+          "accountingDimensionValues": []
+        }
+      }
+    ]
+  }
+}

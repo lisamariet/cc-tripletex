@@ -130,8 +130,7 @@ async def run_test(client, handler, fields: dict) -> tuple[bool, str]:
 
         # Only check errors from THIS test's calls
         new_calls = client.tracker.api_calls[calls_before:]
-        recent_errors = [c for c in new_calls if 400 <= c.status < 500
-                        and c.path != "/company/salesmodules"]  # Ignore salesmodules 422
+        recent_errors = [c for c in new_calls if 400 <= c.status < 500]
 
         if recent_errors:
             # Allow known sandbox-only failures (no bank account blocks :invoice)

@@ -1,4 +1,12 @@
-"""Tier 1 handlers — simple create operations (1 API call each, ×1 point)."""
+"""Tier 1 handlers — simple create operations (1 API call each, ×1 point).
+
+Efficiency notes:
+- create_supplier: 1 call (POST /supplier) — optimal
+- create_customer: 1 call (POST /customer) — optimal
+- create_employee: 1-3 calls (GET /department if needed + POST /employee + POST /employment if startDate)
+- create_product: 1 call (POST /product) — vatType IDs hardcoded to avoid GET /ledger/vatType
+- create_department: 1 call (POST /department) — salesmodules call removed (always 422)
+"""
 from __future__ import annotations
 
 import logging
@@ -8,6 +16,30 @@ from app.handlers import register_handler
 from app.tripletex import TripletexClient
 
 logger = logging.getLogger(__name__)
+
+# Hardcoded vatType number→ID mapping for Norwegian standard VAT codes.
+# These are defined by Norwegian tax authorities and are consistent across
+# all Tripletex sandboxes.  The API `number` field equals the `id` for
+# standard codes.  We fall back to an API lookup for unknown codes.
+_VAT_CODE_TO_ID: dict[str, int] = {
+    "3": 3,    # 25% standard (Utgående MVA, høy sats)
+    "31": 31,  # 15% food (middels sats)
+    "33": 33,  # 12% transport/low (lav sats)
+    "5": 5,    # 0% exempt
+    "6": 6,    # 0% outside VAT law
+}
+
+
+async def _resolve_vat_type_id(client: TripletexClient, vat_code: str) -> int | None:
+    """Resolve a vatCode string to a vatType ID, using hardcoded map first."""
+    if vat_code in _VAT_CODE_TO_ID:
+        return _VAT_CODE_TO_ID[vat_code]
+    # Fallback: API lookup for unknown codes
+    vat_resp = await client.get_cached("/ledger/vatType", params={"number": vat_code})
+    vat_types = vat_resp.json().get("values", [])
+    if vat_types:
+        return vat_types[0]["id"]
+    return None
 
 
 def _pick(fields: dict, *keys: str) -> dict[str, Any]:
@@ -196,13 +228,11 @@ async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dic
     if fields.get("costExcludingVat") is not None:
         payload["costExcludingVatCurrency"] = fields["costExcludingVat"]
 
-    # If vatCode specified, look up the vatType
+    # If vatCode specified, resolve to vatType ID (hardcoded for common codes)
     if fields.get("vatCode"):
-        vat_resp = await client.get_cached("/ledger/vatType", params={"number": fields["vatCode"]})
-        vat_data = vat_resp.json()
-        vat_types = vat_data.get("values", [])
-        if vat_types:
-            payload["vatType"] = {"id": vat_types[0]["id"]}
+        vat_id = await _resolve_vat_type_id(client, fields["vatCode"])
+        if vat_id is not None:
+            payload["vatType"] = {"id": vat_id}
 
     _warn_unused("create_product", fields, _PRODUCT_KEYS)
 
@@ -214,12 +244,9 @@ async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dic
 
 @register_handler("create_department")
 async def create_department(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    # First enable the department module
-    try:
-        await client.post("/company/salesmodules", [{"name": "department", "enabled": True}])
-    except Exception:
-        logger.warning("Could not enable department module — may already be active")
-
+    # NOTE: salesmodules POST removed — department module is already enabled in
+    # competition sandboxes.  The old call always returned 422, wasting a call
+    # and incurring a 4xx penalty on the efficiency bonus.
     payload = {"name": fields["name"]}
     if fields.get("departmentNumber"):
         payload["departmentNumber"] = fields["departmentNumber"]
