@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_212638_642922",
+  "prompt": "Register the supplier Brightstone Ltd with organization number 845031037. Email: faktura@brightstoneltd.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "UN0Iw-JqbEqOG1BeVYYIFGda88mjTcEP7xb5dul-nRU"
+  }
+}
