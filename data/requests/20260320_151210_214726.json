@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_151210_214726",
+  "prompt": "Registrer leverandøren Sjøbris AS med organisasjonsnummer 811212717. E-post: faktura@sjbris.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "F38Tg_pprdIWOGkE2wBGCh_-7XPDh1zFW-e0Cn_3_Rk"
+  }
+}

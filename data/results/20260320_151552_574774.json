@@ -1,0 +1,54 @@
+{
+  "timestamp": "20260320_151552_574774",
+  "prompt": "Sett fastpris 122650 kr på prosjektet \"Digital transformasjon\" for Fossekraft AS (org.nr 830330704). Prosjektleiar er Liv Brekke (liv.brekke@example.org). Fakturer kunden for 33 % av fastprisen som ei delbetaling.",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1281.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1236.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 422,
+      "duration_ms": 1102.2,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"customer.id\",\"message\":\"Verdien er ikke av korrekt type for dette feltet.\",\"path\":\"customer.id\",\"rootId\":null}],\"requestId\":\"aaa62a5b-0068-4fa7-a47f-7f6c00249c13\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 422,
+      "duration_ms": 1207.6,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"customer.id\",\"message\":\"Verdien er ikke av korrekt type for dette feltet.\",\"path\":\"customer.id\",\"rootId\":null}],\"requestId\":\"6adea3b3-927f-4c92-8766-ac8108a9ac37\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/invoice",
+      "status": 422,
+      "duration_ms": 1145.7,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"order\",\"message\":\"Feltet eksisterer ikke i objektet.\",\"path\":null,\"rootId\":null}],\"requestId\":\"50b8c7b8-7e15-4dff-b37f-e5fae3b4a4aa\"}"
+    }
+  ],
+  "total_calls": 5,
+  "error_count_4xx": 3,
+  "total_duration_ms": 17905.2,
+  "result": {
+    "status": "completed",
+    "fallback": true,
+    "calls_made": 5
+  }
+}

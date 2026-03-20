@@ -1,0 +1,61 @@
+{
+  "timestamp": "20260320_152827_747343",
+  "prompt": "Sett fastpris 203000 kr på prosjektet \"Digital transformasjon\" for Stormberg AS (org.nr 834028719). Prosjektleder er Hilde Hansen (hilde.hansen@example.org). Fakturer kunden for 75 % av fastprisen som en delbetaling.",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 2803.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1220.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 1355.5,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/project/401934813",
+      "status": 422,
+      "duration_ms": 1393.9,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"fixedPrice\",\"message\":\"Feltet eksisterer ikke i objektet.\",\"path\":null,\"rootId\":null}],\"requestId\":\"a5bf7aaf-9c6c-4689-bfc8-24c62d6dc256\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 422,
+      "duration_ms": 1268.8,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"customer.id\",\"message\":\"Verdien er ikke av korrekt type for dette feltet.\",\"path\":\"customer.id\",\"rootId\":null}],\"requestId\":\"ff6c5954-c5ef-4796-a8e2-0810ee0cf7e9\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/invoice",
+      "status": 422,
+      "duration_ms": 1451.3,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"order\",\"message\":\"Feltet eksisterer ikke i objektet.\",\"path\":null,\"rootId\":null}],\"requestId\":\"f4e0b982-47f8-4583-a6c5-1ec52f211c5c\"}"
+    }
+  ],
+  "total_calls": 6,
+  "error_count_4xx": 3,
+  "total_duration_ms": 16088.9,
+  "result": {
+    "status": "completed",
+    "fallback": true,
+    "calls_made": 6
+  }
+}

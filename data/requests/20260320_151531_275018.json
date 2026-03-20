@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_151531_275018",
+  "prompt": "Erstellen Sie den Kunden Flussgold GmbH mit der Organisationsnummer 914077168. Die Adresse ist Storgata 109, 7010 Trondheim. E-Mail: post@flussgold.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "7kCIYhoZ3BVaTod673r2YC8zTwBCdCfoKEmoMKIr674"
+  }
+}

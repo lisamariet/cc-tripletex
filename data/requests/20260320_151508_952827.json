@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_151508_952827",
+  "prompt": "Sett fastpris 430750 kr på prosjektet \"Automatiseringsprosjekt\" for Fossekraft AS (org.nr 907433498). Prosjektleiar er Solveig Eide (solveig.eide@example.org). Fakturer kunden for 50 % av fastprisen som ei delbetaling.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "OypGP8-F3R3Ay9kxB7hl2SKhvHDmLq1TyOa_Z1u5K7A"
+  }
+}

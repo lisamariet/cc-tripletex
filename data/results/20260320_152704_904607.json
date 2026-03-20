@@ -1,0 +1,63 @@
+{
+  "timestamp": "20260320_152704_904607",
+  "prompt": "Opprett en faktura til kunden Havbris AS (org.nr 977448239) med tre produktlinjer: Konsulenttimer (6390) til 2850 kr med 25 % MVA, Systemutvikling (1652) til 2650 kr med 15 % MVA (næringsmiddel), og Webdesign (3273) til 7400 kr med 0 % MVA (avgiftsfri).",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Havbris AS",
+      "customerOrgNumber": "977448239",
+      "lines": [
+        {
+          "description": "Konsulenttimer (6390)",
+          "quantity": 1,
+          "unitPriceExcludingVat": 2850,
+          "vatCode": "3"
+        },
+        {
+          "description": "Systemutvikling (1652)",
+          "quantity": 1,
+          "unitPriceExcludingVat": 2650,
+          "vatCode": "31"
+        },
+        {
+          "description": "Webdesign (3273)",
+          "quantity": 1,
+          "unitPriceExcludingVat": 7400,
+          "vatCode": "5"
+        }
+      ]
+    },
+    "confidence": 0.96
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 1299.9,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 1564.3,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401959914/:invoice",
+      "status": 422,
+      "duration_ms": 1107.9,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Faktura kan ikke opprettes før selskapet har registrert et bankkontonummer.\",\"path\":null,\"rootId\":null}],\"requestId\":\"e5bee9bf-7dee-4873-b6dd-c02e0299e740\"}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 1,
+  "total_duration_ms": 6801.4,
+  "result": {
+    "status": "completed",
+    "taskType": "create_invoice",
+    "created": {}
+  }
+}

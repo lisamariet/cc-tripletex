@@ -176,32 +176,34 @@ def _translate_prompt(prompt: str) -> str | None:
 # ──────────────────────────────────────────────
 
 def fetch_gcs_logs(log_type: str = "results") -> list[dict]:
-    """Fetch all GCS log files and return parsed JSON list.
+    """Load logs from local data/ directory (fast) with optional GCS sync.
     log_type: 'results' or 'requests'
     """
-    result = subprocess.run(
-        ["gsutil", "ls", f"gs://tripletex-agent-requests/{log_type}/"],
-        capture_output=True, text=True,
-    )
-    if result.returncode != 0 or not result.stdout.strip():
-        return []
-
-    files = sorted(result.stdout.strip().split("\n"))
-    if not files or files == [""]:
+    local_dir = PROJECT_ROOT / "data" / log_type
+    if not local_dir.exists():
         return []
 
     logs = []
-    for f in files:
-        r = subprocess.run(["gsutil", "cat", f], capture_output=True, text=True)
-        if r.returncode != 0:
-            continue
+    for f in sorted(local_dir.glob("*.json")):
         try:
-            data = json.loads(r.stdout)
-            data["_gcs_path"] = f
+            data = json.loads(f.read_text())
+            data["_local_path"] = str(f)
             logs.append(data)
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, OSError):
             continue
     return logs
+
+
+def sync_gcs_data() -> None:
+    """Sync GCS data to local data/ directory."""
+    subprocess.run(
+        ["gsutil", "-m", "rsync", "gs://tripletex-agent-requests/results/", str(PROJECT_ROOT / "data" / "results/")],
+        capture_output=True, text=True,
+    )
+    subprocess.run(
+        ["gsutil", "-m", "rsync", "gs://tripletex-agent-requests/requests/", str(PROJECT_ROOT / "data" / "requests/")],
+        capture_output=True, text=True,
+    )
 
 
 def match_log_to_submission(log: dict, submissions: list[dict]) -> dict | None:

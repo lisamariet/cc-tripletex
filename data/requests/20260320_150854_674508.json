@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_150854_674508",
+  "prompt": "Registrer leverandøren Vestfjord AS med organisasjonsnummer 914908787. E-post: faktura@vestfjord.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "7l3nXDRSFHODVUB-TefLdVypSs6ruwl0eV5r84p_3v4"
+  }
+}

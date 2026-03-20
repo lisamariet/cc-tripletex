@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_152735_201905",
+  "prompt": "Opprett kunden Havbris AS med organisasjonsnummer 946293199. Adressen er Sjøgata 112, 4611 Kristiansand. E-post: post@havbris.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "OTLWcvnmsKeNXss8PlSiIy1mEzv2iFskUkrGes4r3GM"
+  }
+}

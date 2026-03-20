@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_151127_166788",
+  "prompt": "Defina um preço fixo de 114250 NOK no projeto \"Implementação ERP\" para Luz do Sol Lda (org. nº 898537447). O gestor de projeto é Catarina Costa (catarina.costa@example.org). Fature ao cliente 50 % do preço fixo como pagamento por etapa.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "JnsChLbduM9Z_DxBj3CavihDSxjSDLy-TvY6kTpUa8k"
+  }
+}

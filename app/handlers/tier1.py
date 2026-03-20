@@ -72,13 +72,18 @@ _CONTACT_KEYS = {
 
 
 def _sync_email(fields: dict) -> None:
-    """If only one of email/invoiceEmail is set, copy to both."""
+    """If only one of email/invoiceEmail is set, copy to both.
+    Also set overdueNoticeEmail if not explicitly provided."""
     email = fields.get("email")
     inv_email = fields.get("invoiceEmail")
     if inv_email and not email:
         fields["email"] = inv_email
     elif email and not inv_email:
         fields["invoiceEmail"] = email
+    # Default overdueNoticeEmail to the same email if not set
+    resolved_email = fields.get("email") or fields.get("invoiceEmail")
+    if resolved_email and not fields.get("overdueNoticeEmail"):
+        fields["overdueNoticeEmail"] = resolved_email
 
 
 @register_handler("create_supplier")

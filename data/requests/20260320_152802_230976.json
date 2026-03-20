@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_152802_230976",
+  "prompt": "Register a travel expense for Charles Harris (charles.harris@example.org) for \"Client visit Oslo\". The trip lasted 5 days with per diem (daily rate 800 NOK). Expenses: flight ticket 2300 NOK and taxi 500 NOK.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "SgCvwppxtBHArkG0CLzlKJ6boa57jdbS4eqe1eRE3Yw"
+  }
+}

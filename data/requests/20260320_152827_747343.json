@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_152827_747343",
+  "prompt": "Sett fastpris 203000 kr på prosjektet \"Digital transformasjon\" for Stormberg AS (org.nr 834028719). Prosjektleder er Hilde Hansen (hilde.hansen@example.org). Fakturer kunden for 75 % av fastprisen som en delbetaling.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "4ABWGF6bgkqkrliO0TE6_sqMhK6TMDXn2lcPRhGPbJM"
+  }
+}

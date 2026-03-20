@@ -1,0 +1,118 @@
+{
+  "timestamp": "20260320_152611_960854",
+  "prompt": "Registre 11 horas para Ana Romero (ana.romero@example.org) en la actividad \"Design\" del proyecto \"Integración de plataforma\" para Costa Brava SL (org. nº 886098499). Tarifa por hora: 1850 NOK/h. Genere una factura de proyecto al cliente basada en las horas registradas.",
+  "parsed_task": {
+    "task_type": "batch_register_timesheet",
+    "fields": {
+      "items": [
+        {
+          "taskType": "register_timesheet",
+          "fields": {
+            "employeeName": "Ana Romero",
+            "employeeEmail": "ana.romero@example.org",
+            "activityName": "Design",
+            "projectName": "Integración de plataforma",
+            "hours": 11,
+            "comment": "Project work for Costa Brava SL"
+          },
+          "confidence": 0.95,
+          "reasoning": "Spanish prompt to register 11 timesheet hours for Ana Romero on Design activity in Integración de plataforma project."
+        },
+        {
+          "taskType": "create_invoice",
+          "fields": {
+            "customerName": "Costa Brava SL",
+            "customerOrgNumber": "886098499",
+            "lines": [
+              {
+                "description": "Design - Integración de plataforma",
+                "quantity": 11,
+                "unitPriceExcludingVat": 1850,
+                "vatCode": "3"
+              }
+            ]
+          },
+          "confidence": 0.94,
+          "reasoning": "Spanish prompt requests invoice generation based on registered hours. 11 hours × 1850 NOK/h = 20350 NOK excluding VAT at standard 25% rate."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1453.0,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 1193.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/activity",
+      "status": 200,
+      "duration_ms": 1320.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 1267.9,
+      "error": null
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 7873.4,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_register_timesheet",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "register_timesheet",
+        "created": {
+          "id": 175904495,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175904495",
+          "project": {
+            "id": 401935795,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/project/401935795"
+          },
+          "activity": {
+            "id": 5079749,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/activity/5079749"
+          },
+          "date": "2026-03-20",
+          "hours": 11.0,
+          "chargeableHours": 11.0,
+          "employee": {
+            "id": 18186962,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18186962"
+          },
+          "timeClocks": [],
+          "comment": "Project work for Costa Brava SL",
+          "locked": false,
+          "chargeable": false,
+          "invoice": null,
+          "hourlyRate": 0.0,
+          "hourlyCost": 0.0,
+          "hourlyCostPercentage": 0,
+          "projectChargeableHours": 11.0
+        }
+      },
+      {
+        "status": "completed",
+        "note": "Employee not found"
+      }
+    ]
+  }
+}

@@ -89,7 +89,7 @@ Supported task types and their fields:
     Fields: customerName*, customerOrgNumber, orderDate (YYYY-MM-DD), deliveryDate (YYYY-MM-DD), lines (array of {description, quantity, unitPriceExcludingVat})
 
 24. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
-    Fields: supplierName, supplierOrgNumber, organizationNumber, amount, description, invoiceDate (YYYY-MM-DD), expenseAccount (account number, default "4000")
+    Fields: supplierName, supplierOrgNumber, organizationNumber, amount (gross total including VAT), description, invoiceDate (YYYY-MM-DD), expenseAccount (account number, default "4000"), invoiceNumber (the supplier's invoice reference, e.g. "INV-2026-4855"), vatRate (integer percent, e.g. 25 for 25%, default 25)
 
 25. "register_timesheet" — Register hours/timesheet entry for an employee
     Fields: employeeName, employeeEmail, projectName, activityName, hours* (number), date (YYYY-MM-DD), comment

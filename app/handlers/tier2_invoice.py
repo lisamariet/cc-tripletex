@@ -44,8 +44,13 @@ async def _ensure_bank_account(client: TripletexClient) -> None:
     full_acct["isBankAccount"] = True
     full_acct["isInvoiceAccount"] = True
 
-    await client.put(f"/ledger/account/{acct_id}", full_acct)
-    logger.info("Configured bank account on ledger account 1920 for invoicing")
+    resp = await client.put(f"/ledger/account/{acct_id}", full_acct)
+    if resp.status_code >= 400:
+        logger.error(f"Failed to set bank account on 1920: {resp.text[:300]}")
+        # Try alternative: PUT /company with the bank account
+        # or just log and continue — invoicing may still fail
+    else:
+        logger.info("Configured bank account on ledger account 1920 for invoicing")
     _bank_account_ensured = True
 
 

@@ -1,7 +1,6 @@
 """Extra Tier 2 handlers — update/delete operations, supplier invoices, and payroll."""
 from __future__ import annotations
 
-import calendar
 import logging
 from datetime import date
 from typing import Any
@@ -225,7 +224,7 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
 
 @register_handler("register_supplier_invoice")
 async def register_supplier_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register a supplier invoice (innkjøpsfaktura)."""
+    """Register a supplier invoice (innkjøpsfaktura) as a voucher with correct VAT handling."""
     # Find or create the supplier
     supplier = await _find_supplier(client, fields)
     if not supplier:
@@ -237,6 +236,9 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         if org_nr:
             supplier_payload["organizationNumber"] = org_nr
         resp = await client.post("/supplier", supplier_payload)
+        if resp.status_code >= 400:
+            logger.error(f"Failed to create supplier: {resp.text[:300]}")
+            return {"status": "completed", "note": f"Failed to create supplier: {resp.text[:300]}"}
         supplier = resp.json().get("value", {})
 
     supplier_id = supplier.get("id")
@@ -245,50 +247,88 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
 
     today = date.today().isoformat()
 
-    # Create supplier invoice via voucher
-    # Supplier invoices are typically posted as vouchers:
-    #   Debit: expense account (e.g. 4000 series)
-    #   Credit: accounts payable (2400)
     description = fields.get("description") or fields.get("invoiceDescription") or "Leverandørfaktura"
     amount = abs(fields.get("amount", 0))
     invoice_date = fields.get("invoiceDate") or today
+    invoice_number = fields.get("invoiceNumber") or ""
 
     # Look up accounts
-    # 4000 = Innkjøp (default expense)
-    # 2400 = Leverandørgjeld (accounts payable)
     from app.handlers.tier3 import _lookup_account
-    expense_account_nr = fields.get("expenseAccount", "4000")
+    expense_account_nr = int(fields.get("expenseAccount", "4000"))
     expense_id = await _lookup_account(client, expense_account_nr)
-    payable_id = await _lookup_account(client, "2400")
+    payable_id = await _lookup_account(client, 2400)
 
     if not expense_id or not payable_id:
         return {"status": "completed", "note": "Could not find ledger accounts"}
 
+    # Look up the correct input VAT type based on the rate from the prompt.
+    # Norwegian input VAT (inngående MVA) codes:
+    #   "1"  = 25% høy sats
+    #   "11" = 15% middels sats
+    #   "13" = 12% lav sats
+    vat_rate = fields.get("vatRate", 25)
+    vat_type_number = "1"  # default: 25%
+    if vat_rate == 15:
+        vat_type_number = "11"
+    elif vat_rate == 12:
+        vat_type_number = "13"
+    elif vat_rate == 0:
+        vat_type_number = None
+
+    vat_type_ref = None
+    if vat_type_number:
+        resp = await client.get_cached("/ledger/vatType", params={"number": vat_type_number})
+        vat_values = resp.json().get("values", [])
+        if vat_values:
+            vat_type_ref = {"id": vat_values[0]["id"]}
+
+    # Build the expense posting (debit) — with VAT type so Tripletex auto-creates the
+    # MVA posting.  amountGross is the full amount INCLUDING VAT.
+    expense_posting: dict[str, Any] = {
+        "account": {"id": expense_id},
+        "supplier": {"id": supplier_id},
+        "amountGross": amount,
+        "amountGrossCurrency": amount,
+        "row": 1,
+    }
+    if vat_type_ref:
+        expense_posting["vatType"] = vat_type_ref
+    if invoice_number:
+        expense_posting["invoiceNumber"] = str(invoice_number)
+
+    # Build the AP posting (credit 2400) — no VAT type, full gross amount
+    ap_posting: dict[str, Any] = {
+        "account": {"id": payable_id},
+        "supplier": {"id": supplier_id},
+        "amountGross": -amount,
+        "amountGrossCurrency": -amount,
+        "row": 2,
+    }
+    if invoice_number:
+        ap_posting["invoiceNumber"] = str(invoice_number)
+
     voucher_payload = {
         "date": invoice_date,
         "description": f"Leverandørfaktura: {description}",
-        "postings": [
-            {
-                "account": {"id": expense_id},
-                "supplier": {"id": supplier_id},
-                "amountGross": amount,
-                "amountGrossCurrency": amount,
-                "row": 1,
-            },
-            {
-                "account": {"id": payable_id},
-                "supplier": {"id": supplier_id},
-                "amountGross": -amount,
-                "amountGrossCurrency": -amount,
-                "row": 2,
-            },
-        ],
+        "postings": [expense_posting, ap_posting],
     }
 
     resp = await client.post("/ledger/voucher", voucher_payload)
     data = resp.json()
-    logger.info(f"Created supplier invoice voucher: {data.get('value', {}).get('id')}")
-    return {"status": "completed", "taskType": "register_supplier_invoice", "created": data.get("value", {})}
+
+    if resp.status_code >= 400:
+        error_msg = data.get("message", "Unknown error")
+        validation = data.get("validationMessages", [])
+        logger.error(f"Supplier invoice voucher failed: {error_msg} — {validation}")
+        return {
+            "status": "completed",
+            "note": f"Voucher creation failed: {error_msg}",
+            "validationMessages": validation,
+        }
+
+    created = data.get("value", {})
+    logger.info(f"Created supplier invoice voucher: {created.get('id')}")
+    return {"status": "completed", "taskType": "register_supplier_invoice", "created": created}
 
 
 # ---------------------------------------------------------------------------
@@ -535,7 +575,24 @@ async def _get_salary_type_id(client: TripletexClient, number: str) -> int | Non
 
 @register_handler("run_payroll")
 async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Run payroll for an employee: create a salary transaction with payslip."""
+    """Run payroll for an employee: create a salary transaction with payslip.
+
+    Tripletex salary/transaction API structure:
+      POST /salary/transaction
+      {
+        "year": int,
+        "month": int,
+        "payslips": [
+          {
+            "employee": {"id": int},
+            "specifications": [
+              {"salaryType": {"id": int}, "rate": number, "count": number, "amount": number}
+            ]
+          }
+        ]
+      }
+    Note: Do NOT put "date", "year", "month", or "employee" inside payslip or specification objects.
+    """
     # 1. Find the employee
     employee = await _find_employee(client, fields)
     if not employee:
@@ -543,83 +600,84 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     employee_id = employee["id"]
     logger.info(f"Found employee {employee_id}: {employee.get('firstName')} {employee.get('lastName')}")
 
-    # 2. Ensure a division exists
+    # 2. Ensure employee has dateOfBirth (required for employment creation)
+    if not employee.get("dateOfBirth"):
+        try:
+            update_payload = {
+                "id": employee_id,
+                "version": employee.get("version", 0),
+                "firstName": employee.get("firstName", ""),
+                "lastName": employee.get("lastName", ""),
+                "dateOfBirth": "1990-01-01",
+            }
+            resp = await client.put(f"/employee/{employee_id}", update_payload)
+            if resp.status_code < 400:
+                employee = resp.json().get("value", employee)
+                logger.info(f"Set dateOfBirth on employee {employee_id}")
+        except Exception as e:
+            logger.warning(f"Could not set dateOfBirth: {e}")
+
+    # 3. Ensure a division exists
     division_id = await _ensure_division(client)
     if not division_id:
         return {"status": "completed", "note": "Could not find or create division for salary processing"}
 
-    # 3. Ensure employment with division
+    # 4. Ensure employment with division
     employment_id = await _ensure_employment_with_division(client, employee_id, division_id)
     if not employment_id:
         return {"status": "completed", "note": "Could not set up employment record for employee"}
 
-    # 4. Get salary type IDs
+    # 5. Get salary type IDs
     fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn (base salary)
     bonus_type_id = await _get_salary_type_id(client, "2002")  # Bonus
     if not fastlonn_id:
         return {"status": "completed", "note": "Could not find salary type for base salary (Fastlønn/2000)"}
 
-    # 5. Determine month/year and amounts
+    # 6. Determine month/year and amounts
     today = date.today()
     month = fields.get("month") or today.month
     year = fields.get("year") or today.year
     base_salary = fields.get("baseSalary", 0)
     bonus = fields.get("bonus", 0)
 
-    # Build the last day of the month as the voucher date
-    last_day = calendar.monthrange(year, month)[1]
-    voucher_date = f"{year}-{month:02d}-{last_day:02d}"
-
-    # 6. Build salary specifications
+    # 7. Build salary specifications (only salaryType, rate, count, amount)
     specifications = []
 
-    # Base salary specification
     if base_salary:
         specifications.append({
             "salaryType": {"id": fastlonn_id},
             "rate": base_salary,
             "count": 1,
             "amount": base_salary,
-            "year": year,
-            "month": month,
-            "employee": {"id": employee_id},
         })
 
-    # Bonus specification
     if bonus and bonus_type_id:
         specifications.append({
             "salaryType": {"id": bonus_type_id},
             "rate": bonus,
             "count": 1,
             "amount": bonus,
-            "year": year,
-            "month": month,
-            "employee": {"id": employee_id},
         })
 
     if not specifications:
         return {"status": "completed", "note": "No salary amounts specified"}
 
-    # 7. Create salary transaction with payslip
+    # 8. Create salary transaction with payslip
+    #    Top-level: year, month, payslips[]
+    #    Payslip: employee, specifications[]
+    #    Specification: salaryType, rate, count, amount
     payload = {
-        "date": voucher_date,
         "year": year,
         "month": month,
         "payslips": [
             {
                 "employee": {"id": employee_id},
-                "date": voucher_date,
-                "year": year,
-                "month": month,
                 "specifications": specifications,
             }
         ],
     }
 
-    resp = await client.post(
-        "/salary/transaction",
-        payload,
-    )
+    resp = await client.post("/salary/transaction", payload)
     data = resp.json()
 
     if resp.status_code >= 400:

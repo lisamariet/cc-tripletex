@@ -73,6 +73,10 @@ Key patterns:
 - Department POST body: {"name": "...", "departmentNumber": N}
 - Product POST body: {"name": "...", "number": N, "priceExcludingVat": N}
 - For travel expenses: POST /travelExpense with {"employee": {"id": EMP_ID}, "title": "...", "date": "YYYY-MM-DD"} then POST /travelExpense/cost
+- For salary/payroll: POST /salary/transaction with {"year": YYYY, "month": M, "payslips": [{"employee": {"id": EMP_ID}, "specifications": [{"salaryType": {"id": TYPE_ID}, "rate": AMOUNT, "count": 1, "amount": AMOUNT}]}]}
+  - Salary type 2000 = Fastlønn (base salary), 2002 = Bonus. Look up IDs via GET /salary/type?number=2000
+  - Employee MUST have an employment record with a division. Check GET /employee/employment?employeeId=ID, create if missing.
+  - Do NOT put "date", "year", "month", or "employee" inside payslip or specification — only at the transaction top level (year, month) and payslip (employee).
 - Use ?fields=id,name,* to get all fields when searching
 
 Return ONLY a valid JSON array of API calls. Each call is an object:

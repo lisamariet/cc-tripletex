@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_151104_707200",
+  "prompt": "Recebemos a fatura INV-2026-4811 do fornecedor Montanha Lda (org. nº 859712355) no valor de 33200 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 7300). Registe a fatura do fornecedor com o IVA dedutível correto (25 %).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "482w4HFlNvue8PliFOxfKaLgOXOMdjJQGSzf1EAuiJE"
+  }
+}
