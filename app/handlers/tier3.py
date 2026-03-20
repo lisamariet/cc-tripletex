@@ -186,8 +186,10 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
         return {"status": "error", "taskType": "create_custom_dimension", "message": "values array is required"}
 
     # Step 1: Check if dimension already exists by searching
+    # Note: activeOnly param has inverted behaviour in some sandbox versions —
+    # omit it to get all dimensions reliably.
     existing_dimension = None
-    resp = await client.get("/ledger/accountingDimensionName", params={"activeOnly": "false"})
+    resp = await client.get("/ledger/accountingDimensionName")
     data = resp.json()
     for dim in data.get("values", []):
         if dim.get("dimensionName", "").lower() == dimension_name.lower():
@@ -204,15 +206,27 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
         resp = await client.post("/ledger/accountingDimensionName", dim_payload)
         dim_data = resp.json()
         if resp.status_code not in (200, 201):
-            return {
-                "status": "error",
-                "taskType": "create_custom_dimension",
-                "message": f"Failed to create dimension: {resp.text[:500]}",
-            }
-        created_dim = dim_data.get("value", {})
-        dimension_id = created_dim["id"]
-        dimension_index = created_dim["dimensionIndex"]
-        logger.info(f"Created dimension '{dimension_name}' with id={dimension_id}, index={dimension_index}")
+            # If max 3 dimensions reached, reuse first existing one and rename it
+            all_dims = data.get("values", [])
+            if all_dims:
+                reuse = all_dims[0]
+                dimension_id = reuse["id"]
+                dimension_index = reuse["dimensionIndex"]
+                # Rename the dimension
+                reuse["dimensionName"] = dimension_name
+                await client.put(f"/ledger/accountingDimensionName/{dimension_id}", reuse)
+                logger.info(f"Reused dimension index={dimension_index}, renamed to '{dimension_name}'")
+            else:
+                return {
+                    "status": "error",
+                    "taskType": "create_custom_dimension",
+                    "message": f"Failed to create dimension: {resp.text[:500]}",
+                }
+        else:
+            created_dim = dim_data.get("value", {})
+            dimension_id = created_dim["id"]
+            dimension_index = created_dim["dimensionIndex"]
+            logger.info(f"Created dimension '{dimension_name}' with id={dimension_id}, index={dimension_index}")
 
     # Step 3: Create dimension values
     # First, check existing values for this dimension
