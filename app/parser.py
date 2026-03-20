@@ -140,6 +140,26 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
         logger.error(f"Failed to parse LLM JSON: {e}")
         return ParsedTask(task_type="unknown", fields={}, reasoning=f"JSON parse error: {e}")
 
+    # Handle case where LLM returns a list (batch tasks like "create 3 departments")
+    if isinstance(parsed, list):
+        if len(parsed) == 1:
+            parsed = parsed[0]
+        elif len(parsed) > 1:
+            # Batch task — wrap in a batch structure
+            # Use the task type from the first item
+            first = parsed[0] if isinstance(parsed[0], dict) else {}
+            task_type = first.get("taskType", "unknown")
+            return ParsedTask(
+                task_type=f"batch_{task_type}" if task_type != "unknown" else "unknown",
+                fields={"items": parsed},
+                confidence=first.get("confidence", 0.5),
+                reasoning=f"Batch of {len(parsed)} items",
+            )
+
+    if not isinstance(parsed, dict):
+        logger.error(f"Unexpected parse result type: {type(parsed)}")
+        return ParsedTask(task_type="unknown", fields={}, reasoning="Unexpected response format")
+
     task = ParsedTask(
         task_type=parsed.get("taskType", "unknown"),
         fields=parsed.get("fields", {}),

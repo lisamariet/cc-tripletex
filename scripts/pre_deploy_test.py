@@ -84,7 +84,6 @@ TESTS = [
         "name": f"PreDeploy Product {int(time.time())}",
         "number": str(int(time.time()) % 100000),
         "priceExcludingVat": 500,
-        "vatCode": "3",
     }, True),
 
     ("create_department", "create_department", {

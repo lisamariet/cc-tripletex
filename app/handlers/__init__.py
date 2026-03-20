@@ -25,6 +25,21 @@ def register_handler(task_type: str):
 
 async def execute_task(task_type: str, client: TripletexClient, fields: dict[str, Any]) -> dict[str, Any]:
     """Look up and run the handler for task_type. Returns result dict."""
+    # Handle batch tasks: batch_create_department → run create_department for each item
+    if task_type.startswith("batch_"):
+        base_type = task_type[6:]  # Remove "batch_" prefix
+        handler = HANDLER_REGISTRY.get(base_type)
+        if handler is None:
+            logger.warning(f"No handler for batch base type: {base_type}")
+            return {"status": "completed", "note": f"No handler for batch type: {base_type}"}
+        items = fields.get("items", [])
+        results = []
+        for item in items:
+            item_fields = item.get("fields", item) if isinstance(item, dict) else {}
+            result = await handler(client, item_fields)
+            results.append(result)
+        return {"status": "completed", "taskType": task_type, "batch_results": results}
+
     handler = HANDLER_REGISTRY.get(task_type)
     if handler is None:
         logger.warning(f"No handler for task type: {task_type}")
