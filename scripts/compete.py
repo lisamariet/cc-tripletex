@@ -1211,7 +1211,7 @@ def cmd_errors(args: argparse.Namespace) -> None:
                 if status == 422:
                     raw = call.get("error") or call.get("response_body")
                     if isinstance(raw, dict):
-                        for vm in raw.get("validationMessages", []):
+                        for vm in (raw.get("validationMessages") or []):
                             msg_text = vm.get("message", "") if isinstance(vm, dict) else str(vm)
                             field = vm.get("field", "") if isinstance(vm, dict) else ""
                             if field:
@@ -1222,7 +1222,7 @@ def cmd_errors(args: argparse.Namespace) -> None:
                         try:
                             import json as _json
                             parsed = _json.loads(raw)
-                            for vm in parsed.get("validationMessages", []):
+                            for vm in (parsed.get("validationMessages") or []):
                                 msg_text = vm.get("message", "") if isinstance(vm, dict) else str(vm)
                                 field = vm.get("field", "") if isinstance(vm, dict) else ""
                                 if field:
