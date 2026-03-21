@@ -334,6 +334,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if not expense_id or not payable_id:
         return {"status": "completed", "note": "Could not find ledger accounts"}
 
+    # 2b. Unlock VAT on expense account if locked (some accounts like 7100 are
+    #     locked to vatCode 0, but the prompt asks for input VAT 25%)
+    try:
+        acc_resp = await client.get(f"/ledger/account/{expense_id}")
+        acc_data = acc_resp.json().get("value", {})
+        if acc_data.get("vatLocked"):
+            acc_data["vatLocked"] = False
+            await client.put(f"/ledger/account/{expense_id}", acc_data)
+            logger.info(f"Unlocked VAT on account {expense_account_nr} (id={expense_id})")
+    except Exception as e:
+        logger.warning(f"Could not unlock VAT on account {expense_account_nr}: {e}")
+
     # 3. Look up the "Leverandørfaktura" voucher type
     resp = await client.get_cached("/ledger/voucherType", params={"name": "Leverandørfaktura"})
     vt_values = resp.json().get("values", [])
