@@ -202,6 +202,18 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
         re.IGNORECASE,
     )
 
+    # Multi-signal pre-check: project_lifecycle when 3+ of 4 signals present
+    # Must run BEFORE keyword loop since individual keywords (register_timesheet etc.) would match first
+    _plc_signals = sum([
+        bool(re.search(r"budget|budsjett|Budget|Haushalt|orçamento|presupuesto", prompt_lower)),
+        bool(re.search(r"(?:log|registrer?).{0,20}(?:time|timer|hours?|horas?|Stunden|heures)|timesheet|timeliste|\d+\s*(?:hours?|timer|Stunden|heures|horas?)", prompt_lower)),
+        bool(re.search(r"supplier.{0,20}(?:cost|expense|invoice)|leverandør.{0,20}(?:kostnad|faktura)|Lieferant.{0,20}(?:kosten|rechnung)|co[uû]t.{0,20}fournisseur|custo.{0,20}fornecedor|costo.{0,20}proveedor", prompt_lower)),
+        bool(re.search(r"(?:customer|kunde|client|Kunde|cliente).{0,20}(?:invoice|faktura|facture|Rechnung|factura|fatura)|fakturer.{0,20}kunden|invoice.{0,20}(?:for|to).{0,20}(?:the|project)", prompt_lower)),
+    ])
+    if _plc_signals >= 3:
+        logger.info(f"Multi-signal match ({_plc_signals}/4 signals) → project_lifecycle")
+        return "project_lifecycle"
+
     for task_type, patterns in _KEYWORD_RULES:
         for pattern in patterns:
             if re.search(pattern, prompt_lower, re.IGNORECASE):
@@ -224,6 +236,7 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
                     return "overdue_invoice"
                 logger.info(f"Keyword match: '{pattern}' → {task_type}")
                 return task_type
+
     return None
 
 
