@@ -1522,6 +1522,19 @@ Kommandoer:
     batch_parser.add_argument("--max-concurrent", type=int, default=3,
                               help="Maks samtidige submissions (default: 3)")
 
+    # submit-track command
+    submit_track_parser = subparsers.add_parser(
+        "submit-track",
+        help="Submit 1 om gangen med task-ID tracking via leaderboard-delta",
+    )
+    submit_track_parser.add_argument(
+        "--count",
+        type=int,
+        default=1,
+        metavar="N",
+        help="Antall submissions (default: 1)",
+    )
+
     args = parser.parse_args()
 
     if args.command == "status":
@@ -1542,6 +1555,8 @@ Kommandoer:
         cmd_compare(args)
     elif args.command == "tasks":
         cmd_tasks(args)
+    elif args.command == "submit-track":
+        cmd_submit_track(args)
 
 
 # ──────────────────────────────────────────────
@@ -1974,6 +1989,219 @@ def _wait_for_capacity(client: httpx.Client, max_concurrent: int, wait_s: int = 
         print(f"  {YELLOW}Aktive submissions: {active}/{max_concurrent} — venter {wait_s}s (forsøk {attempt+1}/{max_retries})...{RESET}")
         time.sleep(wait_s)
     return False
+
+
+def _fetch_leaderboard_attempts(client: httpx.Client) -> dict[str, int]:
+    """Hent tx_task_id -> total_attempts for oss fra leaderboard-detaljer."""
+    try:
+        resp = client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
+        resp.raise_for_status()
+        task_list = _extract_task_list(resp.json())
+        return {
+            t.get("tx_task_id", ""): safe_int(t.get("total_attempts", 0))
+            for t in task_list
+            if t.get("tx_task_id")
+        }
+    except Exception:
+        return {}
+
+
+def _get_task_type_from_gcs_after(since_ts: float, timeout: float = 30.0) -> str | None:
+    """Poll lokal GCS-data for nyeste result-log nyere enn since_ts.
+
+    Venter i maks `timeout` sekunder på at GCS-sync har hentet loggen.
+    Returnerer task_type-streng eller None.
+    """
+    deadline = time.time() + timeout
+    local_dir = PROJECT_ROOT / "data" / "results"
+    while time.time() < deadline:
+        # Synk og let etter ny fil
+        sync_gcs_data()
+        logs = fetch_gcs_logs("results")
+        # Finn nyeste log nyere enn since_ts
+        for log in reversed(logs):
+            log_ts_str = log.get("timestamp", "")
+            try:
+                dt = datetime.strptime(log_ts_str[:15], "%Y%m%d_%H%M%S")
+                log_epoch = dt.timestamp()
+            except (ValueError, IndexError):
+                continue
+            if log_epoch >= since_ts - 5:  # 5s slakk for klokke-diff
+                task = log.get("parsed_task") or {}
+                tt = task.get("task_type", "")
+                if tt and tt not in ("unknown", "?", ""):
+                    return tt
+                # Prøv prompt-inferens
+                prompt = log.get("prompt", "")
+                if prompt:
+                    inferred = _infer_task_type_from_prompt(prompt)
+                    if inferred:
+                        return inferred
+        time.sleep(3)
+    return None
+
+
+def cmd_submit_track(args: argparse.Namespace) -> None:
+    """Submit én om gangen med task-ID tracking via leaderboard-delta."""
+    count = args.count
+    endpoint = ENDPOINT_URL
+    api_key = os.environ.get("API_KEY", "")
+
+    # Lokal kopi av TASK_ID_MAP (oppdateres i minnet denne kjøringen)
+    local_map: dict[str, dict] = {k: dict(v) for k, v in TASK_ID_MAP.items()}
+
+    new_mappings: list[tuple[str, str, str]] = []  # (task_id, old_type, new_type)
+    confirmed_count = 0
+
+    print(f"{BOLD}Submit-track: {count} submission(s){RESET}\n")
+
+    with make_client() as client:
+        for i in range(count):
+            print(f"{BOLD}[{i+1}/{count}]{RESET} Submitting...")
+
+            # ── Snapshot BEFORE ──
+            before = _fetch_leaderboard_attempts(client)
+
+            # ── Submit ──
+            submit_ts = time.time()
+            payload: dict[str, Any] = {"endpoint_url": f"{endpoint}{SOLVE_PATH}"}
+            if api_key:
+                payload["endpoint_api_key"] = api_key
+
+            resp = client.post(f"{API_BASE}/tasks/{TASK_ID}/submissions", json=payload)
+            if not resp.is_success:
+                print(f"  {RED}Submit feilet ({resp.status_code}): {resp.text[:120]}{RESET}")
+                if resp.status_code == 429:
+                    print("  Rate-limit — venter 60s...")
+                    time.sleep(60)
+                continue
+
+            result = resp.json()
+            sub_id = result.get("id", "?")
+            used = result.get("daily_submissions_used", "?")
+            max_sub = result.get("daily_submissions_max", "?")
+            print(f"  Submission: {sub_id}  ({used}/{max_sub} brukt i dag)")
+
+            # ── Poll for submission-resultat ──
+            submission_id = result.get("id")
+            score_raw = None
+            score_max = None
+            score_norm = None
+            if submission_id:
+                start = time.time()
+                interval_poll = 5
+                while time.time() - start < 180:
+                    time.sleep(interval_poll)
+                    elapsed = int(time.time() - start)
+                    print(f"  ... poller {elapsed}s", end="\r", flush=True)
+                    subs = normalize_submissions(fetch_submissions(client))
+                    for sub in subs:
+                        sid = sub.get("id") or sub.get("submission_id")
+                        if str(sid) == str(submission_id):
+                            status = (sub.get("status") or "").lower()
+                            if status in ("completed", "done", "scored", "failed", "error"):
+                                score_raw = sub.get("score_raw")
+                                score_max = sub.get("score_max")
+                                score_norm = safe_float(sub.get("normalized_score"))
+                                break
+                    if score_raw is not None:
+                        break
+                    interval_poll = min(interval_poll + 2, 15)
+                print()  # clear \r line
+
+            # ── Snapshot AFTER (vent litt på leaderboard-oppdatering) ──
+            time.sleep(3)
+            after = _fetch_leaderboard_attempts(client)
+
+            # ── Delta: finn hvilken task fikk +1 attempt ──
+            changed_task_id: str | None = None
+            for tid, after_count in after.items():
+                before_count = before.get(tid, 0)
+                if after_count > before_count:
+                    changed_task_id = tid
+                    break
+
+            # Hent task_type fra GCS
+            task_type_gcs = _get_task_type_from_gcs_after(submit_ts, timeout=20.0)
+
+            # Bestem tier fra task_id
+            if changed_task_id:
+                short_id = changed_task_id[-2:] if len(changed_task_id) >= 2 else changed_task_id
+                known = local_map.get(short_id)
+                tier = known["tier"] if known else 0
+                old_type = known["type"] if known else "unknown"
+
+                # Oppdater mapping hvis vi har ny task_type
+                mapping_note = ""
+                if task_type_gcs and task_type_gcs != "?":
+                    if old_type == "unknown" or old_type == "?":
+                        local_map[short_id] = {"type": task_type_gcs, "tier": tier}
+                        new_mappings.append((short_id, old_type, task_type_gcs))
+                        mapping_note = f"  {CYAN}Mapping: Task {short_id} var \"{old_type}\" → nå \"{task_type_gcs}\"{RESET}"
+                    elif old_type != task_type_gcs:
+                        local_map[short_id] = {"type": task_type_gcs, "tier": tier}
+                        new_mappings.append((short_id, old_type, task_type_gcs))
+                        mapping_note = f"  {YELLOW}Mapping oppdatert: Task {short_id}: \"{old_type}\" → \"{task_type_gcs}\"{RESET}"
+                    else:
+                        confirmed_count += 1
+                        mapping_note = f"  {DIM}Mapping: bekreftet{RESET}"
+                else:
+                    task_type_gcs = task_type_gcs or old_type or "?"
+
+                # Score-visning
+                if score_raw is not None:
+                    color = score_color(score_norm)
+                    score_str = f"{color}{safe_int(score_raw)}/{safe_int(score_max)} ({score_norm:.0%}){RESET}"
+                else:
+                    score_str = f"{DIM}(ingen score){RESET}"
+
+                tier_str = f"T{tier}" if tier else "T?"
+                print(f"  {GREEN}Task {short_id}{RESET} ({tier_str}) = {CYAN}{task_type_gcs}{RESET} — Score: {score_str}")
+                if mapping_note:
+                    print(mapping_note)
+            else:
+                # Ingen delta funnet — vis task_type fra GCS uansett
+                task_str = task_type_gcs or "ukjent"
+                if score_raw is not None:
+                    color = score_color(score_norm)
+                    score_str = f"{color}{safe_int(score_raw)}/{safe_int(score_max)} ({score_norm:.0%}){RESET}"
+                else:
+                    score_str = f"{DIM}(ingen score){RESET}"
+                print(f"  {YELLOW}Ingen task-delta funnet{RESET} — Score: {score_str}  Type: {task_str}")
+
+            if i < count - 1:
+                print(f"\n  Venter 5s for leaderboard-oppdatering...\n")
+                time.sleep(5)
+
+    # ── Sluttrapport ──
+    unique_tasks = len(set(m[0] for m in new_mappings) | set(
+        tid[-2:] if len(tid) >= 2 else tid
+        for tid in _fetch_all_changed_ids_local()  # fallback til tom liste
+    ))
+    print(f"\n{BOLD}{'═'*55}{RESET}")
+    print(f"{BOLD}=== Submit-track complete ==={RESET}")
+    print(f"{count} submissions, {confirmed_count} bekreftet mapping")
+
+    if new_mappings:
+        print(f"\n{CYAN}Nye mappings oppdaget: {len(new_mappings)}{RESET}")
+        for (tid, old, new) in new_mappings:
+            print(f"  Task {tid}: {DIM}{old}{RESET} → {GREEN}{new}{RESET}")
+
+        print(f"\n{BOLD}Oppdatert TASK_ID_MAP (ukjente tasks):{RESET}")
+        for task_num, info in sorted(local_map.items()):
+            if info["type"] != "unknown":
+                orig = TASK_ID_MAP.get(task_num, {})
+                if orig.get("type") != info["type"]:
+                    print(f"  Task {task_num}: {GREEN}{info['type']}{RESET} (T{info['tier']})")
+    else:
+        print(f"  Ingen nye mappings oppdaget.")
+
+    print()
+
+
+def _fetch_all_changed_ids_local() -> list[str]:
+    """Hjelpefunksjon — returnerer alltid tom liste (brukes kun for type-hint)."""
+    return []
 
 
 def cmd_batch(args: argparse.Namespace) -> None:
