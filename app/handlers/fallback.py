@@ -51,7 +51,6 @@ Available Tripletex v2 endpoints (all via proxy base URL):
 | /activity | GET, POST | Activities |
 | /contact | GET, POST, PUT | Contact persons |
 | /address | GET, PUT | Addresses |
-| /company/salesmodules | POST | BETA — returns 403, do NOT use |
 | /ledger/vatType | GET | VAT type lookup (params: number) |
 | /invoice/paymentType | GET | Payment types for invoices |
 

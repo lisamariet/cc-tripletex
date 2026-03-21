@@ -512,13 +512,13 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
 
 @register_handler("year_end_closing")
 async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Perform year-end closing: close postings for the year and create opening balance for the next year.
+    """Perform year-end closing: close postings for the year and return annual account summary.
 
     Steps:
     1. Look up accounting periods for the given year
     2. Find close groups for the year
     3. Close open postings via PUT /ledger/posting/:closePostings (batch, single attempt)
-    4. Create opening balance for the next year via POST /ledger/voucher/openingBalance [BETA]
+    4. Skip next-year balance init (BETA endpoint removed — returns 403)
     5. Return summary with annual account info
 
     NOTE: This handler is capped at MAX_API_CALLS to prevent runaway loops.
@@ -542,7 +542,7 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
     year = int(year)
 
     create_opening_balance = fields.get("createOpeningBalance", True)
-    opening_balance_date = fields.get("openingBalanceDate", f"{year + 1}-01-01")
+    # opening_balance_date removed — BETA endpoint not available
 
     result: dict[str, Any] = {
         "status": "completed",
@@ -628,47 +628,14 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
             })
             logger.info(f"Year-end closing {year}: no open postings to close")
 
-        # Step 4: Create opening balance for next year (BETA endpoint)
-        # Use the direct endpoint — do NOT iterate over individual accounts.
+        # Step 4: Next-year balance init (BETA endpoint removed — skip to avoid 403)
         if create_opening_balance:
-            _check_budget()
-            resp = await client.get("/ledger/voucher/openingBalance")
-            existing_ob = resp.json()
-            existing_voucher = existing_ob.get("value")
-
-            if existing_voucher and existing_voucher.get("id"):
-                result["steps"].append({
-                    "step": "opening_balance",
-                    "status": "already_exists",
-                    "voucherId": existing_voucher["id"],
-                    "note": "Opening balance already exists; skipping creation",
-                })
-                logger.info(f"Year-end closing {year}: opening balance already exists (voucher {existing_voucher['id']})")
-            else:
-                # Post opening balance with just the date — let Tripletex calculate balances
-                ob_payload: dict[str, Any] = {
-                    "voucherDate": opening_balance_date,
-                }
-                _check_budget()
-                resp = await client.post("/ledger/voucher/openingBalance", ob_payload)
-                if resp.status_code in (200, 201):
-                    voucher = resp.json().get("value", {})
-                    result["steps"].append({
-                        "step": "opening_balance",
-                        "status": "completed",
-                        "voucherId": voucher.get("id"),
-                        "date": opening_balance_date,
-                    })
-                    logger.info(f"Year-end closing {year}: created opening balance voucher {voucher.get('id')}")
-                else:
-                    error_msg = resp.json().get("message", resp.text[:500])
-                    result["steps"].append({
-                        "step": "opening_balance",
-                        "status": "error",
-                        "message": error_msg,
-                        "note": "This is a BETA endpoint and may not be available in all environments",
-                    })
-                    logger.warning(f"Opening balance creation failed (giving up): {error_msg}")
+            result["steps"].append({
+                "step": "opening_balance",
+                "status": "skipped",
+                "note": "BETA endpoint removed — returns 403; next-year balance init skipped",
+            })
+            logger.info(f"Year-end closing {year}: opening balance step skipped (BETA endpoint removed)")
 
         # Step 5: Fetch annual account info for verification
         _check_budget()
