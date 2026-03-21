@@ -25,6 +25,54 @@ TASK_ID = "cccccccc-cccc-cccc-cccc-cccccccccccc"  # Tripletex challenge task ID
 OUR_TEAM_ID = "ecfa24d3-9b1b-4ef2-a164-8568cf17839e"
 SOLVE_PATH = "/solve"
 
+# Task ID → task_type mapping (discovered via submit+delta method)
+# Tier info: T1=×1(max 2), T2=×2(max 4), T3=×3(max 6)
+TASK_ID_MAP: dict[str, dict] = {
+    "01": {"type": "create_supplier", "tier": 1},
+    "02": {"type": "create_customer", "tier": 1},
+    "03": {"type": "create_product", "tier": 1},
+    "04": {"type": "create_employee", "tier": 1},
+    "05": {"type": "batch_create_department", "tier": 1},
+    "06": {"type": "create_department", "tier": 1},
+    "07": {"type": "create_employee", "tier": 1},       # variant with role/entitlements
+    "08": {"type": "create_customer", "tier": 1},        # variant with address
+    "09": {"type": "set_project_fixed_price", "tier": 2},
+    "10": {"type": "create_invoice", "tier": 2},
+    "11": {"type": "create_custom_dimension", "tier": 2},
+    "12": {"type": "batch_create_department", "tier": 1}, # batch variant
+    "13": {"type": "register_payment", "tier": 2},
+    "14": {"type": "create_travel_expense", "tier": 2},
+    "15": {"type": "register_supplier_invoice", "tier": 2},
+    "16": {"type": "register_timesheet", "tier": 2},
+    "17": {"type": "create_credit_note", "tier": 2},
+    "18": {"type": "reverse_payment", "tier": 2},
+    # T3 tasks (opened 2026-03-21) — some still unconfirmed
+    "19": {"type": "create_employee", "tier": 3},         # PDF offer letter variant
+    "20": {"type": "register_expense_receipt", "tier": 3},
+    "21": {"type": "monthly_closing", "tier": 3},
+    "22": {"type": "unknown", "tier": 3},                 # unidentified
+    "23": {"type": "unknown", "tier": 3},                 # unidentified
+    "24": {"type": "unknown", "tier": 3},                 # unidentified — #1 scores 6.0
+    "25": {"type": "unknown", "tier": 3},                 # unidentified — #1 scores 5.2
+    "26": {"type": "create_voucher", "tier": 3},
+    "27": {"type": "year_end_closing", "tier": 3},
+    "28": {"type": "correct_ledger_error", "tier": 3},
+    "29": {"type": "bank_reconciliation", "tier": 3},
+    "30": {"type": "run_payroll", "tier": 3},
+}
+
+def get_task_name(tx_task_id: str) -> str:
+    """Get human-readable task name from task ID."""
+    info = TASK_ID_MAP.get(tx_task_id)
+    if info:
+        return f"{info['type']} (T{info['tier']})"
+    return f"task_{tx_task_id}"
+
+def get_task_tier(tx_task_id: str) -> int:
+    """Get tier for a task ID."""
+    info = TASK_ID_MAP.get(tx_task_id)
+    return info["tier"] if info else 0
+
 COMMON_HEADERS = {
     "accept": "*/*",
     "origin": "https://app.ainm.no",
