@@ -72,8 +72,10 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"regnskapsdimensjon|accounting dimension|dimensão contab|dimensión contab|comptable.*dimension|dimension.*comptable",
     ]),
     ("set_project_fixed_price", [
-        r"fastpris|fixed.?price|preço fixo|precio fijo|Festpreis|prix fixe|prix forfait",
-        r"delbetaling|partial payment|pago parcial|pagamento parcial|Teilzahlung|paiement partiel",
+        r"fastpris|fixed.?price|preço fixo|precio fijo|Festpreis|prix forfait(?:aire)?",
+        # "prix fixe" only when combined with project context — not standalone (avoid matching "prix fixe" in other contexts)
+        r"(?:prosjekt|project|projet|proyecto|projeto|Projekt).{0,60}(?:fastpris|fixed.?price|preço fixo|precio fijo|Festpreis|prix forfait|prix fixe)",
+        r"(?:fastpris|fixed.?price|preço fixo|precio fijo|Festpreis|prix forfait|prix fixe).{0,60}(?:prosjekt|project|projet|proyecto|projeto|Projekt)",
     ]),
     ("run_payroll", [
         r"payroll|lønnskjøring|lønn(?:s)?kjøring|Gehaltsabrechnung|nómina|folha de pagamento|paie",
@@ -159,6 +161,13 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
         re.IGNORECASE,
     )
 
+    # Reminder fee / purregebyr signals — these should NOT be classified as set_project_fixed_price
+    _REMINDER_FEE_SIGNALS = re.compile(
+        r"frais de rappel|taxa de lembrete|purregebyr|reminder.?fee|late.?fee"
+        r"|overdue.?fee|frais.{0,20}retard|frais.{0,20}rappel|lembrete.{0,20}atraso",
+        re.IGNORECASE,
+    )
+
     for task_type, patterns in _KEYWORD_RULES:
         for pattern in patterns:
             if re.search(pattern, prompt_lower, re.IGNORECASE):
@@ -175,6 +184,10 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
                 if task_type == "monthly_closing" and _YEAR_END_SIGNALS.search(prompt_lower):
                     logger.info(f"Keyword match '{pattern}' → monthly_closing, but year-end signals present → year_end_closing")
                     return "year_end_closing"
+                # If we matched set_project_fixed_price but prompt is about reminder/late fees, use create_voucher
+                if task_type == "set_project_fixed_price" and _REMINDER_FEE_SIGNALS.search(prompt_lower):
+                    logger.info(f"Keyword match '{pattern}' → set_project_fixed_price, but reminder fee signals present → create_voucher")
+                    return "create_voucher"
                 logger.info(f"Keyword match: '{pattern}' → {task_type}")
                 return task_type
     return None
@@ -228,8 +241,11 @@ Supported task types and their fields:
 
 12. "create_project" — Create a project (without fixed price)
     Fields: name*, customerName, customerOrgNumber, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), projectManagerName, isClosed (bool)
+    ANALYTICAL MODE: If the prompt asks to first analyze the ledger/accounts and then create projects based on the results (e.g. "find the top 3 cost accounts and create one project per account"), set analyzeTopCosts=true and projectCount=N (number of projects to create). In this case, name is NOT required — the handler will derive project names from the analysis.
+    Example analytical fields: {"analyzeTopCosts": true, "projectCount": 3, "isInternal": true, "period": "2026-01-01/2026-02-28"}
 
-13. "set_project_fixed_price" — Create a project linked to a customer with a fixed price amount, and optionally invoice a percentage as partial payment (keywords: fastpris, fixed price, preço fixo, Festpreis, prix fixe, precio fijo, delbetaling, partial payment, pago parcial, pagamento parcial, Teilzahlung, paiement partiel)
+13. "set_project_fixed_price" — Create a NEW project linked to a customer with a FIXED PRICE amount (fastpris/prix forfaitaire/preço fixo/Festpreis/precio fijo). Optionally invoice a percentage as partial payment.
+    IMPORTANT: This task type is ONLY for creating a project with a fixed budget/price. Do NOT use this type for: reminder fees (frais de rappel, purregebyr, taxa de lembrete), late payment fees, overdue invoice handling, or any task that does not explicitly mention creating a new project with a fixed price.
     Fields: projectName*, customerName*, customerOrgNumber, fixedPrice* (number — the fixed price amount in NOK), projectManagerName, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), invoicePercentage (number — if the prompt asks to invoice X% of the fixed price as partial payment, extract the percentage here, e.g. 50 for 50%)
 
 14. "update_employee" — Update employee details
@@ -353,6 +369,18 @@ Output: {"taskType": "register_supplier_invoice", "fields": {"description": "Lev
 
 Prompt: "Vi treng Kontorstoler fra denne kvitteringa bokfort pa avdeling Drift. Bruk rett utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling."
 Output: {"taskType": "register_supplier_invoice", "fields": {"productName": "Kontorstoler", "department": "Drift", "expenseAccount": 6000, "vatRate": 25, "vatCode": "11", "description": "Kontorstoler - avdeling Drift"}, "confidence": 0.92, "reasoning": "Nynorsk prompt: 'Kontorstoler' = office chairs → account 6000 (furniture/møbler). Department 'Drift' specified. 25% standard input VAT (vatCode 11). All amounts, supplierName and invoiceDate must be extracted from the attached receipt PDF/image."}
+
+Prompt: "Totalkostnadene økte betydelig fra januar til februar 2026. Analyser hovedboken og finn de tre kostnadskontoene med størst økning i beløp. Opprett et internt prosjekt for hver av de tre kontoene med kontoens namn. Opprett også en aktivitet for hvert prosjekt."
+Output: {"taskType": "create_project", "fields": {"analyzeTopCosts": true, "projectCount": 3, "isInternal": true, "period": "2026-01-01/2026-02-28", "createActivity": true}, "confidence": 0.88, "reasoning": "Norwegian prompt to analyze the ledger and create one internal project per top-3 cost account. Project names are not static — the handler will derive them from the analysis. analyzeTopCosts=true triggers the analytical workflow."}
+
+Prompt: "Totalkostnadene auka monaleg frå januar til februar 2026. Analyser hovudboka og finn dei tre kostnadskontoane med størst auke i beløp. Opprett eit internt prosjekt for kvar av dei tre kontoane med kontoens namn. Opprett også ein aktivitet for kvart prosjekt."
+Output: {"taskType": "create_project", "fields": {"analyzeTopCosts": true, "projectCount": 3, "isInternal": true, "period": "2026-01-01/2026-02-28", "createActivity": true}, "confidence": 0.88, "reasoning": "Norwegian Nynorsk prompt identical in meaning to the Bokmål version above — analyze ledger, find top-3 cost accounts, create internal projects with activities."}
+
+Prompt: "L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 50 NOK. Debit creances clients (1500), credit revenus de rappel (3400). Créez également une facture pour les frais de rappel au client et envoyez-la. De plus, enregistrez un paiement partiel de 5000 NOK sur la facture en retard."
+Output: {"taskType": "create_voucher", "fields": {"description": "Frais de rappel", "postings": [{"debitAccount": 1500, "creditAccount": 3400, "amount": 50, "description": "Frais de rappel client"}]}, "confidence": 0.80, "reasoning": "French prompt about a late invoice with reminder fees (frais de rappel) and partial payment. This is NOT set_project_fixed_price — 'paiement partiel' here refers to a partial payment on an overdue invoice, not invoicing a percentage of a fixed-price project. Primary action is posting a reminder fee voucher (debit 1500, credit 3400)."}
+
+Prompt: "Um dos seus clientes tem uma fatura vencida. Encontre a fatura vencida e registe uma taxa de lembrete de 70 NOK. Débito contas a receber (1500), crédito receitas de lembrete (3400). Também crie uma fatura para a taxa de lembrete ao cliente."
+Output: {"taskType": "create_voucher", "fields": {"description": "Taxa de lembrete", "postings": [{"debitAccount": 1500, "creditAccount": 3400, "amount": 70, "description": "Taxa de lembrete - cliente em atraso"}]}, "confidence": 0.82, "reasoning": "Portuguese prompt about an overdue invoice with a reminder fee (taxa de lembrete). This is NOT set_project_fixed_price — there is no project creation or fixed price involved. Primary action is posting a reminder fee voucher."}
 
 Prompt: "Sett fastpris 430750 kr på prosjektet 'Automatisering' for Havbris AS (org.nr 967636665). Prosjektleder er Kari Olsen."
 Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Automatisering", "customerName": "Havbris AS", "customerOrgNumber": "967636665", "fixedPrice": 430750, "projectManagerName": "Kari Olsen"}, "confidence": 0.96, "reasoning": "Norwegian prompt to create a project with a fixed price for a customer."}

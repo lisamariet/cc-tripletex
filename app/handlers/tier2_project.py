@@ -11,8 +11,115 @@ from app.handlers.tier2_invoice import _find_or_create_customer, _ensure_bank_ac
 logger = logging.getLogger(__name__)
 
 
+async def _analyze_top_cost_accounts(client: TripletexClient, project_count: int, period: str | None) -> list[dict[str, Any]]:
+    """Fetch ledger postings and return the top-N cost accounts by net movement."""
+    from datetime import date
+
+    # Parse period string "YYYY-MM-DD/YYYY-MM-DD"
+    date_from = "2026-01-01"
+    date_to = date.today().isoformat()
+    if period and "/" in period:
+        parts = period.split("/", 1)
+        date_from = parts[0].strip()
+        date_to = parts[1].strip()
+
+    # Cost accounts are typically in range 4000–7999 (Norwegian chart of accounts)
+    resp = await client.get("/ledger/account", params={
+        "from": 0,
+        "count": 500,
+        "isApplicableForSupplierInvoice": False,
+    })
+    all_accounts = resp.json().get("values", [])
+    # Filter to cost accounts (4000–7999)
+    cost_accounts = [a for a in all_accounts if 4000 <= int(a.get("number", 0)) <= 7999]
+
+    # Fetch postings for each account and sum up the movement
+    # Use /ledger/openPost or sum via /account/:id/balance — but simplest is to query postings
+    account_movements: list[dict[str, Any]] = []
+    for acc in cost_accounts[:80]:  # Cap to avoid too many calls
+        acc_id = acc.get("id")
+        acc_number = acc.get("number")
+        acc_name = acc.get("name", str(acc_number))
+        try:
+            bal_resp = await client.get(f"/account/{acc_id}/balance", params={
+                "periodDateFrom": date_from,
+                "periodDateTo": date_to,
+            })
+            bal_data = bal_resp.json()
+            net = abs(bal_data.get("value", 0) or 0)
+            if net > 0:
+                account_movements.append({"id": acc_id, "number": acc_number, "name": acc_name, "movement": net})
+        except Exception:
+            continue
+
+    # Sort by movement descending, return top N
+    account_movements.sort(key=lambda x: x["movement"], reverse=True)
+    return account_movements[:project_count]
+
+
 @register_handler("create_project")
 async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    from datetime import date
+
+    # --- ANALYTICAL MODE: analyzeTopCosts=true ---
+    if fields.get("analyzeTopCosts"):
+        project_count = int(fields.get("projectCount", 3))
+        period = fields.get("period")
+        is_internal = fields.get("isInternal", True)
+        create_activity = fields.get("createActivity", False)
+
+        logger.info(f"[create_project] Analytical mode: top {project_count} cost accounts")
+        top_accounts = await _analyze_top_cost_accounts(client, project_count, period)
+
+        if not top_accounts:
+            logger.warning("[create_project] No cost accounts found for analysis")
+            return {"status": "completed", "taskType": "create_project", "note": "No cost account movements found"}
+
+        pm_id = await _find_project_manager(client, fields.get("projectManagerName"))
+        created_projects = []
+        today = date.today().isoformat()
+
+        for acc in top_accounts:
+            project_name = f"{acc['number']} {acc['name']}"
+            payload: dict[str, Any] = {
+                "name": project_name,
+                "isInternal": is_internal,
+                "startDate": fields.get("startDate") or today,
+            }
+            if pm_id:
+                payload["projectManager"] = {"id": pm_id}
+
+            proj_resp = await client.post("/project", payload)
+            proj_data = proj_resp.json().get("value", {})
+            proj_id = proj_data.get("id")
+            logger.info(f"[create_project] Created analytical project '{project_name}' id={proj_id}")
+
+            activity_data = None
+            if create_activity and proj_id:
+                try:
+                    act_payload = {
+                        "name": acc["name"],
+                        "isProjectActivity": True,
+                        "isGeneral": False,
+                    }
+                    act_resp = await client.post("/activity", act_payload)
+                    activity_data = act_resp.json().get("value", {})
+                except Exception as e:
+                    logger.warning(f"[create_project] Could not create activity for project {proj_id}: {e}")
+
+            entry = {"account": acc["number"], "project": proj_data}
+            if activity_data:
+                entry["activity"] = activity_data
+            created_projects.append(entry)
+
+        return {
+            "status": "completed",
+            "taskType": "create_project",
+            "mode": "analyzeTopCosts",
+            "created": created_projects,
+        }
+
+    # --- STANDARD MODE: static fields ---
     # Guard: if name is missing the parser likely failed — return gracefully
     if not fields or not fields.get("name"):
         logger.warning("[create_project] Missing 'name' field — parser may have failed")
@@ -42,7 +149,7 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
 
     project_payload: dict[str, Any] = {
         "name": fields["name"],
-        "isInternal": False,
+        "isInternal": fields.get("isInternal", False),
     }
 
     if pm_id:
@@ -53,7 +160,6 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
         project_payload["customer"] = {"id": customer_id}
 
     # startDate is required by Tripletex — default to today
-    from datetime import date
     project_payload["startDate"] = fields.get("startDate") or date.today().isoformat()
     if fields.get("endDate"):
         project_payload["endDate"] = fields["endDate"]
