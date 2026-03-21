@@ -592,6 +592,22 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                 bank_statement_id = stmt_data.get("id")
                 statement_import_status = "imported"
                 logger.info(f"Imported bank statement: id={bank_statement_id}")
+            elif resp_import.status_code == 422 and "eksisterer allerede" in resp_import.text:
+                # Duplicate statement — find existing statement for this account/period
+                logger.info("Statement already exists for period — finding existing statement")
+                stmt_list_resp = await client.get("/bank/statement", params={"count": "20"})
+                if stmt_list_resp.status_code == 200:
+                    for s in stmt_list_resp.json().get("values", []):
+                        s_from = s.get("fromDate", "")
+                        s_to = s.get("toDate", "")
+                        # Match by overlapping date range
+                        if date_from and date_to and s_from <= date_to and s_to >= date_from:
+                            bank_statement_id = s.get("id")
+                            statement_import_status = "existing"
+                            logger.info(f"Using existing bank statement: id={bank_statement_id}")
+                            break
+                if not bank_statement_id:
+                    statement_import_status = "duplicate_not_found"
             else:
                 statement_import_status = f"failed_{resp_import.status_code}"
                 logger.warning(f"Bank statement import failed: {resp_import.text[:300]}")
@@ -603,8 +619,8 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     resp = await client.get("/ledger/accountingPeriod", params={"count": "20"})
     periods = resp.json().get("values", [])
     current_period_id = None
-    # Pick period covering date_to (or today)
-    target_date = date_to or today
+    # Pick period covering date_from (start of bank statement), fallback to date_to or today
+    target_date = date_from or date_to or today
     for p in periods:
         start = p.get("start", "")
         end = p.get("end", "")
@@ -700,6 +716,101 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     if resp.status_code == 200:
         count_data = resp.json()
         matches_after = count_data.get("value", 0) if isinstance(count_data.get("value"), int) else 0
+
+    # Step 6b: Manual matching fallback — if suggest found nothing but we have a bank statement,
+    # fetch statement transactions (IDs) and zip with csv_transactions (amounts), then match
+    # against ledger postings by amount. This avoids N individual GET /bank/statement/transaction calls.
+    if matches_after == 0 and bank_statement_id and reconciliation_id and date_from and date_to:
+        logger.info("Suggest found 0 matches — attempting manual amount-based matching")
+        try:
+            import datetime as _dt
+            # Expand date range slightly for ledger postings (±7 days tolerance)
+            try:
+                _from_ext = (
+                    _dt.date.fromisoformat(date_from) - _dt.timedelta(days=7)
+                ).isoformat()
+                _to_ext = (
+                    _dt.date.fromisoformat(date_to) + _dt.timedelta(days=7)
+                ).isoformat()
+            except Exception:
+                _from_ext, _to_ext = date_from, date_to
+
+            # Get statement transaction IDs in order (same order as csv_transactions)
+            stmt_resp = await client.get(f"/bank/statement/{bank_statement_id}")
+            stmt_txns: list[dict] = []
+            if stmt_resp.status_code == 200:
+                raw_txns = stmt_resp.json().get("value", {}).get("transactions", [])
+                # Zip statement txn IDs with csv_transactions amounts (same order)
+                for i, t_ref in enumerate(raw_txns):
+                    t_id = t_ref.get("id")
+                    if t_id and i < len(csv_transactions):
+                        stmt_txns.append({
+                            "id": t_id,
+                            "amount": csv_transactions[i]["amount"],
+                            "matched": False,
+                        })
+            logger.info(f"Manual match: {len(stmt_txns)} statement transactions")
+
+            # Get ledger postings for account in extended period
+            post_resp = await client.get("/ledger/posting", params={
+                "accountId": str(account_id),
+                "dateFrom": _from_ext,
+                "dateTo": _to_ext,
+                "count": "200",
+            })
+            ledger_postings: list[dict] = []
+            if post_resp.status_code == 200:
+                for p in post_resp.json().get("values", []):
+                    if not p.get("matched", False):
+                        ledger_postings.append({
+                            "id": p["id"],
+                            "amount": p.get("amountCurrency", 0.0),
+                        })
+            logger.info(f"Manual match: {len(ledger_postings)} unmatched ledger postings")
+
+            # Build amount lookup for postings {amount: [posting_id, ...]}
+            posting_by_amount: dict[float, list[int]] = {}
+            for p in ledger_postings:
+                amt = round(float(p["amount"]), 2)
+                posting_by_amount.setdefault(amt, []).append(p["id"])
+
+            # Match each unmatched statement transaction to a ledger posting with same amount
+            manual_match_count = 0
+            for txn in stmt_txns:
+                if txn.get("matched"):
+                    continue
+                txn_amt = round(float(txn["amount"]), 2)
+                # Try same-sign amount first (positive txn → positive posting = debit on 1920)
+                candidates = posting_by_amount.get(txn_amt, [])
+                if not candidates:
+                    # Try opposite sign (credit posting)
+                    candidates = posting_by_amount.get(-txn_amt, [])
+                if candidates:
+                    posting_id = candidates.pop(0)
+                    match_payload = {
+                        "bankReconciliation": {"id": reconciliation_id},
+                        "transactions": [{"id": txn["id"]}],
+                        "postings": [{"id": posting_id}],
+                        "type": "MANUAL",
+                    }
+                    match_resp = await client.post("/bank/reconciliation/match", match_payload)
+                    if match_resp.status_code in (200, 201):
+                        manual_match_count += 1
+                        logger.info(f"Manual match: txn {txn['id']} ↔ posting {posting_id} (amt={txn_amt})")
+                    else:
+                        logger.warning(f"Manual match failed: {match_resp.text[:150]}")
+
+            if manual_match_count > 0:
+                logger.info(f"Manual matching created {manual_match_count} matches")
+                # Recount
+                count_resp = await client.get("/bank/reconciliation/match/count", params={
+                    "bankReconciliationId": str(reconciliation_id),
+                })
+                if count_resp.status_code == 200:
+                    cnt = count_resp.json()
+                    matches_after = cnt.get("value", 0) if isinstance(cnt.get("value"), int) else matches_after
+        except Exception as _exc:
+            logger.warning(f"Manual matching failed: {_exc}")
 
     new_matches = matches_after - matches_before
 
