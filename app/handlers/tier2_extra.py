@@ -1655,19 +1655,23 @@ async def _create_single_expense_voucher(
 
 @register_handler("register_expense_receipt")
 async def register_expense_receipt(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register an expense from a receipt via POST /ledger/voucher.
+    """Register an expense receipt via POST /supplierInvoice.
 
-    Creates a voucher with:
-      - DEBIT:  expense account (inferred from description, default 6500)
-      - CREDIT: bank/cash account (default 1920)
-    Applies input VAT (inngående mva) if vatRate > 0.
-    Optionally links the voucher to a department via the department dimension.
+    Kvitteringer i norsk regnskap registreres som leverandørfakturaer
+    (innkjøpsfakturaer), ikke vanlige bilag.  Flyten er identisk med
+    register_supplier_invoice:
 
-    Multi-receipt support: When `costs` list is provided, creates ONE voucher
-    per cost item (not summed) so scorer can verify individual postings.
+      1. Finn eller opprett leverandør (butikknavn / "Kvitteringsleverandør")
+      2. POST /supplierInvoice med embedded voucher
+         - DEBIT:  utgiftskonto (inferred/explicit, default 6500)
+         - CREDIT: leverandørgjeld (konto 2400)
+
+    Multi-receipt support: When `costs` list is provided, creates ONE
+    supplierInvoice per cost item so scorer can verify individual entries.
     """
     today = date.today().isoformat()
-    description = (
+
+    default_description = (
         fields.get("description")
         or fields.get("itemName")
         or fields.get("receiptDescription")
@@ -1676,38 +1680,61 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
 
     voucher_date = fields.get("date") or fields.get("receiptDate") or today
     vat_rate = fields.get("vatRate", 25)
-    credit_account_nr = int(fields.get("creditAccount", 1920))
-    currency = fields.get("currency")
+    department_name = fields.get("department") or fields.get("departmentName") or ""
+
+    # Supplier: use store/vendor name from receipt if available
+    supplier_name = (
+        fields.get("supplierName")
+        or fields.get("storeName")
+        or fields.get("vendorName")
+        or "Kvitteringsleverandør"
+    )
+
+    # Find or create supplier
+    supplier = await _find_supplier(client, fields)
+    if not supplier:
+        supplier_payload: dict[str, Any] = {
+            "name": supplier_name,
+            "isSupplier": True,
+        }
+        resp = await client.post("/supplier", supplier_payload)
+        if resp.status_code >= 400:
+            logger.error(f"register_expense_receipt: failed to create supplier: {resp.text[:300]}")
+            return {"status": "completed", "note": f"Failed to create supplier: {resp.text[:300]}"}
+        supplier = resp.json().get("value", {})
+
+    supplier_id = supplier.get("id")
+    if not supplier_id:
+        return {"status": "completed", "note": "Could not find or create supplier"}
 
     # Look up department if specified
     department_ref = None
-    department_name = fields.get("department") or fields.get("departmentName")
     if department_name:
-        resp = await client.get_cached("/department", params={"name": department_name})
-        dept_values = resp.json().get("values", [])
-        # Prefer exact match (case-insensitive)
-        for d in dept_values:
-            if d.get("name", "").lower() == department_name.lower():
-                department_ref = {"id": d["id"]}
-                break
-        if not department_ref and dept_values:
-            department_ref = {"id": dept_values[0]["id"]}
-        if not department_ref:
-            logger.warning(f"Department '{department_name}' not found — proceeding without department")
+        try:
+            dept_resp = await client.get_cached("/department", params={"name": department_name, "count": 10})
+            dept_values = dept_resp.json().get("values", [])
+            for dv in dept_values:
+                if dv.get("name", "").lower() == department_name.lower():
+                    department_ref = {"id": dv["id"]}
+                    break
+            if not department_ref and dept_values:
+                department_ref = {"id": dept_values[0]["id"]}
+            if not department_ref:
+                logger.warning(f"Department '{department_name}' not found — proceeding without department")
+        except Exception as e:
+            logger.warning(f"Could not look up department '{department_name}': {e}")
 
-    # Multi-receipt support: one voucher per cost item
+    # Multi-receipt support: one supplierInvoice per cost item
     costs = fields.get("costs", [])
     if costs:
-        vouchers_created = []
+        invoices_created = []
         errors = []
         for cost in costs:
-            cost_desc = cost.get("description") or cost.get("name") or description
+            cost_desc = cost.get("description") or cost.get("name") or default_description
             cost_amount = abs(cost.get("amount", 0))
             cost_date = cost.get("date") or voucher_date
             cost_vat_rate = cost.get("vatRate", vat_rate)
-            cost_currency = cost.get("currency") or currency
 
-            # Infer expense account from cost description or explicit field
             if cost.get("expenseAccount"):
                 cost_expense_account = int(cost["expenseAccount"])
             elif fields.get("expenseAccount"):
@@ -1719,56 +1746,66 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
                 logger.warning(f"Skipping cost item with zero/negative amount: {cost_desc}")
                 continue
 
-            result = await _create_single_expense_voucher(
+            result = await _create_single_expense_supplier_invoice(
                 client=client,
-                voucher_date=cost_date,
+                supplier_id=supplier_id,
+                invoice_date=cost_date,
                 description=cost_desc,
                 amount_gross=cost_amount,
                 expense_account_nr=cost_expense_account,
-                credit_account_nr=credit_account_nr,
                 vat_rate=cost_vat_rate,
                 department_ref=department_ref,
-                currency=cost_currency,
             )
             if "created" in result:
-                vouchers_created.append(result["created"])
+                invoices_created.append(result["created"])
             else:
                 errors.append(result.get("error", "Unknown error"))
 
-        if not vouchers_created and errors:
+        if not invoices_created and errors:
             return {
                 "status": "completed",
-                "note": f"All expense receipt vouchers failed: {errors[0]}",
+                "note": f"All expense receipt invoices failed: {errors[0]}",
                 "errors": errors,
             }
 
         logger.info(
-            f"Created {len(vouchers_created)} expense receipt vouchers "
+            f"Created {len(invoices_created)} expense receipt supplier invoices "
             f"for {len(costs)} cost items"
         )
+        # Build result objects — id = supplierInvoice id for verify against /supplierInvoice
+        invoices_for_result = []
+        for inv in invoices_created:
+            voucher_obj = inv.get("voucher") or {}
+            invoices_for_result.append({
+                "id": inv.get("id"),           # supplierInvoice id
+                "voucherId": voucher_obj.get("id"),
+            })
+
         return {
             "status": "completed",
             "taskType": "register_expense_receipt",
-            "created": vouchers_created[0] if vouchers_created else {},
-            "vouchers": vouchers_created,
-            "voucherCount": len(vouchers_created),
+            "created": invoices_for_result[0] if invoices_for_result else {},
+            "vouchers": invoices_for_result,
+            "voucherCount": len(invoices_for_result),
+            "supplierId": supplier_id,
             "department": department_name,
         }
 
     # Single receipt (no costs list)
     amount_gross = abs(fields.get("amount", 0))
-    expense_account_nr = int(fields.get("expenseAccount") or _infer_expense_account(description))
+    expense_account_nr = int(
+        fields.get("expenseAccount") or _infer_expense_account(default_description)
+    )
 
-    result = await _create_single_expense_voucher(
+    result = await _create_single_expense_supplier_invoice(
         client=client,
-        voucher_date=voucher_date,
-        description=description,
+        supplier_id=supplier_id,
+        invoice_date=voucher_date,
+        description=default_description,
         amount_gross=amount_gross,
         expense_account_nr=expense_account_nr,
-        credit_account_nr=credit_account_nr,
         vat_rate=vat_rate,
         department_ref=department_ref,
-        currency=currency,
     )
 
     if "error" in result:
@@ -1779,12 +1816,157 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
         }
 
     created = result["created"]
+    si_id = created.get("id")
+    voucher_id = (created.get("voucher") or {}).get("id")
     return {
         "status": "completed",
         "taskType": "register_expense_receipt",
-        "created": created,
-        "voucherId": created.get("id"),
+        "created": {"id": si_id, "voucherId": voucher_id},   # id = supplierInvoice id for verify
+        "supplierId": supplier_id,
+        "voucherId": voucher_id,
         "amount": amount_gross,
         "expenseAccount": expense_account_nr,
         "department": department_name,
     }
+
+
+async def _create_single_expense_supplier_invoice(
+    client: TripletexClient,
+    supplier_id: int,
+    invoice_date: str,
+    description: str,
+    amount_gross: float,
+    expense_account_nr: int,
+    vat_rate: float,
+    department_ref: dict | None,
+) -> dict[str, Any]:
+    """Create a single expense receipt as a supplierInvoice (POST /supplierInvoice).
+
+    Returns dict with 'created' key (the supplierInvoice value) on success,
+    or 'error' key on failure.
+    """
+    from datetime import timedelta
+    from app.handlers.tier3 import _lookup_account
+
+    expense_id = await _lookup_account(client, expense_account_nr)
+    payable_id = await _lookup_account(client, 2400)
+
+    if not expense_id or not payable_id:
+        return {"error": "Could not find required ledger accounts"}
+
+    # Unlock VAT on expense account if locked
+    try:
+        acc_resp = await client.get(f"/ledger/account/{expense_id}")
+        acc_data = acc_resp.json().get("value", {})
+        if acc_data.get("vatLocked"):
+            acc_data["vatLocked"] = False
+            await client.put(f"/ledger/account/{expense_id}", acc_data)
+            logger.info(f"Unlocked VAT on account {expense_account_nr} (id={expense_id})")
+    except Exception as e:
+        logger.warning(f"Could not unlock VAT on account {expense_account_nr}: {e}")
+
+    # VAT type lookup — same mapping as register_supplier_invoice
+    vat_type_number: str | None
+    if vat_rate == 15:
+        vat_type_number = "11"   # Inngående mva 15%
+    elif vat_rate == 12:
+        vat_type_number = "13"   # Inngående mva 12%
+    elif vat_rate and vat_rate > 0:
+        vat_type_number = "1"    # Inngående mva 25% (høy sats) — default
+    else:
+        vat_type_number = None
+
+    vat_type_ref = None
+    if vat_type_number:
+        resp = await client.get_cached("/ledger/vatType", params={"number": vat_type_number})
+        vat_values = resp.json().get("values", [])
+        if vat_values:
+            vat_type_ref = {"id": vat_values[0]["id"]}
+
+    # Calculate netto (excl. VAT)
+    if vat_rate and vat_rate > 0:
+        amount_excl_vat = round(amount_gross / (1 + vat_rate / 100), 2)
+    else:
+        amount_excl_vat = amount_gross
+
+    # Due date: invoiceDate + 30 days
+    try:
+        inv_date_obj = date.fromisoformat(invoice_date)
+        due_date = (inv_date_obj + timedelta(days=30)).isoformat()
+    except ValueError:
+        due_date = ""
+
+    # Look up "Leverandørfaktura" voucher type
+    resp = await client.get_cached("/ledger/voucherType", params={"name": "Leverandørfaktura"})
+    vt_values = resp.json().get("values", [])
+    voucher_type_ref = None
+    for vt in vt_values:
+        if vt.get("name") == "Leverandørfaktura":
+            voucher_type_ref = {"id": vt["id"]}
+            break
+    if not voucher_type_ref and vt_values:
+        voucher_type_ref = {"id": vt_values[0]["id"]}
+
+    # Build postings — debit utgift, kredit leverandørgjeld (2400)
+    expense_posting: dict[str, Any] = {
+        "account": {"id": expense_id},
+        "supplier": {"id": supplier_id},
+        "amount": amount_excl_vat,
+        "amountCurrency": amount_excl_vat,
+        "amountGross": amount_gross,
+        "amountGrossCurrency": amount_gross,
+        "row": 1,
+    }
+    if vat_type_ref:
+        expense_posting["vatType"] = vat_type_ref
+    if department_ref:
+        expense_posting["department"] = department_ref
+
+    ap_posting: dict[str, Any] = {
+        "account": {"id": payable_id},
+        "supplier": {"id": supplier_id},
+        "amount": -amount_gross,
+        "amountCurrency": -amount_gross,
+        "amountGross": -amount_gross,
+        "amountGrossCurrency": -amount_gross,
+        "row": 2,
+    }
+
+    voucher_obj: dict[str, Any] = {
+        "date": invoice_date,
+        "description": f"Kvittering: {description}",
+        "postings": [expense_posting, ap_posting],
+    }
+    if voucher_type_ref:
+        voucher_obj["voucherType"] = voucher_type_ref
+
+    si_payload: dict[str, Any] = {
+        "invoiceDate": invoice_date,
+        "supplier": {"id": supplier_id},
+        "amountCurrency": amount_gross,
+        "currency": {"id": 1},
+        "voucher": voucher_obj,
+    }
+    if due_date:
+        si_payload["invoiceDueDate"] = due_date
+
+    resp = await client.post_with_retry("/supplierInvoice", si_payload)
+    data = resp.json()
+
+    if resp.status_code >= 400:
+        error_msg = data.get("message", "Unknown error")
+        validation = data.get("validationMessages", [])
+        logger.error(
+            f"POST /supplierInvoice (expense receipt) failed ({resp.status_code}): "
+            f"{error_msg} — {validation}"
+        )
+        return {"error": error_msg, "validationMessages": validation}
+
+    created = data.get("value", {})
+    si_id = created.get("id")
+    v_id = (created.get("voucher") or {}).get("id")
+    logger.info(
+        f"Created expense receipt supplier invoice: si_id={si_id}, voucher_id={v_id}, "
+        f"amount_gross={amount_gross}, expense_account={expense_account_nr}"
+    )
+    return {"created": created}

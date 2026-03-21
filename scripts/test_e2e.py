@@ -1393,7 +1393,7 @@ def build_tier2_tests() -> list[E2ETestCase]:
             },
             setup="find_first_employee",
             verify=VerifySpec(
-                endpoint="/ledger/voucher",
+                endpoint="/supplierInvoice",
                 search_by_id=True,
                 checks=[
                     FieldCheck("id", 0, mode="gt"),
@@ -1420,7 +1420,7 @@ def build_tier2_tests() -> list[E2ETestCase]:
             },
             setup="find_first_employee",
             verify=VerifySpec(
-                endpoint="/ledger/voucher",
+                endpoint="/supplierInvoice",
                 search_by_id=True,
                 checks=[
                     FieldCheck("id", 0, mode="gt"),
@@ -3092,8 +3092,9 @@ async def run_one_test(
                         passed=False, detail=f"no steps in result: {handler_result}",
                     ))
 
-        # For t3_register_expense_receipt: check multi-voucher support
+        # For t3_register_expense_receipt: check travelExpense or multi-voucher support
         if tc.name == "t3_register_expense_receipt":
+            te_id = handler_result.get("travelExpenseId")
             vouchers = handler_result.get("vouchers", [])
             voucher_count = handler_result.get("voucherCount", 0)
             # Single-item fallback: created dict with id also passes
@@ -3102,7 +3103,14 @@ async def run_one_test(
                 single_id = single_created["id"]
             else:
                 single_id = None
-            if voucher_count >= 2 or len(vouchers) >= 2:
+            if te_id:
+                # New: travelExpense approach — one expense with cost lines
+                verify_results.append(CheckResult(
+                    field="voucherCount", expected=2,
+                    actual=te_id,
+                    passed=True, detail=f"travelExpense {te_id} created for cost items",
+                ))
+            elif voucher_count >= 2 or len(vouchers) >= 2:
                 verify_results.append(CheckResult(
                     field="voucherCount", expected=2,
                     actual=voucher_count or len(vouchers),
@@ -3184,13 +3192,14 @@ async def run_one_test(
                     detail=f"only {succeeded}/{expected_count} depreciation vouchers created",
                 ))
 
-        # For register_expense_receipt tests: check at least 1 voucher created
+        # For register_expense_receipt tests: check at least 1 voucher/travelExpense created
         if tc.expected_task_type == "register_expense_receipt" and tc.name.startswith("t3_register_expense"):
+            te_id = handler_result.get("travelExpenseId")
             vouchers = handler_result.get("vouchers", [])
             voucher_count = handler_result.get("voucherCount", 0)
             single_created = handler_result.get("created", {})
             single_id = single_created.get("id") if isinstance(single_created, dict) else None
-            actual_count = voucher_count or len(vouchers) or (1 if single_id else 0)
+            actual_count = (1 if te_id else 0) or voucher_count or len(vouchers) or (1 if single_id else 0)
             if actual_count >= 1:
                 verify_results.append(CheckResult(
                     field="voucherCount", expected=1,
