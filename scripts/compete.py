@@ -487,17 +487,24 @@ def cmd_status(args: argparse.Namespace) -> None:
             today_count += 1
 
     print()
-    print(f"{BOLD}  Totalpoeng: {total_score:.1f} | Oppgaver med poeng: {tasks_with_score}/30 | Submissions i dag: {today_count}/32{RESET}")
+    print(f"{BOLD}  Totalpoeng: {total_score:.1f} | Oppgaver med poeng: {tasks_with_score}/30 | Submissions i dag: {today_count}/300{RESET}")
     print()
 
     # ── Table ──
+    total_subs = len(submissions)
+    limit = getattr(args, "limit", None)
+    display_subs = submissions[:limit] if limit is not None else submissions
+    if limit is not None:
+        print(f"  Viser {len(display_subs)} av {total_subs} submissions")
+        print()
+
     print(f"  {'#':>3}  {'Tid':<10} {'Oppgavetype':<25} {'Score':>12} {'Varighet':>8}  {'Status'}")
     print(f"  {'─'*80}")
 
     # ANSI italic
     ITALIC = "\033[3m"
 
-    for i, sub in enumerate(submissions[:25], 1):
+    for i, sub in enumerate(display_subs, 1):
         ts = format_ts_short(sub.get("queued_at"))
         raw = sub.get("score_raw")
         mx = sub.get("score_max")
@@ -1307,7 +1314,14 @@ Kommandoer:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # status command
-    subparsers.add_parser("status", help="Vis submissions og total score")
+    status_parser = subparsers.add_parser("status", help="Vis submissions og total score")
+    status_parser.add_argument(
+        "-n", "--limit",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Vis de N siste submissions (standard: alle)",
+    )
 
     # show command
     show_parser = subparsers.add_parser("show", help="Vis detaljer for en submission")
