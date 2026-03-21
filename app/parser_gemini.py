@@ -159,6 +159,17 @@ def parse_task_gemini(
     if task.task_type not in VALID_TASK_TYPES and task.task_type != "unknown":
         task.task_type = "unknown"
 
+    # Known misclassification overrides — keyword signals that MUST win over Gemini
+    import re
+    _RECEIPT_SIGNAL = re.compile(
+        r"kvittering|quittung|receipt|re[çc]u|recibo|ricevuta|kvitto",
+        re.IGNORECASE,
+    )
+    if task.task_type == "register_supplier_invoice" and _RECEIPT_SIGNAL.search(prompt):
+        logger.info(f"[Gemini] Override: {task.task_type} → register_expense_receipt (receipt signal in prompt)")
+        task.task_type = "register_expense_receipt"
+        task.reasoning = f"Override: receipt signal → register_expense_receipt. {task.reasoning}"
+
     if task.task_type == "unknown":
         inferred = _infer_task_type_from_keywords(prompt)
         if inferred:
