@@ -464,11 +464,19 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     #   - Expense debit posting WITH supplier reference on the expense account line
     #   - AP credit posting (konto 2400) WITH supplier reference
     # Without both postings + supplier ref on expense, POST /supplierInvoice returns 500.
+    #
+    # CRITICAL: To get correct amountExcludingVat and isCreditNote=false from Tripletex,
+    # the expense posting MUST include BOTH:
+    #   - amount / amountCurrency = netto (excl. VAT) — used for amountExcludingVat
+    #   - amountGross / amountGrossCurrency = brutto (incl. VAT) — the actual amount
+    # The AP posting uses gross amount (no VAT split needed).
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
         "supplier": {"id": supplier_id},
-        "amountGross": amount_gross,
-        "amountGrossCurrency": amount_gross,
+        "amount": amount_excl_vat,            # netto eks. mva → drives amountExcludingVat
+        "amountCurrency": amount_excl_vat,    # netto i valuta
+        "amountGross": amount_gross,          # brutto inkl. mva
+        "amountGrossCurrency": amount_gross,  # brutto i valuta
         "row": 1,
     }
     if vat_type_ref:
@@ -479,6 +487,8 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     ap_posting: dict[str, Any] = {
         "account": {"id": payable_id},
         "supplier": {"id": supplier_id},
+        "amount": -amount_gross,             # total leverage (no VAT separation for AP)
+        "amountCurrency": -amount_gross,
         "amountGross": -amount_gross,
         "amountGrossCurrency": -amount_gross,
         "row": 2,
