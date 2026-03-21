@@ -231,6 +231,47 @@ def _make_bank_csv_b64() -> str:
     return base64.b64encode(csv_text.encode("windows-1252")).decode()
 
 
+def _make_bank_csv_german_b64() -> str:
+    """German-style bank CSV: dot as thousand separator, comma as decimal, DD.MM.YYYY."""
+    import base64
+    lines = [
+        "Buchungsdatum;Valutadatum;Buchungstext;Betrag;Kontostand",
+        "01.03.2026;01.03.2026;Miete Büro;-15.000,00;100.000,00",
+        "05.03.2026;05.03.2026;Gehaltseingang;85.000,00;185.000,00",
+        "10.03.2026;10.03.2026;Lieferantenrechnung Dalheim AS;-60.375,00;124.625,00",
+        "20.03.2026;20.03.2026;Kundenzahlung Bolgekraft AS;25.000,00;149.625,00",
+    ]
+    csv_text = "\n".join(lines)
+    return base64.b64encode(csv_text.encode("utf-8")).decode()
+
+
+def _make_bank_csv_french_b64() -> str:
+    """French-style bank CSV: comma as decimal, DD/MM/YYYY, semicolon separator."""
+    import base64
+    lines = [
+        "Date;Libellé;Débit;Crédit;Solde",
+        "01/03/2026;Loyer bureau;15000,00;;100000,00",
+        "05/03/2026;Virement salaire;;85000,00;185000,00",
+        "10/03/2026;Facture fournisseur Dalheim AS;60375,00;;124625,00",
+        "20/03/2026;Paiement client Bolgekraft AS;;25000,00;149625,00",
+    ]
+    csv_text = "\n".join(lines)
+    return base64.b64encode(csv_text.encode("utf-8")).decode()
+
+
+def _make_receipt_image_b64() -> str:
+    """Create a minimal PNG image (1x1 pixel) to simulate a receipt photo."""
+    import base64
+    # Minimal valid 1x1 white PNG
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n"
+        b"\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02"
+        b"\x00\x00\x00\x90wS\xde\x00\x00\x00\x0cIDATx\x9cc\xf8\xff\xff"
+        b"?\x00\x05\xfe\x02\xfe\xdc\xccY\xe7\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    return base64.b64encode(png_bytes).decode()
+
+
 def _make_minimal_pdf_b64() -> str:
     """Create a minimal valid PDF and return base64."""
     import base64
@@ -1627,6 +1668,440 @@ def build_tier2_tests() -> list[E2ETestCase]:
             verify=None,  # custom post-check: 3 batch_results created
             tier=3,
         ),
+
+        # -----------------------------------------------------------------------
+        # NEW T3 TESTS — from real competition prompts (2026-03-21)
+        # -----------------------------------------------------------------------
+
+        # T3-18: create_voucher — overdue invoice + purregebyr + partial payment (Norwegian)
+        # Real prompt: "En av kundene dine har en forfalt faktura. Finn den forfalte
+        # fakturaen og bokfor et purregebyr pa 50 kr. Debet kundefordringer (1500),
+        # kredit purregebyr (3400). Opprett også en faktura for purregebyret til kunden
+        # og send den. Registrer i tillegg en delbetaling på 5000 kr på den forfalte fakturaen."
+        E2ETestCase(
+            name="t3_create_voucher_purregebyr_norwegian",
+            expected_task_type="create_voucher",
+            expected_fields={},
+            prompt=(
+                "En av kundene dine har en forfalt faktura. "
+                "Finn den forfalte fakturaen og bokfør et purregebyr på 50 kr. "
+                "Debet kundefordringer (1500), kredit purregebyr (3400). "
+                "Opprett også en faktura for purregebyret til kunden og send den. "
+                "Registrer i tillegg en delbetaling på 5000 kr på den forfalte fakturaen."
+            ),
+            direct_fields={
+                "description": f"Purregebyr E2E {ts}",
+                "date": "2026-03-21",
+                "postings": [
+                    {"debitAccount": "1500", "creditAccount": "3400", "amount": 50},
+                ],
+            },
+            setup="create_overdue_invoice_for_purregebyr",
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=3,
+        ),
+
+        # T3-19: create_voucher — overdue invoice + purregebyr (French variant)
+        # Real prompt: "L'un de vos clients a une facture en retard. Trouvez la facture
+        # en retard et enregistrez des frais de rappel de 65 NOK."
+        E2ETestCase(
+            name="t3_create_voucher_purregebyr_french",
+            expected_task_type="create_voucher",
+            expected_fields={},
+            prompt=(
+                "L'un de vos clients a une facture en retard. "
+                "Trouvez la facture en retard et enregistrez des frais de rappel de 65 NOK. "
+                "Débit créances clients (1500), crédit revenus de rappel (3400). "
+                "Créez également une facture pour les frais de rappel au client et envoyez-la. "
+                "De plus, enregistrez un paiement partiel de 5000 NOK sur la facture en retard."
+            ),
+            direct_fields={
+                "description": f"Frais de rappel E2E {ts}",
+                "date": "2026-03-21",
+                "postings": [
+                    {"debitAccount": "1500", "creditAccount": "3400", "amount": 65},
+                ],
+            },
+            setup="create_overdue_invoice_for_purregebyr",
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=3,
+        ),
+
+        # T3-20: bank_reconciliation — German CSV (dot thousands, comma decimal, DD.MM.YYYY)
+        # Verifies CSV parser handles European number format
+        E2ETestCase(
+            name="t3_bank_reconciliation_german_csv",
+            expected_task_type="bank_reconciliation",
+            expected_fields={},
+            prompt=(
+                "Führen Sie den Bankabgleich für März 2026 durch. "
+                "Die beigefügte CSV-Datei enthält Transaktionen der Bank. "
+                "Gleichen Sie diese mit den gebuchten Posten auf Konto 1920 ab."
+            ),
+            direct_fields={
+                "accountNumber": 1920,
+                "dateFrom": "2026-03-01",
+                "dateTo": "2026-03-31",
+                "attachmentContent": _make_bank_csv_german_b64(),
+                "attachmentName": "kontoauszug_maerz_2026.csv",
+            },
+            setup="find_bank_account",
+            verify=None,  # custom post-check: reconciliationId in result
+            tier=3,
+        ),
+
+        # T3-21: bank_reconciliation — French CSV (slash date, comma decimal)
+        # Real prompt: "Rapprochez le relevé bancaire (CSV ci-joint) avec les factures
+        # ouvertes dans Tripletex."
+        E2ETestCase(
+            name="t3_bank_reconciliation_french_csv",
+            expected_task_type="bank_reconciliation",
+            expected_fields={},
+            prompt=(
+                "Rapprochez le relevé bancaire (CSV ci-joint) avec les factures ouvertes "
+                "dans Tripletex. Associez les paiements entrants aux factures clients et "
+                "les paiements sortants aux factures fournisseurs. "
+                "Gérez correctement les paiements partiels."
+            ),
+            direct_fields={
+                "accountNumber": 1920,
+                "dateFrom": "2026-03-01",
+                "dateTo": "2026-03-31",
+                "attachmentContent": _make_bank_csv_french_b64(),
+                "attachmentName": "releve_bancaire_mars_2026.csv",
+            },
+            setup="find_bank_account",
+            verify=None,  # custom post-check: reconciliationId in result
+            tier=3,
+        ),
+
+        # T3-22: correct_ledger_error — single error without date in prompt
+        # Verifies handler defaults date to today when not specified
+        E2ETestCase(
+            name="t3_correct_ledger_error_no_date",
+            expected_task_type="correct_ledger_error",
+            expected_fields={},
+            prompt=(
+                "Det er bokført en feil: 3500 kr ble ført på konto 7300 (annonser) "
+                "i stedet for konto 6300 (leie lokale). "
+                "Reverser den feilaktige posteringen og bokfør riktig på konto 6300. "
+                "(Ingen dato oppgitt — bruk siste posteringsdato.)"
+            ),
+            direct_fields={
+                "correctedPostings": [
+                    {"debitAccount": "6300", "creditAccount": "1920", "amount": 3500},
+                ],
+                "correctionDescription": "Korreksjon: Feilført annonsekostnad → leie lokale",
+                # date intentionally omitted — handler must default
+            },
+            setup="create_voucher_for_correction_7300",
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=3,
+        ),
+
+        # T3-23: correct_ledger_error — Norwegian multi-error from real competition prompt
+        # Real prompt: "Vi har oppdaget feil i hovedboken for januar og februar 2026.
+        # Gå gjennom alle bilag og finn de 4 feilene: en postering på feil konto
+        # (konto 6540 brukt i stedet for 6860, beløp 4200 kr), et duplisert bilag
+        # (konto 6860, beløp 1250 kr), en manglende MVA-linje (konto 6540, beløp ekskl.
+        # 10200 kr mangler MVA på konto 2710), og et feil beløp (konto 6540, 16800 kr
+        # bokført i stedet for 15550 kr)."
+        # Note: uses 7100/6300/7140 instead of 6540/6860 (sandbox-safe accounts)
+        E2ETestCase(
+            name="t3_correct_ledger_multi_error_norwegian",
+            expected_task_type="correct_ledger_error",
+            expected_fields={},
+            prompt=(
+                "Vi har oppdaget feil i hovedboken for januar og februar 2026. "
+                "Gå gjennom alle bilag og finn de 4 feilene: "
+                "en postering på feil konto (konto 7100 brukt i stedet for 6300, beløp 4200 kr), "
+                "et duplisert bilag (konto 6300, beløp 1250 kr), "
+                "en manglende MVA-linje (konto 7140, beløp ekskl. 10200 kr mangler MVA på konto 2710), "
+                "og et feil beløp (konto 7100, 16800 kr bokført i stedet for 15550 kr). "
+                "Korriger alle feilene."
+            ),
+            direct_fields={
+                "errors": [
+                    {
+                        "errorType": "wrong_account",
+                        "wrongAccount": 7100,
+                        "correctAccount": 6300,
+                        "amount": 4200,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "duplicate",
+                        "account": 6300,
+                        "amount": 1250,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "missing_vat",
+                        "account": 7140,
+                        "amount": 10200,
+                        "vatAccount": 2710,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "wrong_amount",
+                        "account": 7100,
+                        "amount": 16800,
+                        "correctAmount": 15550,
+                        "date": "2026-03-21",
+                    },
+                ],
+                "date": "2026-03-21",
+            },
+            setup="create_vouchers_for_multi_correction_no",
+            verify=None,
+            tier=3,
+        ),
+
+        # T3-24: monthly_closing — all 3 parts (accrual + depreciation + provision)
+        # Spanish variant from real competition prompt:
+        # "Realice el cierre mensual de marzo de 2026. Registre la periodificación
+        # (4600 NOK por mes de la cuenta 1700 a gasto). Contabilice la depreciación
+        # mensual de un activo fijo con costo de adquisición 220600 NOK y vida útil 4 años.
+        # También registre una provisión salarial."
+        E2ETestCase(
+            name="t3_monthly_closing_spanish_all_parts",
+            expected_task_type="monthly_closing",
+            expected_fields={},
+            prompt=(
+                "Realice el cierre mensual de marzo de 2026. "
+                "Registre la periodificación (4600 NOK por mes de la cuenta 1700 a gasto cuenta 6300). "
+                "Contabilice la depreciación mensual de un activo fijo con costo de adquisición "
+                "220600 NOK y vida útil 4 años (depreciación lineal a cuenta 6020, cuenta activo 1200). "
+                "Verifique que el balance de saldos sea cero. "
+                "También registre una provisión salarial "
+                "(débito cuenta de gastos salariales 5000, crédito cuenta de devengos 2900, importe 38000 NOK)."
+            ),
+            direct_fields={
+                "month": 3,
+                "year": 2026,
+                "accruals": [
+                    {
+                        "fromAccount": 1700,
+                        "toAccount": 6300,
+                        "amount": 4600,
+                        "description": "Periodificación marzo 2026",
+                    },
+                ],
+                "depreciations": [
+                    {
+                        "account": 6020,
+                        "assetAccount": 1200,
+                        "acquisitionCost": 220600,
+                        "usefulLifeYears": 4,
+                        "description": "Depreciación activo fijo marzo 2026",
+                    },
+                ],
+                "provisions": [
+                    {
+                        "debitAccount": 5000,
+                        "creditAccount": 2900,
+                        "amount": 38000,
+                        "description": "Provisión salarial marzo 2026",
+                    },
+                ],
+            },
+            verify=None,  # custom post-check: vouchersCreated >= 3
+            tier=3,
+        ),
+
+        # T3-25: monthly_closing — without provision (only accrual + depreciation)
+        # Real competition variant: some prompts omit the provision section entirely
+        E2ETestCase(
+            name="t3_monthly_closing_no_provision",
+            expected_task_type="monthly_closing",
+            expected_fields={},
+            prompt=(
+                "Utfør månedsavslutning for mars 2026. "
+                "Periodiser forskuddsbetalt kostnad (7050 kr per måned fra konto 1710 til konto 6300). "
+                "Bokfør månedlig avskrivning for et driftsmiddel med anskaffelseskost 102750 kr "
+                "og levetid 10 år (lineær avskrivning til konto 6020, anleggsmiddelkonto 1200). "
+                "Kontroller at saldobalansen går i null."
+            ),
+            direct_fields={
+                "month": 3,
+                "year": 2026,
+                "accruals": [
+                    {
+                        "fromAccount": 1710,
+                        "toAccount": 6300,
+                        "amount": 7050,
+                        "description": "Periodisering mars 2026",
+                    },
+                ],
+                "depreciations": [
+                    {
+                        "account": 6020,
+                        "assetAccount": 1200,
+                        "acquisitionCost": 102750,
+                        "usefulLifeYears": 10,
+                        "description": "Avskrivning driftsmiddel mars 2026",
+                    },
+                ],
+                # provisions intentionally omitted
+            },
+            verify=None,  # custom post-check: vouchersCreated >= 2
+            tier=3,
+        ),
+
+        # T3-26: batch_create_voucher — depreciation entries for 3 assets (year-end style)
+        # Real competition prompt (Nynorsk): "Gjer forenkla årsoppgjer for 2025:
+        # 1) Rekn ut og bokfør årlege avskrivingar for tre eigedelar:
+        # Programvare (364700 kr, 4 år lineært, konto 1250),
+        # IT-utstyr (313300 kr, 8 år, konto 1210),
+        # Inventar (270900 kr, 6 år, konto 1240).
+        # Bruk konto 6010 for avskrivingskostnad og 1209 for akkumulerte avskrivingar."
+        E2ETestCase(
+            name="t3_batch_create_voucher_depreciation",
+            expected_task_type="batch_create_voucher",
+            expected_fields={},
+            prompt=(
+                "Gjer forenkla årsoppgjer for 2025: "
+                "Rekn ut og bokfør årlege avskrivingar for tre eigedelar: "
+                "Programvare (364700 kr, 4 år lineært, konto 1250), "
+                "IT-utstyr (313300 kr, 8 år, konto 1210), "
+                "Inventar (270900 kr, 6 år, konto 1240). "
+                "Bruk konto 6010 for avskrivingskostnad og 1209 for akkumulerte avskrivingar."
+            ),
+            direct_fields={
+                "items": [
+                    {
+                        "taskType": "create_voucher",
+                        "fields": {
+                            "description": f"Avskriving Programvare 2025 {ts}",
+                            "date": "2025-12-31",
+                            "postings": [
+                                # 364700 / 4 years = 91175 per year
+                                {"debitAccount": "6010", "amount": 91175},
+                                {"creditAccount": "1209", "amount": 91175},
+                            ],
+                        },
+                    },
+                    {
+                        "taskType": "create_voucher",
+                        "fields": {
+                            "description": f"Avskriving IT-utstyr 2025 {ts}",
+                            "date": "2025-12-31",
+                            "postings": [
+                                # 313300 / 8 years = 39162.5 -> 39163
+                                {"debitAccount": "6010", "amount": 39163},
+                                {"creditAccount": "1209", "amount": 39163},
+                            ],
+                        },
+                    },
+                    {
+                        "taskType": "create_voucher",
+                        "fields": {
+                            "description": f"Avskriving Inventar 2025 {ts}",
+                            "date": "2025-12-31",
+                            "postings": [
+                                # 270900 / 6 years = 45150
+                                {"debitAccount": "6010", "amount": 45150},
+                                {"creditAccount": "1209", "amount": 45150},
+                            ],
+                        },
+                    },
+                ],
+            },
+            verify=None,  # custom post-check: 3 batch_results with created vouchers
+            tier=3,
+        ),
+
+        # T3-27: register_expense_receipt — with image attachment (receipt photo)
+        # Real competition prompt: "Necesitamos el gasto de Skjermfilter de este recibo
+        # registrado en el departamento Innkjøp."
+        E2ETestCase(
+            name="t3_register_expense_receipt_with_image",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                "Registrer kvitteringen (bildevedlegg) for Skjermfilter 450 kr "
+                "den 2026-03-21 i avdelingen Innkjøp. "
+                "Bruk riktig utgiftskonto og sikre korrekt MVA-behandling."
+            ),
+            direct_fields={
+                "date": "2026-03-21",
+                "vatRate": 25,
+                "costs": [
+                    {"description": "Skjermfilter", "amount": 450, "date": "2026-03-21"},
+                ],
+                "attachmentContent": _make_receipt_image_b64(),
+                "attachmentName": "kvittering_skjermfilter.png",
+            },
+            setup="find_first_employee",
+            verify=None,  # custom post-check: voucherCount >= 1
+            tier=3,
+        ),
+
+        # T3-28: register_expense_receipt — German variant ("Quittung")
+        # Verifies German keyword detection and VAT handling
+        E2ETestCase(
+            name="t3_register_expense_receipt_german",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                "Erfassen Sie die Ausgabe aus dieser Quittung: "
+                "Büromaterial 320 NOK am 2026-03-21. "
+                "Verwenden Sie das richtige Aufwandskonto und stellen Sie die "
+                "korrekte MwSt-Behandlung sicher."
+            ),
+            direct_fields={
+                "date": "2026-03-21",
+                "vatRate": 25,
+                "costs": [
+                    {"description": "Büromaterial", "amount": 320, "date": "2026-03-21"},
+                ],
+            },
+            setup="find_first_employee",
+            verify=None,  # custom post-check: voucherCount >= 1
+            tier=3,
+        ),
+
+        # T3-29: register_expense_receipt — Portuguese variant ("recibo")
+        # Real competition prompt: "Precisamos da despesa de Kundemøte lunsj deste recibo
+        # registada no departamento Økonomi."
+        E2ETestCase(
+            name="t3_register_expense_receipt_portuguese",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                "Precisamos da despesa de Kundemøte lunsj deste recibo "
+                "registada no departamento Økonomi. "
+                "Use a conta de despesas correta e garanta o tratamento correto do IVA."
+            ),
+            direct_fields={
+                "date": "2026-03-21",
+                "vatRate": 25,
+                "costs": [
+                    {"description": "Kundemøte lunsj", "amount": 580, "date": "2026-03-21"},
+                ],
+            },
+            setup="find_first_employee",
+            verify=None,  # custom post-check: voucherCount >= 1
+            tier=3,
+        ),
     ]
 
 
@@ -1951,6 +2426,143 @@ async def setup_create_vouchers_for_multi_correction_fr(client, fields: dict) ->
     return fields
 
 
+async def setup_create_overdue_invoice_for_purregebyr(client, fields: dict) -> dict:
+    """Create a customer + overdue invoice for the purregebyr (reminder fee) tests.
+
+    Steps:
+    1. Create a customer (or find existing)
+    2. Create an invoice dated > 14 days ago (overdue)
+    3. Inject customer info into fields so the handler knows which invoice to work with.
+    """
+    ts = _ts()
+    customer_name = f"E2E PurrKunde {ts}"
+    # Create customer
+    cust_resp = await client.post("/customer", {"name": customer_name, "isCustomer": True})
+    cust = cust_resp.json().get("value", {})
+    cust_id = cust.get("id")
+    if not cust_id:
+        raise RuntimeError(f"Failed to create customer for purregebyr: {cust_resp.text[:200]}")
+
+    # Create an overdue invoice (30 days in the past)
+    import datetime
+    overdue_date = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+    due_date = (datetime.date.today() - datetime.timedelta(days=14)).isoformat()
+    inv_payload = {
+        "customer": {"id": cust_id},
+        "invoiceDate": overdue_date,
+        "invoiceDueDate": due_date,
+        "orders": [],
+    }
+    # Use /invoice endpoint to create a draft invoice
+    inv_resp = await client.post("/invoice", {
+        "customer": {"id": cust_id},
+        "invoiceDate": overdue_date,
+        "invoiceDueDate": due_date,
+        "orders": [],
+    })
+    inv = inv_resp.json().get("value", {})
+    inv_id = inv.get("id")
+    if not inv_id:
+        # Try order-first approach if direct invoice fails
+        order_resp = await client.post("/order", {
+            "customer": {"id": cust_id},
+            "orderDate": overdue_date,
+            "deliveryDate": overdue_date,
+            "orderLines": [
+                {
+                    "description": "Konsulenttjenester",
+                    "quantity": 1,
+                    "unitPriceExcludingVat": 10000,
+                    "vatType": {"id": 3},
+                }
+            ],
+        })
+        order = order_resp.json().get("value", {})
+        order_id = order.get("id")
+        if order_id:
+            # Invoice the order
+            inv2_resp = await client.post(f"/order/{order_id}/:invoice", {
+                "invoiceDate": overdue_date,
+                "sendToCustomer": False,
+            })
+            inv = inv2_resp.json().get("value", {})
+            inv_id = inv.get("id")
+
+    fields["_customer_id"] = cust_id
+    fields["_customer_name"] = customer_name
+    fields["_invoice_id"] = inv_id
+    return fields
+
+
+async def setup_create_voucher_for_correction_7300(client, fields: dict) -> dict:
+    """Create a voucher with wrong account 7300 (annonsering) for correction-no-date test."""
+    from app.handlers.tier3 import _lookup_account
+    debit_id = await _lookup_account(client, 7300)  # Wrong: annonsering
+    credit_id = await _lookup_account(client, 1920)
+    payload = {
+        "date": "2026-03-21",
+        "description": f"E2E Feilfort annonsering {_ts()}",
+        "postings": [
+            {"account": {"id": debit_id}, "amountGross": 3500, "amountGrossCurrency": 3500, "row": 1},
+            {"account": {"id": credit_id}, "amountGross": -3500, "amountGrossCurrency": -3500, "row": 2},
+        ],
+    }
+    resp = await client.post("/ledger/voucher", payload)
+    created = resp.json().get("value", {})
+    if not created.get("id"):
+        raise RuntimeError(f"Failed to create voucher for correction (7300): {resp.text[:300]}")
+    fields["_voucher_id"] = created.get("id")
+    fields["voucherNumber"] = created.get("number")
+    return fields
+
+
+async def setup_create_vouchers_for_multi_correction_no(client, fields: dict) -> dict:
+    """Create 4 vouchers for the Norwegian multi-error correction test (t3-23).
+
+    Uses different amounts than existing multi-correction tests:
+    1. Wrong account: 4200 on 7100 (should be 6300)
+    2. Duplicate: 1250 on 6300
+    3. Missing VAT: 10200 on 7140 (MVA missing on 2710)
+    4. Wrong amount: 16800 on 7100 (should be 15550)
+    """
+    from app.handlers.tier3 import _lookup_account
+
+    credit_id = await _lookup_account(client, 1920)
+    date = "2026-03-21"
+
+    voucher_specs = [
+        (7100, 4200, "E2E NO Feil konto (7100->6300)"),
+        (6300, 1250, "E2E NO Duplikat bilag"),
+        (7140, 10200, "E2E NO Manglende MVA"),
+        (7100, 16800, "E2E NO Feil belop (16800->15550)"),
+    ]
+
+    created_ids = []
+    for acct_num, amt, desc in voucher_specs:
+        debit_id = await _lookup_account(client, acct_num)
+        payload = {
+            "date": date,
+            "description": f"{desc} {_ts()}",
+            "postings": [
+                {"account": {"id": debit_id}, "amountGross": amt, "amountGrossCurrency": amt, "row": 1},
+                {"account": {"id": credit_id}, "amountGross": -amt, "amountGrossCurrency": -amt, "row": 2},
+            ],
+        }
+        resp = await client.post("/ledger/voucher", payload)
+        created = resp.json().get("value", {})
+        if created.get("id"):
+            created_ids.append(created["id"])
+        else:
+            logger.warning(f"Failed to create NO setup voucher '{desc}': {resp.text[:300]}")
+
+    errors = fields.get("errors", [])
+    for i, vid in enumerate(created_ids):
+        if i < len(errors):
+            errors[i]["_voucher_id"] = vid
+
+    return fields
+
+
 SETUP_REGISTRY = {
     "find_first_employee": setup_find_first_employee,
     "find_bank_account": setup_find_bank_account,
@@ -1967,6 +2579,10 @@ SETUP_REGISTRY = {
     "create_voucher_for_correction": setup_create_voucher_for_correction,
     "create_vouchers_for_multi_correction": setup_create_vouchers_for_multi_correction,
     "create_vouchers_for_multi_correction_fr": setup_create_vouchers_for_multi_correction_fr,
+    # New setup functions for T3-18 to T3-29
+    "create_overdue_invoice_for_purregebyr": setup_create_overdue_invoice_for_purregebyr,
+    "create_voucher_for_correction_7300": setup_create_voucher_for_correction_7300,
+    "create_vouchers_for_multi_correction_no": setup_create_vouchers_for_multi_correction_no,
 }
 
 
@@ -2551,6 +3167,47 @@ async def run_one_test(
                     field="batch_count", expected=expected_count,
                     actual=succeeded,
                     passed=False, detail=f"only {succeeded}/{expected_count} departments created",
+                ))
+
+        # For t3_batch_create_voucher_depreciation: 3 vouchers with depreciation postings
+        if tc.name == "t3_batch_create_voucher_depreciation":
+            batch_results = handler_result.get("batch_results", [])
+            succeeded = sum(
+                1 for r in batch_results
+                if isinstance(r, dict) and r.get("created", {}).get("id")
+            )
+            expected_count = 3  # 3 assets
+            if succeeded >= expected_count:
+                verify_results.append(CheckResult(
+                    field="batch_count", expected=expected_count,
+                    actual=succeeded,
+                    passed=True, detail=f"all {succeeded} depreciation vouchers created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="batch_count", expected=expected_count,
+                    actual=succeeded,
+                    passed=False,
+                    detail=f"only {succeeded}/{expected_count} depreciation vouchers created",
+                ))
+
+        # For register_expense_receipt tests: check at least 1 voucher created
+        if tc.expected_task_type == "register_expense_receipt" and tc.name.startswith("t3_register_expense"):
+            vouchers = handler_result.get("vouchers", [])
+            voucher_count = handler_result.get("voucherCount", 0)
+            single_created = handler_result.get("created", {})
+            single_id = single_created.get("id") if isinstance(single_created, dict) else None
+            actual_count = voucher_count or len(vouchers) or (1 if single_id else 0)
+            if actual_count >= 1:
+                verify_results.append(CheckResult(
+                    field="voucherCount", expected=1,
+                    actual=actual_count,
+                    passed=True, detail=f"{actual_count} receipt voucher(s) created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="voucherCount", expected=1, actual=0,
+                    passed=False, detail=f"no vouchers in result: {handler_result}",
                 ))
 
     elapsed = time.time() - t0
