@@ -1,6 +1,7 @@
 """Tier 3 handlers — voucher operations, year-end closing, and bank reconciliation."""
 from __future__ import annotations
 
+import asyncio
 import datetime
 import logging
 from typing import Any
@@ -73,6 +74,26 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
     debit_accounts_used: list[str] = []
     credit_accounts_used: list[str] = []
 
+    # Collect all unique account numbers upfront for parallel lookup
+    unique_account_numbers: set[int] = set()
+    for p in postings_input:
+        if p.get("debitAccount"):
+            unique_account_numbers.add(int(p["debitAccount"]))
+        if p.get("creditAccount"):
+            unique_account_numbers.add(int(p["creditAccount"]))
+
+    # Parallel lookup of all unique account IDs and VAT types
+    account_ids: dict[int, int] = {}
+    vat_types: dict[int, dict[str, Any] | None] = {}
+    if unique_account_numbers:
+        unique_list = list(unique_account_numbers)
+        id_results, vat_results = await asyncio.gather(
+            asyncio.gather(*[_lookup_account(client, n) for n in unique_list]),
+            asyncio.gather(*[_lookup_vat_type(client, n) for n in unique_list]),
+        )
+        account_ids = dict(zip(unique_list, id_results))
+        vat_types = dict(zip(unique_list, vat_results))
+
     for idx, p in enumerate(postings_input):
         row = idx + 1  # row must be >= 1 (row 0 is system-reserved for VAT)
 
@@ -83,14 +104,14 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
 
         if debit_account:
             account_number = int(debit_account)
-            account_id = await _lookup_account(client, account_number)
+            account_id = account_ids[account_number]
             posting: dict[str, Any] = {
                 "account": {"id": account_id},
                 "amountGross": amount,
                 "amountGrossCurrency": amount,
                 "row": row,
             }
-            vat_type = await _lookup_vat_type(client, account_number)
+            vat_type = vat_types.get(account_number)
             if vat_type:
                 posting["vatType"] = vat_type
             if department_ref:
@@ -100,14 +121,14 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
 
         if credit_account:
             account_number = int(credit_account)
-            account_id = await _lookup_account(client, account_number)
+            account_id = account_ids[account_number]
             posting = {
                 "account": {"id": account_id},
                 "amountGross": -amount,
                 "amountGrossCurrency": -amount,
                 "row": row + len(postings_input) if debit_account else row,
             }
-            vat_type = await _lookup_vat_type(client, account_number)
+            vat_type = vat_types.get(account_number)
             if vat_type:
                 posting["vatType"] = vat_type
             if department_ref:
@@ -167,6 +188,7 @@ async def overdue_invoice(client: TripletexClient, fields: dict[str, Any]) -> di
         "invoiceDateTo": today,
         "fields": "id,invoiceNumber,amount,amountCurrency,amountOutstanding,amountCurrencyOutstanding,"
                   "customer,invoiceDueDate,amountExcludingVat,amountExcludingVatCurrency",
+        "count": "100",
     }
     resp = await client.get("/invoice", params=search_params)
     all_invoices = resp.json().get("values", [])
@@ -199,12 +221,17 @@ async def overdue_invoice(client: TripletexClient, fields: dict[str, Any]) -> di
     logger.info(f"Found overdue invoice {overdue_id} (#{overdue_number}), customer={customer_id}")
 
     # ── Step 2: Post reminder fee voucher (debit 1500, credit 3400) ──
-    debit_id = await _lookup_account(client, int(debit_account_nr))
-    credit_id = await _lookup_account(client, int(credit_account_nr))
+    # Parallel: look up debit account, credit account, and VAT type 0 simultaneously
+    (debit_id, credit_id), vat_resp = await asyncio.gather(
+        asyncio.gather(
+            _lookup_account(client, int(debit_account_nr)),
+            _lookup_account(client, int(credit_account_nr)),
+        ),
+        client.get_cached("/ledger/vatType", params={"number": "0"}),
+    )
 
     # For account 3400, use VAT code 0 (no VAT on reminder fees)
     # Look up VAT type 0 explicitly
-    vat_resp = await client.get_cached("/ledger/vatType", params={"number": "0"})
     vat_types_zero = vat_resp.json().get("values", [])
     vat_type_zero = {"id": vat_types_zero[0]["id"]} if vat_types_zero else None
 
@@ -329,6 +356,7 @@ async def reverse_voucher(client: TripletexClient, fields: dict[str, Any]) -> di
         if voucher_number:
             search_params["number"] = str(voucher_number)
 
+        search_params["fields"] = "id,number,date,description,postings,version"
         resp = await client.get("/ledger/voucher", params=search_params)
         data = resp.json()
         vouchers = data.get("values", [])
@@ -340,7 +368,7 @@ async def reverse_voucher(client: TripletexClient, fields: dict[str, Any]) -> di
         reversal_date = date or vouchers[0].get("date")
     else:
         # We have a direct voucher ID — fetch it to get the date
-        resp = await client.get(f"/ledger/voucher/{voucher_id}")
+        resp = await client.get(f"/ledger/voucher/{voucher_id}", params={"fields": "id,number,date,description,postings,version"})
         voucher_data = resp.json().get("value", {})
         reversal_date = date or voucher_data.get("date")
 
@@ -368,6 +396,7 @@ async def delete_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
         if voucher_number:
             search_params["number"] = str(voucher_number)
 
+        search_params["fields"] = "id,number,date,description"
         resp = await client.get("/ledger/voucher", params=search_params)
         data = resp.json()
         vouchers = data.get("values", [])
@@ -416,7 +445,7 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
     # Note: activeOnly param has inverted behaviour in some sandbox versions —
     # omit it to get all dimensions reliably.
     existing_dimension = None
-    resp = await client.get("/ledger/accountingDimensionName")
+    resp = await client.get("/ledger/accountingDimensionName", params={"fields": "id,name,dimensionName,dimensionIndex,active"})
     data = resp.json()
     for dim in data.get("values", []):
         if dim.get("dimensionName", "").lower() == dimension_name.lower():
@@ -508,9 +537,11 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
             result["voucher"] = {"status": "error", "message": f"Dimension value '{dimension_value_name}' not found"}
             return result
 
-        # Look up account IDs
-        debit_account_id = await _lookup_account(client, int(account_number))
-        credit_account_id = await _lookup_account(client, int(credit_account))
+        # Look up account IDs in parallel
+        debit_account_id, credit_account_id = await asyncio.gather(
+            _lookup_account(client, int(account_number)),
+            _lookup_account(client, int(credit_account)),
+        )
 
         # Build the dimension reference based on dimension index
         dim_field = f"freeAccountingDimension{dimension_index}"
@@ -538,7 +569,7 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
             "postings": [debit_posting, credit_posting],
         }
 
-        resp = await client.post("/ledger/voucher", voucher_payload)
+        resp = await client.post_with_retry("/ledger/voucher", voucher_payload)
         voucher_data = resp.json()
         if resp.status_code in (200, 201):
             voucher = voucher_data.get("value", {})
@@ -792,6 +823,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                         "invoiceDateFrom": "2020-01-01",
                         "invoiceDateTo": date_to or datetime.date.today().isoformat(),
                         "count": "5",
+                        "fields": "id,invoiceNumber,amount,amountOutstanding,amountRemainingCurrency",
                     })
                     if inv_resp.status_code == 200:
                         invoices = inv_resp.json().get("values", [])
@@ -825,6 +857,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                     sinv_resp = await client.get("/supplierInvoice", params={
                         "invoiceNumber": inv_number,
                         "count": "5",
+                        "fields": "id,invoiceNumber,amount,amountOutstanding,amountRemainingCurrency",
                     })
                     if sinv_resp.status_code == 200:
                         sinvoices = sinv_resp.json().get("values", [])
@@ -861,7 +894,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     if csv_transactions and date_from and date_to:
         # Find bank ID — GET /bank returns Norwegian bank institutions (global system data)
         bank_id: int | None = None
-        resp_bank = await client.get("/bank", params={"isBankReconciliationSupport": "true", "count": "50"})
+        resp_bank = await client.get("/bank", params={"isBankReconciliationSupport": "true", "count": "50", "fields": "id,name,bankStatementFileFormatSupport"})
         if resp_bank.status_code == 200:
             banks = resp_bank.json().get("values", [])
             # Prefer bank that explicitly supports DNB_CSV
@@ -913,7 +946,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             elif resp_import.status_code == 422 and "eksisterer allerede" in resp_import.text:
                 # Duplicate statement — find existing statement for this account/period
                 logger.info("Statement already exists for period — finding existing statement")
-                stmt_list_resp = await client.get("/bank/statement", params={"count": "20"})
+                stmt_list_resp = await client.get("/bank/statement", params={"count": "20", "fields": "id,closingBalance,fromDate,toDate"})
                 if stmt_list_resp.status_code == 200:
                     for s in stmt_list_resp.json().get("values", []):
                         s_from = s.get("fromDate", "")
@@ -934,7 +967,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
 
     # Step 3: Find current accounting period
     today = datetime.date.today().isoformat()
-    resp = await client.get("/ledger/accountingPeriod", params={"count": "20"})
+    resp = await client.get("/ledger/accountingPeriod", params={"count": "20", "fields": "id,start,end,isClosed"})
     periods = resp.json().get("values", [])
     current_period_id = None
     # Pick period covering date_from (start of bank statement), fallback to date_to or today
@@ -955,6 +988,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     resp = await client.get("/bank/reconciliation", params={
         "accountId": str(account_id),
         "count": "10",
+        "fields": "id,accountId,closingBalance,isClosed,lastClosedDate,type,accountingPeriod",
     })
     data = resp.json()
     reconciliations = data.get("values", [])
@@ -977,7 +1011,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         # the correct ledger-side closing balance automatically. Sending a CSV-derived
         # value causes a mismatch that prevents the reconciliation from being closed.
 
-        resp = await client.post("/bank/reconciliation", rec_payload)
+        resp = await client.post_with_retry("/bank/reconciliation", rec_payload)
         if resp.status_code >= 400:
             error_data = resp.json()
             error_msg = error_data.get("message", resp.text[:300])
@@ -1046,7 +1080,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                 _from_ext, _to_ext = date_from, date_to
 
             # Get statement transaction IDs in order (same order as csv_transactions)
-            stmt_resp = await client.get(f"/bank/statement/{bank_statement_id}")
+            stmt_resp = await client.get(f"/bank/statement/{bank_statement_id}", params={"fields": "id,closingBalance,fromDate,toDate,transactions"})
             stmt_txns: list[dict] = []
             if stmt_resp.status_code == 200:
                 raw_txns = stmt_resp.json().get("value", {}).get("transactions", [])
@@ -1067,6 +1101,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                 "dateFrom": _from_ext,
                 "dateTo": _to_ext,
                 "count": "200",
+                "fields": "id,date,amount,amountCurrency,account,description,matched",
             })
             ledger_postings: list[dict] = []
             if post_resp.status_code == 200:
@@ -1128,6 +1163,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     resp = await client.get("/bank/reconciliation/match", params={
         "bankReconciliationId": str(reconciliation_id),
         "count": "100",
+        "fields": "id,type,bankReconciliation",
     })
     all_matches = resp.json().get("values", []) if resp.status_code == 200 else []
 
@@ -1137,7 +1173,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     is_closed = False
     if reconciliation_id:
         try:
-            latest_rec_resp = await client.get(f"/bank/reconciliation/{reconciliation_id}")
+            latest_rec_resp = await client.get(f"/bank/reconciliation/{reconciliation_id}", params={"fields": "id,accountId,closingBalance,isClosed,lastClosedDate,type,accountingPeriod,version"})
             if latest_rec_resp.status_code == 200:
                 latest_rec = latest_rec_resp.json().get("value", {})
                 close_payload = dict(latest_rec)
@@ -1231,6 +1267,7 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
         resp = await client.get("/ledger/accountingPeriod", params={
             "startFrom": f"{year}-01-01",
             "startTo": f"{year + 1}-01-01",
+            "fields": "id,start,end,isClosed",
         })
         periods_data = resp.json()
         periods = periods_data.get("values", [])
@@ -1246,6 +1283,7 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
         resp = await client.get("/ledger/closeGroup", params={
             "dateFrom": f"{year}-01-01",
             "dateTo": f"{year}-12-31",
+            "fields": "id,day,isClosed",
         })
         close_groups_data = resp.json()
         close_groups = close_groups_data.get("values", [])
@@ -1261,6 +1299,7 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
             "dateFrom": f"{year}-01-01",
             "dateTo": f"{year}-12-31",
             "count": MAX_POSTINGS,
+            "fields": "id,date,amount,account,description,closeGroup",
         })
         postings_data = resp.json()
         all_postings = postings_data.get("values", [])
@@ -1316,6 +1355,7 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
         resp = await client.get("/ledger/annualAccount", params={
             "yearFrom": str(year),
             "yearTo": str(year + 1),
+            "fields": "id,year,isClosed",
         })
         annual_data = resp.json()
         annual_accounts = annual_data.get("values", [])
@@ -1396,6 +1436,7 @@ async def _find_voucher_by_account_and_amount(
         "count": "100",
         "dateFrom": search_from,
         "dateTo": search_to_posting,
+        "fields": "id,date,amount,amountGross,account,description,voucher",
     }
     posting_resp = await client.get("/ledger/posting", params=params)
     if posting_resp.status_code < 400:
@@ -1405,7 +1446,7 @@ async def _find_voucher_by_account_and_amount(
             if abs(abs(posting_amount) - abs(amount)) < 0.01:
                 voucher_id = posting.get("voucher", {}).get("id")
                 if voucher_id and (already_seen is None or voucher_id not in already_seen):
-                    resp = await client.get(f"/ledger/voucher/{voucher_id}")
+                    resp = await client.get(f"/ledger/voucher/{voucher_id}", params={"fields": "id,number,date,description,postings,version"})
                     if resp.status_code == 200:
                         return resp.json().get("value", {})
     else:
@@ -1419,6 +1460,7 @@ async def _find_voucher_by_account_and_amount(
         "count": "100",
         "dateFrom": search_from,
         "dateTo": search_to_voucher,
+        "fields": "id,number,date,description,reverseVoucher",
     }
     voucher_resp = await client.get("/ledger/voucher", params=voucher_params)
     if voucher_resp.status_code >= 400:
@@ -1492,7 +1534,7 @@ async def _correct_single_error(
             # Direct voucher ID lookup (e.g. from setup/pre-search)
             voucher = None
             if error.get("_voucher_id"):
-                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}")
+                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}", params={"fields": "id,number,date,description,postings,version"})
                 if resp.status_code == 200:
                     voucher = resp.json().get("value", {})
             if not voucher:
@@ -1528,7 +1570,7 @@ async def _correct_single_error(
                     {"account": {"id": credit_id}, "amountGross": -amount, "amountGrossCurrency": -amount, "row": 2},
                 ],
             }
-            corr_resp = await client.post("/ledger/voucher", correction_payload)
+            corr_resp = await client.post_with_retry("/ledger/voucher", correction_payload)
             if corr_resp.status_code >= 400:
                 result["status"] = "partial"
                 result["message"] = f"Reversed but correction failed: {corr_resp.json().get('message', '')}"
@@ -1540,7 +1582,7 @@ async def _correct_single_error(
             dup_account = int(account)
             voucher = None
             if error.get("_voucher_id"):
-                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}")
+                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}", params={"fields": "id,number,date,description,postings,version"})
                 if resp.status_code == 200:
                     voucher = resp.json().get("value", {})
             if not voucher:
@@ -1581,7 +1623,7 @@ async def _correct_single_error(
                     {"account": {"id": credit_id}, "amountGross": -vat_amount, "amountGrossCurrency": -vat_amount, "row": 2},
                 ],
             }
-            corr_resp = await client.post("/ledger/voucher", correction_payload)
+            corr_resp = await client.post_with_retry("/ledger/voucher", correction_payload)
             if corr_resp.status_code >= 400:
                 result["status"] = "error"
                 result["message"] = f"VAT correction failed: {corr_resp.json().get('message', '')}"
@@ -1600,7 +1642,7 @@ async def _correct_single_error(
 
             voucher = None
             if error.get("_voucher_id"):
-                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}")
+                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}", params={"fields": "id,number,date,description,postings,version"})
                 if resp.status_code == 200:
                     voucher = resp.json().get("value", {})
             if not voucher:
@@ -1636,7 +1678,7 @@ async def _correct_single_error(
                     {"account": {"id": credit_id}, "amountGross": -correct_amount, "amountGrossCurrency": -correct_amount, "row": 2},
                 ],
             }
-            corr_resp = await client.post("/ledger/voucher", correction_payload)
+            corr_resp = await client.post_with_retry("/ledger/voucher", correction_payload)
             if corr_resp.status_code >= 400:
                 result["status"] = "partial"
                 result["message"] = f"Reversed but correction failed: {corr_resp.json().get('message', '')}"
@@ -1731,7 +1773,7 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
     original_voucher = None
 
     if voucher_id:
-        resp = await client.get(f"/ledger/voucher/{voucher_id}")
+        resp = await client.get(f"/ledger/voucher/{voucher_id}", params={"fields": "id,number,date,description,postings,version"})
         if resp.status_code == 200:
             original_voucher = resp.json().get("value", {})
     else:
@@ -1746,17 +1788,19 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
             acct_id = await _lookup_account(client, int(account_from))
             posting_resp = await client.get("/ledger/posting", params={
                 "dateFrom": date, "dateTo": date, "accountId": str(acct_id),
+                "fields": "id,date,amount,account,description,voucher",
             })
             postings_found = posting_resp.json().get("values", [])
             if postings_found:
                 found_id = postings_found[0].get("voucher", {}).get("id")
                 if found_id:
-                    resp = await client.get(f"/ledger/voucher/{found_id}")
+                    resp = await client.get(f"/ledger/voucher/{found_id}", params={"fields": "id,number,date,description,postings,version"})
                     if resp.status_code == 200:
                         original_voucher = resp.json().get("value", {})
 
         # Only search /ledger/voucher if we have dateFrom (required param — otherwise 422)
         if not original_voucher and search_params.get("dateFrom"):
+            search_params["fields"] = "id,number,date,description,postings,version"
             resp = await client.get("/ledger/voucher", params=search_params)
             vouchers = resp.json().get("values", [])
             if description and len(vouchers) > 1:
@@ -1809,7 +1853,7 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
             direct_desc = correction_description or f"Direkte korreksjon {correction_date or date or 'ukjent dato'}"
             import datetime as _dt
             direct_date = correction_date or date or _dt.date.today().isoformat()
-            direct_resp = await client.post("/ledger/voucher", {
+            direct_resp = await client.post_with_retry("/ledger/voucher", {
                 "date": direct_date,
                 "description": direct_desc,
                 "postings": direct_postings,
@@ -1896,11 +1940,16 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
                 postings.append(entry)
 
     elif account_to and amount:
-        # Option B: simple account correction
+        # Option B: simple account correction — parallel lookup of debit + credit accounts
         debit_num = int(account_to)
-        debit_id = await _lookup_account(client, debit_num)
         credit_num = int(fields.get("creditAccount", 1920))
-        credit_id = await _lookup_account(client, credit_num)
+        (debit_id, credit_id), vt = await asyncio.gather(
+            asyncio.gather(
+                _lookup_account(client, debit_num),
+                _lookup_account(client, credit_num),
+            ),
+            _lookup_vat_type(client, debit_num),
+        )
 
         postings = [
             {"account": {"id": debit_id}, "amountGross": amount,
@@ -1908,7 +1957,6 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
             {"account": {"id": credit_id}, "amountGross": -amount,
              "amountGrossCurrency": -amount, "row": 2},
         ]
-        vt = await _lookup_vat_type(client, debit_num)
         if vt:
             postings[0]["vatType"] = vt
 
@@ -1953,7 +2001,7 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
         "postings": postings,
     }
 
-    correction_resp = await client.post("/ledger/voucher", correction_payload)
+    correction_resp = await client.post_with_retry("/ledger/voucher", correction_payload)
     correction_data = correction_resp.json()
 
     if correction_resp.status_code >= 400:
@@ -2024,12 +2072,17 @@ async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> di
 
         try:
             # Debit the expense account (toAccount), credit the balance sheet account (fromAccount)
-            debit_id = await _lookup_account(client, to_account)
-            credit_id = await _lookup_account(client, from_account)
-
-            # Look up VAT type for revenue/sales accounts (3000-series)
-            debit_vat = await _lookup_vat_type(client, to_account)
-            credit_vat = await _lookup_vat_type(client, from_account)
+            # Parallel: look up both account IDs and both VAT types simultaneously
+            (debit_id, credit_id), (debit_vat, credit_vat) = await asyncio.gather(
+                asyncio.gather(
+                    _lookup_account(client, to_account),
+                    _lookup_account(client, from_account),
+                ),
+                asyncio.gather(
+                    _lookup_vat_type(client, to_account),
+                    _lookup_vat_type(client, from_account),
+                ),
+            )
 
             debit_posting: dict[str, Any] = {
                 "account": {"id": debit_id},
@@ -2055,7 +2108,7 @@ async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> di
                 "postings": [debit_posting, credit_posting],
             }
 
-            resp = await client.post("/ledger/voucher", payload)
+            resp = await client.post_with_retry("/ledger/voucher", payload)
             data = resp.json()
             if resp.status_code >= 400:
                 error_msg = data.get("message", "Unknown error")
@@ -2090,8 +2143,11 @@ async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> di
         monthly_amount = round(acquisition_cost / useful_life_years / 12, 2)
 
         try:
-            debit_id = await _lookup_account(client, expense_account)
-            credit_id = await _lookup_account(client, asset_account)
+            # Parallel lookup of expense and asset account IDs
+            debit_id, credit_id = await asyncio.gather(
+                _lookup_account(client, expense_account),
+                _lookup_account(client, asset_account),
+            )
 
             payload = {
                 "date": voucher_date,
@@ -2112,7 +2168,7 @@ async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> di
                 ],
             }
 
-            resp = await client.post("/ledger/voucher", payload)
+            resp = await client.post_with_retry("/ledger/voucher", payload)
             data = resp.json()
             if resp.status_code >= 400:
                 error_msg = data.get("message", "Unknown error")
@@ -2163,8 +2219,11 @@ async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> di
                 )
 
         try:
-            debit_id = await _lookup_account(client, debit_account)
-            credit_id = await _lookup_account(client, credit_account)
+            # Parallel lookup of debit and credit account IDs
+            debit_id, credit_id = await asyncio.gather(
+                _lookup_account(client, debit_account),
+                _lookup_account(client, credit_account),
+            )
 
             payload = {
                 "date": voucher_date,
@@ -2185,7 +2244,7 @@ async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> di
                 ],
             }
 
-            resp = await client.post("/ledger/voucher", payload)
+            resp = await client.post_with_retry("/ledger/voucher", payload)
             data = resp.json()
             if resp.status_code >= 400:
                 error_msg = data.get("message", "Unknown error")
