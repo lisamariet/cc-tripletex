@@ -148,9 +148,10 @@ async def create_customer(client: TripletexClient, fields: dict[str, Any]) -> di
 
 _EMPLOYEE_KEYS = {
     "firstName", "lastName", "email", "phoneNumberMobile", "dateOfBirth",
-    "startDate", "userType", "departmentId", "address", "employeeNumber",
+    "startDate", "userType", "departmentId", "department", "address", "employeeNumber",
     "nationalIdentityNumber", "bankAccountNumber", "iban", "role",
     "occupationCode", "employmentPercentage", "annualSalary", "monthlySalary",
+    "hoursPerDay", "workHoursPerDay",
 }
 
 
@@ -301,6 +302,32 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
             logger.info(f"Created employment details for employment {employment_id}")
         else:
             logger.warning(f"Failed to create employment details: {det_resp.text[:300]}")
+
+    # Standard working hours — POST /employee/standardTime
+    hours_per_day = fields.get("hoursPerDay") or fields.get("workHoursPerDay")
+    if employee_id and hours_per_day:
+        start = fields.get("startDate") or "2026-01-01"
+        st_payload: dict[str, Any] = {
+            "employee": {"id": employee_id},
+            "fromDate": start,
+            "hoursPerDay": float(hours_per_day),
+        }
+        st_resp = await client.post("/employee/standardTime", st_payload)
+        if st_resp.status_code < 400:
+            logger.info(f"Set standard working hours: {hours_per_day}h/day for employee {employee_id}")
+        else:
+            logger.warning(f"Failed to set standardTime: {st_resp.text[:300]}")
+    elif employee_id and fields.get("employmentPercentage"):
+        # Default 7.5 hours/day (Norwegian standard) when percentage is set but hoursPerDay not
+        start = fields.get("startDate") or "2026-01-01"
+        st_payload = {
+            "employee": {"id": employee_id},
+            "fromDate": start,
+            "hoursPerDay": 7.5,
+        }
+        st_resp = await client.post("/employee/standardTime", st_payload)
+        if st_resp.status_code < 400:
+            logger.info(f"Set default standard working hours: 7.5h/day for employee {employee_id}")
 
     return {"status": "completed", "taskType": "create_employee", "created": data.get("value", {})}
 
