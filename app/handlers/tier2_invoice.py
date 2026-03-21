@@ -439,10 +439,11 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
 
     invoice_id = invoice.get("id")
 
-    # If the invoice dict doesn't already have amount fields, fetch full details
-    if not invoice.get("amountCurrency") and not invoice.get("amount"):
-        detail_resp = await client.get(f"/invoice/{invoice_id}")
-        invoice = detail_resp.json().get("value", invoice)
+    # Always fetch full invoice details to get amountCurrencyOutstanding reliably.
+    # The search result from _find_invoice only includes a subset of fields and
+    # may return a stale/incorrect amountOutstanding value from the Tripletex API.
+    detail_resp = await client.get(f"/invoice/{invoice_id}")
+    invoice = detail_resp.json().get("value", invoice)
 
     # Get payment type (bank)
     payment_type_id = await _get_bank_payment_type_id(client)

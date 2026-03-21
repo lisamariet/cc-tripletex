@@ -2069,6 +2069,7 @@ async def run_one_test(
                 or handler_result.get("supplierId")
                 or handler_result.get("productId")
                 or handler_result.get("deletedId")
+                or handler_result.get("voucherId")
             )
 
         if handler_result.get("note") and not entity_id:
@@ -2194,25 +2195,38 @@ async def run_one_test(
                     passed=False, detail=f"expected 2 values, got {len(vals)}",
                 ))
 
-        # For monthly_closing, check vouchersCreated in result
+        # For monthly_closing, check vouchersCreated in result.
+        # The expected count depends on which input lists are non-empty in the
+        # test fields (accruals, depreciations, provisions).  Not all variants
+        # include all three types — only require the types that were requested.
         if tc.expected_task_type == "monthly_closing":
             vouchers_created = handler_result.get("vouchersCreated", 0)
             vouchers = handler_result.get("vouchers", [])
-            if vouchers_created >= 3:
+            # Determine which types were requested for this specific test
+            test_fields_used = tc.direct_fields or {}
+            requested_types: list[str] = []
+            if test_fields_used.get("accruals"):
+                requested_types.append("accrual")
+            if test_fields_used.get("depreciations"):
+                requested_types.append("depreciation")
+            if test_fields_used.get("provisions"):
+                requested_types.append("provision")
+            expected_count = len(requested_types) if requested_types else 3
+            if vouchers_created >= expected_count:
                 verify_results.append(CheckResult(
-                    field="vouchersCreated", expected=3,
+                    field="vouchersCreated", expected=expected_count,
                     actual=vouchers_created,
                     passed=True, detail=f"all {vouchers_created} vouchers created",
                 ))
             else:
                 verify_results.append(CheckResult(
-                    field="vouchersCreated", expected=3,
+                    field="vouchersCreated", expected=expected_count,
                     actual=vouchers_created,
-                    passed=False, detail=f"expected 3 vouchers, got {vouchers_created}",
+                    passed=False, detail=f"expected {expected_count} vouchers, got {vouchers_created}",
                 ))
-            # Verify each voucher type is present
+            # Verify each requested voucher type is present
             voucher_types = {v.get("type") for v in vouchers}
-            for vtype in ("accrual", "depreciation", "provision"):
+            for vtype in requested_types or ("accrual", "depreciation", "provision"):
                 if vtype in voucher_types:
                     verify_results.append(CheckResult(
                         field=f"voucher_type_{vtype}", expected="exists",

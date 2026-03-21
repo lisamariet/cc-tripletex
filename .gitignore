@@ -1,9 +1,12 @@
 # Environment
 .env
 .env.*
+.local.md
+.planning/
 
 # Claude
 .claude/
+CLAUDE.md
 
 # Node
 node_modules/
@@ -21,11 +24,6 @@ __pycache__/
 *.pyc
 .venv/
 
-# local secrets files
-.local.md
-
-# Local planning artifacts
-.planning/
 
 # Local competition data (request/result logs)
 data/
