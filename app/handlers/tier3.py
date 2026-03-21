@@ -946,7 +946,10 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
         creditAccount — credit side for simple correction (default 1920)
     """
     # Empty fields guard — parser may have failed to extract structured fields
-    if not fields or (not fields.get("errorType") and not fields.get("account") and not fields.get("errors")):
+    _KNOWN_FIELDS = {"errors", "errorType", "account", "correctedPostings", "voucherNumber",
+                     "_voucher_id", "date", "accountFrom", "accountTo", "amount", "correctionDate",
+                     "correctionDescription", "description", "creditAccount"}
+    if not fields or not any(k in fields for k in _KNOWN_FIELDS):
         logger.warning("[correct_ledger_error] Empty fields — parser may have failed")
         return {
             "status": "completed",
