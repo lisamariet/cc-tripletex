@@ -58,6 +58,7 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"(?:feil|error|mistake|erreur|Fehler|erro).{0,30}(?:i regnskap|in.?(?:ledger|accounting|bookkeeping)|en.?contabilidad|dans.?la.?comptabilité|in.?der.?Buchhaltung|na.?contabilidade)",
         r"korreksjonsbilag|correction.?voucher|corrective.?entry|asiento.?correct|écriture.?correct|Korrekturbuchung|lançamento.?correct",
         r"(?:reverser|reverse|tilbakefør).{0,30}(?:og|and|y|et|und|e).{0,30}(?:korriger|correct|rett|fix|corrig)",
+        r"erreurs?.{0,30}grand.?livre|grand.?livre.{0,30}erreurs?",
     ]),
     ("register_supplier_invoice", [
         r"leverandorfaktura.*(?:PDF|vedlagt|attached)|(?:PDF|vedlagt|attached).*leverandorfaktura",
@@ -125,9 +126,22 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
 def _infer_task_type_from_keywords(prompt: str) -> str | None:
     """Try to infer task type from keywords in the prompt. Returns None if no match."""
     prompt_lower = prompt.lower()
+
+    # Disambiguation: if prompt mentions year-end closing keywords BUT also mentions
+    # depreciations/accruals/provisions, it should be monthly_closing (posting vouchers)
+    # rather than year_end_closing (closing accounting periods).
+    _MONTHLY_SIGNALS = re.compile(
+        r"avskrivning|depreciation|periodisering|accrual|avsetning|provision|forskudd|prepaid|skatteavsetning|tax.?provision",
+        re.IGNORECASE,
+    )
+
     for task_type, patterns in _KEYWORD_RULES:
         for pattern in patterns:
             if re.search(pattern, prompt_lower, re.IGNORECASE):
+                # If we matched year_end_closing but prompt has monthly_closing signals, reclassify
+                if task_type == "year_end_closing" and _MONTHLY_SIGNALS.search(prompt_lower):
+                    logger.info(f"Keyword match '{pattern}' → year_end_closing, but monthly signals present → monthly_closing")
+                    return "monthly_closing"
                 logger.info(f"Keyword match: '{pattern}' → {task_type}")
                 return task_type
     return None
@@ -238,8 +252,8 @@ Supported task types and their fields:
 31. "year_end_closing" — Perform year-end closing (årsavslutning/årsoppgjør/Jahresabschluss/clôture annuelle/cierre de año/encerramento anual): close accounting periods, close postings, and create opening balance for the next year
     Fields: year* (integer, the fiscal year to close, e.g. 2025), createOpeningBalance (bool, default true — whether to create an opening balance for the next year), openingBalanceDate (YYYY-MM-DD, default first day of next year)
 
-32. "correct_ledger_error" — Correct an error in the ledger / bookkeeping (feilretting i regnskap / error correction / Korrekturbuchung / corrección contable / correction comptable / correção contábil): find and reverse the erroneous voucher, then post a corrected voucher
-    Fields: voucherNumber (integer — the erroneous voucher number), date (YYYY-MM-DD — date of the erroneous voucher), description (string — description to identify the erroneous voucher), correctedPostings (array of {debitAccount, creditAccount, amount} — the CORRECT postings to replace the error), correctionDescription (string — description for the correction voucher), correctionDate (YYYY-MM-DD — date for correction, defaults to original date), accountFrom (integer — the WRONG account number used in the error), accountTo (integer — the CORRECT account number), amount (number — the amount involved), creditAccount (integer — credit account for simple correction, default 1920)
+32. "correct_ledger_error" — Correct one or MORE errors in the ledger / bookkeeping (feilretting i regnskap / error correction / Korrekturbuchung / corrección contable / correction comptable / correção contábil / erreurs dans le grand livre): find and reverse erroneous vouchers, then post corrected vouchers
+    Fields: voucherNumber (integer — the erroneous voucher number), date (YYYY-MM-DD — date of the erroneous voucher), description (string — description to identify the erroneous voucher), correctedPostings (array of {debitAccount, creditAccount, amount} — the CORRECT postings to replace the error), correctionDescription (string — description for the correction voucher), correctionDate (YYYY-MM-DD — date for correction, defaults to original date), accountFrom (integer — the WRONG account number used in the error), accountTo (integer — the CORRECT account number), amount (number — the amount involved), creditAccount (integer — credit account for simple correction, default 1920), errors (array of error objects when MULTIPLE errors need correction — each object has: {errorType ("wrong_account" | "duplicate" | "missing_vat" | "wrong_amount"), account (integer — the account number involved), wrongAccount (integer — for wrong_account: the wrong account used), correctAccount (integer — for wrong_account: the correct account), amount (number — the amount on the erroneous posting), correctAmount (number — for wrong_amount: what it should be), vatAccount (integer — for missing_vat: the VAT account that should have been used, e.g. 2710), date (YYYY-MM-DD — date to search for the voucher)})
 
 33. "monthly_closing" — Perform monthly closing (månedsavslutning/Monatsabschluss/cierre mensual/clôture mensuelle/encerramento mensal): post accruals, depreciations, and provisions as vouchers
     Fields: month* (integer 1-12), year* (integer), accruals (array of {fromAccount (balance sheet account to credit, e.g. 1720), toAccount (expense account to debit, e.g. 6300), amount (number), description (string)}), depreciations (array of {account (expense account for depreciation, e.g. 6020), assetAccount (balance sheet asset account to credit, e.g. 1200), acquisitionCost (number — original cost of the asset), usefulLifeYears (number — useful life in years), description (string)}), provisions (array of {debitAccount (expense account, e.g. 5000), creditAccount (liability account, e.g. 2900), amount (number), description (string)})

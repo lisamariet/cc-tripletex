@@ -937,6 +937,56 @@ def build_tier2_tests() -> list[E2ETestCase]:
             tier=3,
         ),
 
+        # T3-4b: correct_ledger_error (multi-error) — correct 4 errors in one task
+        # Uses accounts 7100/6300/7140 which don't require supplier ID in sandbox
+        E2ETestCase(
+            name="t3_correct_ledger_multi_error",
+            expected_task_type="correct_ledger_error",
+            expected_fields={},
+            prompt=(
+                "Il y a 4 erreurs dans le grand livre à corriger : "
+                "1) Le compte 7100 a été utilisé au lieu du compte 6300 pour un montant de 5000 NOK. "
+                "2) Un document en double sur le compte 6300 pour 1250 NOK doit être annulé. "
+                "3) Il manque une ligne de TVA sur le compte 7140 pour 10200 NOK (TVA sur le compte 2710). "
+                "4) Le montant de 16800 NOK sur le compte 7100 est erroné, il devrait être 15550 NOK."
+            ),
+            direct_fields={
+                "errors": [
+                    {
+                        "errorType": "wrong_account",
+                        "wrongAccount": 7100,
+                        "correctAccount": 6300,
+                        "amount": 5000,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "duplicate",
+                        "account": 6300,
+                        "amount": 1250,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "missing_vat",
+                        "account": 7140,
+                        "amount": 10200,
+                        "vatAccount": 2710,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "wrong_amount",
+                        "account": 7100,
+                        "amount": 16800,
+                        "correctAmount": 15550,
+                        "date": "2026-03-21",
+                    },
+                ],
+                "date": "2026-03-21",
+            },
+            setup="create_vouchers_for_multi_correction",
+            verify=None,
+            tier=3,
+        ),
+
         # T3-5: monthly_closing — post accruals, depreciations, and provisions
         E2ETestCase(
             name="t3_monthly_closing",
@@ -1209,6 +1259,54 @@ async def setup_create_voucher_for_correction(client, fields: dict) -> dict:
     return fields
 
 
+async def setup_create_vouchers_for_multi_correction(client, fields: dict) -> dict:
+    """Create 4 vouchers that simulate the 4 error types for multi-error correction.
+
+    Uses accounts 7100/6300/7140 which don't require supplier ID in sandbox.
+    1. Wrong account: 5000 on 7100 (should be 6300)
+    2. Duplicate: 1250 on 6300
+    3. Missing VAT: 10200 on 7140 (MVA missing on 2710)
+    4. Wrong amount: 16800 on 7100 (should be 15550)
+    """
+    from app.handlers.tier3 import _lookup_account
+
+    credit_id = await _lookup_account(client, 1920)
+    date = "2026-03-21"
+
+    voucher_specs = [
+        (7100, 5000, "E2E Feil konto (7100→6300)"),
+        (6300, 1250, "E2E Duplikat bilag"),
+        (7140, 10200, "E2E Manglende MVA"),
+        (7100, 16800, "E2E Feil beløp (16800→15550)"),
+    ]
+
+    created_ids = []
+    for acct_num, amt, desc in voucher_specs:
+        debit_id = await _lookup_account(client, acct_num)
+        payload = {
+            "date": date,
+            "description": f"{desc} {_ts()}",
+            "postings": [
+                {"account": {"id": debit_id}, "amountGross": amt, "amountGrossCurrency": amt, "row": 1},
+                {"account": {"id": credit_id}, "amountGross": -amt, "amountGrossCurrency": -amt, "row": 2},
+            ],
+        }
+        resp = await client.post("/ledger/voucher", payload)
+        created = resp.json().get("value", {})
+        if created.get("id"):
+            created_ids.append(created["id"])
+        else:
+            logger.warning(f"Failed to create setup voucher '{desc}': {resp.text[:300]}")
+
+    # Inject voucher IDs into errors for direct lookup
+    errors = fields.get("errors", [])
+    for i, vid in enumerate(created_ids):
+        if i < len(errors):
+            errors[i]["_voucher_id"] = vid
+
+    return fields
+
+
 SETUP_REGISTRY = {
     "find_first_employee": setup_find_first_employee,
     "find_bank_account": setup_find_bank_account,
@@ -1223,6 +1321,7 @@ SETUP_REGISTRY = {
     "create_voucher_for_delete": setup_create_voucher_for_delete,
     "find_or_reuse_dimension": setup_find_or_reuse_dimension,
     "create_voucher_for_correction": setup_create_voucher_for_correction,
+    "create_vouchers_for_multi_correction": setup_create_vouchers_for_multi_correction,
 }
 
 
@@ -1443,6 +1542,10 @@ async def run_one_test(
             correction = handler_result.get("correctionVoucher", {})
             if isinstance(correction, dict) and correction.get("id"):
                 entity_id = correction["id"]
+            # Multi-error mode: check errorsCompleted
+            if handler_result.get("errorsCompleted"):
+                entity_id = handler_result.get("errorsCompleted")
+                execute_detail = f"multi-error: {handler_result.get('errorsCompleted')}/{handler_result.get('errorsProcessed')} completed"
         if not entity_id:
             entity_id = (
                 handler_result.get("invoiceId")

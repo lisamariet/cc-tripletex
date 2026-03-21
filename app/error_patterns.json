@@ -1746,6 +1746,118 @@
       "error_message": "Kan ikke være null.",
       "fix": "Valideringsfeil: Kan ikke være null.",
       "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": "dateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    },
+    {
+      "field": "dateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
     }
   ],
   "POST /bank/reconciliation": [
@@ -1765,6 +1877,50 @@
     },
     {
       "field": "accountingPeriod",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    }
+  ],
+  "GET /ledger/posting": [
+    {
+      "field": "dateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateTo",
       "error_type": "validation_error",
       "error_message": "Kan ikke være null.",
       "fix": "Valideringsfeil: Kan ikke være null.",

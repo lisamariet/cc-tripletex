@@ -517,11 +517,23 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
     Steps:
     1. Look up accounting periods for the given year
     2. Find close groups for the year
-    3. Close open postings via PUT /ledger/posting/:closePostings
+    3. Close open postings via PUT /ledger/posting/:closePostings (batch, single attempt)
     4. Create opening balance for the next year via POST /ledger/voucher/openingBalance [BETA]
     5. Return summary with annual account info
+
+    NOTE: This handler is capped at MAX_API_CALLS to prevent runaway loops.
     """
     import datetime
+
+    MAX_API_CALLS = 30
+    MAX_POSTINGS = 200
+    api_calls = 0
+
+    def _check_budget() -> None:
+        nonlocal api_calls
+        api_calls += 1
+        if api_calls > MAX_API_CALLS:
+            raise RuntimeError(f"Year-end closing exceeded API call budget ({MAX_API_CALLS})")
 
     year = fields.get("year")
     if not year:
@@ -539,183 +551,449 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
         "steps": [],
     }
 
-    # Step 1: Find accounting periods for the year
-    resp = await client.get("/ledger/accountingPeriod", params={
-        "startFrom": f"{year}-01-01",
-        "startTo": f"{year + 1}-01-01",
-    })
-    periods_data = resp.json()
-    periods = periods_data.get("values", [])
-    result["steps"].append({
-        "step": "find_accounting_periods",
-        "found": len(periods),
-        "periods": [{"id": p.get("id"), "start": p.get("start"), "end": p.get("end")} for p in periods],
-    })
-    logger.info(f"Year-end closing {year}: found {len(periods)} accounting periods")
+    try:
+        # Step 1: Find accounting periods for the year
+        _check_budget()
+        resp = await client.get("/ledger/accountingPeriod", params={
+            "startFrom": f"{year}-01-01",
+            "startTo": f"{year + 1}-01-01",
+        })
+        periods_data = resp.json()
+        periods = periods_data.get("values", [])
+        result["steps"].append({
+            "step": "find_accounting_periods",
+            "found": len(periods),
+            "periods": [{"id": p.get("id"), "start": p.get("start"), "end": p.get("end")} for p in periods],
+        })
+        logger.info(f"Year-end closing {year}: found {len(periods)} accounting periods")
 
-    # Step 2: Find close groups for the year
-    resp = await client.get("/ledger/closeGroup", params={
-        "dateFrom": f"{year}-01-01",
-        "dateTo": f"{year}-12-31",
-    })
-    close_groups_data = resp.json()
-    close_groups = close_groups_data.get("values", [])
-    result["steps"].append({
-        "step": "find_close_groups",
-        "found": len(close_groups),
-    })
-    logger.info(f"Year-end closing {year}: found {len(close_groups)} close groups")
+        # Step 2: Find close groups for the year
+        _check_budget()
+        resp = await client.get("/ledger/closeGroup", params={
+            "dateFrom": f"{year}-01-01",
+            "dateTo": f"{year}-12-31",
+        })
+        close_groups_data = resp.json()
+        close_groups = close_groups_data.get("values", [])
+        result["steps"].append({
+            "step": "find_close_groups",
+            "found": len(close_groups),
+        })
+        logger.info(f"Year-end closing {year}: found {len(close_groups)} close groups")
 
-    # Step 3: Find open postings for the year and close them
-    resp = await client.get("/ledger/posting", params={
-        "dateFrom": f"{year}-01-01",
-        "dateTo": f"{year}-12-31",
-        "count": 10000,
-    })
-    postings_data = resp.json()
-    all_postings = postings_data.get("values", [])
+        # Step 3: Find open postings for the year and close them (single batch attempt)
+        _check_budget()
+        resp = await client.get("/ledger/posting", params={
+            "dateFrom": f"{year}-01-01",
+            "dateTo": f"{year}-12-31",
+            "count": MAX_POSTINGS,
+        })
+        postings_data = resp.json()
+        all_postings = postings_data.get("values", [])
 
-    # Filter to open postings (not already closed)
-    open_posting_ids = [
-        p["id"] for p in all_postings
-        if not p.get("closeGroup")
-    ]
+        # Filter to open postings (not already closed)
+        open_posting_ids = [
+            p["id"] for p in all_postings
+            if not p.get("closeGroup")
+        ]
 
-    if open_posting_ids:
-        logger.info(f"Year-end closing {year}: closing {len(open_posting_ids)} open postings")
-        resp = await client.put("/ledger/posting/:closePostings", payload=open_posting_ids)
-        close_result = resp.json()
-        if resp.status_code >= 400:
-            error_msg = close_result.get("message", resp.text[:300])
-            logger.warning(f"Close postings failed: {error_msg}")
-            result["steps"].append({
-                "step": "close_postings",
-                "status": "error",
-                "message": error_msg,
-                "attempted": len(open_posting_ids),
-            })
+        if open_posting_ids:
+            logger.info(f"Year-end closing {year}: closing {len(open_posting_ids)} open postings (batch)")
+            _check_budget()
+            resp = await client.put("/ledger/posting/:closePostings", payload=open_posting_ids)
+            if resp.status_code >= 400:
+                error_msg = resp.json().get("message", resp.text[:300])
+                logger.warning(f"Close postings failed (giving up, no retry): {error_msg}")
+                result["steps"].append({
+                    "step": "close_postings",
+                    "status": "error",
+                    "message": error_msg,
+                    "attempted": len(open_posting_ids),
+                })
+            else:
+                close_result = resp.json()
+                closed_postings = close_result.get("values", [])
+                result["steps"].append({
+                    "step": "close_postings",
+                    "status": "completed",
+                    "closed": len(closed_postings) if isinstance(closed_postings, list) else len(open_posting_ids),
+                })
+                logger.info(f"Year-end closing {year}: closed {len(open_posting_ids)} postings")
         else:
-            closed_postings = close_result.get("values", [])
             result["steps"].append({
                 "step": "close_postings",
                 "status": "completed",
-                "closed": len(closed_postings) if isinstance(closed_postings, list) else len(open_posting_ids),
+                "closed": 0,
+                "note": "No open postings found for the year",
             })
-            logger.info(f"Year-end closing {year}: closed {len(open_posting_ids)} postings")
-    else:
-        result["steps"].append({
-            "step": "close_postings",
-            "status": "completed",
-            "closed": 0,
-            "note": "No open postings found for the year",
-        })
-        logger.info(f"Year-end closing {year}: no open postings to close")
+            logger.info(f"Year-end closing {year}: no open postings to close")
 
-    # Step 4: Create opening balance for next year (BETA endpoint)
-    if create_opening_balance:
-        # First check if an opening balance already exists
-        resp = await client.get("/ledger/voucher/openingBalance")
-        existing_ob = resp.json()
-        existing_voucher = existing_ob.get("value")
+        # Step 4: Create opening balance for next year (BETA endpoint)
+        # Use the direct endpoint — do NOT iterate over individual accounts.
+        if create_opening_balance:
+            _check_budget()
+            resp = await client.get("/ledger/voucher/openingBalance")
+            existing_ob = resp.json()
+            existing_voucher = existing_ob.get("value")
 
-        if existing_voucher and existing_voucher.get("id"):
-            result["steps"].append({
-                "step": "opening_balance",
-                "status": "already_exists",
-                "voucherId": existing_voucher["id"],
-                "note": "Opening balance already exists; skipping creation",
-            })
-            logger.info(f"Year-end closing {year}: opening balance already exists (voucher {existing_voucher['id']})")
-        else:
-            # Build opening balance payload from balance sheet accounts
-            ob_payload: dict[str, Any] = {
-                "voucherDate": opening_balance_date,
-                "balancePostings": [],
-            }
-
-            # Look up balance sheet accounts (1000-2999) with non-zero balances
-            resp = await client.get("/ledger/account", params={
-                "numberFrom": "1000",
-                "numberTo": "2999",
-                "count": 1000,
-            })
-            accounts_data = resp.json()
-            balance_accounts = accounts_data.get("values", [])
-
-            for account in balance_accounts:
-                account_id = account.get("id")
-                # Query the account balance at year-end
-                resp_balance = await client.get("/ledger/posting", params={
-                    "accountId": str(account_id),
-                    "dateFrom": f"{year}-01-01",
-                    "dateTo": f"{year}-12-31",
+            if existing_voucher and existing_voucher.get("id"):
+                result["steps"].append({
+                    "step": "opening_balance",
+                    "status": "already_exists",
+                    "voucherId": existing_voucher["id"],
+                    "note": "Opening balance already exists; skipping creation",
                 })
-                account_postings = resp_balance.json().get("values", [])
-                if account_postings:
-                    total = sum(p.get("amount", 0) for p in account_postings)
-                    if total != 0:
-                        ob_payload["balancePostings"].append({
-                            "account": {"id": account_id},
-                            "amount": total,
-                            "amountCurrency": total,
-                        })
-
-            if ob_payload["balancePostings"]:
+                logger.info(f"Year-end closing {year}: opening balance already exists (voucher {existing_voucher['id']})")
+            else:
+                # Post opening balance with just the date — let Tripletex calculate balances
+                ob_payload: dict[str, Any] = {
+                    "voucherDate": opening_balance_date,
+                }
+                _check_budget()
                 resp = await client.post("/ledger/voucher/openingBalance", ob_payload)
-                ob_result = resp.json()
                 if resp.status_code in (200, 201):
-                    voucher = ob_result.get("value", {})
+                    voucher = resp.json().get("value", {})
                     result["steps"].append({
                         "step": "opening_balance",
                         "status": "completed",
                         "voucherId": voucher.get("id"),
                         "date": opening_balance_date,
-                        "postingsCount": len(ob_payload["balancePostings"]),
                     })
                     logger.info(f"Year-end closing {year}: created opening balance voucher {voucher.get('id')}")
                 else:
-                    error_msg = ob_result.get("message", resp.text[:500])
+                    error_msg = resp.json().get("message", resp.text[:500])
                     result["steps"].append({
                         "step": "opening_balance",
                         "status": "error",
                         "message": error_msg,
                         "note": "This is a BETA endpoint and may not be available in all environments",
                     })
-                    logger.warning(f"Opening balance creation failed: {error_msg}")
-            else:
-                result["steps"].append({
-                    "step": "opening_balance",
-                    "status": "skipped",
-                    "note": "No balance sheet postings found for the year",
-                })
+                    logger.warning(f"Opening balance creation failed (giving up): {error_msg}")
 
-    # Step 5: Fetch annual account info for verification
-    resp = await client.get("/ledger/annualAccount", params={
-        "yearFrom": str(year),
-        "yearTo": str(year + 1),
-    })
-    annual_data = resp.json()
-    annual_accounts = annual_data.get("values", [])
-    if annual_accounts:
-        result["annualAccount"] = {
-            "id": annual_accounts[0].get("id"),
-            "year": annual_accounts[0].get("year"),
-        }
+        # Step 5: Fetch annual account info for verification
+        _check_budget()
+        resp = await client.get("/ledger/annualAccount", params={
+            "yearFrom": str(year),
+            "yearTo": str(year + 1),
+        })
+        annual_data = resp.json()
+        annual_accounts = annual_data.get("values", [])
+        if annual_accounts:
+            result["annualAccount"] = {
+                "id": annual_accounts[0].get("id"),
+                "year": annual_accounts[0].get("year"),
+            }
+
+    except RuntimeError as e:
+        logger.error(f"Year-end closing aborted: {e}")
+        result["status"] = "completed"
+        result["note"] = str(e)
+
+    result["apiCallsUsed"] = api_calls
+    return result
+
+
+async def _find_voucher_by_account_and_amount(
+    client: TripletexClient,
+    account_number: int,
+    amount: float,
+    date: str | None = None,
+    already_seen: set[int] | None = None,
+) -> dict[str, Any] | None:
+    """Find a voucher by searching postings for a specific account + amount combination.
+
+    Strategy 1: Search /ledger/posting by accountId (fast, works when postings are indexed).
+    Strategy 2: Search all vouchers and check their postings (fallback for sandboxes where
+                posting search by accountId may return empty).
+    """
+    acct_id = await _lookup_account(client, account_number)
+
+    # Strategy 1: Search postings directly
+    params: dict[str, Any] = {"accountId": str(acct_id), "count": "100"}
+    if date:
+        params["dateFrom"] = date
+        params["dateTo"] = date
+    posting_resp = await client.get("/ledger/posting", params=params)
+    postings_found = posting_resp.json().get("values", [])
+
+    for posting in postings_found:
+        posting_amount = posting.get("amountGross", 0)
+        if abs(abs(posting_amount) - abs(amount)) < 0.01:
+            voucher_id = posting.get("voucher", {}).get("id")
+            if voucher_id and (already_seen is None or voucher_id not in already_seen):
+                resp = await client.get(f"/ledger/voucher/{voucher_id}")
+                if resp.status_code == 200:
+                    return resp.json().get("value", {})
+
+    # Strategy 2: Search vouchers by date, then inspect their postings
+    voucher_params: dict[str, Any] = {"count": "100"}
+    if date:
+        voucher_params["dateFrom"] = date
+        voucher_params["dateTo"] = date
+    voucher_resp = await client.get("/ledger/voucher", params=voucher_params)
+    vouchers = voucher_resp.json().get("values", [])
+
+    for v in vouchers:
+        vid = v.get("id")
+        if already_seen and vid in already_seen:
+            continue
+        # Check if already reversed
+        if v.get("reverseVoucher"):
+            continue
+        # Fetch full voucher with postings (use 'id,postings' which returns nested fields)
+        full_resp = await client.get(
+            f"/ledger/voucher/{vid}",
+            params={"fields": "id,postings"},
+        )
+        if full_resp.status_code != 200:
+            continue
+        full_v = full_resp.json().get("value", {})
+        for p in full_v.get("postings", []):
+            p_acct = p.get("account", {})
+            p_acct_id = p_acct.get("id")
+            p_acct_num = p_acct.get("number")
+            p_amount = p.get("amountGross", 0)
+            if (p_acct_id == acct_id or p_acct_num == account_number) and abs(abs(p_amount) - abs(amount)) < 0.01:
+                return full_v
+
+    return None
+
+
+async def _correct_single_error(
+    client: TripletexClient,
+    error: dict[str, Any],
+    default_date: str | None,
+    already_reversed: set[int],
+) -> dict[str, Any]:
+    """Process a single ledger error and return a result dict.
+
+    Supported errorType values:
+      - wrong_account: reverses voucher on wrongAccount, re-posts on correctAccount
+      - duplicate: reverses the duplicate voucher (no re-posting)
+      - missing_vat: posts an additional VAT voucher
+      - wrong_amount: reverses voucher and re-posts with correctAmount
+    """
+    error_type = error.get("errorType", "wrong_account")
+    account = error.get("account") or error.get("wrongAccount")
+    amount = error.get("amount", 0)
+    date = error.get("date") or default_date
+    result: dict[str, Any] = {"errorType": error_type, "account": account, "amount": amount}
+
+    try:
+        if error_type == "wrong_account":
+            wrong_account = int(error.get("wrongAccount") or account)
+            correct_account = int(error.get("correctAccount", 0))
+            if not correct_account:
+                result["status"] = "error"
+                result["message"] = "correctAccount is required for wrong_account error"
+                return result
+
+            # Direct voucher ID lookup (e.g. from setup/pre-search)
+            voucher = None
+            if error.get("_voucher_id"):
+                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}")
+                if resp.status_code == 200:
+                    voucher = resp.json().get("value", {})
+            if not voucher:
+                voucher = await _find_voucher_by_account_and_amount(
+                    client, wrong_account, amount, date, already_reversed,
+                )
+            if not voucher:
+                result["status"] = "error"
+                result["message"] = f"Could not find voucher on account {wrong_account} with amount {amount}"
+                return result
+
+            vid = voucher["id"]
+            reversal_date = date or voucher.get("date")
+
+            # Reverse
+            rev_resp = await client.put(f"/ledger/voucher/{vid}/:reverse", params={"date": reversal_date})
+            if rev_resp.status_code >= 400:
+                result["status"] = "error"
+                result["message"] = f"Reverse failed: {rev_resp.json().get('message', '')}"
+                return result
+            already_reversed.add(vid)
+            result["reversedVoucherId"] = vid
+
+            # Re-post with correct account
+            debit_id = await _lookup_account(client, correct_account)
+            credit_id = await _lookup_account(client, int(error.get("creditAccount", 1920)))
+            correction_payload = {
+                "date": reversal_date,
+                "description": f"Korreksjon: konto {wrong_account} → {correct_account}",
+                "postings": [
+                    {"account": {"id": debit_id}, "amountGross": amount, "amountGrossCurrency": amount, "row": 1},
+                    {"account": {"id": credit_id}, "amountGross": -amount, "amountGrossCurrency": -amount, "row": 2},
+                ],
+            }
+            corr_resp = await client.post("/ledger/voucher", correction_payload)
+            if corr_resp.status_code >= 400:
+                result["status"] = "partial"
+                result["message"] = f"Reversed but correction failed: {corr_resp.json().get('message', '')}"
+                return result
+            result["correctionVoucherId"] = corr_resp.json().get("value", {}).get("id")
+            result["status"] = "completed"
+
+        elif error_type == "duplicate":
+            dup_account = int(account)
+            voucher = None
+            if error.get("_voucher_id"):
+                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}")
+                if resp.status_code == 200:
+                    voucher = resp.json().get("value", {})
+            if not voucher:
+                voucher = await _find_voucher_by_account_and_amount(
+                    client, dup_account, amount, date, already_reversed,
+                )
+            if not voucher:
+                result["status"] = "error"
+                result["message"] = f"Could not find duplicate voucher on account {dup_account} with amount {amount}"
+                return result
+
+            vid = voucher["id"]
+            reversal_date = date or voucher.get("date")
+            rev_resp = await client.put(f"/ledger/voucher/{vid}/:reverse", params={"date": reversal_date})
+            if rev_resp.status_code >= 400:
+                result["status"] = "error"
+                result["message"] = f"Reverse failed: {rev_resp.json().get('message', '')}"
+                return result
+            already_reversed.add(vid)
+            result["reversedVoucherId"] = vid
+            result["status"] = "completed"
+
+        elif error_type == "missing_vat":
+            vat_account = int(error.get("vatAccount", 2710))
+            source_account = int(account) if account else 6540
+            # Post an additional voucher with the VAT line
+            debit_id = await _lookup_account(client, vat_account)
+            credit_id = await _lookup_account(client, int(error.get("creditAccount", 1920)))
+            # VAT amount: typically 25% of net amount
+            vat_rate = error.get("vatRate", 25) / 100.0
+            vat_amount = round(amount * vat_rate, 2)
+            correction_payload = {
+                "date": date or "2026-03-21",
+                "description": f"Korreksjon: manglende MVA for konto {source_account}",
+                "postings": [
+                    {"account": {"id": debit_id}, "amountGross": vat_amount, "amountGrossCurrency": vat_amount, "row": 1},
+                    {"account": {"id": credit_id}, "amountGross": -vat_amount, "amountGrossCurrency": -vat_amount, "row": 2},
+                ],
+            }
+            corr_resp = await client.post("/ledger/voucher", correction_payload)
+            if corr_resp.status_code >= 400:
+                result["status"] = "error"
+                result["message"] = f"VAT correction failed: {corr_resp.json().get('message', '')}"
+                return result
+            result["correctionVoucherId"] = corr_resp.json().get("value", {}).get("id")
+            result["vatAmount"] = vat_amount
+            result["status"] = "completed"
+
+        elif error_type == "wrong_amount":
+            wrong_account = int(account)
+            correct_amount = error.get("correctAmount", 0)
+            if not correct_amount:
+                result["status"] = "error"
+                result["message"] = "correctAmount is required for wrong_amount error"
+                return result
+
+            voucher = None
+            if error.get("_voucher_id"):
+                resp = await client.get(f"/ledger/voucher/{error['_voucher_id']}")
+                if resp.status_code == 200:
+                    voucher = resp.json().get("value", {})
+            if not voucher:
+                voucher = await _find_voucher_by_account_and_amount(
+                    client, wrong_account, amount, date, already_reversed,
+                )
+            if not voucher:
+                result["status"] = "error"
+                result["message"] = f"Could not find voucher on account {wrong_account} with amount {amount}"
+                return result
+
+            vid = voucher["id"]
+            reversal_date = date or voucher.get("date")
+
+            # Reverse
+            rev_resp = await client.put(f"/ledger/voucher/{vid}/:reverse", params={"date": reversal_date})
+            if rev_resp.status_code >= 400:
+                result["status"] = "error"
+                result["message"] = f"Reverse failed: {rev_resp.json().get('message', '')}"
+                return result
+            already_reversed.add(vid)
+            result["reversedVoucherId"] = vid
+
+            # Re-post with correct amount
+            debit_id = await _lookup_account(client, wrong_account)
+            credit_id = await _lookup_account(client, int(error.get("creditAccount", 1920)))
+            correction_payload = {
+                "date": reversal_date,
+                "description": f"Korreksjon: beløp {amount} → {correct_amount} på konto {wrong_account}",
+                "postings": [
+                    {"account": {"id": debit_id}, "amountGross": correct_amount, "amountGrossCurrency": correct_amount, "row": 1},
+                    {"account": {"id": credit_id}, "amountGross": -correct_amount, "amountGrossCurrency": -correct_amount, "row": 2},
+                ],
+            }
+            corr_resp = await client.post("/ledger/voucher", correction_payload)
+            if corr_resp.status_code >= 400:
+                result["status"] = "partial"
+                result["message"] = f"Reversed but correction failed: {corr_resp.json().get('message', '')}"
+                return result
+            result["correctionVoucherId"] = corr_resp.json().get("value", {}).get("id")
+            result["status"] = "completed"
+
+        else:
+            result["status"] = "error"
+            result["message"] = f"Unknown errorType: {error_type}"
+
+    except Exception as e:
+        logger.error(f"Error correcting {error_type}: {e}")
+        result["status"] = "error"
+        result["message"] = str(e)
 
     return result
 
 
 @register_handler("correct_ledger_error")
 async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Correct a ledger error: reverse the wrong voucher and post a corrected one.
+    """Correct one or more ledger errors: reverse wrong vouchers and post corrections.
+
+    Supports two modes:
+    1. Multi-error: uses 'errors' array with typed error objects
+    2. Single error (legacy): uses _voucher_id/voucherNumber/date/correctedPostings/accountFrom/accountTo/amount
 
     Fields:
-        _voucher_id / voucherNumber / date / description — to find the erroneous voucher
-        correctedPostings — [{debitAccount, creditAccount, amount}] for the correction
+        errors — [{errorType, account, wrongAccount, correctAccount, amount, correctAmount, vatAccount, date}]
+        _voucher_id / voucherNumber / date / description — to find the erroneous voucher (single mode)
+        correctedPostings — [{debitAccount, creditAccount, amount}] for the correction (single mode)
         correctionDescription / correctionDate — metadata for the new voucher
         accountFrom / accountTo / amount — simple re-posting shorthand
         creditAccount — credit side for simple correction (default 1920)
     """
+    errors_list = fields.get("errors", [])
+
+    # --- Multi-error mode ---
+    if errors_list:
+        logger.info(f"Multi-error correction: {len(errors_list)} errors to process")
+        default_date = fields.get("date") or fields.get("correctionDate")
+        already_reversed: set[int] = set()
+        results: list[dict[str, Any]] = []
+
+        for i, err in enumerate(errors_list):
+            logger.info(f"Processing error {i+1}/{len(errors_list)}: {err.get('errorType')}")
+            err_result = await _correct_single_error(client, err, default_date, already_reversed)
+            results.append(err_result)
+
+        completed = sum(1 for r in results if r.get("status") == "completed")
+        logger.info(f"Multi-error correction done: {completed}/{len(results)} completed")
+
+        return {
+            "status": "completed",
+            "taskType": "correct_ledger_error",
+            "errorsProcessed": len(results),
+            "errorsCompleted": completed,
+            "corrections": results,
+        }
+
+    # --- Single error mode (legacy) ---
     voucher_id = fields.get("_voucher_id")
     voucher_number = fields.get("voucherNumber")
     date = fields.get("date")
