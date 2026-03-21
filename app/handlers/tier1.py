@@ -88,7 +88,23 @@ def _sync_email(fields: dict) -> None:
 
 @register_handler("create_supplier")
 async def create_supplier(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    _sync_email(fields)
+    # For suppliers: set email field, but DON'T auto-copy to invoiceEmail/overdueNoticeEmail
+    # unless the prompt explicitly provides them. The scoring checks that these fields
+    # are only set when explicitly requested.
+    # _sync_email copies email↔invoiceEmail, which is wrong for suppliers where
+    # the prompt says "E-mail:" generically — it should go in `email` only.
+    email = fields.get("email") or fields.get("invoiceEmail")
+    if email:
+        fields["email"] = email
+    # Only keep invoiceEmail if parser explicitly extracted it as different from email,
+    # or if prompt context suggests it's specifically an invoice email
+    if fields.get("invoiceEmail") == fields.get("email"):
+        # Same value = was auto-copied, remove it so Tripletex keeps it empty
+        fields.pop("invoiceEmail", None)
+    # Don't set overdueNoticeEmail for suppliers (it's a customer-facing field)
+    if fields.get("overdueNoticeEmail") == email:
+        fields.pop("overdueNoticeEmail", None)
+
     payload = {"name": fields["name"]}
     payload.update(_pick(fields, "organizationNumber", "email", "invoiceEmail",
                          "phoneNumber", "phoneNumberMobile", "isPrivateIndividual",

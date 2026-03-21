@@ -112,7 +112,7 @@ IMPORTANT: You MUST classify the task as one of the supported types below. Only 
 Supported task types and their fields:
 
 1. "create_supplier" — Register a new supplier
-   Fields: name*, organizationNumber, email (IMPORTANT: if prompt says "email" or "e-post" without specifying type, put it in BOTH email AND invoiceEmail), invoiceEmail, phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, bankAccount, website, address (object with addressLine1, addressLine2, postalCode, city)
+   Fields: name*, organizationNumber, email (IMPORTANT: for suppliers, put the email ONLY in the "email" field — do NOT copy to invoiceEmail unless the prompt explicitly says "invoice email" or "fakturaepost"), invoiceEmail (only if explicitly mentioned as invoice/faktura email), phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, bankAccount, website, address (object with addressLine1, addressLine2, postalCode, city)
 
 2. "create_customer" — Register a new customer
    Fields: name*, organizationNumber, email (IMPORTANT: if prompt says "email" or "e-post" without specifying type, put it in BOTH email AND invoiceEmail), invoiceEmail, phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, isSupplier (bool), website, address (object with addressLine1, addressLine2, postalCode, city)
@@ -212,7 +212,7 @@ Prompt: "Créez une dimension comptable personnalisée 'Kostsenter' avec les val
 Output: {"taskType": "create_custom_dimension", "fields": {"dimensionName": "Kostsenter", "values": ["Kundeservice", "Økonomi"], "voucherDate": "2026-03-20", "voucherDescription": "Voucher linked to dimension Økonomi", "accountNumber": 6300, "amount": 15000, "dimensionValue": "Økonomi"}, "confidence": 0.95, "reasoning": "French prompt to create custom dimension 'Kostsenter' with values and post a voucher linked to 'Økonomi'."}
 
 Prompt: "Registre el proveedor Dorada SL con número de organización 853166553. Correo electrónico: faktura@doradasl.no."
-Output: {"taskType": "create_supplier", "fields": {"name": "Dorada SL", "organizationNumber": "853166553", "email": "faktura@doradasl.no", "invoiceEmail": "faktura@doradasl.no"}, "confidence": 0.95, "reasoning": "Spanish prompt requesting supplier registration with org number and email."}
+Output: {"taskType": "create_supplier", "fields": {"name": "Dorada SL", "organizationNumber": "853166553", "email": "faktura@doradasl.no"}, "confidence": 0.95, "reasoning": "Spanish prompt requesting supplier registration with org number and email. For suppliers, email goes only in 'email' field, not invoiceEmail."}
 
 Prompt: "Le client Océan SARL (nº org. 924390735) a une facture impayée de 39300 NOK hors TVA pour \"Maintenance\". Enregistrez le paiement intégral de cette facture."
 Output: {"taskType": "register_payment", "fields": {"customerName": "Océan SARL", "customerOrgNumber": "924390735", "amount": 39300, "invoiceDescription": "Maintenance", "lines": [{"description": "Maintenance", "quantity": 1, "unitPriceExcludingVat": 39300, "vatCode": "3"}]}, "confidence": 0.92, "reasoning": "French prompt to register full payment on an unpaid invoice for Maintenance."}

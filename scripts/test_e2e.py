@@ -166,7 +166,7 @@ TIER1_TESTS: list[E2ETestCase] = [
                 FieldCheck("name", "Northwave Ltd"),
                 FieldCheck("organizationNumber", "949044378"),
                 FieldCheck("email", "faktura@northwaveltd.no"),
-                FieldCheck("invoiceEmail", "faktura@northwaveltd.no"),
+                FieldCheck("invoiceEmail", ""),  # Suppliers should NOT have invoiceEmail auto-copied
             ],
         ),
         tier=1,
