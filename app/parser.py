@@ -13,7 +13,7 @@ from app.file_processor import process_files
 from app.models import ParsedTask
 
 # Parser backend selection (haiku | gemini | embedding | auto)
-PARSER_BACKEND = os.getenv("PARSER_BACKEND", "haiku")
+PARSER_BACKEND = os.getenv("PARSER_BACKEND", "gemini")
 
 logger = logging.getLogger(__name__)
 

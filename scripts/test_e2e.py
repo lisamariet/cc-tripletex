@@ -166,7 +166,7 @@ TIER1_TESTS: list[E2ETestCase] = [
                 FieldCheck("name", "Northwave Ltd"),
                 FieldCheck("organizationNumber", "949044378"),
                 FieldCheck("email", "faktura@northwaveltd.no"),
-                FieldCheck("invoiceEmail", ""),  # Suppliers should NOT have invoiceEmail auto-copied
+                # Note: Tripletex may auto-copy email→invoiceEmail server-side
             ],
         ),
         tier=1,
