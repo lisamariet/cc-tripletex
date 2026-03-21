@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import re
+from datetime import datetime, timedelta
 from typing import Any
 
 from app.handlers import register_handler
@@ -182,12 +183,54 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
     if not employee_id:
         return {"status": "completed", "note": "Employee not found for travel expense"}
 
+    # Determine if any cost line is per diem — if so, we need travel details
+    has_per_diem = any(_is_per_diem_cost(c) for c in fields.get("costs", []))
+    travel_date = fields.get("date", "")
+
     # Create the travel expense
-    te_payload = {
+    te_payload: dict[str, Any] = {
         "employee": {"id": employee_id},
         "title": fields.get("title", "Travel Expense"),
-        "date": fields.get("date", ""),
+        "date": travel_date,
     }
+
+    if has_per_diem and travel_date:
+        # Calculate total per diem days from all per diem cost lines
+        total_days = sum(
+            _extract_per_diem_days(c)
+            for c in fields.get("costs", [])
+            if _is_per_diem_cost(c)
+        )
+        total_days = max(total_days, 1)
+
+        try:
+            dep_date = datetime.strptime(travel_date, "%Y-%m-%d")
+        except ValueError:
+            dep_date = datetime.now()
+        ret_date = dep_date + timedelta(days=total_days)
+
+        destination = fields.get("destination", "")
+        if not destination:
+            title = fields.get("title", "")
+            m = re.search(
+                r"(?:visit|besøk|reise|trip|tur)\s+(?:to\s+|til\s+)?(.+)",
+                title, re.IGNORECASE,
+            )
+            destination = m.group(1).strip() if m else ""
+
+        te_payload["travelDetails"] = {
+            "departureDate": dep_date.strftime("%Y-%m-%d"),
+            "returnDate": ret_date.strftime("%Y-%m-%d"),
+            "departureTime": "08:00",
+            "returnTime": "18:00",
+            "destination": destination or "Reisemål",
+            "departureFrom": fields.get("departureFrom", "Kontoret"),
+            "purpose": fields.get("title", "Tjenestereise"),
+            "isForeignTravel": False,
+            "isDayTrip": total_days <= 1,
+            "isCompensationFromRates": True,
+        }
+
     resp = await client.post("/travelExpense", te_payload)
     te = resp.json().get("value", {})
     te_id = te.get("id")

@@ -1121,5 +1121,57 @@
       "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
       "status": 404
     }
+  ],
+  "GET /salary/payslip/{id}": [
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    }
+  ],
+  "GET /salary/transaction/{id}": [
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    }
+  ],
+  "GET /salary/transaction": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    }
+  ],
+  "GET /travelExpense/rateCategory": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "HTTP 404 Not Found",
+      "fix": "API-feil: HTTP 404 Not Found",
+      "status": 404
+    }
+  ],
+  "GET /travelExpense/rate": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "HTTP 404 Not Found",
+      "fix": "API-feil: HTTP 404 Not Found",
+      "status": 404
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Result set too large. Limit of 10000 reached.",
+      "fix": "API-feil: Result set too large. Limit of 10000 reached.",
+      "status": 422
+    }
   ]
 }
