@@ -151,9 +151,9 @@ async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any
 
             today = date_cls.today().isoformat()
 
-            # Create order with 1 line for partial payment
+            # Create order with 1 line for partial payment, linked to the project
             description = f"Delbetaling {int(percentage)}%" if percentage == int(percentage) else f"Delbetaling {percentage}%"
-            order_payload = {
+            order_payload: dict[str, Any] = {
                 "customer": {"id": customer_id},
                 "orderDate": today,
                 "deliveryDate": today,
@@ -165,6 +165,8 @@ async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any
                     }
                 ],
             }
+            if project_id:
+                order_payload["project"] = {"id": project_id}
             order_resp = await client.post("/order", order_payload)
             order = order_resp.json().get("value", {})
             order_id = order.get("id")

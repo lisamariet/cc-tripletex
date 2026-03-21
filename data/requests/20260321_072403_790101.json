@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_072403_790101",
+  "prompt": "Erstellen Sie eine benutzerdefinierte Buchhaltungsdimension \"Kostsenter\" mit den Werten \"IT\" und \"Innkjøp\". Buchen Sie dann einen Beleg auf Konto 7000 über 19450 NOK, verknüpft mit dem Dimensionswert \"IT\".",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "8L_djKlzM84O1Ic-iwF8Gn7-ZuoC7t-ZJdN7aCzgCaY"
+  }
+}

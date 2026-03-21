@@ -1,0 +1,60 @@
+{
+  "timestamp": "20260321_072520_898832",
+  "prompt": "El cliente Viento SL (org. nº 857019199) ha reclamado sobre la factura por \"Informe de análisis\" (27200 NOK sin IVA). Emita una nota de crédito completa que revierta toda la factura.",
+  "parsed_task": {
+    "task_type": "create_credit_note",
+    "fields": {
+      "customerName": "Viento SL",
+      "customerOrgNumber": "857019199",
+      "invoiceDescription": "Informe de análisis",
+      "amount": 27200,
+      "lines": [
+        {
+          "description": "Informe de análisis",
+          "quantity": 1,
+          "unitPriceExcludingVat": 27200,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 1056.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1234.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 1097.5,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147563898/:createCreditNote",
+      "status": 200,
+      "duration_ms": 1242.1,
+      "error": null
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 5905.0,
+  "result": {
+    "status": "completed",
+    "taskType": "create_credit_note",
+    "invoiceId": 2147563898
+  }
+}

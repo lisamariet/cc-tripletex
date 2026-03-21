@@ -1504,5 +1504,21 @@
       "fix": "Valideringsfeil: Reiseregningens dato samsvarer ikke med valgt satskategori.",
       "status": 422
     }
+  ],
+  "GET /supplierInvoice/{id}": [
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    },
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    }
   ]
 }

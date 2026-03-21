@@ -345,13 +345,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if not voucher_type_ref and vt_values:
         voucher_type_ref = {"id": vt_values[0]["id"]}
 
-    # 4. Look up the correct input VAT type based on the rate from the prompt.
+    # 4. Look up the correct INPUT VAT type (inngående mva) for supplier invoices.
+    #    Tripletex VAT type numbers:
+    #      1 = Utgående mva 25% (output, for sales) — NOT for purchases
+    #     11 = Inngående mva 25% (input, for purchases)
+    #     13 = Inngående mva 15% (input, food/beverage)
+    #     14 = Inngående mva 12% (input, transport/cinema)
     vat_rate = fields.get("vatRate", 25)
-    vat_type_number = "1"  # default: 25%
+    vat_type_number = "11"  # default: Inngående mva 25%
     if vat_rate == 15:
-        vat_type_number = "11"
-    elif vat_rate == 12:
         vat_type_number = "13"
+    elif vat_rate == 12:
+        vat_type_number = "14"
     elif vat_rate == 0:
         vat_type_number = None
 
@@ -362,7 +367,8 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         if vat_values:
             vat_type_ref = {"id": vat_values[0]["id"]}
 
-    # 5. Build voucher postings (expense debit + AP credit)
+    # 5. Build voucher postings (expense debit only — Tripletex auto-generates
+    #    the AP credit posting for supplierInvoice entities)
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
         "supplier": {"id": supplier_id},
@@ -373,18 +379,10 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if vat_type_ref:
         expense_posting["vatType"] = vat_type_ref
 
-    ap_posting: dict[str, Any] = {
-        "account": {"id": payable_id},
-        "supplier": {"id": supplier_id},
-        "amountGross": -amount,
-        "amountGrossCurrency": -amount,
-        "row": 2,
-    }
-
     voucher_obj: dict[str, Any] = {
         "date": invoice_date,
         "description": f"Leverandørfaktura: {description}",
-        "postings": [expense_posting, ap_posting],
+        "postings": [expense_posting],
     }
     if voucher_type_ref:
         voucher_obj["voucherType"] = voucher_type_ref
@@ -410,8 +408,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         validation = data.get("validationMessages", [])
         logger.error(f"POST /supplierInvoice failed ({resp.status_code}): {error_msg} — {validation}")
         # Fallback: create via /ledger/voucher if /supplierInvoice fails (e.g. 403)
+        # For plain vouchers, we need balanced postings (add AP credit side)
+        ap_posting: dict[str, Any] = {
+            "account": {"id": payable_id},
+            "supplier": {"id": supplier_id},
+            "amountGross": -amount,
+            "amountGrossCurrency": -amount,
+            "row": 2,
+        }
+        fallback_voucher = dict(voucher_obj)
+        fallback_voucher["postings"] = [expense_posting, ap_posting]
         return await _register_supplier_invoice_via_voucher(
-            client, fields, voucher_obj, invoice_number, supplier_id,
+            client, fields, fallback_voucher, invoice_number, supplier_id,
         )
 
     created = data.get("value", {})
@@ -939,10 +947,14 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     # Set employment details with monthlySalary if not already set
     await _ensure_employment_details(client, employment_id, base_salary)
 
-    # 5. Try salary/transaction API
+    # 5. Try salary/transaction API (creates payslip)
     transaction_id = None
+    payslip_id = None
     fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn
     bonus_type_id = await _get_salary_type_id(client, "2002")  # Bonus
+    # Fallback bonus type: try "2001" (Overtid/tillegg) if "2002" doesn't exist
+    if not bonus_type_id:
+        bonus_type_id = await _get_salary_type_id(client, "2001")
 
     if fastlonn_id:
         specifications = []
@@ -953,9 +965,10 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
                 "count": 1,
                 "amount": base_salary,
             })
-        if bonus and bonus_type_id:
+        if bonus:
+            bonus_id = bonus_type_id or fastlonn_id  # Fall back to Fastlønn if no bonus type
             specifications.append({
-                "salaryType": {"id": bonus_type_id},
+                "salaryType": {"id": bonus_id},
                 "rate": bonus,
                 "count": 1,
                 "amount": bonus,
@@ -979,9 +992,14 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
             if resp.status_code in (200, 201):
                 created = data.get("value", {})
                 transaction_id = created.get("id")
+                # Extract payslip ID from the transaction response
+                payslips = created.get("payslips", [])
+                if payslips:
+                    payslip_id = payslips[0].get("id")
                 logger.info(
                     f"Created salary transaction {transaction_id} for employee {employee_id}: "
-                    f"baseSalary={base_salary}, bonus={bonus}, month={month}/{year}"
+                    f"baseSalary={base_salary}, bonus={bonus}, month={month}/{year}, "
+                    f"payslip={payslip_id}"
                 )
             else:
                 error_msg = data.get("message", "Unknown error")
@@ -990,8 +1008,8 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
                     f"Salary transaction API failed ({resp.status_code}): {error_msg} — {validation}"
                 )
 
-    # 6. ALSO create a manual voucher (salary transaction is just a draft,
-    #    invisible to GET /salary/payslip search — voucher ensures postings exist)
+    # 6. ALSO create a manual voucher with salary postings.
+    #    This provides a secondary verification path via ledger/posting.
     salary_account_id = await _lookup_account_id(client, 5000)
     bank_account_id = await _lookup_account_id(client, 1920)
 
@@ -1049,6 +1067,7 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         "status": "completed",
         "taskType": "run_payroll",
         "transactionId": transaction_id or voucher_id,
+        "payslipId": payslip_id,
         "voucherId": voucher_id,
         "employeeId": employee_id,
         "baseSalary": base_salary,
