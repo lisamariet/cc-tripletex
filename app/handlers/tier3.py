@@ -789,6 +789,8 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                 try:
                     inv_resp = await client.get("/invoice", params={
                         "invoiceNumber": inv_number,
+                        "invoiceDateFrom": "2020-01-01",
+                        "invoiceDateTo": date_to or datetime.date.today().isoformat(),
                         "count": "5",
                     })
                     if inv_resp.status_code == 200:
