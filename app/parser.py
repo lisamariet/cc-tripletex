@@ -140,8 +140,8 @@ Supported task types and their fields:
    Fields: customerName, customerOrgNumber, invoiceNumber, comment, amount, invoiceDescription, lines (array of {description, quantity, unitPriceExcludingVat, vatCode})
 
 10. "create_travel_expense" — Register a travel expense
-    Fields: employeeName*, employeeFirstName, employeeLastName, title*, date (YYYY-MM-DD), destination (travel destination extracted from title or context), costs (array of {description, amount, vatCode, currency})
-    IMPORTANT: If the prompt mentions "per diem", "diett", "dagpenger", "daily rate/allowance", "diet", include the per diem as a cost with description containing "per diem" or "diett", and include the number of days in the description (e.g. "Per diem (4 days)" or "Diett 3 dager").
+    Fields: employeeName*, employeeFirstName, employeeLastName, title*, date (YYYY-MM-DD — if not explicitly stated, use today's date), destination (travel destination city/place extracted from title or context), costs (array of {description, amount, vatCode, currency})
+    IMPORTANT for per diem / diet: If the prompt mentions "per diem", "diett", "dagpenger", "daily rate/allowance", "diet", "Tagegeld", "Tagessatz", "dietas", "indemnites journalieres", include the per diem as a cost with description starting with "Per diem" and include the number of days in parentheses (e.g. "Per diem (4 days)" or "Per diem (2 days)"). Calculate the total: days * daily rate. Always extract the destination city from the title.
 
 11. "delete_travel_expense" — Delete a travel expense
     Fields: employeeName, travelExpenseTitle, travelExpenseId

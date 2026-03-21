@@ -389,6 +389,38 @@ def build_tier2_tests() -> list[E2ETestCase]:
             tier=2,
         ),
 
+        # T2-5b: create_travel_expense with per diem (competition-style)
+        E2ETestCase(
+            name="t2_create_travel_expense_perdiem",
+            expected_task_type="create_travel_expense",
+            expected_fields={},
+            prompt=(
+                f'Registrer en reiseregning for den foerste ansatte med tittel '
+                f'"E2E PerDiem {ts}", dato 2026-03-20. '
+                f'Reisen varte 3 dager med diett (dagsats 800 kr). '
+                f'Utlegg: flybillett 3900 kr og taxi 350 kr.'
+            ),
+            direct_fields={
+                "title": f"E2E PerDiem {ts}",
+                "date": "2026-03-20",
+                "destination": "Oslo",
+                "costs": [
+                    {"description": "Per diem (3 days)", "amount": 2400},
+                    {"description": "Flybillett", "amount": 3900},
+                    {"description": "Taxi", "amount": 350},
+                ],
+            },
+            setup="find_first_employee",
+            verify=VerifySpec(
+                endpoint="/travelExpense",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("title", f"E2E PerDiem {ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
         # T2-6: delete_travel_expense (create one then delete)
         E2ETestCase(
             name="t2_delete_travel_expense",
