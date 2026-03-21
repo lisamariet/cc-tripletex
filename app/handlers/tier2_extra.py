@@ -21,13 +21,13 @@ async def _find_supplier(client: TripletexClient, fields: dict[str, Any]) -> dic
     name = fields.get("supplierName") or fields.get("name")
 
     if org_nr:
-        resp = await client.get("/supplier", params={"organizationNumber": org_nr})
+        resp = await client.get("/supplier", params={"organizationNumber": org_nr, "fields": "id,name,organizationNumber,version"})
         values = resp.json().get("values", [])
         if values:
             return values[0]
 
     if name:
-        resp = await client.get("/supplier", params={"name": name})
+        resp = await client.get("/supplier", params={"name": name, "fields": "id,name,organizationNumber,version"})
         values = resp.json().get("values", [])
         if values:
             return values[0]
@@ -41,13 +41,13 @@ async def _find_product(client: TripletexClient, fields: dict[str, Any]) -> dict
     name = fields.get("productName") or fields.get("name")
 
     if number:
-        resp = await client.get("/product", params={"number": str(number)})
+        resp = await client.get("/product", params={"number": str(number), "fields": "id,name,number,version,priceExcludingVatCurrency,priceIncludingVatCurrency"})
         values = resp.json().get("values", [])
         if values:
             return values[0]
 
     if name:
-        resp = await client.get("/product", params={"name": name})
+        resp = await client.get("/product", params={"name": name, "fields": "id,name,number,version,priceExcludingVatCurrency,priceIncludingVatCurrency"})
         values = resp.json().get("values", [])
         if values:
             return values[0]
@@ -61,13 +61,13 @@ async def _find_customer(client: TripletexClient, fields: dict[str, Any]) -> dic
     name = fields.get("customerName") or fields.get("name")
 
     if org_nr:
-        resp = await client.get("/customer", params={"organizationNumber": org_nr})
+        resp = await client.get("/customer", params={"organizationNumber": org_nr, "fields": "id,name,organizationNumber,version"})
         values = resp.json().get("values", [])
         if values:
             return values[0]
 
     if name:
-        resp = await client.get("/customer", params={"name": name})
+        resp = await client.get("/customer", params={"name": name, "fields": "id,name,organizationNumber,version"})
         values = resp.json().get("values", [])
         if values:
             return values[0]
@@ -97,6 +97,7 @@ async def _find_employee_by_fields(client: TripletexClient, fields: dict[str, An
     if not params:
         return None
 
+    params["fields"] = "id,firstName,lastName,email,version"
     resp = await client.get("/employee", params=params)
     values = resp.json().get("values", [])
     return values[0] if values else None
@@ -313,7 +314,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         org_nr = fields.get("supplierOrgNumber") or fields.get("organizationNumber")
         if org_nr:
             supplier_payload["organizationNumber"] = str(org_nr)
-        resp = await client.post("/supplier", supplier_payload)
+        resp = await client.post_with_retry("/supplier", supplier_payload)
         if resp.status_code >= 400:
             logger.error(f"Failed to create supplier: {resp.text[:300]}")
             return {"status": "completed", "note": f"Failed to create supplier: {resp.text[:300]}"}
@@ -378,7 +379,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     # 2b. Unlock VAT on expense account if locked (some accounts like 7100 are
     #     locked to vatCode 0, but the prompt asks for input VAT 25%)
     try:
-        acc_resp = await client.get(f"/ledger/account/{expense_id}")
+        acc_resp = await client.get_cached(f"/ledger/account/{expense_id}")
         acc_data = acc_resp.json().get("value", {})
         if acc_data.get("vatLocked"):
             acc_data["vatLocked"] = False
@@ -618,7 +619,7 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> dic
     # Try email first (most precise)
     email = fields.get("employeeEmail") or fields.get("email")
     if email:
-        resp = await client.get("/employee", params={"email": email})
+        resp = await client.get("/employee", params={"email": email, "fields": "id,firstName,lastName,email,version"})
         values = resp.json().get("values", [])
         if values:
             return values[0]
@@ -629,7 +630,7 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> dic
 
 async def _find_project(client: TripletexClient, name: str) -> dict | None:
     """Find a project by name."""
-    resp = await client.get("/project", params={"name": name})
+    resp = await client.get("/project", params={"name": name, "fields": "id,name,version,startDate,isInternal,projectManager"})
     values = resp.json().get("values", [])
     return values[0] if values else None
 
@@ -670,14 +671,14 @@ async def _find_or_create_project(
     if pm_id:
         payload["projectManager"] = {"id": pm_id}
 
-    resp = await client.post("/project", payload)
+    resp = await client.post_with_retry("/project", payload)
     created = resp.json().get("value", {})
     return created.get("id")
 
 
 async def _find_activity(client: TripletexClient, name: str) -> dict | None:
     """Find an activity by name."""
-    resp = await client.get("/activity", params={"name": name})
+    resp = await client.get("/activity", params={"name": name, "fields": "id,name,version"})
     values = resp.json().get("values", [])
     # Prefer exact match
     for v in values:
@@ -704,7 +705,7 @@ async def _find_or_create_activity(
             "name": name,
             "activityType": "PROJECT_GENERAL_ACTIVITY",
         }
-        resp = await client.post("/activity", payload)
+        resp = await client.post_with_retry("/activity", payload)
         if resp.status_code >= 400:
             logger.warning(f"Failed to create activity '{name}': {resp.text[:200]}")
             return None
@@ -808,7 +809,7 @@ async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) ->
 
         if not act_id:
             # Try first available activity for project
-            resp = await client.get("/activity/%3EforTimeSheet", params={"projectId": project_id})
+            resp = await client.get("/activity/%3EforTimeSheet", params={"projectId": project_id, "fields": "id,name"})
             activities = resp.json().get("values", [])
             act_id = activities[0]["id"] if activities else None
 
@@ -827,7 +828,7 @@ async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) ->
         if fields.get("comment"):
             entry_payload["comment"] = fields["comment"]
 
-        resp = await client.post("/timesheet/entry", entry_payload)
+        resp = await client.post_with_retry("/timesheet/entry", entry_payload)
         if resp.status_code < 400:
             created = resp.json().get("value", {})
             created_entries.append(created)
@@ -918,7 +919,7 @@ async def _create_project_invoice(
         ],
     }
 
-    resp = await client.post("/order", order_payload)
+    resp = await client.post_with_retry("/order", order_payload)
     order_data = resp.json()
     if resp.status_code >= 400:
         error_msg = order_data.get("message", "Unknown error")
@@ -962,7 +963,7 @@ async def _ensure_division(client: TripletexClient) -> int | None:
 
     # Need a municipality for the division — use Oslo (id=262) as default,
     # but fall back to first available municipality
-    muni_resp = await client.get("/municipality", params={"count": 5})
+    muni_resp = await client.get("/municipality", params={"count": 5, "fields": "id,name,municipalityNumber,payrollTaxZone"})
     munis = muni_resp.json().get("values", [])
     # Prefer a municipality with a payrollTaxZone set
     muni_id = None
@@ -996,7 +997,7 @@ async def _ensure_employment_with_division(
     client: TripletexClient, employee_id: int, division_id: int
 ) -> int | None:
     """Ensure the employee has an employment record linked to a division. Returns employment ID."""
-    resp = await client.get("/employee/employment", params={"employeeId": employee_id})
+    resp = await client.get("/employee/employment", params={"employeeId": employee_id, "fields": "id,employee,division,startDate,isMainEmployer,taxDeductionCode,version"})
     employments = resp.json().get("values", [])
 
     if employments:
@@ -1142,7 +1143,7 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         if depts:
             emp_payload["department"] = {"id": depts[0]["id"]}
 
-        resp = await client.post("/employee", emp_payload)
+        resp = await client.post_with_retry("/employee", emp_payload)
         if resp.status_code >= 400:
             logger.error(f"Failed to create employee for payroll: {resp.text[:300]}")
             return {"status": "completed", "note": f"Could not create employee: {resp.text[:200]}"}
@@ -1247,7 +1248,7 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
                     payslip_id = payslips[0].get("id")
                 # If payslips not in response body, fetch them via GET salary/transaction/{id}
                 if not payslip_id and transaction_id:
-                    tx_resp = await client.get(f"/salary/transaction/{transaction_id}")
+                    tx_resp = await client.get(f"/salary/transaction/{transaction_id}", params={"fields": "id,payslips(id,employee)"})
                     if tx_resp.status_code == 200:
                         tx_data = tx_resp.json().get("value", {})
                         tx_payslips = tx_data.get("payslips", [])
@@ -1872,7 +1873,7 @@ async def _create_single_expense_supplier_invoice(
 
     # Unlock VAT on expense account if locked
     try:
-        acc_resp = await client.get(f"/ledger/account/{expense_id}")
+        acc_resp = await client.get_cached(f"/ledger/account/{expense_id}")
         acc_data = acc_resp.json().get("value", {})
         if acc_data.get("vatLocked"):
             acc_data["vatLocked"] = False
@@ -2091,7 +2092,7 @@ async def project_lifecycle(client: TripletexClient, fields: dict[str, Any]) -> 
     if employee_ids:
         activity_id = await _find_or_create_activity(client, project_name, project_id=project_id)
         if not activity_id:
-            resp = await client.get("/activity/%3EforTimeSheet", params={"projectId": project_id})
+            resp = await client.get("/activity/%3EforTimeSheet", params={"projectId": project_id, "fields": "id,name"})
             activities = resp.json().get("values", [])
             activity_id = activities[0]["id"] if activities else None
 
@@ -2109,7 +2110,7 @@ async def project_lifecycle(client: TripletexClient, fields: dict[str, Any]) -> 
             }
             if activity_id:
                 entry_payload["activity"] = {"id": activity_id}
-            resp = await client.post("/timesheet/entry", entry_payload)
+            resp = await client.post_with_retry("/timesheet/entry", entry_payload)
             if resp.status_code < 400:
                 created_entry = resp.json().get("value", {})
                 timesheet_entries.append(created_entry)
@@ -2162,7 +2163,7 @@ async def project_lifecycle(client: TripletexClient, fields: dict[str, Any]) -> 
                 }
             ],
         }
-        resp = await client.post("/order", order_payload)
+        resp = await client.post_with_retry("/order", order_payload)
         order = resp.json().get("value", {})
         order_id = order.get("id")
 
