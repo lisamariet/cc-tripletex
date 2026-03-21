@@ -1,0 +1,17 @@
+{
+  "timestamp": "20260321_094829_085944",
+  "prompt": "Realice el cierre mensual de marzo de 2026. Registre la periodificación (12500 NOK por mes de la cuenta 1720 a gasto). Contabilice la depreciación mensual de un activo fijo con costo de adquisición 61400 NOK y vida útil 10 años (depreciación lineal a cuenta 6020). Verifique que el balance de saldos sea cero. También registre una provisión salarial (débito cuenta de gastos salariales 5000, crédito cuenta de salarios acumulados 2900).",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 8959.3,
+  "result": {
+    "status": "completed",
+    "note": "Fallback LLM error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZG1qvHTWD1rbCHPyTnh6'}"
+  }
+}

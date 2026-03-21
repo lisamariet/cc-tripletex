@@ -1020,10 +1020,16 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
                     f"Salary transaction API failed ({resp.status_code}): {error_msg} — {validation}"
                 )
 
-    # 6. ALSO create a manual voucher with salary postings.
+    # 6. ALSO create a manual voucher with full Norwegian payroll postings.
     #    This provides a secondary verification path via ledger/posting.
-    salary_account_id = await _lookup_account_id(client, 5000)
-    bank_account_id = await _lookup_account_id(client, 1920)
+    #    Norwegian payroll requires: salary, tax deduction, AGA, net bank payment.
+    salary_account_id = await _lookup_account_id(client, 5000)   # Lønn til ansatte
+    bank_account_id = await _lookup_account_id(client, 1920)     # Bankinnskudd
+    tax_account_id = await _lookup_account_id(client, 2600)      # Forskuddstrekk
+    aga_expense_id = await _lookup_account_id(client, 5400)      # Arbeidsgiveravgift
+    aga_payable_id = await _lookup_account_id(client, 2770)      # Skyldig arbeidsgiveravgift
+    vacation_payable_id = await _lookup_account_id(client, 2940) # Skyldig feriepenger
+    vacation_expense_id = await _lookup_account_id(client, 5020) # Feriepenger
 
     voucher_id = None
     if salary_account_id and bank_account_id:
@@ -1032,9 +1038,20 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         if bonus:
             description += f" (grunnlønn {base_salary} + bonus {bonus})"
 
+        # Norwegian payroll calculations
+        gross = total_amount
+        tax_rate = 0.30  # Standard tabelltrekk ~30%
+        tax_deduction = round(gross * tax_rate / 100) * 100  # Rounded to nearest 100
+        net_pay = gross - tax_deduction
+        aga_rate = 0.141  # Standard AGA sone 1 (14.1%)
+        aga_amount = round(gross * aga_rate, 2)
+        vacation_rate = 0.12  # Standard feriepenger 12%
+        vacation_amount = round(gross * vacation_rate, 2)
+
         postings = []
         row = 1
 
+        # DEBIT: Salary expense (konto 5000)
         if base_salary:
             postings.append({
                 "account": {"id": salary_account_id},
@@ -1055,12 +1072,62 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
             })
             row += 1
 
+        # CREDIT: Tax deduction (konto 2600 Forskuddstrekk)
+        if tax_account_id and tax_deduction > 0:
+            postings.append({
+                "account": {"id": tax_account_id},
+                "amountGross": -tax_deduction,
+                "amountGrossCurrency": -tax_deduction,
+                "row": row,
+            })
+            row += 1
+
+        # CREDIT: Net pay to bank (konto 1920)
         postings.append({
             "account": {"id": bank_account_id},
-            "amountGross": -total_amount,
-            "amountGrossCurrency": -total_amount,
+            "amountGross": -net_pay,
+            "amountGrossCurrency": -net_pay,
             "row": row,
         })
+        row += 1
+
+        # DEBIT: AGA expense (konto 5400)
+        if aga_expense_id and aga_amount > 0:
+            postings.append({
+                "account": {"id": aga_expense_id},
+                "amountGross": aga_amount,
+                "amountGrossCurrency": aga_amount,
+                "row": row,
+            })
+            row += 1
+
+        # CREDIT: AGA payable (konto 2770)
+        if aga_payable_id and aga_amount > 0:
+            postings.append({
+                "account": {"id": aga_payable_id},
+                "amountGross": -aga_amount,
+                "amountGrossCurrency": -aga_amount,
+                "row": row,
+            })
+            row += 1
+
+        # DEBIT: Vacation pay expense (konto 5020)
+        # CREDIT: Vacation pay payable (konto 2940)
+        if vacation_expense_id and vacation_payable_id and vacation_amount > 0:
+            postings.append({
+                "account": {"id": vacation_expense_id},
+                "amountGross": vacation_amount,
+                "amountGrossCurrency": vacation_amount,
+                "row": row,
+            })
+            row += 1
+            postings.append({
+                "account": {"id": vacation_payable_id},
+                "amountGross": -vacation_amount,
+                "amountGrossCurrency": -vacation_amount,
+                "row": row,
+            })
+            row += 1
 
         voucher_payload = {
             "date": voucher_date,
@@ -1071,9 +1138,39 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         resp = await client.post("/ledger/voucher", voucher_payload)
         if resp.status_code < 400:
             voucher_id = resp.json().get("value", {}).get("id")
-            logger.info(f"Created payroll voucher {voucher_id} for employee {employee_id}")
+            logger.info(
+                f"Created payroll voucher {voucher_id} for employee {employee_id}: "
+                f"gross={gross}, tax={tax_deduction}, net={net_pay}, aga={aga_amount}"
+            )
         else:
             logger.warning(f"Payroll voucher creation failed: {resp.text[:300]}")
+            # Fallback: simple voucher without tax/AGA if full posting fails
+            simple_postings = [
+                {
+                    "account": {"id": salary_account_id},
+                    "employee": {"id": employee_id},
+                    "amountGross": total_amount,
+                    "amountGrossCurrency": total_amount,
+                    "row": 1,
+                },
+                {
+                    "account": {"id": bank_account_id},
+                    "amountGross": -total_amount,
+                    "amountGrossCurrency": -total_amount,
+                    "row": 2,
+                },
+            ]
+            simple_payload = {
+                "date": voucher_date,
+                "description": description,
+                "postings": simple_postings,
+            }
+            resp = await client.post("/ledger/voucher", simple_payload)
+            if resp.status_code < 400:
+                voucher_id = resp.json().get("value", {}).get("id")
+                logger.info(f"Created simple payroll voucher {voucher_id} (fallback)")
+            else:
+                logger.warning(f"Simple payroll voucher also failed: {resp.text[:300]}")
 
     return {
         "status": "completed",

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_092358_543726",
+  "prompt": "Ejecute la nómina de Marta López (marta.lopez@example.org) para este mes. El salario base es de 31300 NOK. Añada una bonificación única de 13300 NOK además del salario base.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "T2uM4GlGbWogAIpBOwGSGyl67JHmeXaANkqlRRsdcfM"
+  }
+}

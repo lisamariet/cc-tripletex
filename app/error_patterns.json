@@ -117,6 +117,20 @@
       "error_message": "HTTP 403 uten feilmelding",
       "fix": "Sjekk at endpointet POST /company/salesmodules brukes korrekt",
       "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Unspecified exception",
+      "fix": "API-feil: Unspecified exception",
+      "status": 409
     }
   ],
   "POST /customer": [
@@ -166,6 +180,13 @@
       "error_type": "required_field",
       "error_message": "Feltet må fylles ut.",
       "fix": "Feltet 'employee.dateOfBirth' er påkrevd og må ha en verdi",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "status": 422
     },
     {
@@ -391,6 +412,13 @@
       "error_type": "business_rule",
       "error_message": "Et bilag kan ikke registreres uten posteringer.",
       "fix": "Forretningsregel: Et bilag kan ikke registreres uten posteringer.",
+      "status": 422
+    },
+    {
+      "field": "postings.supplier.id",
+      "error_type": "missing_value",
+      "error_message": "Leverandør mangler.",
+      "fix": "'postings.supplier.id' mangler — sett en gyldig verdi",
       "status": 422
     }
   ],
@@ -683,6 +711,13 @@
       "error_message": "Produktnummeret 77777 er i bruk.",
       "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
       "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
     }
   ],
   "POST /project": [
@@ -819,6 +854,13 @@
       "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
     }
   ],
   "PUT /invoice/{id}/:payment": [
@@ -886,6 +928,13 @@
     }
   ],
   "DELETE /employee/{id}": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
     {
       "field": "",
       "error_type": "api_error",
@@ -1153,6 +1202,13 @@
       "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
     }
   ],
   "DELETE /supplier/{id}": [
@@ -1288,6 +1344,13 @@
       "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
       "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
       "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
     }
   ],
   "POST /timesheet/entry": [
@@ -1353,6 +1416,13 @@
       "error_message": "Startdato for prosjektet 99591 E2E Timefoering 1774076541 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
       "fix": "Forretningsregel: Startdato for prosjektet 99591 E2E Timefoering 1774076541 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
       "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Startdato for prosjektet 99607 E2E Timefoering 1774086463 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
+      "fix": "Forretningsregel: Startdato for prosjektet 99607 E2E Timefoering 1774086463 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
+      "status": 422
     }
   ],
   "GET /salary/type": [
@@ -1401,6 +1471,34 @@
       "error_message": "Unauthorized",
       "fix": "API-feil: Unauthorized",
       "status": 401
+    },
+    {
+      "field": "invoiceDateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
     }
   ],
   "DELETE /ledger/posting/{id}": [
@@ -1519,6 +1617,88 @@
       "error_message": "Object not found",
       "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
       "status": 404
+    },
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    }
+  ],
+  "GET /company": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "HTTP 405 Method Not Allowed",
+      "fix": "API-feil: HTTP 405 Method Not Allowed",
+      "status": 400
+    }
+  ],
+  "POST /supplierInvoice": [
+    {
+      "field": "supplierVoucherType",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'supplierVoucherType' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    }
+  ],
+  "GET /salary/specification/{id}": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    }
+  ],
+  "GET /salary/payslip": [
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' values (2026,2) is greater than or equal 'To and excluding' value (2026,2) in filter.",
+      "fix": "Valideringsfeil: 'From and including' values (2026,2) is greater than or equal 'To and excluding' value (2026,2) in filter.",
+      "status": 422
+    }
+  ],
+  "GET /ledger/voucher": [
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
+      "status": 422
+    }
+  ],
+  "POST /bank/reconciliation": [
+    {
+      "field": "type",
+      "error_type": "wrong_type",
+      "error_message": "Verdien er ikke av korrekt type for dette feltet.",
+      "fix": "Sjekk datatypen for 'type'",
+      "status": 422
+    },
+    {
+      "field": "type",
+      "error_type": "wrong_type",
+      "error_message": "Verdien er ikke av korrekt type for dette feltet.",
+      "fix": "Sjekk datatypen for 'type'",
+      "status": 422
+    },
+    {
+      "field": "accountingPeriod",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
     }
   ]
 }

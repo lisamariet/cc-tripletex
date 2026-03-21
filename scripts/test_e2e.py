@@ -878,6 +878,64 @@ def build_tier2_tests() -> list[E2ETestCase]:
             ),
             tier=3,
         ),
+
+        # T3-2: bank_reconciliation — find/create reconciliation and auto-match
+        E2ETestCase(
+            name="t3_bank_reconciliation",
+            expected_task_type="bank_reconciliation",
+            expected_fields={},
+            prompt="Utfør bankavstemming for bankkontoen. Match banktransaksjoner mot bokførte poster.",
+            direct_fields={
+                "accountNumber": 1920,
+                "dateFrom": "2026-01-01",
+                "dateTo": "2026-03-21",
+            },
+            setup="find_bank_account",
+            verify=None,  # custom check: reconciliationId in result
+            tier=3,
+        ),
+
+        # T3-3: year_end_closing — close postings and create opening balance
+        E2ETestCase(
+            name="t3_year_end_closing",
+            expected_task_type="year_end_closing",
+            expected_fields={},
+            prompt="Gjennomfør årsavslutning for regnskapsåret 2025. Lukk alle posteringer og opprett åpningsbalanse for 2026.",
+            direct_fields={
+                "year": 2025,
+                "createOpeningBalance": True,
+            },
+            verify=None,  # custom check: steps in result
+            tier=3,
+        ),
+
+        # T3-4: correct_ledger_error — reverse wrong voucher and post corrected one
+        E2ETestCase(
+            name="t3_correct_ledger_error",
+            expected_task_type="correct_ledger_error",
+            expected_fields={},
+            prompt=(
+                "Det er bokført en feil: 5000 kr ble ført på konto 7100 (reisekostnad) "
+                "i stedet for konto 6300 (leie lokale). Reverser den feilaktige posteringen "
+                "og bokfør riktig på konto 6300."
+            ),
+            direct_fields={
+                "correctedPostings": [
+                    {"debitAccount": "6300", "creditAccount": "1920", "amount": 5000},
+                ],
+                "correctionDescription": "Korreksjon: Feilført reisekostnad, skal være leie lokale",
+                "date": "2026-03-21",
+            },
+            setup="create_voucher_for_correction",
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=3,
+        ),
     ]
 
 
@@ -1071,8 +1129,22 @@ async def setup_find_or_reuse_dimension(client, fields: dict) -> dict:
     return fields
 
 
+async def setup_find_bank_account(client, fields: dict) -> dict:
+    """Find a bank account (ledger account 1920) to use for reconciliation test."""
+    from app.handlers.tier3 import _lookup_account
+    try:
+        account_id = await _lookup_account(client, 1920)
+        fields["accountId"] = account_id
+        fields["accountNumber"] = 1920
+        logger.info(f"Found bank account 1920: id={account_id}")
+    except ValueError:
+        logger.warning("Account 1920 not found, keeping defaults")
+    return fields
+
+
 SETUP_REGISTRY = {
     "find_first_employee": setup_find_first_employee,
+    "find_bank_account": setup_find_bank_account,
     "create_customer_for_update": setup_create_customer_for_update,
     "create_travel_expense_for_delete": setup_create_travel_expense_for_delete,
     "create_supplier_for_update": setup_create_supplier_for_update,

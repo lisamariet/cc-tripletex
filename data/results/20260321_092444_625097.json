@@ -1,0 +1,17 @@
+{
+  "timestamp": "20260321_092444_625097",
+  "prompt": "Du har motteke ein leverandorfaktura (sjaa vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren viss den ikkje finst. Bruk rett utgiftskonto og inngaaande MVA.",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 11577.7,
+  "result": {
+    "status": "completed",
+    "note": "Fallback LLM error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZFz36c9HBWnxNVTHXXix'}"
+  }
+}

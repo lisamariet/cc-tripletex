@@ -28,15 +28,35 @@ VALID_TASK_TYPES = {
     "delete_supplier", "create_order", "register_supplier_invoice",
     "register_timesheet", "create_invoice_from_pdf", "run_payroll",
     "create_custom_dimension",
+    "bank_reconciliation",
+    "year_end_closing",
+    "correct_ledger_error",
 }
 
 # Keyword patterns for inferring task type when LLM returns "unknown"
 # Each entry: (task_type, list of regex patterns — match ANY = positive signal)
 _KEYWORD_RULES: list[tuple[str, list[str]]] = [
+    ("year_end_closing", [
+        r"årsavslutning|årsoppgjør|year.?end.?clos|cierre.?de.?año|clôture.?annuelle|Jahresabschluss|encerramento.?anual",
+        r"(?:lukk|close|cerrar|clôturer|schließen|fechar).{0,30}(?:regnskapsår|regnskapsperiode|fiscal.?year|accounting.?year|ejercicio|année.?comptable|Geschäftsjahr|ano.?fiscal)",
+        r"åpningsbalanse|opening.?balance|balance.?d.?ouverture|Eröffnungsbilanz|balance.?de.?apertura|balanço.?de.?abertura",
+    ]),
+    ("bank_reconciliation", [
+        r"bankavstemming|bank.?reconcili|conciliación.?banc|rapprochement.?banc|Bankabstimmung|conciliação.?banc",
+        r"(?:avstem|reconcil|concili|rapproch).{0,30}(?:bank|konto|account|cuenta|compte|Konto|conta)",
+        r"bank.?statement.?match|banktransaksjon.{0,20}match|bankutskrift",
+    ]),
     ("monthly_closing", [
         r"månedsavslutning|monthly.?clos|cierre.?mensual|clôture.?mensuel|Monatsabschluss|encerramento.?mensal",
         r"periodisering|accrual|periodificación|periodisation|Periodenabgrenzung|periodização",
         r"avskrivning|depreciation|depreciación|amortissement|Abschreibung|depreciação",
+    ]),
+    ("correct_ledger_error", [
+        r"feilretting|feilrett|error.?correct|correct.{0,20}(?:ledger|posting|entry|voucher|bilag)",
+        r"(?:rett|korriger|correct|fix|corrig).{0,30}(?:feil|error|mistake|bokfør|posting|bilag|voucher|asiento|lançamento|écriture|Buchung)",
+        r"(?:feil|error|mistake|erreur|Fehler|erro).{0,30}(?:i regnskap|in.?(?:ledger|accounting|bookkeeping)|en.?contabilidad|dans.?la.?comptabilité|in.?der.?Buchhaltung|na.?contabilidade)",
+        r"korreksjonsbilag|correction.?voucher|corrective.?entry|asiento.?correct|écriture.?correct|Korrekturbuchung|lançamento.?correct",
+        r"(?:reverser|reverse|tilbakefør).{0,30}(?:og|and|y|et|und|e).{0,30}(?:korriger|correct|rett|fix|corrig)",
     ]),
     ("register_supplier_invoice", [
         r"leverandorfaktura.*(?:PDF|vedlagt|attached)|(?:PDF|vedlagt|attached).*leverandorfaktura",
@@ -211,7 +231,16 @@ Supported task types and their fields:
 29. "create_custom_dimension" — Create a custom accounting dimension (dimensjon/dimension/dimensão/dimensión/Dimension) with values, then optionally post a voucher linked to a dimension value
     Fields: dimensionName* (name of the dimension, e.g. "Region", "Kostsenter"), values* (array of strings, e.g. ["Sør-Norge", "Nord-Norge"]), voucherDate (YYYY-MM-DD), voucherDescription (string), accountNumber (integer, the expense/cost account), amount (number in NOK), dimensionValue (string — which value from the values array to link to the voucher posting), creditAccount (integer, default 1920 for bank)
 
-30. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
+30. "bank_reconciliation" — Perform bank reconciliation (bankavstemming/Bankabstimmung/rapprochement bancaire/conciliación bancaria/conciliação bancária): match bank transactions to ledger postings
+    Fields: accountNumber (integer, e.g. 1920 for bank account), accountId (integer, Tripletex bank account ID), dateFrom (YYYY-MM-DD), dateTo (YYYY-MM-DD), closingBalance (number — bank statement closing balance)
+
+31. "year_end_closing" — Perform year-end closing (årsavslutning/årsoppgjør/Jahresabschluss/clôture annuelle/cierre de año/encerramento anual): close accounting periods, close postings, and create opening balance for the next year
+    Fields: year* (integer, the fiscal year to close, e.g. 2025), createOpeningBalance (bool, default true — whether to create an opening balance for the next year), openingBalanceDate (YYYY-MM-DD, default first day of next year)
+
+32. "correct_ledger_error" — Correct an error in the ledger / bookkeeping (feilretting i regnskap / error correction / Korrekturbuchung / corrección contable / correction comptable / correção contábil): find and reverse the erroneous voucher, then post a corrected voucher
+    Fields: voucherNumber (integer — the erroneous voucher number), date (YYYY-MM-DD — date of the erroneous voucher), description (string — description to identify the erroneous voucher), correctedPostings (array of {debitAccount, creditAccount, amount} — the CORRECT postings to replace the error), correctionDescription (string — description for the correction voucher), correctionDate (YYYY-MM-DD — date for correction, defaults to original date), accountFrom (integer — the WRONG account number used in the error), accountTo (integer — the CORRECT account number), amount (number — the amount involved), creditAccount (integer — credit account for simple correction, default 1920)
+
+33. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
 
 Examples:
 
