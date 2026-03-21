@@ -1425,6 +1425,133 @@ def cmd_compare(args: argparse.Namespace) -> None:
 
 
 # ──────────────────────────────────────────────
+#  lb command (leaderboard task details)
+# ──────────────────────────────────────────────
+
+def cmd_lb(args: argparse.Namespace) -> None:
+    """Show all 30 tasks from leaderboard with attempts, score and task_type."""
+    with make_client() as client:
+        # Fetch leaderboard to find #1 team and our placement
+        print("Henter leaderboard...")
+        resp_lb = client.get(f"{API_BASE}/tripletex/leaderboard")
+        resp_lb.raise_for_status()
+        leaderboard = resp_lb.json()
+
+        # Sort by total score descending to find #1
+        if isinstance(leaderboard, list):
+            lb_sorted = sorted(leaderboard, key=lambda t: safe_float(t.get("total_score", 0)), reverse=True)
+        else:
+            print(f"{RED}Uventet leaderboard-format{RESET}")
+            return
+
+        if not lb_sorted:
+            print("Tomt leaderboard.")
+            return
+
+        top_team = lb_sorted[0]
+        top_team_id = top_team.get("team_id") or top_team.get("id", "")
+        top_team_score = safe_float(top_team.get("total_score", 0))
+
+        # Find our placement and score
+        our_placement = "?"
+        our_total = 0.0
+        our_team_name = "?"
+        for i, team in enumerate(lb_sorted, 1):
+            tid = team.get("team_id") or team.get("id", "")
+            if tid == OUR_TEAM_ID:
+                our_placement = str(i)
+                our_total = safe_float(team.get("total_score", 0))
+                our_team_name = team.get("team_name") or team.get("name", "oss")
+                break
+
+        # Fetch task details for us and #1
+        print(f"Henter task-detaljer for oss ({our_team_name})...")
+        resp_us = client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
+        resp_us.raise_for_status()
+        our_tasks = resp_us.json()
+
+        print(f"Henter task-detaljer for #1...")
+        resp_top = client.get(f"{API_BASE}/tripletex/leaderboard/{top_team_id}")
+        resp_top.raise_for_status()
+        top_tasks = resp_top.json()
+
+    # Build lookup dicts: tx_task_id -> {best_score, total_attempts}
+    our_map: dict[str, dict] = {}
+    if isinstance(our_tasks, list):
+        for t in our_tasks:
+            tid = t.get("tx_task_id", "")
+            if tid:
+                our_map[tid] = t
+    elif isinstance(our_tasks, dict):
+        for t in our_tasks.get("tasks", our_tasks.get("data", [])):
+            tid = t.get("tx_task_id", "")
+            if tid:
+                our_map[tid] = t
+
+    top_map: dict[str, dict] = {}
+    if isinstance(top_tasks, list):
+        for t in top_tasks:
+            tid = t.get("tx_task_id", "")
+            if tid:
+                top_map[tid] = t
+    elif isinstance(top_tasks, dict):
+        for t in top_tasks.get("tasks", top_tasks.get("data", [])):
+            tid = t.get("tx_task_id", "")
+            if tid:
+                top_map[tid] = t
+
+    # Build rows from TASK_ID_MAP (all 30 tasks)
+    rows = []
+    sum_ours = 0.0
+    sum_top = 0.0
+
+    for task_num in sorted(TASK_ID_MAP.keys(), key=lambda x: int(x)):
+        info = TASK_ID_MAP[task_num]
+        task_type = info["type"]
+        tier = info["tier"]
+
+        our_entry = our_map.get(task_num) or {}
+        top_entry = top_map.get(task_num) or {}
+
+        our_score = safe_float(our_entry.get("best_score", 0))
+        top_score = safe_float(top_entry.get("best_score", 0))
+        our_tries = safe_int(our_entry.get("total_attempts", 0))
+
+        sum_ours += our_score
+        sum_top += top_score
+
+        rows.append({
+            "task_id": task_num,
+            "tier": tier,
+            "task_type": task_type,
+            "our_score": our_score,
+            "top_score": top_score,
+            "our_tries": our_tries,
+        })
+
+    # Print header
+    print()
+    print(f"{BOLD}Leaderboard — {our_team_name} ({our_total:.1f} poeng, rank #{our_placement}){RESET}")
+    print()
+    print(f"  {'Task':<6} {'T':<2} {'Oppgavetype':<30} {'Score':>7} {'Tries':>6} {'#1 Score':>9}")
+    print(f"  {'─' * 70}")
+
+    # Print rows
+    for row in rows:
+        task_type = row["task_type"]
+        if len(task_type) > 29:
+            task_type = task_type[:26] + "..."
+
+        print(f"  {row['task_id']:<6} {row['tier']:<2} {task_type:<30} {row['our_score']:>7.2f} {row['our_tries']:>6} {row['top_score']:>9.2f}")
+
+    # Print footer
+    print(f"  {'─' * 70}")
+    gap = sum_top - sum_ours
+    print(f"  {BOLD}Totalt: {sum_ours:.1f} | #1: {sum_top:.1f} | Gap: {gap:.1f}{RESET}")
+    print()
+
+
+# ──────────────────────────────────────────────
 #  main
 # ──────────────────────────────────────────────
 
@@ -1441,6 +1568,7 @@ Kommandoer:
   poll        Overvåk nye submissions i sanntid
   submit      Trigger ny submission
   compare     Sammenlign task-score med #1 på leaderboard
+  lb          Vis leaderboard task-detaljer
   errors      Detaljert 4xx-feilanalyse fra logger
         """,
     )
@@ -1508,6 +1636,9 @@ Kommandoer:
     # compare command
     subparsers.add_parser("compare", help="Sammenlign task-score med #1 på leaderboard")
 
+    # lb command
+    subparsers.add_parser("lb", help="Vis leaderboard task-detaljer")
+
     # errors command
     subparsers.add_parser("errors", help="Detaljert 4xx-feilanalyse fra logger")
 
@@ -1553,6 +1684,8 @@ Kommandoer:
         cmd_poll(args)
     elif args.command == "compare":
         cmd_compare(args)
+    elif args.command == "lb":
+        cmd_lb(args)
     elif args.command == "tasks":
         cmd_tasks(args)
     elif args.command == "submit-track":
