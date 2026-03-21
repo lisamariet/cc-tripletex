@@ -334,9 +334,136 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
     return result
 
 
+def _parse_csv_statement(csv_text: str) -> list[dict]:
+    """Parse bank statement CSV (format: Dato;Forklaring;Inn;Ut;Saldo).
+
+    Returns list of transaction dicts with keys: date, description, amount, balance.
+    Amount is positive for inn (credit) and negative for ut (debit).
+    """
+    import csv as _csv
+    import io
+
+    transactions = []
+    reader = _csv.reader(io.StringIO(csv_text), delimiter=";")
+    headers = None
+    for row in reader:
+        if not row or not any(r.strip() for r in row):
+            continue
+        if headers is None:
+            # Normalize header names
+            headers = [h.strip().lower().replace('"', '') for h in row]
+            continue
+        if len(row) < 2:
+            continue
+        row_clean = [r.strip().replace('"', '').replace('\xa0', '').replace(' ', '') for r in row]
+
+        # Map columns by header
+        def _get(col: str) -> str:
+            if col in headers:
+                idx = headers.index(col)
+                return row_clean[idx] if idx < len(row_clean) else ""
+            return ""
+
+        date_str = _get("dato")
+        description = row[headers.index("forklaring")].strip() if "forklaring" in headers else ""
+        inn_str = _get("inn")
+        ut_str = _get("ut")
+        saldo_str = _get("saldo")
+
+        if not date_str:
+            continue
+
+        def _parse_num(s: str) -> float:
+            """Parse Norwegian/international number: handles both 1.234,56 and 1234.56 formats."""
+            if not s:
+                return 0.0
+            s = s.strip()
+            # If both . and , present: determine which is thousands separator
+            if "." in s and "," in s:
+                dot_pos = s.rfind(".")
+                comma_pos = s.rfind(",")
+                if dot_pos > comma_pos:
+                    # 1,234.56 format (. is decimal)
+                    s = s.replace(",", "")
+                else:
+                    # 1.234,56 format (, is decimal)
+                    s = s.replace(".", "").replace(",", ".")
+            elif "," in s:
+                # Only comma: could be 1234,56 (decimal) or 1.234 (thousands)
+                s = s.replace(",", ".")
+            # else: only . — keep as is (standard float)
+            try:
+                return float(s)
+            except ValueError:
+                return 0.0
+
+        inn_val = _parse_num(inn_str)
+        ut_val = _parse_num(ut_str)
+        saldo_val = _parse_num(saldo_str)
+
+        # Amount: positive = inn (money in), negative = ut (money out)
+        if inn_val > 0:
+            amount = inn_val
+        elif ut_val != 0:
+            amount = -abs(ut_val)
+        else:
+            continue  # skip rows with no movement
+
+        transactions.append({
+            "date": date_str,
+            "description": description,
+            "amount": amount,
+            "balance": saldo_val,
+        })
+
+    return transactions
+
+
+def _build_dnb_csv(transactions: list[dict]) -> bytes:
+    """Build a DNB CSV file from parsed transactions.
+
+    DNB CSV format (semicolon-separated, Norwegian):
+    "Dato";"Forklaring";"Rentedato";"Inn/ut";"Saldo"
+    "17.01.2026";"Innbetaling fra Berg AS";"17.01.2026";"10937,50";"110937,50"
+
+    Amount sign: positive = inn, negative = ut (DNB uses signed values in Inn/ut column).
+    """
+    import io as _io
+
+    output = _io.StringIO()
+    output.write('"Dato";"Forklaring";"Rentedato";"Inn/ut";"Saldo"\n')
+
+    for txn in transactions:
+        raw_date = txn["date"]  # YYYY-MM-DD
+        try:
+            parts = raw_date.split("-")
+            formatted_date = f"{parts[2]}.{parts[1]}.{parts[0]}"
+        except Exception:
+            formatted_date = raw_date
+
+        desc = txn["description"].replace('"', "'")
+        amount = txn["amount"]
+        balance = txn["balance"]
+
+        def _fmt(v: float) -> str:
+            return f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+        output.write(f'"{formatted_date}";"{desc}";"{formatted_date}";"{_fmt(amount)}";"{_fmt(balance)}"\n')
+
+    return output.getvalue().encode("utf-8")
+
+
 @register_handler("bank_reconciliation")
 async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Perform bank reconciliation: find/create reconciliation, match transactions to postings.
+    """Perform bank reconciliation from CSV attachment.
+
+    Steps:
+    1. Parse CSV attachment → extract transactions + closing balance
+    2. Resolve bank account (1920) and find/get bank ID
+    3. Import CSV as bank statement via POST /bank/statement/import (DNB_CSV format)
+    4. Create reconciliation record
+    5. Run suggest-matching to auto-match transactions to postings
+    6. Return summary
 
     Fields:
         accountId (int, optional): Tripletex ledger account ID for the bank account.
@@ -344,16 +471,55 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         dateFrom (str, optional): Start date for statement period (YYYY-MM-DD).
         dateTo (str, optional): End date for statement period (YYYY-MM-DD).
         closingBalance (float, optional): Bank statement closing balance for reconciliation.
+        _raw_files (list, optional): Raw file attachments from the request (injected by main.py).
     """
+    import base64
     import datetime
 
     account_id = fields.get("accountId")
     account_number = fields.get("accountNumber", 1920)
     date_from = fields.get("dateFrom")
-    date_to = fields.get("dateTo") or datetime.date.today().isoformat()
+    date_to = fields.get("dateTo")
     closing_balance = fields.get("closingBalance")
+    raw_files: list[dict] = fields.get("_raw_files", [])
 
-    # Step 1: Resolve bank account via ledger account lookup (not /bank which lists institutions)
+    # --- Parse CSV attachment if present ---
+    csv_transactions: list[dict] = []
+    csv_date_from: str | None = None
+    csv_date_to: str | None = None
+    csv_closing_balance: float | None = None
+
+    for f in raw_files:
+        mime = f.get("mime_type", "")
+        filename = f.get("filename", "")
+        if mime == "text/csv" or filename.lower().endswith(".csv"):
+            try:
+                raw_bytes = base64.b64decode(f["content_base64"])
+                csv_text = raw_bytes.decode("utf-8")
+                csv_transactions = _parse_csv_statement(csv_text)
+                logger.info(f"Parsed {len(csv_transactions)} transactions from CSV {filename}")
+
+                if csv_transactions:
+                    dates = [t["date"] for t in csv_transactions]
+                    csv_date_from = min(dates)
+                    csv_date_to = max(dates)
+                    csv_closing_balance = csv_transactions[-1]["balance"]
+                    logger.info(f"CSV period: {csv_date_from} → {csv_date_to}, closing balance={csv_closing_balance}")
+            except Exception as _exc:
+                logger.warning(f"Failed to parse CSV {filename}: {_exc}")
+            break  # Only process first CSV file
+
+    # Use CSV-derived values as defaults if not explicitly provided
+    if date_from is None and csv_date_from:
+        date_from = csv_date_from
+    if date_to is None and csv_date_to:
+        date_to = csv_date_to
+    if closing_balance is None and csv_closing_balance is not None:
+        closing_balance = csv_closing_balance
+    if date_to is None:
+        date_to = datetime.date.today().isoformat()
+
+    # Step 1: Resolve bank account
     if not account_id:
         try:
             account_id = await _lookup_account(client, int(account_number))
@@ -364,23 +530,86 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                 "message": f"Bank account number {account_number} not found in Tripletex",
             }
 
-    logger.info(f"Bank reconciliation: using account_id={account_id}")
+    logger.info(f"Bank reconciliation: account_id={account_id}, period={date_from}→{date_to}")
 
-    # Step 2: Find current accounting period (required for creating reconciliation)
+    # Step 2: Import CSV as bank statement if we have CSV data
+    bank_statement_id: int | None = None
+    statement_import_status: str = "skipped"
+
+    if csv_transactions and date_from and date_to:
+        # Find bank ID — GET /bank returns all Norwegian bank institutions (global system data)
+        bank_id: int | None = None
+        # Try several queries to find a bank that supports DNB_CSV
+        for search_params in [
+            {"query": "DNB", "count": "5"},
+            {"isBankReconciliationSupport": "true", "count": "10"},
+            {"count": "20"},
+        ]:
+            resp_bank = await client.get("/bank", params=search_params)
+            if resp_bank.status_code == 200:
+                banks = resp_bank.json().get("values", [])
+                # Prefer bank that explicitly supports DNB_CSV
+                for bank in banks:
+                    supported = bank.get("bankStatementFileFormatSupport", [])
+                    if "DNB_CSV" in supported:
+                        bank_id = bank["id"]
+                        logger.info(f"Found bank with DNB_CSV support: id={bank_id} ({bank.get('name','')})")
+                        break
+                if bank_id is None and banks:
+                    bank_id = banks[0]["id"]
+                    logger.info(f"Using first available bank: id={bank_id} ({banks[0].get('name','')})")
+            if bank_id is not None:
+                break
+
+        if bank_id is None:
+            logger.warning("No bank found via /bank — cannot import CSV statement")
+
+        if bank_id is not None:
+            # Build DNB CSV from parsed transactions
+            dnb_csv_bytes = _build_dnb_csv(csv_transactions)
+
+            import_params = {
+                "bankId": str(bank_id),
+                "accountId": str(account_id),
+                "fromDate": date_from,
+                "toDate": date_to,
+                "fileFormat": "DNB_CSV",
+            }
+            resp_import = await client.post_multipart(
+                "/bank/statement/import",
+                file_bytes=dnb_csv_bytes,
+                filename="bankutskrift.csv",
+                mime_type="text/csv",
+                params=import_params,
+            )
+            if resp_import.status_code in (200, 201):
+                stmt_data = resp_import.json().get("value", {})
+                bank_statement_id = stmt_data.get("id")
+                statement_import_status = "imported"
+                logger.info(f"Imported bank statement: id={bank_statement_id}")
+            else:
+                statement_import_status = f"failed_{resp_import.status_code}"
+                logger.warning(f"Bank statement import failed: {resp_import.text[:300]}")
+        else:
+            statement_import_status = "no_bank_id"
+
+    # Step 3: Find current accounting period
     today = datetime.date.today().isoformat()
     resp = await client.get("/ledger/accountingPeriod", params={"count": "20"})
     periods = resp.json().get("values", [])
     current_period_id = None
+    # Pick period covering date_to (or today)
+    target_date = date_to or today
     for p in periods:
         start = p.get("start", "")
         end = p.get("end", "")
-        if start <= today < end:
+        if start <= target_date < end:
             current_period_id = p["id"]
             break
     if not current_period_id and periods:
         current_period_id = periods[-1]["id"]
 
-    # Step 3: Get or create bank reconciliation
+    # Step 4: Get or create bank reconciliation
     reconciliation_id = None
     reconciliation = None
 
@@ -391,7 +620,6 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     data = resp.json()
     reconciliations = data.get("values", [])
 
-    # Find open reconciliation (isClosed=False)
     for rec in reconciliations:
         if not rec.get("isClosed", True):
             reconciliation = rec
@@ -400,7 +628,6 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             break
 
     if not reconciliation_id:
-        # Create a new reconciliation — requires account + accountingPeriod + type (MANUAL or AUTOMATIC)
         rec_payload: dict[str, Any] = {
             "account": {"id": account_id},
             "type": "MANUAL",
@@ -415,7 +642,6 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             error_data = resp.json()
             error_msg = error_data.get("message", resp.text[:300])
             logger.warning(f"Failed to create reconciliation: {error_msg}")
-            # Try last reconciliation as fallback
             resp2 = await client.get("/bank/reconciliation/>last", params={"accountId": str(account_id)})
             if resp2.status_code == 200 and resp2.json().get("value"):
                 reconciliation = resp2.json().get("value", {})
@@ -432,11 +658,24 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             reconciliation_id = reconciliation.get("id")
             logger.info(f"Created new reconciliation id={reconciliation_id}")
 
-    # Step 3: Use suggest endpoint to auto-match transactions to postings
+    # Step 5: Update closing balance on reconciliation if needed
+    if closing_balance is not None and reconciliation_id and reconciliation:
+        if reconciliation.get("bankAccountClosingBalanceCurrency") != closing_balance:
+            update_payload = dict(reconciliation)
+            update_payload["bankAccountClosingBalanceCurrency"] = closing_balance
+            for field_name in ("changes", "url", "closedDate", "closedByContact", "closedByEmployee",
+                               "approvable", "autoPayReconciliation", "attachment", "transactions"):
+                update_payload.pop(field_name, None)
+            resp = await client.put(f"/bank/reconciliation/{reconciliation_id}", update_payload)
+            if resp.status_code in (200, 201):
+                logger.info(f"Updated closing balance to {closing_balance}")
+            else:
+                logger.warning(f"Failed to update closing balance: {resp.text[:300]}")
+
+    # Step 6: Run suggest-matching
     matches_before = 0
     matches_after = 0
 
-    # Count existing matches
     resp = await client.get("/bank/reconciliation/match/count", params={
         "bankReconciliationId": str(reconciliation_id),
     })
@@ -444,15 +683,12 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         count_data = resp.json()
         matches_before = count_data.get("value", 0) if isinstance(count_data.get("value"), int) else 0
 
-    # Run auto-suggest matching
     resp = await client.put(
         "/bank/reconciliation/match/:suggest",
         params={"bankReconciliationId": str(reconciliation_id)},
     )
-    suggest_status = resp.status_code
-    logger.info(f"Suggest matches: status={suggest_status}")
+    logger.info(f"Suggest matches: status={resp.status_code}")
 
-    # Count matches after suggestion
     resp = await client.get("/bank/reconciliation/match/count", params={
         "bankReconciliationId": str(reconciliation_id),
     })
@@ -462,47 +698,14 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
 
     new_matches = matches_after - matches_before
 
-    # Step 4: Get all matches for reporting
+    # Step 7: Get all matches for reporting
     resp = await client.get("/bank/reconciliation/match", params={
         "bankReconciliationId": str(reconciliation_id),
         "count": "100",
     })
     all_matches = resp.json().get("values", []) if resp.status_code == 200 else []
 
-    # Step 5: Update closing balance if provided
-    if closing_balance is not None and reconciliation_id and reconciliation:
-        update_payload = dict(reconciliation)
-        update_payload["bankAccountClosingBalanceCurrency"] = closing_balance
-        # Clean up read-only fields
-        for field_name in ("changes", "url", "closedDate", "closedByContact", "closedByEmployee",
-                           "approvable", "autoPayReconciliation", "attachment", "transactions"):
-            update_payload.pop(field_name, None)
-        resp = await client.put(f"/bank/reconciliation/{reconciliation_id}", update_payload)
-        if resp.status_code in (200, 201):
-            logger.info(f"Updated closing balance to {closing_balance}")
-        else:
-            logger.warning(f"Failed to update closing balance: {resp.text[:300]}")
-
-    # Step 6: Get bank statement transactions if available
-    statement_transactions_count = 0
-    if date_from:
-        resp = await client.get("/bank/statement", params={
-            "accountId": str(account_id),
-            "count": "5",
-        })
-        statements = resp.json().get("values", []) if resp.status_code == 200 else []
-        for stmt in statements:
-            stmt_id = stmt.get("id")
-            if stmt_id:
-                resp = await client.get("/bank/statement/transaction", params={
-                    "bankStatementId": str(stmt_id),
-                    "count": "50",
-                })
-                if resp.status_code == 200:
-                    txns = resp.json().get("values", [])
-                    statement_transactions_count += len(txns)
-
-    # Step 7: Attempt to close the reconciliation (marks it as isClosed=True for scorer)
+    # Step 8: Attempt to close the reconciliation
     is_closed = False
     if reconciliation_id:
         try:
@@ -511,7 +714,6 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                 latest_rec = latest_rec_resp.json().get("value", {})
                 close_payload = dict(latest_rec)
                 close_payload["isClosed"] = True
-                # Remove read-only fields
                 for _f in ("changes", "url", "closedDate", "closedByContact", "closedByEmployee",
                            "approvable", "autoPayReconciliation", "attachment", "transactions"):
                     close_payload.pop(_f, None)
@@ -529,16 +731,22 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         "taskType": "bank_reconciliation",
         "reconciliationId": reconciliation_id,
         "accountId": account_id,
+        "bankStatementId": bank_statement_id,
+        "statementImportStatus": statement_import_status,
+        "csvTransactionsFound": len(csv_transactions),
         "matchesBefore": matches_before,
         "matchesAfter": matches_after,
         "newMatches": new_matches,
         "totalMatches": len(all_matches),
-        "statementTransactions": statement_transactions_count,
         "isClosed": is_closed,
     }
 
     if closing_balance is not None:
         result["closingBalance"] = closing_balance
+    if date_from:
+        result["dateFrom"] = date_from
+    if date_to:
+        result["dateTo"] = date_to
 
     return result
 
@@ -558,7 +766,9 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
     """
     import datetime
 
-    MAX_API_CALLS = 30
+    # Hard cap: current handler uses exactly 5 calls in normal operation.
+    # 15 leaves headroom for retries while still blocking runaway loops.
+    MAX_API_CALLS = 15
     MAX_POSTINGS = 200
     api_calls = 0
 
@@ -705,32 +915,67 @@ async def _find_voucher_by_account_and_amount(
     Strategy 1: Search /ledger/posting by accountId (fast, works when postings are indexed).
     Strategy 2: Search all vouchers and check their postings (fallback for sandboxes where
                 posting search by accountId may return empty).
+
+    NOTE: Both /ledger/posting and /ledger/voucher require dateFrom+dateTo — return None
+    immediately if date is unknown to avoid 422 errors.
     """
+    import datetime as _dt
+
+    if not date:
+        # Cannot search without a date — both endpoints require dateFrom/dateTo
+        logger.warning(
+            f"[_find_voucher_by_account_and_amount] No date provided for account {account_number} "
+            "— cannot search /ledger/posting or /ledger/voucher (dateFrom required)"
+        )
+        return None
+
     acct_id = await _lookup_account(client, account_number)
 
+    # /ledger/posting accepts dateFrom == dateTo (inclusive on both ends)
+    # /ledger/voucher requires dateTo > dateFrom (exclusive upper bound) → add 1 day
+    try:
+        date_obj = _dt.date.fromisoformat(date)
+        date_next = (date_obj + _dt.timedelta(days=1)).isoformat()
+    except ValueError:
+        date_next = date  # fallback — keep original
+
     # Strategy 1: Search postings directly
-    params: dict[str, Any] = {"accountId": str(acct_id), "count": "100"}
-    if date:
-        params["dateFrom"] = date
-        params["dateTo"] = date
+    params: dict[str, Any] = {
+        "accountId": str(acct_id),
+        "count": "100",
+        "dateFrom": date,
+        "dateTo": date,
+    }
     posting_resp = await client.get("/ledger/posting", params=params)
-    postings_found = posting_resp.json().get("values", [])
+    if posting_resp.status_code < 400:
+        postings_found = posting_resp.json().get("values", [])
+        for posting in postings_found:
+            posting_amount = posting.get("amountGross", 0)
+            if abs(abs(posting_amount) - abs(amount)) < 0.01:
+                voucher_id = posting.get("voucher", {}).get("id")
+                if voucher_id and (already_seen is None or voucher_id not in already_seen):
+                    resp = await client.get(f"/ledger/voucher/{voucher_id}")
+                    if resp.status_code == 200:
+                        return resp.json().get("value", {})
+    else:
+        logger.warning(
+            f"[_find_voucher_by_account_and_amount] /ledger/posting search failed "
+            f"({posting_resp.status_code}): {posting_resp.text[:200]}"
+        )
 
-    for posting in postings_found:
-        posting_amount = posting.get("amountGross", 0)
-        if abs(abs(posting_amount) - abs(amount)) < 0.01:
-            voucher_id = posting.get("voucher", {}).get("id")
-            if voucher_id and (already_seen is None or voucher_id not in already_seen):
-                resp = await client.get(f"/ledger/voucher/{voucher_id}")
-                if resp.status_code == 200:
-                    return resp.json().get("value", {})
-
-    # Strategy 2: Search vouchers by date, then inspect their postings
-    voucher_params: dict[str, Any] = {"count": "100"}
-    if date:
-        voucher_params["dateFrom"] = date
-        voucher_params["dateTo"] = date
+    # Strategy 2: Search vouchers by date range (dateTo must be > dateFrom — use next day)
+    voucher_params: dict[str, Any] = {
+        "count": "100",
+        "dateFrom": date,
+        "dateTo": date_next,
+    }
     voucher_resp = await client.get("/ledger/voucher", params=voucher_params)
+    if voucher_resp.status_code >= 400:
+        logger.warning(
+            f"[_find_voucher_by_account_and_amount] /ledger/voucher search failed "
+            f"({voucher_resp.status_code}): {voucher_resp.text[:200]}"
+        )
+        return None
     vouchers = voucher_resp.json().get("values", [])
 
     for v in vouchers:
