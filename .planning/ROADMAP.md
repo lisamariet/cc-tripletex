@@ -51,7 +51,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Deploy Cloud Run + fiks compete.py tooling (score-beregning, submit-throttling)
 - [x] 02-02-PLAN.md — Fiks parser-disambiguering og handler-robusthet for nullscore-tasks
-- [ ] 02-03-PLAN.md — E2E-verifiser nullscore-fikser mot sandbox og deploy
+- [x] 02-03-PLAN.md — E2E-verifiser nullscore-fikser mot sandbox og deploy
 
 ### Phase 3: Effektivitet
 **Goal**: Alle handlers med 1.0 korrekthet utløser effektivitetsbonus ved å minimere API-kall og eliminere 4xx
