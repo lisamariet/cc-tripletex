@@ -23,3 +23,9 @@ __pycache__/
 
 # local secrets files
 .local.md
+
+# Local planning artifacts
+.planning/
+
+# Local competition data (request/result logs)
+data/
