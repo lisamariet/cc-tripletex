@@ -470,13 +470,16 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     #   - amount / amountCurrency = netto (excl. VAT) — used for amountExcludingVat
     #   - amountGross / amountGrossCurrency = brutto (incl. VAT) — the actual amount
     # The AP posting uses gross amount (no VAT split needed).
+    # Sign convention: expense posting = NEGATIVE (debit in Tripletex voucher),
+    # AP posting = POSITIVE (credit). This ensures isCreditNote=false and
+    # correct amountExcludingVat on the created supplierInvoice.
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
         "supplier": {"id": supplier_id},
-        "amount": amount_excl_vat,            # netto eks. mva → drives amountExcludingVat
-        "amountCurrency": amount_excl_vat,    # netto i valuta
-        "amountGross": amount_gross,          # brutto inkl. mva
-        "amountGrossCurrency": amount_gross,  # brutto i valuta
+        "amount": -amount_excl_vat,           # netto eks. mva (negative = debit)
+        "amountCurrency": -amount_excl_vat,
+        "amountGross": -amount_gross,         # brutto inkl. mva (negative = debit)
+        "amountGrossCurrency": -amount_gross,
         "row": 1,
     }
     if vat_type_ref:
@@ -487,10 +490,10 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     ap_posting: dict[str, Any] = {
         "account": {"id": payable_id},
         "supplier": {"id": supplier_id},
-        "amount": -amount_gross,             # total leverage (no VAT separation for AP)
-        "amountCurrency": -amount_gross,
-        "amountGross": -amount_gross,
-        "amountGrossCurrency": -amount_gross,
+        "amount": amount_gross,              # total AP (positive = credit)
+        "amountCurrency": amount_gross,
+        "amountGross": amount_gross,
+        "amountGrossCurrency": amount_gross,
         "row": 2,
     }
 
