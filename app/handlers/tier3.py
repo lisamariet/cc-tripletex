@@ -1,6 +1,7 @@
 """Tier 3 handlers — voucher operations, year-end closing, and bank reconciliation."""
 from __future__ import annotations
 
+import datetime
 import logging
 from typing import Any
 
@@ -34,7 +35,7 @@ async def _lookup_vat_type(client: TripletexClient, account_number: int) -> dict
 @register_handler("create_voucher")
 async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dict:
     description = fields.get("description", "")
-    date = fields["date"]
+    date = fields.get("date") or datetime.date.today().isoformat()
     postings_input = fields.get("postings", [])
 
     postings = []
