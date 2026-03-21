@@ -79,6 +79,9 @@ async def solve(request: Request):
             result["note"] = "Missing credentials"
         else:
             client = TripletexClient(base_url, session_token, debug=True)
+            # Inject raw files into fields so handlers can access attachments directly
+            if files:
+                parsed_task.fields["_raw_files"] = files
             result = await execute_task(parsed_task.task_type, client, parsed_task.fields, prompt=prompt)
             # Ensure status is always "completed"
             result["status"] = "completed"

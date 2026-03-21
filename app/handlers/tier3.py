@@ -537,29 +537,21 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     statement_import_status: str = "skipped"
 
     if csv_transactions and date_from and date_to:
-        # Find bank ID — GET /bank returns all Norwegian bank institutions (global system data)
+        # Find bank ID — GET /bank returns Norwegian bank institutions (global system data)
         bank_id: int | None = None
-        # Try several queries to find a bank that supports DNB_CSV
-        for search_params in [
-            {"query": "DNB", "count": "5"},
-            {"isBankReconciliationSupport": "true", "count": "10"},
-            {"count": "20"},
-        ]:
-            resp_bank = await client.get("/bank", params=search_params)
-            if resp_bank.status_code == 200:
-                banks = resp_bank.json().get("values", [])
-                # Prefer bank that explicitly supports DNB_CSV
-                for bank in banks:
-                    supported = bank.get("bankStatementFileFormatSupport", [])
-                    if "DNB_CSV" in supported:
-                        bank_id = bank["id"]
-                        logger.info(f"Found bank with DNB_CSV support: id={bank_id} ({bank.get('name','')})")
-                        break
-                if bank_id is None and banks:
-                    bank_id = banks[0]["id"]
-                    logger.info(f"Using first available bank: id={bank_id} ({banks[0].get('name','')})")
-            if bank_id is not None:
-                break
+        resp_bank = await client.get("/bank", params={"isBankReconciliationSupport": "true", "count": "50"})
+        if resp_bank.status_code == 200:
+            banks = resp_bank.json().get("values", [])
+            # Prefer bank that explicitly supports DNB_CSV
+            for bank in banks:
+                supported = bank.get("bankStatementFileFormatSupport", [])
+                if "DNB_CSV" in supported:
+                    bank_id = bank["id"]
+                    logger.info(f"Found bank with DNB_CSV support: id={bank_id} ({bank.get('name','')})")
+                    break
+            if bank_id is None and banks:
+                bank_id = banks[0]["id"]
+                logger.info(f"Using first reconciliation-capable bank: id={bank_id} ({banks[0].get('name','')})")
 
         if bank_id is None:
             logger.warning("No bank found via /bank — cannot import CSV statement")

@@ -88,6 +88,41 @@ class TripletexClient:
     async def delete(self, path: str) -> httpx.Response:
         return await self._request("DELETE", path)
 
+    async def post_multipart(
+        self,
+        path: str,
+        file_bytes: bytes,
+        filename: str,
+        mime_type: str = "text/csv",
+        params: dict[str, Any] | None = None,
+    ) -> httpx.Response:
+        """POST a file as multipart/form-data (e.g. POST /bank/statement/import)."""
+        url = f"{self.base_url}{path}"
+        logger.info(f"Tripletex POST (multipart) {url} file={filename}")
+        if params:
+            logger.info(f"Params: {params}")
+        t0 = time.monotonic()
+        try:
+            resp = await self._client.post(
+                url,
+                files={"file": (filename, file_bytes, mime_type)},
+                params=params,
+            )
+        except Exception as exc:
+            duration = (time.monotonic() - t0) * 1000
+            self.tracker.record("POST", path, 0, duration, error=str(exc), url=url, query_params=params)
+            raise
+
+        duration = (time.monotonic() - t0) * 1000
+        error_body = resp.text[:500] if 400 <= resp.status_code < 500 else None
+        self.tracker.record(
+            "POST", path, resp.status_code, duration, error=error_body,
+            url=url, query_params=params,
+            response_body=resp.text[:2000] if self.debug else None,
+        )
+        logger.info(f"Response {resp.status_code} ({duration:.0f}ms): {resp.text[:500]}")
+        return resp
+
     # -- smart retry methods -------------------------------------------------
 
     async def post_with_retry(
