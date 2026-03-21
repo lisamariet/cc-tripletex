@@ -1345,6 +1345,8 @@ async def _correct_single_error(
     error: dict[str, Any],
     default_date: str | None,
     already_reversed: set[int],
+    default_date_from: str | None = None,
+    default_date_to: str | None = None,
 ) -> dict[str, Any]:
     """Process a single ledger error and return a result dict.
 
@@ -1358,6 +1360,9 @@ async def _correct_single_error(
     account = error.get("account") or error.get("wrongAccount")
     amount = error.get("amount", 0)
     date = error.get("date") or default_date
+    # Fall-back search window from top-level fields (e.g. "January and February 2026")
+    err_date_from = error.get("dateFrom") or default_date_from
+    err_date_to = error.get("dateTo") or default_date_to
     result: dict[str, Any] = {"errorType": error_type, "account": account, "amount": amount}
 
     try:
@@ -1378,6 +1383,7 @@ async def _correct_single_error(
             if not voucher:
                 voucher = await _find_voucher_by_account_and_amount(
                     client, wrong_account, amount, date, already_reversed,
+                    date_from=err_date_from, date_to=err_date_to,
                 )
             if not voucher:
                 result["status"] = "error"
@@ -1425,6 +1431,7 @@ async def _correct_single_error(
             if not voucher:
                 voucher = await _find_voucher_by_account_and_amount(
                     client, dup_account, amount, date, already_reversed,
+                    date_from=err_date_from, date_to=err_date_to,
                 )
             if not voucher:
                 result["status"] = "error"
@@ -1484,6 +1491,7 @@ async def _correct_single_error(
             if not voucher:
                 voucher = await _find_voucher_by_account_and_amount(
                     client, wrong_account, amount, date, already_reversed,
+                    date_from=err_date_from, date_to=err_date_to,
                 )
             if not voucher:
                 result["status"] = "error"
@@ -1567,12 +1575,18 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
     if errors_list:
         logger.info(f"Multi-error correction: {len(errors_list)} errors to process")
         default_date = fields.get("date") or fields.get("correctionDate")
+        # Top-level period from parser (e.g. "January and February 2026" → dateFrom/dateTo)
+        default_date_from = fields.get("dateFrom")
+        default_date_to = fields.get("dateTo")
         already_reversed: set[int] = set()
         results: list[dict[str, Any]] = []
 
         for i, err in enumerate(errors_list):
             logger.info(f"Processing error {i+1}/{len(errors_list)}: {err.get('errorType')}")
-            err_result = await _correct_single_error(client, err, default_date, already_reversed)
+            err_result = await _correct_single_error(
+                client, err, default_date, already_reversed,
+                default_date_from=default_date_from, default_date_to=default_date_to,
+            )
             results.append(err_result)
 
         completed = sum(1 for r in results if r.get("status") == "completed")
