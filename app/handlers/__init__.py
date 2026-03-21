@@ -50,6 +50,10 @@ async def execute_task(task_type: str, client: TripletexClient, fields: dict[str
 
             logger.info(f"Batch item {len(results)+1}/{len(items)}: {item_type}")
             result = await item_handler(client, item_fields)
+            # Log batch item result for debugging
+            created = result.get("created", {})
+            if not created or (isinstance(created, dict) and not created.get("id")):
+                logger.warning(f"Batch item {len(results)+1}/{len(items)} ({item_type}): empty created — {result.get('error', 'unknown')}")
             results.append(result)
         return {"status": "completed", "taskType": task_type, "batch_results": results}
 

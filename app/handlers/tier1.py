@@ -353,5 +353,9 @@ async def create_department(client: TripletexClient, fields: dict[str, Any]) -> 
 
     resp = await client.post("/department", payload)
     data = resp.json()
-    logger.info(f"Created department: {data.get('value', {}).get('id')}")
-    return {"status": "completed", "taskType": "create_department", "created": data.get("value", {})}
+    created = data.get("value", {})
+    if not created or not created.get("id"):
+        logger.warning(f"create_department failed: status={resp.status_code}, body={resp.text[:300]}")
+        return {"status": "completed", "taskType": "create_department", "error": f"API returned no id: {resp.text[:200]}", "created": {}}
+    logger.info(f"Created department: {created.get('id')} name={created.get('name')}")
+    return {"status": "completed", "taskType": "create_department", "created": created}
