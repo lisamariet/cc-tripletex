@@ -850,6 +850,34 @@ def build_tier2_tests() -> list[E2ETestCase]:
             verify=None,  # custom check: all 3 created
             tier=2,
         ),
+
+        # ---- Tier 3 tests ----
+
+        # T3-1: register_supplier_invoice from PDF
+        E2ETestCase(
+            name="t3_supplier_invoice_from_pdf",
+            expected_task_type="register_supplier_invoice",
+            expected_fields={},
+            prompt="Du har motteke ein leverandorfaktura (sjaa vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren viss den ikkje finst. Bruk rett utgiftskonto og inngaaande MVA.",
+            direct_fields={
+                "supplierName": "Dalheim AS",
+                "supplierOrgNumber": "859434118",
+                "amount": 60375,
+                "description": "Programvarelisens",
+                "invoiceDate": "2026-03-08",
+                "invoiceNumber": "INV-2026-2252",
+                "expenseAccount": "6340",
+                "vatRate": 25,
+            },
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=3,
+        ),
     ]
 
 
