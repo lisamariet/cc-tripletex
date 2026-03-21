@@ -297,6 +297,44 @@ def _infer_task_type_from_prompt(prompt: str) -> str | None:
     return None
 
 
+def get_error_counts_for_sub(sub: dict, gcs_logs: list[dict]) -> tuple[int | None, int | None]:
+    """Return (n_4xx, n_5xx) for a submission by matching the closest GCS log within 10 min.
+
+    Returns (None, None) if no matching log is found.
+    """
+    sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
+    if not sub_ts or not gcs_logs:
+        return None, None
+    try:
+        dt_sub = datetime.fromisoformat(sub_ts.replace("Z", "+00:00")).replace(tzinfo=None)
+    except Exception:
+        return None, None
+
+    best_delta = timedelta(minutes=10)
+    best_log = None
+
+    for log in gcs_logs:
+        log_ts = log.get("timestamp", "")
+        if not log_ts:
+            continue
+        try:
+            dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
+            delta = abs(dt_log - dt_sub)
+            if delta < best_delta:
+                best_delta = delta
+                best_log = log
+        except Exception:
+            continue
+
+    if best_log is None:
+        return None, None
+
+    api_calls = best_log.get("api_calls") or []
+    n_4xx = sum(1 for c in api_calls if 400 <= safe_int(c.get("status")) < 500)
+    n_5xx = sum(1 for c in api_calls if safe_int(c.get("status")) >= 500)
+    return n_4xx, n_5xx
+
+
 def get_task_type_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[dict] | None = None) -> str:
     """Find task type from GCS logs for a submission.
 
@@ -498,8 +536,8 @@ def cmd_status(args: argparse.Namespace) -> None:
         print(f"  Viser {len(display_subs)} av {total_subs} submissions")
         print()
 
-    print(f"  {'#':>3}  {'Tid':<10} {'Oppgavetype':<25} {'Score':>12} {'Varighet':>8}  {'Status'}")
-    print(f"  {'─'*80}")
+    print(f"  {'#':>3}  {'Tid':<10} {'Oppgavetype':<25} {'Score':>12} {'4xx':>4} {'5xx':>4} {'Varighet':>8}  {'Status'}")
+    print(f"  {'─'*88}")
 
     # ANSI italic
     ITALIC = "\033[3m"
@@ -533,6 +571,11 @@ def cmd_status(args: argparse.Namespace) -> None:
 
         dur_str = f"{duration / 1000:.1f}s" if duration else "-"
 
+        # 4xx / 5xx counts from GCS log
+        n_4xx, n_5xx = get_error_counts_for_sub(sub, gcs_logs)
+        err_4xx_str = str(n_4xx) if n_4xx is not None else "-"
+        err_5xx_str = str(n_5xx) if n_5xx is not None else "-"
+
         # Right-align score (compensate for ANSI)
         visible_pad = 12 - len(score_pad)
         score_display = " " * max(0, visible_pad) + score_str
@@ -541,7 +584,7 @@ def cmd_status(args: argparse.Namespace) -> None:
         task_pad = 25 - len(task_visible)
         task_col = task_display + " " * max(0, task_pad)
 
-        print(f"  {i:>3}  {ts:<10} {task_col} {score_display} {dur_str:>8}  {status}")
+        print(f"  {i:>3}  {ts:<10} {task_col} {score_display} {err_4xx_str:>4} {err_5xx_str:>4} {dur_str:>8}  {status}")
 
 
 # ──────────────────────────────────────────────
