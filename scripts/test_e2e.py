@@ -598,6 +598,29 @@ def build_tier2_tests() -> list[E2ETestCase]:
 
         # ---- New tests: missing handler coverage ----
 
+        # T2-13b: create_employee WITHOUT email — tests email fallback (generates {first}.{last}@company.no)
+        E2ETestCase(
+            name="t2_create_employee_no_email",
+            expected_task_type="create_employee",
+            expected_fields={},
+            prompt=f'Opprett ansatt "NoEmail{ts}" "Fallback{ts}" som begynner 2026-03-21.',
+            direct_fields={
+                "firstName": f"NoEmail{ts}",
+                "lastName": f"Fallback{ts}",
+                # No email field — triggers fallback logic in create_employee
+                "startDate": "2026-03-21",
+            },
+            verify=VerifySpec(
+                endpoint="/employee",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("firstName", f"NoEmail{ts}"),
+                    FieldCheck("lastName", f"Fallback{ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
         # T2-14: create_employee with role (5/10 points for role)
         E2ETestCase(
             name="t2_create_employee_with_role",
