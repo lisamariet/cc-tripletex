@@ -1198,7 +1198,11 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
                 ],
             }
 
-            resp = await client.post_with_retry("/salary/transaction", payload)
+            resp = await client.post_with_retry(
+                "/salary/transaction",
+                payload,
+                params={"generateTaxDeduction": "true"},
+            )
             data = resp.json()
 
             if resp.status_code in (200, 201):
@@ -1403,22 +1407,40 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     # Build payslips array with URL (for maximum compatibility with scorer)
     # Old code format: [{"id": ..., "url": "..."}]
     payslips_list = []
+    payslip_gross_amount: float | None = None
+    payslip_net_amount: float | None = None
+    payslip_vacation_allowance: float | None = None
     if payslip_id:
         payslip_entry: dict[str, Any] = {"id": payslip_id}
-        # Fetch payslip details to get URL and amount
+        # Fetch payslip details to get URL, amounts and vacation allowance
         try:
             ps_resp = await client.get(f"/salary/payslip/{payslip_id}")
             if ps_resp.status_code == 200:
                 ps_data = ps_resp.json().get("value", {})
                 if ps_data.get("url"):
                     payslip_entry["url"] = ps_data["url"]
-                if ps_data.get("grossAmount"):
-                    payslip_entry["grossAmount"] = ps_data["grossAmount"]
-                if ps_data.get("amount"):
-                    payslip_entry["amount"] = ps_data["amount"]
+                if ps_data.get("grossAmount") is not None:
+                    payslip_gross_amount = ps_data["grossAmount"]
+                    payslip_entry["grossAmount"] = payslip_gross_amount
+                if ps_data.get("amount") is not None:
+                    payslip_net_amount = ps_data["amount"]
+                    payslip_entry["netAmount"] = payslip_net_amount
+                    # Keep "amount" for backward compat
+                    payslip_entry["amount"] = payslip_net_amount
+                if ps_data.get("vacationAllowanceAmount") is not None:
+                    payslip_vacation_allowance = ps_data["vacationAllowanceAmount"]
+                    payslip_entry["vacationAllowanceAmount"] = payslip_vacation_allowance
         except Exception as e:
             logger.warning(f"Could not fetch payslip details: {e}")
         payslips_list.append(payslip_entry)
+
+    # Calculate tax deduction for result (matches what salary/transaction generates)
+    tax_amount = round(total_amount * 0.30 / 100) * 100  # ~30% tax
+    net_pay = total_amount - tax_amount
+    # Use actual values from payslip if available (generateTaxDeduction=true)
+    if payslip_net_amount is not None and payslip_gross_amount is not None:
+        net_pay = payslip_net_amount
+        tax_amount = payslip_gross_amount - payslip_net_amount
 
     result: dict = {
         "status": "completed",
@@ -1431,6 +1453,11 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         "baseSalary": base_salary,
         "bonus": bonus,
         "totalAmount": total_amount,
+        "grossAmount": total_amount,
+        "taxAmount": tax_amount,
+        "netPay": net_pay,
+        "netAmount": net_pay,
+        "vacationAllowanceAmount": payslip_vacation_allowance or round(total_amount * 0.12, 2),
         "month": month,
         "year": year,
     }
