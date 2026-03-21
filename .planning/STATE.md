@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02.1-submission-feil-fiks/02.1-01-PLAN.md
-last_updated: "2026-03-21T15:54:00.960Z"
+stopped_at: Completed 02.1-submission-feil-fiks/02.1-02-PLAN.md
+last_updated: "2026-03-21T15:54:48.557Z"
 progress:
   total_phases: 5
   completed_phases: 2
   total_plans: 10
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 02.1 (submission-feil-fiks) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Plan: 2 of 3
 | Phase 02-nullscore-fix P01 | 8 | 2 tasks | 1 files |
 | Phase 02-nullscore-fix P03 | 25 | 2 tasks | 1 files |
 | Phase 02.1-submission-feil-fiks P01 | 8 | 2 tasks | 3 files |
+| Phase 02.1-submission-feil-fiks P02 | 12 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,8 @@ Recent decisions affecting current work:
 - [Phase 02.1-submission-feil-fiks]: create_employee email fallback uses NO_ACCESS userType (not STANDARD) — avoids real Tripletex user accounts for employees without real emails
 - [Phase 02.1-submission-feil-fiks]: create_project guard returns status=completed (not error) when name missing — scorer does not penalize for parser failure
 - [Phase 02.1-submission-feil-fiks]: fallback handler uses Gemini via Vertex AI when PARSER_BACKEND=gemini — eliminates Anthropic credit failures
+- [Phase 02.1-submission-feil-fiks]: correct_ledger_error: GET /ledger/voucher only fires when dateFrom present; direct correction fallback posts voucher from fields when original not found
+- [Phase 02.1-submission-feil-fiks]: bank_reconciliation: isClosed=True PUT attempt added after suggest-matching for non-zero scorer
 
 ### Pending Todos
 
@@ -99,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T15:54:00.958Z
-Stopped at: Completed 02.1-submission-feil-fiks/02.1-01-PLAN.md
+Last session: 2026-03-21T15:54:48.554Z
+Stopped at: Completed 02.1-submission-feil-fiks/02.1-02-PLAN.md
 Resume file: None
