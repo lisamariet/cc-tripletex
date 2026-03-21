@@ -112,63 +112,106 @@ def _extract_destination(fields: dict[str, Any]) -> str:
     return title or "Reisemal"
 
 
-async def _get_per_diem_rate_category(
+def _rate_category_valid_for_date(cat: dict[str, Any], travel_date: datetime) -> bool:
+    """Return True if this rate category is valid for the given travel date."""
+    from_str = cat.get("fromDate")
+    to_str = cat.get("toDate")
+    try:
+        if from_str and datetime.strptime(from_str, "%Y-%m-%d") > travel_date:
+            return False
+        if to_str and datetime.strptime(to_str, "%Y-%m-%d") < travel_date:
+            return False
+    except (ValueError, TypeError):
+        pass
+    return True
+
+
+async def _get_per_diem_rate_categories_ranked(
     client: TripletexClient,
     is_day_trip: bool = False,
-) -> int | None:
-    """Get the newest per diem rate category ID for domestic overnight travel.
+    travel_date: datetime | None = None,
+) -> list[int]:
+    """Return a ranked list of candidate per diem rate category IDs.
 
-    Tripletex has many duplicate rate categories for different date ranges.
-    We need the one with the HIGHEST id (newest) matching the travel date.
-    For multi-day trips: "Overnatting over 12 timer - innland"
-    For day trips: "Dagsreise over 12 timer - innland"
+    Filters on domestic + correct trip type, then date-validity, then sorts by
+    highest ID (newest). Returns all valid candidates so callers can try each
+    one if earlier choices trigger a date-mismatch validation error.
     """
+    if travel_date is None:
+        travel_date = datetime.now()
+
     try:
-        resp = await client.get_cached("/travelExpense/rateCategory",
-                                        params={"type": "PER_DIEM", "count": 1000})
+        resp = await client.get_cached(
+            "/travelExpense/rateCategory",
+            params={"type": "PER_DIEM", "count": 1000},
+        )
         cats = resp.json().get("values", [])
         if not cats:
-            return None
+            return []
 
-        # Filter for domestic categories matching trip type
+        # Primary filter: domestic + trip-type match
         matching = []
         for cat in cats:
             name = cat.get("name", "").lower()
-            is_domestic = "innland" in name
-            if not is_domestic:
+            if "innland" not in name:
                 continue
             if is_day_trip:
-                # For day trips, prefer "Dagsreise over 12 timer"
                 if "dagsreise" in name and "over 12" in name:
                     matching.append(cat)
             else:
-                # For overnight trips, prefer "Overnatting over 12 timer"
                 if "overnatting" in name and "over 12" in name:
                     matching.append(cat)
 
         if not matching:
-            # Fallback: any domestic category, newest first
+            # Fallback: any domestic category
             matching = [c for c in cats if "innland" in c.get("name", "").lower()]
 
-        if matching:
-            # Return the one with highest id (newest date range)
-            matching.sort(key=lambda c: c["id"], reverse=True)
-            chosen = matching[0]
-            logger.info(f"Selected rateCategory: id={chosen['id']} name={chosen.get('name')}")
-            return chosen["id"]
+        if not matching:
+            matching = cats
 
-        return cats[-1]["id"]  # Absolute fallback: last in list
+        # Prefer date-valid categories, but keep all as fallback
+        date_valid = [c for c in matching if _rate_category_valid_for_date(c, travel_date)]
+        candidates = date_valid if date_valid else matching
+
+        # Sort by highest id (newest) first
+        candidates.sort(key=lambda c: c["id"], reverse=True)
+        ids = [c["id"] for c in candidates]
+
+        logger.info(
+            f"Rate category candidates (date={travel_date.date()}): "
+            f"{[(c['id'], c.get('name')) for c in candidates[:3]]}"
+        )
+        return ids
+
     except Exception as e:
-        logger.warning(f"Failed to get per diem rate category: {e}")
-    return None
+        logger.warning(f"Failed to get per diem rate categories: {e}")
+    return []
+
+
+async def _get_per_diem_rate_category(
+    client: TripletexClient,
+    is_day_trip: bool = False,
+    travel_date: datetime | None = None,
+) -> int | None:
+    """Get the best per diem rate category ID (first from ranked list)."""
+    ids = await _get_per_diem_rate_categories_ranked(
+        client, is_day_trip=is_day_trip, travel_date=travel_date,
+    )
+    return ids[0] if ids else None
 
 
 async def _get_per_diem_rate_type(client: TripletexClient, rate_category_id: int | None) -> int | None:
-    """Get a per diem rate type ID from /travelExpense/rate."""
+    """Get a per diem rate type ID from /travelExpense/rate.
+
+    Requires rateCategoryId — without it the endpoint returns 422 "Result set
+    too large". Returns None (safe fallback) if the category ID is missing or
+    the call fails.
+    """
+    if not rate_category_id:
+        logger.warning("Skipping /travelExpense/rate lookup — no rateCategoryId available")
+        return None
     try:
-        params: dict[str, Any] = {"count": 1}
-        if rate_category_id:
-            params["rateCategoryId"] = str(rate_category_id)
+        params: dict[str, Any] = {"count": 1, "rateCategoryId": str(rate_category_id)}
         resp = await client.get_cached("/travelExpense/rate", params=params)
         if resp.status_code != 200:
             logger.warning(f"GET /travelExpense/rate returned {resp.status_code}")
@@ -246,64 +289,108 @@ async def _create_per_diem_compensation(
     cost: dict[str, Any],
     fields: dict[str, Any],
     is_day_trip: bool = False,
+    travel_date: datetime | None = None,
 ) -> bool:
-    """Create a per diem compensation entry. Returns True on success."""
-    rate_category_id = await _get_per_diem_rate_category(client, is_day_trip=is_day_trip)
-    rate_type_id = await _get_per_diem_rate_type(client, rate_category_id)
+    """Create a per diem compensation entry. Returns True on success.
+
+    Tries each candidate rate category in rank order. If a category causes a
+    "dato samsvarer ikke" (date mismatch) validation error, the next candidate
+    is tried automatically.
+    """
+    if travel_date is None:
+        travel_date = datetime.now()
+
+    # Get all candidate category IDs ranked by preference
+    category_ids = await _get_per_diem_rate_categories_ranked(
+        client, is_day_trip=is_day_trip, travel_date=travel_date,
+    )
 
     days = _extract_per_diem_days(cost)
     amount = cost.get("amount", 0)
     location = _extract_destination(fields)
 
-    payload: dict[str, Any] = {
-        "travelExpense": {"id": te_id},
-        "count": days,
-        "location": location,
-        "overnightAccommodation": "NONE",
-        "isDeductionForBreakfast": False,
-        "isDeductionForLunch": False,
-        "isDeductionForDinner": False,
-    }
+    def _build_payload(rate_category_id: int | None, rate_type_id: int | None) -> dict[str, Any]:
+        p: dict[str, Any] = {
+            "travelExpense": {"id": te_id},
+            "count": days,
+            "location": location,
+            "overnightAccommodation": "NONE",
+            "isDeductionForBreakfast": False,
+            "isDeductionForLunch": False,
+            "isDeductionForDinner": False,
+        }
+        if rate_type_id:
+            p["rateType"] = {"id": rate_type_id}
+        if rate_category_id:
+            p["rateCategory"] = {"id": rate_category_id}
+        # Include explicit amount/rate only when Tripletex cannot calculate from rates
+        if not rate_type_id:
+            rate = amount / days if days > 0 else amount
+            p["rate"] = rate
+            p["amount"] = amount
+        return p
 
-    if rate_type_id:
-        payload["rateType"] = {"id": rate_type_id}
-    if rate_category_id:
-        payload["rateCategory"] = {"id": rate_category_id}
+    def _is_date_mismatch(resp_text: str) -> bool:
+        return "samsvarer ikke" in resp_text or "dato" in resp_text.lower()
 
-    # Only include amount/rate if we don't have rate type (Tripletex calculates from rates)
-    if not rate_type_id:
-        rate = amount / days if days > 0 else amount
-        payload["rate"] = rate
-        payload["amount"] = amount
+    def _is_missing_dates(resp_text: str) -> bool:
+        return "avreisedato" in resp_text.lower() or "returdato" in resp_text.lower()
 
-    try:
-        resp = await client.post("/travelExpense/perDiemCompensation", payload)
-        status = resp.status_code
-        if status in (200, 201):
-            per_diem = resp.json().get("value", {})
-            logger.info(f"Created perDiemCompensation {per_diem.get('id')} for TE {te_id}")
-            return True
-        else:
+    # Try up to 3 candidate categories
+    for i, cat_id in enumerate(category_ids[:3]):
+        rate_type_id = await _get_per_diem_rate_type(client, cat_id)
+        payload = _build_payload(cat_id, rate_type_id)
+
+        try:
+            resp = await client.post("/travelExpense/perDiemCompensation", payload)
+            status = resp.status_code
+            if status in (200, 201):
+                per_diem = resp.json().get("value", {})
+                logger.info(
+                    f"Created perDiemCompensation {per_diem.get('id')} "
+                    f"for TE {te_id} (category={cat_id}, attempt={i+1})"
+                )
+                return True
+
             logger.warning(
-                f"perDiemCompensation POST returned {status}: {resp.text[:500]}"
+                f"perDiemCompensation attempt {i+1} returned {status} "
+                f"(category={cat_id}): {resp.text[:300]}"
             )
-            # Try again without rate fields
-            if rate_type_id and status == 422:
-                payload.pop("rateType", None)
-                payload.pop("rateCategory", None)
-                rate = amount / days if days > 0 else amount
-                payload["rate"] = rate
-                payload["amount"] = amount
-                resp2 = await client.post("/travelExpense/perDiemCompensation", payload)
-                if resp2.status_code in (200, 201):
-                    per_diem = resp2.json().get("value", {})
-                    logger.info(f"Created perDiemCompensation {per_diem.get('id')} (retry) for TE {te_id}")
-                    return True
-                logger.warning(f"perDiemCompensation retry also failed: {resp2.status_code}: {resp2.text[:300]}")
+
+            if status == 422:
+                if _is_date_mismatch(resp.text) and i < 2:
+                    logger.info(f"Date mismatch for category {cat_id}, trying next candidate")
+                    continue
+                if _is_missing_dates(resp.text):
+                    # travelDetails not persisted — cannot proceed with per diem
+                    logger.warning(
+                        "perDiemCompensation requires travelDetails (departure/return dates) "
+                        "which were not persisted — falling back to regular cost line"
+                    )
+                    return False
+                # Other 422 — try without rateType/rateCategory as last resort
+                if rate_type_id and i == 0:
+                    fallback = _build_payload(None, None)
+                    resp2 = await client.post("/travelExpense/perDiemCompensation", fallback)
+                    if resp2.status_code in (200, 201):
+                        per_diem = resp2.json().get("value", {})
+                        logger.info(
+                            f"Created perDiemCompensation {per_diem.get('id')} "
+                            f"(no-rate fallback) for TE {te_id}"
+                        )
+                        return True
+                    logger.warning(
+                        f"perDiemCompensation no-rate fallback failed: "
+                        f"{resp2.status_code}: {resp2.text[:200]}"
+                    )
             return False
-    except Exception as e:
-        logger.warning(f"perDiemCompensation POST failed: {e}")
-        return False
+
+        except Exception as e:
+            logger.warning(f"perDiemCompensation POST failed (attempt {i+1}): {e}")
+            return False
+
+    logger.warning(f"All perDiemCompensation attempts failed for TE {te_id}")
+    return False
 
 
 @register_handler("create_travel_expense")
@@ -318,7 +405,7 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
     # Don't send date — let Tripletex default to today.
     # Gemini sometimes hallucinates wrong dates (e.g. 2024 instead of 2026).
     # Tripletex auto-sets today's date when omitted.
-    travel_date = datetime.now().strftime("%Y-%m-%d")  # Used for travelDetails calculations only
+    dep_date = datetime.now()  # Used for travelDetails and rateCategory date filtering
 
     # Calculate per diem days
     total_days = 1
@@ -330,10 +417,6 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
         )
         total_days = max(total_days, 1)
 
-    try:
-        dep_date = datetime.strptime(travel_date, "%Y-%m-%d")
-    except ValueError:
-        dep_date = datetime.now()
     ret_date = dep_date + timedelta(days=total_days)
 
     destination = _extract_destination(fields)
@@ -385,7 +468,9 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
         if _is_per_diem_cost(cost):
             # Try per diem compensation endpoint
             success = await _create_per_diem_compensation(
-                client, te_id, cost, fields, is_day_trip=(total_days <= 1),
+                client, te_id, cost, fields,
+                is_day_trip=(total_days <= 1),
+                travel_date=dep_date,
             )
             if success:
                 per_diem_count += 1
@@ -394,7 +479,7 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
             logger.info("Per diem endpoint failed, falling back to cost line")
 
         # Regular cost line
-        cost_date = cost.get("date", travel_date)
+        cost_date = cost.get("date", dep_date.strftime("%Y-%m-%d"))
         cost_payload: dict[str, Any] = {
             "travelExpense": {"id": te_id},
             "date": cost_date,
