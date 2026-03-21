@@ -33,6 +33,16 @@ VALID_TASK_TYPES = {
 # Keyword patterns for inferring task type when LLM returns "unknown"
 # Each entry: (task_type, list of regex patterns — match ANY = positive signal)
 _KEYWORD_RULES: list[tuple[str, list[str]]] = [
+    ("monthly_closing", [
+        r"månedsavslutning|monthly.?clos|cierre.?mensual|clôture.?mensuel|Monatsabschluss|encerramento.?mensal",
+        r"periodisering|accrual|periodificación|periodisation|Periodenabgrenzung|periodização",
+        r"avskrivning|depreciation|depreciación|amortissement|Abschreibung|depreciação",
+    ]),
+    ("register_supplier_invoice", [
+        r"leverandorfaktura.*(?:PDF|vedlagt|attached)|(?:PDF|vedlagt|attached).*leverandorfaktura",
+        r"supplier.?invoice.*(?:PDF|attached)|(?:PDF|attached).*supplier.?invoice",
+        r"factura.*proveedor.*PDF|PDF.*factura.*proveedor",
+    ]),
     ("create_custom_dimension", [
         r"dimensjon|dimension|dimensão|dimensión|Dimension",
         r"regnskapsdimensjon|accounting dimension|dimensão contab|dimensión contab|comptable.*dimension|dimension.*comptable",
