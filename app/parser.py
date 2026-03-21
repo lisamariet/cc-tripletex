@@ -39,6 +39,12 @@ VALID_TASK_TYPES = {
 # Keyword patterns for inferring task type when LLM returns "unknown"
 # Each entry: (task_type, list of regex patterns — match ANY = positive signal)
 _KEYWORD_RULES: list[tuple[str, list[str]]] = [
+    ("project_lifecycle", [
+        r"(?:complete|full|entire|execute).{0,30}project.?lifecycle",
+        r"(?:komplett|fullstendig|utfør).{0,30}prosjekt.?livssyklus",
+        r"(?:budget|budsjett).{0,80}(?:log.?time|registrer?.{0,10}timer).{0,80}(?:supplier.?cost|leverandør.?kostnad).{0,80}(?:invoice|faktura)",
+        r"(?:log.?time|registrer?.{0,10}timer).{0,80}(?:supplier.?cost|leverandør.?kostnad|supplier.{0,10}(?:cost|expense|invoice)).{0,80}(?:customer.?invoice|kundefaktura|create.{0,10}(?:a\s+)?(?:customer\s+)?invoice)",
+    ]),
     ("year_end_closing", [
         r"årsavslutning|årsoppgjør|year.?end.?clos|cierre.?de.?año|clôture.?annuelle|Jahresabschluss|encerramento.?anual",
         r"(?:lukk|close|cerrar|clôturer|schließen|fechar).{0,30}(?:regnskapsår|regnskapsperiode|fiscal.?year|accounting.?year|ejercicio|année.?comptable|Geschäftsjahr|ano.?fiscal)",

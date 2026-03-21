@@ -20,6 +20,7 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 _RAG_INDEX_PATH = Path(__file__).parent / "api_rag_index.json"
+_GCS_RAG_INDEX = "indexes/api_rag_index.json"
 
 # Cached RAG index
 _rag_index: list[dict[str, Any]] | None = None
@@ -27,19 +28,42 @@ _rag_matrix: np.ndarray | None = None
 _rag_texts: list[str] | None = None
 
 
+def _download_from_gcs(gcs_key: str) -> list[dict[str, Any]] | None:
+    """Try downloading index from GCS. Returns parsed JSON or None."""
+    try:
+        from google.cloud import storage as gcs
+        from app.config import GCS_BUCKET
+
+        client = gcs.Client()
+        blob = client.bucket(GCS_BUCKET).blob(gcs_key)
+        if not blob.exists():
+            return None
+        data = json.loads(blob.download_as_text())
+        logger.info(f"Loaded index from gs://{GCS_BUCKET}/{gcs_key} ({len(data)} entries)")
+        return data
+    except Exception as e:
+        logger.debug(f"GCS download failed for {gcs_key}: {e}")
+        return None
+
+
 def _load_rag_index() -> None:
-    """Load the RAG index from disk into memory."""
+    """Load the RAG index from GCS (preferred) or local disk (fallback)."""
     global _rag_index, _rag_matrix, _rag_texts
 
-    if not _RAG_INDEX_PATH.exists():
-        logger.warning(f"RAG index not found at {_RAG_INDEX_PATH}")
-        _rag_index = []
-        _rag_matrix = np.array([])
-        _rag_texts = []
-        return
+    # Try GCS first (avoids baking large files into Docker image)
+    _rag_index = _download_from_gcs(_GCS_RAG_INDEX)
 
-    with open(_RAG_INDEX_PATH) as f:
-        _rag_index = json.load(f)
+    # Fallback to local file
+    if _rag_index is None:
+        if not _RAG_INDEX_PATH.exists():
+            logger.warning(f"RAG index not found locally or in GCS")
+            _rag_index = []
+            _rag_matrix = np.array([])
+            _rag_texts = []
+            return
+        with open(_RAG_INDEX_PATH) as f:
+            _rag_index = json.load(f)
+        logger.info(f"Loaded RAG index from local file ({len(_rag_index)} entries)")
 
     if not _rag_index:
         _rag_matrix = np.array([])

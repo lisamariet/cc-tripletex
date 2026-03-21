@@ -2082,6 +2082,40 @@ def build_tier2_tests() -> list[E2ETestCase]:
             verify=None,  # custom post-check: voucherCount >= 1
             tier=3,
         ),
+
+        # -----------------------------------------------------------------------
+        # Project Lifecycle
+        # -----------------------------------------------------------------------
+        E2ETestCase(
+            name="t3_project_lifecycle",
+            expected_task_type="project_lifecycle",
+            expected_fields={},
+            prompt=(
+                "Execute the complete project lifecycle for 'System Upgrade Greenfield' "
+                "(Greenfield Ltd, org no. 873288949): "
+                "1) The project has a budget of 206300 NOK. "
+                "2) Log time: Oliver Wilson (project manager, oliver.wilson@example.org) "
+                "36 hours and Victoria Taylor (consultant, victoria.taylor@example.org) "
+                "150 hours. "
+                "3) Register supplier cost of 41300 NOK from Ironbridge Ltd (org no. 913777255). "
+                "4) Create a customer invoice for the project."
+            ),
+            direct_fields={
+                "projectName": "System Upgrade Greenfield",
+                "customerName": "Greenfield Ltd",
+                "customerOrgNumber": "873288949",
+                "projectBudget": 206300,
+                "employees": [
+                    {"name": "Oliver Wilson", "email": "oliver.wilson@example.org", "hours": 36},
+                    {"name": "Victoria Taylor", "email": "victoria.taylor@example.org", "hours": 150},
+                ],
+                "supplierName": "Ironbridge Ltd",
+                "supplierOrgNumber": "913777255",
+                "supplierAmount": 41300,
+            },
+            verify=None,  # custom post-check: projectId + invoice + timesheet
+            tier=3,
+        ),
     ]
 
 

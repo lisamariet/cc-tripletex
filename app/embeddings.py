@@ -29,6 +29,7 @@ _GCP_PROJECT = "ai-nm26osl-1771"
 _GCP_REGION = "europe-west1"
 _EMBEDDING_MODEL = "text-embedding-005"
 _INDEX_PATH = Path(__file__).parent / "embeddings_index.json"
+_GCS_EMBEDDING_INDEX = "indexes/embeddings_index.json"
 
 # Cached index: list of {prompt, task_type, embedding}
 _index: list[dict[str, Any]] | None = None
@@ -117,19 +118,42 @@ def embed_texts_batch(texts: list[str], batch_size: int = 50) -> list[list[float
     return all_embeddings
 
 
+def _download_from_gcs(gcs_key: str) -> list[dict[str, Any]] | None:
+    """Try downloading index from GCS. Returns parsed JSON or None."""
+    try:
+        from google.cloud import storage as gcs
+        from app.config import GCS_BUCKET
+
+        client = gcs.Client()
+        blob = client.bucket(GCS_BUCKET).blob(gcs_key)
+        if not blob.exists():
+            return None
+        data = json.loads(blob.download_as_text())
+        logger.info(f"Loaded index from gs://{GCS_BUCKET}/{gcs_key} ({len(data)} entries)")
+        return data
+    except Exception as e:
+        logger.debug(f"GCS download failed for {gcs_key}: {e}")
+        return None
+
+
 def _load_index() -> None:
-    """Load the embedding index from disk into memory."""
+    """Load the embedding index from GCS (preferred) or local disk (fallback)."""
     global _index, _index_matrix, _index_types
 
-    if not _INDEX_PATH.exists():
-        logger.warning(f"Embedding index not found at {_INDEX_PATH}")
-        _index = []
-        _index_matrix = np.array([])
-        _index_types = []
-        return
+    # Try GCS first
+    _index = _download_from_gcs(_GCS_EMBEDDING_INDEX)
 
-    with open(_INDEX_PATH) as f:
-        _index = json.load(f)
+    # Fallback to local file
+    if _index is None:
+        if not _INDEX_PATH.exists():
+            logger.warning(f"Embedding index not found locally or in GCS")
+            _index = []
+            _index_matrix = np.array([])
+            _index_types = []
+            return
+        with open(_INDEX_PATH) as f:
+            _index = json.load(f)
+        logger.info(f"Loaded embedding index from local file ({len(_index)} entries)")
 
     if not _index:
         _index_matrix = np.array([])

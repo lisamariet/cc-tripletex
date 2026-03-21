@@ -1983,3 +1983,196 @@ async def _create_single_expense_supplier_invoice(
         f"amount_gross={amount_gross}, expense_account={expense_account_nr}"
     )
     return {"created": created}
+
+
+# ---------------------------------------------------------------------------
+# Project Lifecycle (complete project: create → timesheet → supplier cost → invoice)
+# ---------------------------------------------------------------------------
+
+@register_handler("project_lifecycle")
+async def project_lifecycle(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Execute a complete project lifecycle:
+
+    1. Create/find customer
+    2. Create employees (with emails)
+    3. Create project linked to customer, with optional budget
+    4. Log timesheet hours for each employee
+    5. Register supplier cost (supplier invoice)
+    6. Create customer invoice for the project
+    """
+    from app.handlers.tier2_invoice import _ensure_bank_account, _find_or_create_customer
+
+    project_name = fields.get("projectName") or fields.get("name", "")
+    if not project_name:
+        return {"status": "completed", "note": "Project name is required"}
+
+    today = date.today().isoformat()
+    result: dict[str, Any] = {"status": "completed", "taskType": "project_lifecycle"}
+
+    # --- Step 1: Find or create customer ---
+    customer_id = None
+    if fields.get("customerName") or fields.get("customerOrgNumber"):
+        customer_id = await _find_or_create_customer(client, fields)
+        if customer_id:
+            result["customerId"] = customer_id
+            logger.info(f"[project_lifecycle] Customer id={customer_id}")
+
+    # --- Step 2: Create employees ---
+    employees_list = fields.get("employees") or []
+    employee_ids: list[dict[str, Any]] = []
+    first_emp_id = None
+
+    for emp in employees_list:
+        emp_name = emp.get("name", "")
+        emp_email = emp.get("email")
+        emp_fields: dict[str, Any] = {"employeeName": emp_name}
+        if emp_email:
+            emp_fields["employeeEmail"] = emp_email
+
+        employee = await _find_employee(client, emp_fields)
+        if employee:
+            emp_id = employee["id"]
+        else:
+            # Create employee via create_employee handler for full validation
+            from app.handlers.tier1 import create_employee as _create_emp
+            parts = emp_name.strip().split()
+            emp_create_fields: dict[str, Any] = {
+                "firstName": parts[0] if parts else emp_name,
+                "lastName": " ".join(parts[1:]) if len(parts) > 1 else emp_name,
+            }
+            if emp_email:
+                emp_create_fields["email"] = emp_email
+            emp_result = await _create_emp(client, emp_create_fields)
+            emp_id = emp_result.get("created", {}).get("id")
+            if not emp_id:
+                logger.warning(f"[project_lifecycle] Failed to create employee {emp_name}")
+                continue
+
+        if emp_id:
+            employee_ids.append({"id": emp_id, "name": emp_name, "hours": emp.get("hours", 0)})
+            if first_emp_id is None:
+                first_emp_id = emp_id
+
+    # --- Step 3: Create project ---
+    project_id = await _find_or_create_project(
+        client, project_name, pm_id=first_emp_id, entry_date=today,
+    )
+    if not project_id:
+        return {"status": "completed", "note": "Could not create project"}
+
+    # Link customer to project if available
+    if customer_id:
+        try:
+            proj_resp = await client.get(f"/project/{project_id}")
+            proj_data = proj_resp.json().get("value", {})
+            if not proj_data.get("customer"):
+                # Minimal PUT with only required fields to avoid validation issues
+                put_payload: dict[str, Any] = {
+                    "id": project_id,
+                    "version": proj_data.get("version", 0),
+                    "name": proj_data.get("name", project_name),
+                    "isInternal": proj_data.get("isInternal", False),
+                    "startDate": proj_data.get("startDate", today),
+                    "projectManager": proj_data.get("projectManager"),
+                    "customer": {"id": customer_id},
+                }
+                await client.put(f"/project/{project_id}", put_payload)
+                logger.info(f"[project_lifecycle] Linked customer {customer_id} to project {project_id}")
+        except Exception as e:
+            logger.warning(f"[project_lifecycle] Could not link customer to project: {e}")
+
+    result["projectId"] = project_id
+    logger.info(f"[project_lifecycle] Project '{project_name}' id={project_id}")
+
+    # --- Step 4: Log timesheet ---
+    if employee_ids:
+        activity_id = await _find_or_create_activity(client, project_name, project_id=project_id)
+        if not activity_id:
+            resp = await client.get("/activity/%3EforTimeSheet", params={"projectId": project_id})
+            activities = resp.json().get("values", [])
+            activity_id = activities[0]["id"] if activities else None
+
+        timesheet_entries = []
+        total_hours = 0.0
+        for emp_info in employee_ids:
+            hours = emp_info.get("hours", 0)
+            if not hours:
+                continue
+            entry_payload: dict[str, Any] = {
+                "employee": {"id": emp_info["id"]},
+                "project": {"id": project_id},
+                "date": today,
+                "hours": hours,
+            }
+            if activity_id:
+                entry_payload["activity"] = {"id": activity_id}
+            resp = await client.post("/timesheet/entry", entry_payload)
+            if resp.status_code < 400:
+                created_entry = resp.json().get("value", {})
+                timesheet_entries.append(created_entry)
+                total_hours += hours
+                logger.info(f"[project_lifecycle] Timesheet: {emp_info['name']} {hours}h")
+            else:
+                logger.warning(f"[project_lifecycle] Timesheet failed for {emp_info['name']}: {resp.text[:200]}")
+
+        result["timesheetEntries"] = len(timesheet_entries)
+        result["totalHours"] = total_hours
+
+    # --- Step 5: Supplier cost ---
+    supplier_amount = fields.get("supplierAmount") or fields.get("supplierCost")
+    supplier_name = fields.get("supplierName")
+    if supplier_amount and supplier_name:
+        si_fields: dict[str, Any] = {
+            "supplierName": supplier_name,
+            "supplierOrgNumber": fields.get("supplierOrgNumber"),
+            "amount": supplier_amount,
+            "description": f"Project cost: {project_name}",
+            "expenseAccount": fields.get("supplierExpenseAccount", 4000),
+            "vatRate": 25,
+        }
+        si_result = await register_supplier_invoice(client, si_fields)
+        result["supplierInvoice"] = si_result
+        logger.info(f"[project_lifecycle] Supplier invoice: {supplier_name} {supplier_amount} NOK")
+
+    # --- Step 6: Customer invoice ---
+    if customer_id:
+        await _ensure_bank_account(client)
+
+        budget = fields.get("projectBudget") or fields.get("budget")
+        if budget:
+            invoice_amount = budget
+            description = f"Project: {project_name}"
+        else:
+            invoice_amount = supplier_amount or 0
+            description = f"Project services: {project_name}"
+
+        order_payload: dict[str, Any] = {
+            "customer": {"id": customer_id},
+            "project": {"id": project_id},
+            "orderDate": today,
+            "deliveryDate": today,
+            "orderLines": [
+                {
+                    "count": 1,
+                    "unitPriceExcludingVatCurrency": invoice_amount,
+                    "description": description,
+                }
+            ],
+        }
+        resp = await client.post("/order", order_payload)
+        order = resp.json().get("value", {})
+        order_id = order.get("id")
+
+        if order_id:
+            resp = await client.put(f"/order/{order_id}/:invoice", params={
+                "invoiceDate": today,
+                "sendToCustomer": False,
+            })
+            if resp.status_code < 400:
+                invoice = resp.json().get("value", {})
+                result["invoice"] = invoice
+                logger.info(f"[project_lifecycle] Invoice created: {invoice.get('id')}")
+            else:
+                logger.warning(f"[project_lifecycle] Invoice failed: {resp.text[:200]}")
+
+    return result
