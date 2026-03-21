@@ -12,7 +12,7 @@ Agenten er allerede deployert og funksjonell med 21.65/52 poeng. Roadmapen drive
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Korrekthet & Tier 3** - T1/T2 lav-score til 1.0 + T3 handlers tunet for ×3-poeng
+- [x] **Phase 1: Korrekthet & Tier 3** - T1/T2 lav-score til 1.0 + T3 handlers tunet for ×3-poeng (completed 2026-03-21)
 - [ ] **Phase 2: Nullscore Fix** - Diagnostiser og fiks de 4 taskene som scorer 0 (09, 11, 12, 17)
 - [ ] **Phase 3: Effektivitet** - Eliminer 4xx + reduser kall-antall for å aktivere effektivitetsbonus
 - [ ] **Phase 4: T3 Robusthet** - Timeout-sikring og stabilisering av T3-handlers
@@ -29,11 +29,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Bank_reconciliation og year_end_closing gir poeng > 0 ved T3-innsending
   4. Correct_ledger_error og monthly_closing gir poeng > 0 ved T3-innsending
   5. Ingen BETA-endpoint-kall i T3-handlers (null 403 fra BETA på T3-oppgaver)
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 - [x] 01-01-PLAN.md — Fiks felt-mapping for task 04 og 06 (T1, CORR-01/02)
-- [ ] 01-02-PLAN.md — Diagnostiser og fiks T2 lav-score tasks 10, 13, 15, 16, 18 (CORR-03-07)
+- [x] 01-02-PLAN.md — Diagnostiser og fiks T2 lav-score tasks 10, 13, 15, 16, 18 (CORR-03-07)
 - [x] 01-03-PLAN.md — Fjern BETA-kall + tune bank_reconciliation og year_end_closing (T3-01/02/06)
 - [x] 01-04-PLAN.md — Tune correct_ledger_error + monthly_closing + identifiser T3-typer (T3-03/04/05)
 
@@ -88,7 +88,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Korrekthet & Tier 3 | 3/4 | In Progress|  |
+| 1. Korrekthet & Tier 3 | 4/4 | Complete   | 2026-03-21 |
 | 2. Nullscore Fix | 0/3 | Not started | - |
 | 3. Effektivitet | 0/2 | Not started | - |
 | 4. T3 Robusthet | 0/1 | Not started | - |

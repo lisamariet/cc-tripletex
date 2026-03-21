@@ -16,19 +16,19 @@
 
 - [x] **CORR-01**: Fiks felt-mapping på task 04 (T1, score 0.86 → 1.0)
 - [x] **CORR-02**: Fiks felt-mapping på task 06 (T1, score 0.86 → 1.0)
-- [ ] **CORR-03**: Forbedre task 10 (T2, score 1.63 → 3.7+)
-- [ ] **CORR-04**: Forbedre task 13 (T2, score 1.38 → 3.1+)
-- [ ] **CORR-05**: Forbedre task 15 (T2, score 0.50 → 4.0)
-- [ ] **CORR-06**: Forbedre task 16 (T2, score 1.00 → 3.8)
-- [ ] **CORR-07**: Forbedre task 18 (T2, score 1.50 → 3.3+)
+- [x] **CORR-03**: Forbedre task 10 (T2, score 1.63 → 3.7+)
+- [x] **CORR-04**: Forbedre task 13 (T2, score 1.38 → 3.1+)
+- [x] **CORR-05**: Forbedre task 15 (T2, score 0.50 → 4.0)
+- [x] **CORR-06**: Forbedre task 16 (T2, score 1.00 → 3.8)
+- [x] **CORR-07**: Forbedre task 18 (T2, score 1.50 → 3.3+)
 
 ### Tier 3 optimalisering
 
 - [x] **T3-01**: Test og tune bank_reconciliation mot T3-scoring
 - [x] **T3-02**: Test og tune year_end_closing mot T3-scoring
-- [ ] **T3-03**: Test og tune correct_ledger_error mot T3-scoring
-- [ ] **T3-04**: Test og tune monthly_closing mot T3-scoring
-- [ ] **T3-05**: Identifiser og implementer eventuelle nye T3-oppgavetyper
+- [x] **T3-03**: Test og tune correct_ledger_error mot T3-scoring
+- [x] **T3-04**: Test og tune monthly_closing mot T3-scoring
+- [x] **T3-05**: Identifiser og implementer eventuelle nye T3-oppgavetyper
 - [x] **T3-06**: Fjern alle BETA-endpoint-kall fra T3-handlers
 
 ### Effektivitet
@@ -64,16 +64,16 @@
 |-------------|-------|--------|
 | CORR-01 | Phase 1 | Complete |
 | CORR-02 | Phase 1 | Complete |
-| CORR-03 | Phase 1 | Pending |
-| CORR-04 | Phase 1 | Pending |
-| CORR-05 | Phase 1 | Pending |
-| CORR-06 | Phase 1 | Pending |
-| CORR-07 | Phase 1 | Pending |
+| CORR-03 | Phase 1 | Complete |
+| CORR-04 | Phase 1 | Complete |
+| CORR-05 | Phase 1 | Complete |
+| CORR-06 | Phase 1 | Complete |
+| CORR-07 | Phase 1 | Complete |
 | T3-01 | Phase 1 | Complete |
 | T3-02 | Phase 1 | Complete |
-| T3-03 | Phase 1 | Pending |
-| T3-04 | Phase 1 | Pending |
-| T3-05 | Phase 1 | Pending |
+| T3-03 | Phase 1 | Complete |
+| T3-04 | Phase 1 | Complete |
+| T3-05 | Phase 1 | Complete |
 | T3-06 | Phase 1 | Complete |
 | NULL-01 | Phase 2 | Pending |
 | NULL-02 | Phase 2 | Pending |

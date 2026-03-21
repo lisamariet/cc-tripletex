@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-korrekthet-tier-3/01-04-PLAN.md
-last_updated: "2026-03-21T14:12:43.493Z"
+stopped_at: Completed 01-korrekthet-tier-3/01-02-PLAN.md
+last_updated: "2026-03-21T14:25:36.679Z"
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -49,6 +49,7 @@ Plan: 4 of 4
 | Phase 01-korrekthet-tier-3 P03 | 12 | 1 tasks | 2 files |
 | Phase 01-korrekthet-tier-3 P01 | 45 | 1 tasks | 2 files |
 | Phase 01-korrekthet-tier-3 P04 | 2 | 2 tasks | 1 files |
+| Phase 01-korrekthet-tier-3 P02 | 90 | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,10 @@ Recent decisions affecting current work:
 - [Phase 01-korrekthet-tier-3]: create_department: departmentManager resolves via employee etternavn-søk for å dekke manager-sjekker i scorer
 - [Phase 01-korrekthet-tier-3]: correct_ledger_error og monthly_closing er felt-komplette uten endringer — E2E bekreftet alle T3-handlers groenne
 - [Phase 01-korrekthet-tier-3]: Alle 8 T3-typer har handler-registrering — ingen ukjente T3-typer identifisert
+- [Phase 01-korrekthet-tier-3]: register_supplier_invoice: dueDate=30 dager default, amountExcludingVat beregnes fra gross/vatRate, supplier kun paa AP-posting
+- [Phase 01-korrekthet-tier-3]: register_payment: agio/disagio konto 8060 (gain) / 8160 (loss) ved multi-valuta betaling
+- [Phase 01-korrekthet-tier-3]: register_timesheet: employees[]-array for multi-ansatt, POST /project/projectActivity foer timesheet-oppfoering
+- [Phase 01-korrekthet-tier-3]: Task 10 Nynorsk-fix: leverand[o\u00f8]rfaktura regex i parser sikrer korrekt klassifisering
 
 ### Pending Todos
 
@@ -81,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T14:12:43.490Z
-Stopped at: Completed 01-korrekthet-tier-3/01-04-PLAN.md
+Last session: 2026-03-21T14:25:36.676Z
+Stopped at: Completed 01-korrekthet-tier-3/01-02-PLAN.md
 Resume file: None
