@@ -162,8 +162,20 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
                          "employeeNumber", "nationalIdentityNumber",
                          "bankAccountNumber", "iban"))
 
-    # userType is required — default to STANDARD
-    payload["userType"] = fields.get("userType", "STANDARD")
+    # Email fallback: if no email in original fields, generate one from name
+    _email_provided = bool(fields.get("email"))
+    if not _email_provided:
+        import re as _re
+        first_clean = _re.sub(r"[^a-z0-9]", "", fields["firstName"].lower())
+        last_clean = _re.sub(r"[^a-z0-9]", "", fields["lastName"].lower())
+        payload["email"] = f"{first_clean}.{last_clean}@company.no"
+        logger.info(f"[create_employee] No email in prompt — generated fallback: {payload['email']}")
+
+    # userType is required — use NO_ACCESS when email was not provided (no real user account)
+    if _email_provided:
+        payload["userType"] = fields.get("userType", "STANDARD")
+    else:
+        payload["userType"] = fields.get("userType", "NO_ACCESS")
 
     # department is required — use provided or fetch first available
     if fields.get("departmentId"):

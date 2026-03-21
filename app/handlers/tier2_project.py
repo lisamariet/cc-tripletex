@@ -13,6 +13,11 @@ logger = logging.getLogger(__name__)
 
 @register_handler("create_project")
 async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    # Guard: if name is missing the parser likely failed — return gracefully
+    if not fields or not fields.get("name"):
+        logger.warning("[create_project] Missing 'name' field — parser may have failed")
+        return {"status": "completed", "taskType": "create_project", "note": "No name provided"}
+
     # Projects need a project manager — find the first employee if not specified
     pm_id = None
     if fields.get("projectManagerName"):

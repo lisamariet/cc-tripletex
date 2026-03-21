@@ -13,7 +13,8 @@ Agenten er allerede deployert og funksjonell med 21.65/52 poeng. Roadmapen drive
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Korrekthet & Tier 3** - T1/T2 lav-score til 1.0 + T3 handlers tunet for ×3-poeng (completed 2026-03-21)
-- [ ] **Phase 2: Nullscore Fix** - Diagnostiser og fiks de 4 taskene som scorer 0 (09, 11, 12, 17)
+- [x] **Phase 2: Nullscore Fix** - Diagnostiser og fiks de 4 taskene som scorer 0 (09, 11, 12, 17)
+- [ ] **Phase 2.1: Submission-feil fiks** - Fiks 6 konkrete submission-feil fra GCS-logger (INSERTED)
 - [ ] **Phase 3: Effektivitet** - Eliminer 4xx + reduser kall-antall for å aktivere effektivitetsbonus
 - [ ] **Phase 4: T3 Robusthet** - Timeout-sikring og stabilisering av T3-handlers
 
@@ -46,12 +47,31 @@ Plans:
   2. E2E-tester for alle fire tasks passerer mot sandbox uten feil
   3. Submit av task 09 og/eller 17 (T2) gir score > 0 på leaderboard
   4. Submit av task 11 og/eller 12 (T1) gir score > 0 på leaderboard
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 02-01-PLAN.md — Deploy Cloud Run + fiks compete.py tooling (score-beregning, submit-throttling)
 - [x] 02-02-PLAN.md — Fiks parser-disambiguering og handler-robusthet for nullscore-tasks
 - [x] 02-03-PLAN.md — E2E-verifiser nullscore-fikser mot sandbox og deploy
+
+### Phase 02.1: Submission-feil fiks (INSERTED)
+
+**Goal:** Fiks 6 konkrete submission-feil identifisert fra GCS-logger: create_employee email 422, create_project tomme fields, correct_ledger_error 422 GETs, bank_reconciliation 0-score, monthly_closing manglende provisions, Anthropic fallback broken
+**Requirements**: SUB-01, SUB-02, SUB-03, SUB-04, SUB-05, SUB-06
+**Depends on:** Phase 2
+**Success Criteria** (what must be TRUE):
+  1. create_employee returnerer completed uten 422 (email genereres automatisk)
+  2. create_project returnerer completed uten KeyError ved tomme fields
+  3. correct_ledger_error produserer 0 422-feil pa GET-kall
+  4. bank_reconciliation scorer > 0 (closingBalance + match + close)
+  5. monthly_closing ekstraherer provisions for alle 7 sprak
+  6. Fallback-handler bruker Gemini nar PARSER_BACKEND=gemini
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02.1-01-PLAN.md — Fiks create_employee email + create_project guard + Anthropic fallback
+- [ ] 02.1-02-PLAN.md — Fiks correct_ledger_error 422 + bank_reconciliation score + monthly_closing provisions
+- [ ] 02.1-03-PLAN.md — E2E-test alle 6 fikser + deploy Cloud Run
 
 ### Phase 3: Effektivitet
 **Goal**: Alle handlers med 1.0 korrekthet utløser effektivitetsbonus ved å minimere API-kall og eliminere 4xx
@@ -84,11 +104,12 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Korrekthet & Tier 3 | 4/4 | Complete   | 2026-03-21 |
-| 2. Nullscore Fix | 2/3 | In Progress|  |
+| 2. Nullscore Fix | 3/3 | Complete |  2026-03-21 |
+| 2.1 Submission-feil fiks | 0/3 | Not started | - |
 | 3. Effektivitet | 0/2 | Not started | - |
 | 4. T3 Robusthet | 0/1 | Not started | - |
