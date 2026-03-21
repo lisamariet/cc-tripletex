@@ -2483,6 +2483,76 @@ async def run_one_test(
                         passed=False, detail=f"no steps in result: {handler_result}",
                     ))
 
+        # For t3_register_expense_receipt: check multi-voucher support
+        if tc.name == "t3_register_expense_receipt":
+            vouchers = handler_result.get("vouchers", [])
+            voucher_count = handler_result.get("voucherCount", 0)
+            # Single-item fallback: created dict with id also passes
+            single_created = handler_result.get("created", {})
+            if isinstance(single_created, dict) and single_created.get("id"):
+                single_id = single_created["id"]
+            else:
+                single_id = None
+            if voucher_count >= 2 or len(vouchers) >= 2:
+                verify_results.append(CheckResult(
+                    field="voucherCount", expected=2,
+                    actual=voucher_count or len(vouchers),
+                    passed=True, detail=f"{voucher_count or len(vouchers)} vouchers created for 2 cost items",
+                ))
+            elif voucher_count == 1 or len(vouchers) == 1 or single_id:
+                verify_results.append(CheckResult(
+                    field="voucherCount", expected=2,
+                    actual=1,
+                    passed=False, detail="only 1 voucher created — expected 1 per cost item",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="voucherCount", expected=2, actual=0,
+                    passed=False, detail=f"no vouchers in result: {handler_result}",
+                ))
+
+        # For t3_batch_create_voucher: check 2 batch_results with created vouchers
+        if tc.name == "t3_batch_create_voucher":
+            batch_results = handler_result.get("batch_results", [])
+            succeeded = sum(
+                1 for r in batch_results
+                if isinstance(r, dict) and r.get("created", {}).get("id")
+            )
+            expected_count = len(tc.direct_fields.get("items", [])) if tc.direct_fields else 2
+            if succeeded >= expected_count:
+                verify_results.append(CheckResult(
+                    field="batch_count", expected=expected_count,
+                    actual=succeeded,
+                    passed=True, detail=f"all {succeeded} vouchers created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="batch_count", expected=expected_count,
+                    actual=succeeded,
+                    passed=False, detail=f"only {succeeded}/{expected_count} vouchers created",
+                ))
+
+        # For t3_batch_create_department: check 3 batch_results with created departments
+        if tc.name == "t3_batch_create_department":
+            batch_results = handler_result.get("batch_results", [])
+            succeeded = sum(
+                1 for r in batch_results
+                if isinstance(r, dict) and r.get("created", {}).get("id")
+            )
+            expected_count = len(tc.direct_fields.get("items", [])) if tc.direct_fields else 3
+            if succeeded >= expected_count:
+                verify_results.append(CheckResult(
+                    field="batch_count", expected=expected_count,
+                    actual=succeeded,
+                    passed=True, detail=f"all {succeeded} departments created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="batch_count", expected=expected_count,
+                    actual=succeeded,
+                    passed=False, detail=f"only {succeeded}/{expected_count} departments created",
+                ))
+
     elapsed = time.time() - t0
     api_calls = client.tracker.total_calls - calls_before
     return TestResult(
