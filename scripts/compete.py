@@ -461,7 +461,7 @@ def cmd_status(args: argparse.Namespace) -> None:
         # Track best per task type (for real task types, including keyword-inferred)
         if task_type != "?" and not task_type.startswith("["):
             current_best = best_scores.get(task_type, 0.0)
-            score_val = raw if raw is not None else 0.0
+            score_val = safe_float(sub.get("normalized_score")) or 0.0
             if score_val > current_best:
                 best_scores[task_type] = score_val
 
@@ -1355,6 +1355,8 @@ Kommandoer:
     batch_parser.add_argument("count", type=int, help="Antall submissions")
     batch_parser.add_argument("--interval", type=int, default=60,
                               help="Sekunder mellom submissions (default: 60)")
+    batch_parser.add_argument("--max-concurrent", type=int, default=3,
+                              help="Maks samtidige submissions (default: 3)")
 
     args = parser.parse_args()
 
@@ -1520,17 +1522,49 @@ def cmd_errors(args: argparse.Namespace) -> None:
     print()
 
 
+def _count_active_submissions(client: httpx.Client) -> int:
+    """Count submissions currently queued or running (not completed or failed)."""
+    try:
+        resp = client.get(f"{API_BASE}/tasks/{TASK_ID}/submissions")
+        if not resp.is_success:
+            return 0
+        subs = resp.json()
+        if isinstance(subs, dict):
+            subs = subs.get("data", subs.get("submissions", []))
+        active = [s for s in subs if s.get("status") not in ("completed", "failed", "error")]
+        return len(active)
+    except Exception:
+        return 0
+
+
+def _wait_for_capacity(client: httpx.Client, max_concurrent: int, wait_s: int = 30, max_retries: int = 10) -> bool:
+    """Wait until active submission count is below max_concurrent. Returns True if capacity available."""
+    for attempt in range(max_retries):
+        active = _count_active_submissions(client)
+        if active < max_concurrent:
+            return True
+        print(f"  {YELLOW}Aktive submissions: {active}/{max_concurrent} — venter {wait_s}s (forsøk {attempt+1}/{max_retries})...{RESET}")
+        time.sleep(wait_s)
+    return False
+
+
 def cmd_batch(args: argparse.Namespace) -> None:
     """Submit multiple times with interval between each."""
     count = args.count
     interval = args.interval
+    max_concurrent = getattr(args, "max_concurrent", 3)
     endpoint = ENDPOINT_URL
     api_key = os.environ.get("API_KEY", "")
 
-    print(f"{BOLD}Batch submit: {count} submissions, {interval}s mellom hver{RESET}\n")
+    print(f"{BOLD}Batch submit: {count} submissions, {interval}s mellom hver, maks {max_concurrent} samtidige{RESET}\n")
 
     with make_client() as client:
         for i in range(count):
+            # Throttle: wait if too many active submissions
+            if not _wait_for_capacity(client, max_concurrent):
+                print(f"  {RED}[{i+1}/{count}] Tidsavbrudd — for mange aktive submissions. Avbryter.{RESET}")
+                break
+
             payload: dict[str, Any] = {"endpoint_url": f"{endpoint}{SOLVE_PATH}"}
             if api_key:
                 payload["endpoint_api_key"] = api_key
