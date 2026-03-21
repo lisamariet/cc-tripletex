@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Nullscore Fix** - Diagnostiser og fiks de 4 taskene som scorer 0 (09, 11, 12, 17)
 - [ ] **Phase 2.1: Submission-feil fiks** - Fiks 6 konkrete submission-feil fra GCS-logger (INSERTED)
 - [ ] **Phase 2.1.1: Score-maksimering** - Fiks 8 T3-tasks med stoerst poengpotensial (INSERTED)
-- [ ] **Phase 3: Effektivitet** - Eliminer 4xx + reduser kall-antall for å aktivere effektivitetsbonus
+- [x] **Phase 3: Effektivitet** - Eliminer 4xx + reduser kall-antall for å aktivere effektivitetsbonus (completed 2026-03-21)
 - [ ] **Phase 4: T3 Robusthet** - Timeout-sikring og stabilisering av T3-handlers
 
 ## Phase Details
@@ -101,11 +101,11 @@ Plans:
   2. get_cached() brukes konsekvent for vatType, paymentType og costCategory i alle handlers
   3. Alle GET-kall har ?fields=-projeksjon (bekreftet i kode-review)
   4. Minst én handler som tidligere hadde effektivitetsbonus < 1.0 viser forbedret bonus etter submit
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
-- [ ] 03-01-PLAN.md — Eliminer 4xx + fields= projeksjon + get_cached() i T1/T2-handlers
-- [ ] 03-02-PLAN.md — Fields= projeksjon + asyncio.gather() + post_with_retry i T3-handlers
+- [x] 03-01-PLAN.md — Eliminer 4xx + fields= projeksjon + get_cached() i T1/T2-handlers
+- [x] 03-02-PLAN.md — Fields= projeksjon + asyncio.gather() + post_with_retry i T3-handlers
 
 ### Phase 4: T3 Robusthet
 **Goal**: T3-handlers fullfører innen 90 sekunder uten timeout eller MAX_API_CALLS-feil uansett prompt-variant
@@ -131,5 +131,5 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 2.1.1 → 3 → 4
 | 2. Nullscore Fix | 3/3 | Complete |  2026-03-21 |
 | 2.1 Submission-feil fiks | 3/3 | Complete | 2026-03-21 |
 | 2.1.1 Score-maksimering | 0/3 | Not started | - |
-| 3. Effektivitet | 0/2 | Not started | - |
+| 3. Effektivitet | 2/2 | Complete   | 2026-03-21 |
 | 4. T3 Robusthet | 0/1 | Not started | - |
