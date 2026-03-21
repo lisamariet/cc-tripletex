@@ -54,7 +54,7 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"åpningsbalanse|opening.?balance|balance.?d.?ouverture|Eröffnungsbilanz|balance.?de.?apertura|balanço.?de.?abertura",
     ]),
     ("bank_reconciliation", [
-        r"bankavstemming|bank.?reconcili|conciliación.?banc|rapprochement.?banc|Bankabstimmung|conciliação.?banc",
+        r"bankavstemming|bankavstemjing|bank.?reconcili|conciliación.?banc|rapprochement.?banc|Bankabstimmung|conciliação.?banc",
         r"(?:avstem|reconcil|concili|rapproch).{0,30}(?:bank|konto|account|cuenta|compte|Konto|conta)",
         r"bank.?statement.?match|banktransaksjon.{0,20}match|bankutskrift",
         r"reconcili.{0,30}extrato.?banc",
@@ -104,7 +104,7 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"Grundgehalt|baseSalary|grunnlønn",
     ]),
     ("register_timesheet", [
-        r"(?:registrer?|log|book|regist[ea]r?).{0,20}(?:timer|hours?|horas?|Stunden|heures)",
+        r"(?:registrer?|log|book|regist[ea]r?|enregistr|erfass|eintrag|buch).{0,20}(?:timer|hours?|horas?|Stunden|heures)",
         r"timesheet|timeliste|tidsskjema",
         r"horas para .+na atividade",
         r"(?:timer|hours?|horas?|Stunden|heures).{0,80}(?:prosjektfaktura|project.invoice|factura.*proyecto|fatura.*projeto|Projektrechnung|facture.*projet)",
@@ -121,26 +121,26 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"purregebyr|Mahngebühr|frais de rappel|taxa de lembrete|reminder fee",
     ]),
     ("create_order", [
-        r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:ordre|order|pedido|Auftrag|commande|bestilling)",
+        r"(?:opprett|create|cr[eéèa][eéèa]?r?|erstellen).{0,30}(?:ordre|order|pedido|Auftrag|commande|bestilling)",
         r"Auftrag.{0,20}(?:erstellen|anlegen)",
     ]),
     ("create_invoice", [
-        r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:faktura|invoice|fatura|factura|Rechnung|facture)",
+        r"(?:opprett|create|cr[eéèa][eéèa]?r?|erstellen).{0,30}(?:faktura|invoice|fatura|factura|Rechnung|facture)",
     ]),
     ("register_payment", [
         r"(?:registrer?|register|enregistr|regist[ea]r?).{0,30}(?:betaling|payment|pago|pagamento|Zahlung|paiement)",
     ]),
     ("create_supplier", [
-        r"(?:opprett|registrer?|create|register|cre[ea]r?|erstellen|regist[ea]r?).{0,30}(?:leverandør|supplier|proveedor|fornecedor|Lieferant|fournisseur)",
+        r"(?:opprett|registrer?|create|register|cr[eéèa][eéèa]?r?|erstellen|regist[ea]r?).{0,30}(?:leverandør|supplier|proveedor|fornecedor|Lieferant|fournisseur)",
     ]),
     ("create_customer", [
-        r"(?:opprett|registrer?|create|register|cre[ea]r?|erstellen|regist[ea]r?).{0,30}(?:kunde|customer|client[e]?|Kunde|client)",
+        r"(?:opprett|registrer?|create|register|cr[eéèa][eéèa]?r?|erstellen|regist[ea]r?).{0,30}(?:kunde|customer|client[e]?|Kunde|client)",
     ]),
     ("create_employee", [
-        r"(?:opprett|registrer?|create|register|cre[ea]r?|erstellen|regist[ea]r?).{0,30}(?:ansatt|employee|empleado|empregado|Mitarbeiter|employé)",
+        r"(?:opprett|registrer?|create|register|cr[eéèa][eéèa]?r?|erstellen|regist[ea]r?).{0,30}(?:ansatt|employee|empleado|empregado|Mitarbeiter|employé)",
     ]),
     ("create_project", [
-        r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:prosjekt|project|proyecto|projeto|Projekt|projet)",
+        r"(?:opprett|create|cr[eéèa][eéèa]?r?|erstellen).{0,30}(?:prosjekt|project|proyecto|projeto|Projekt|projet)",
         # German: "internes Projekt", "Erstellen Sie ... Projekt"
         r"internes?.{0,10}Projekt|Projekt.{0,30}(?:anlegen|einrichten|erstellen)",
         # German: Analyse Hauptbuch + Projektanlage — Aufwandskonto-Analyse triggers project creation
@@ -148,7 +148,7 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"(?:Haupt|haupt)buch.{0,80}(?:Projekt|erstellen|anlegen|identifizi)",
     ]),
     ("create_voucher", [
-        r"(?:opprett|create|bokfør|cre[ea]r?|erstellen|comptabilise).{0,30}(?:bilag|voucher|asiento|lançamento|Beleg|pièce|écriture)",
+        r"(?:opprett|create|bokfør|cr[eéèa][eéèa]?r?|erstellen|comptabilise).{0,30}(?:bilag|voucher|asiento|lançamento|Beleg|pièce|écriture)",
     ]),
     ("register_supplier_invoice", [
         r"(?:leverand[oø]r|supplier|innkj[øo]ps).{0,30}faktura|supplier.invoice|factura.{0,30}proveedor|fatura.{0,30}fornecedor",
@@ -212,10 +212,10 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
     # Multi-signal pre-check: project_lifecycle when 3+ of 4 signals present
     # Must run BEFORE keyword loop since individual keywords (register_timesheet etc.) would match first
     _plc_signals = sum([
-        bool(re.search(r"budget|budsjett|Budget|Haushalt|orçamento|presupuesto", prompt_lower)),
-        bool(re.search(r"(?:log|registrer?).{0,20}(?:time|timer|hours?|horas?|Stunden|heures)|timesheet|timeliste|\d+\s*(?:hours?|timer|Stunden|heures|horas?)", prompt_lower)),
-        bool(re.search(r"supplier.{0,20}(?:cost|expense|invoice)|leverandør.{0,20}(?:kostnad|faktura)|Lieferant.{0,20}(?:kosten|rechnung)|co[uû]t.{0,20}fournisseur|custo.{0,20}fornecedor|costo.{0,20}proveedor", prompt_lower)),
-        bool(re.search(r"(?:customer|kunde|client|Kunde|cliente).{0,20}(?:invoice|faktura|facture|Rechnung|factura|fatura)|fakturer.{0,20}kunden|invoice.{0,20}(?:for|to).{0,20}(?:the|project)|factura.{0,20}(?:al\s+)?client|fatura.{0,20}client|Rechnung.{0,20}(?:an\s+)?(?:den\s+)?Kund", prompt_lower)),
+        bool(re.search(r"budget|budsjett|haushalt|orçamento|presupuesto", prompt_lower)),
+        bool(re.search(r"(?:log|registrer?|enregistr|erfass|eintrag|buch).{0,20}(?:time|timer|hours?|horas?|stunden|heures)|timesheet|timeliste|\d+\s*(?:hours?|timer|stunden|heures|horas?)", prompt_lower)),
+        bool(re.search(r"supplier.{0,20}(?:cost|expense|invoice)|leverandør.{0,20}(?:kostnad|faktura)|lieferant.{0,20}(?:kosten|rechnung)|co[uû]t.{0,20}fournisseur|custo.{0,20}fornecedor|costo.{0,20}proveedor", prompt_lower)),
+        bool(re.search(r"(?:customer|kunde|client|cliente).{0,20}(?:invoice|faktura|facture|rechnung|fatura)|kundefaktura|fakturer.{0,20}kunden|invoice.{0,20}(?:for|to).{0,20}(?:the|project)|factura.{0,20}(?:al\s+)?client|fatura.{0,20}client|rechnung.{0,20}(?:an\s+)?(?:den\s+)?kund|facture.{0,20}client", prompt_lower)),
     ])
     if _plc_signals >= 3:
         logger.info(f"Multi-signal match ({_plc_signals}/4 signals) → project_lifecycle")
