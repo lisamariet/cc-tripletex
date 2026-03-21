@@ -60,6 +60,13 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"korreksjonsbilag|correction.?voucher|corrective.?entry|asiento.?correct|écriture.?correct|Korrekturbuchung|lançamento.?correct",
         r"(?:reverser|reverse|tilbakefør).{0,30}(?:og|and|y|et|und|e).{0,30}(?:korriger|correct|rett|fix|corrig)",
         r"erreurs?.{0,30}grand.?livre|grand.?livre.{0,30}erreurs?",
+        # French: pièce en double, écriture mauvais compte, TVA manquante
+        r"pi[eè]ce.{0,20}(?:double|err|faux)|écriture.{0,20}mauvais.?compte|TVA.{0,20}manquante",
+        r"montant.{0,20}incorrect|compte.{0,10}utilis[eé].{0,20}(?:au lieu|instead)",
+        # German: Hauptbuch-Fehler, Buchungsfehler, falsches Konto — only when error-correction context
+        r"Hauptbuch.{0,30}(?:Fehler|überprüf|prüfen|korrigier)|Hauptbuch.{0,50}(?:Fehler|falsches?\s+Konto)",
+        r"(?:falsches?|falsche).{0,20}(?:Konto|Buchung)|Buchungsfehler|Kontofehler",
+        r"(?:Fehler|Korrekt).{0,30}Buchung|(?:Buchung|Konto).{0,30}(?:korrigier|berichtig)",
     ]),
     ("register_supplier_invoice", [
         r"leverand[oø]rfaktura|leverand[oø]r.{0,20}faktura",
@@ -114,6 +121,11 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ]),
     ("create_project", [
         r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:prosjekt|project|proyecto|projeto|Projekt|projet)",
+        # German: "internes Projekt", "Erstellen Sie ... Projekt"
+        r"internes?.{0,10}Projekt|Projekt.{0,30}(?:anlegen|einrichten|erstellen)",
+        # German: Analyse Hauptbuch + Projektanlage — Aufwandskonto-Analyse triggers project creation
+        r"Aufwandskont(?:en?|o).{0,60}(?:Projekt|erstellen|anlegen)",
+        r"(?:Haupt|haupt)buch.{0,80}(?:Projekt|erstellen|anlegen|identifizi)",
     ]),
     ("create_voucher", [
         r"(?:opprett|create|bokfør|cre[ea]r?|erstellen|comptabilise).{0,30}(?:bilag|voucher|asiento|lançamento|Beleg|pièce|écriture)",
@@ -130,7 +142,16 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"(?:registrer?|bokfør|record|enregistr|regist[ea]r?|erfassen|registrar).{0,40}(?:kvittering|receipt|reçu|Quittung|recibo|ricevuta|kvitto)",
         r"(?:utgift|expense|Ausgabe|dépense|gasto|despesa).{0,40}(?:kvittering|receipt|reçu|Quittung|recibo|avdeling|département|department|Abteilung)",
         r"(?:kvittering|receipt|reçu|Quittung|recibo).{0,40}(?:utgift|expense|Ausgabe|dépense|gasto|despesa|avdeling|department)",
-        r"depense.*recu|recu.*depense|dépense.*reçu|reçu.*dépense",
+        # French with/without accents: dépense/depense + reçu/recu
+        r"d[eé]pense.*re[çc]u|re[çc]u.*d[eé]pense",
+        # French: "besoin de la depense ... de ce recu" (accent-stripped variants)
+        r"(?:la\s+)?d[eé]pense\s+\S+\s+de\s+ce\s+re[çc]u",
+        # Portuguese: despesa + recibo without requiring proximity
+        r"despesa.{0,60}recibo|recibo.{0,60}despesa",
+        # French: "enregistree au departement" (accent-stripped)
+        r"enregistr[eé][es]?\s+au\s+d[eé]partement",
+        # German: Ausgabe/Ausgabenbeleg + Abteilung
+        r"(?:Ausgabe|Kassenbon|Quittung).{0,40}Abteilung|Abteilung.{0,40}(?:Ausgabe|Kassenbon|Quittung)",
     ]),
 ]
 
@@ -408,6 +429,12 @@ Output: {"taskType": "register_expense_receipt", "fields": {"description": "Skri
 
 Prompt: "Vi treng Kontorstoler fra denne kvitteringa bokfort pa avdeling Drift. Bruk rett utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling."
 Output: {"taskType": "register_expense_receipt", "fields": {"description": "Kontorstoler", "department": "Drift", "expenseAccount": 6540, "vatRate": 25}, "confidence": 0.95, "reasoning": "Norwegian Nynorsk prompt to register office chairs (Kontorstoler) from a receipt for the Drift department. Furniture/chairs → account 6540 (kontormøbler). Standard 25% input VAT applies."}
+
+Prompt: "Die Gesamtkosten sind von Januar bis Februar 2026 deutlich gestiegen. Analysieren Sie das Hauptbuch und identifizieren Sie die drei Aufwandskonten mit dem größten Anstieg. Erstellen Sie für jedes der drei Konten ein internes Projekt mit dem Kontonamen. Erstellen Sie außerdem eine Aktivität für jedes Projekt."
+Output: {"taskType": "create_project", "fields": {"analyzeTopCosts": true, "projectCount": 3, "isInternal": true, "period": "2026-01-01/2026-02-28", "createActivity": true}, "confidence": 0.88, "reasoning": "German prompt to analyze the Hauptbuch (general ledger) and identify the 3 Aufwandskonten (expense accounts) with the largest cost increase, then create an internal project per account with an activity. This is NOT correct_ledger_error — there are no errors to correct. The primary action is create_project based on ledger analysis."}
+
+Prompt: "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 6500 utilisé au lieu de 6540, montant 6800 NOK), une pièce en double (compte 7000, montant 1300 NOK), une ligne de TVA manquante (compte 4300, montant HT 17300 NOK, TVA manquante sur compte 2710), et un montant incorrect (compte 6300, 10150 NOK comptabilisé au lieu de 7450 NOK). Corrigez toutes les erreurs avec des écritures correctives."
+Output: {"taskType": "correct_ledger_error", "fields": {"errors": [{"errorType": "wrong_account", "wrongAccount": 6500, "correctAccount": 6540, "amount": 6800}, {"errorType": "duplicate", "account": 7000, "amount": 1300}, {"errorType": "missing_vat", "account": 4300, "amount": 17300, "vatAccount": 2710}, {"errorType": "wrong_amount", "account": 6300, "amount": 10150, "correctAmount": 7450}]}, "confidence": 0.93, "reasoning": "French prompt identifying 4 accounting errors in the grand livre (general ledger): wrong account (6500→6540), duplicate entry (7000), missing VAT (4300/2710), wrong amount (6300). All 4 errors need corrective entries (écritures correctives)."}
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt
