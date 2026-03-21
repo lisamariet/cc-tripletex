@@ -271,6 +271,7 @@ def _infer_task_type_from_prompt(prompt: str) -> str | None:
     pl = prompt.lower()
     # Order matters: more specific patterns first
     patterns = [
+        ("kvittering|receipt|re[çc]u|quittung|recibo|ricevuta|d[eé]pense.*re[çc]u|utgift.*kvittering", "register_expense_receipt"),
         ("fastpris|fixed price|prix fix|precio fijo|festpreis|preço fix|prix forfait", "set_project_fixed_price"),
         ("dimensjon|dimension|dimensão|dimensión", "create_custom_dimension"),
         ("lønn|payroll|salário|gehalt|salaire|nómina|gehaltsabrechnung", "run_payroll"),
