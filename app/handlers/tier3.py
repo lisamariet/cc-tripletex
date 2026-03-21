@@ -419,19 +419,24 @@ def _parse_csv_statement(csv_text: str) -> list[dict]:
     return transactions
 
 
-def _build_dnb_csv(transactions: list[dict]) -> bytes:
-    """Build a DNB CSV file from parsed transactions.
+def _build_danske_bank_csv(transactions: list[dict]) -> bytes:
+    """Build a Danske Bank CSV file from parsed transactions.
 
-    DNB CSV format (semicolon-separated, Norwegian):
-    "Dato";"Forklaring";"Rentedato";"Inn/ut";"Saldo"
-    "17.01.2026";"Innbetaling fra Berg AS";"17.01.2026";"10937,50";"110937,50"
+    Tripletex DANSKE_BANK_CSV format (semicolon-separated, windows-1252):
+    Bokfort dato;Rentedato;Tekst;Belop i NOK;Bokfort saldo i NOK;Status
+    17.01.2026;17.01.2026;Innbetaling Berg AS;10937,50;110937,50;
 
-    Amount sign: positive = inn, negative = ut (DNB uses signed values in Inn/ut column).
+    Encoding: windows-1252 (NOT utf-8).
+    Amount: signed (positive = inn, negative = ut).
     """
     import io as _io
 
     output = _io.StringIO()
-    output.write('"Dato";"Forklaring";"Rentedato";"Inn/ut";"Saldo"\n')
+    output.write("Bokf\u00f8rt dato;Rentedato;Tekst;Bel\u00f8p i NOK;Bokf\u00f8rt saldo i NOK;Status\n")
+
+    def _fmt(v: float) -> str:
+        """Format number with Norwegian decimal comma, no thousands sep."""
+        return f"{v:.2f}".replace(".", ",")
 
     for txn in transactions:
         raw_date = txn["date"]  # YYYY-MM-DD
@@ -441,16 +446,14 @@ def _build_dnb_csv(transactions: list[dict]) -> bytes:
         except Exception:
             formatted_date = raw_date
 
-        desc = txn["description"].replace('"', "'")
+        # Replace characters that don't encode in windows-1252 with ASCII equivalents
+        desc = txn["description"].replace("\u00d8", "O").replace("\u00f8", "o")
         amount = txn["amount"]
         balance = txn["balance"]
 
-        def _fmt(v: float) -> str:
-            return f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        output.write(f"{formatted_date};{formatted_date};{desc};{_fmt(amount)};{_fmt(balance)};\n")
 
-        output.write(f'"{formatted_date}";"{desc}";"{formatted_date}";"{_fmt(amount)}";"{_fmt(balance)}"\n')
-
-    return output.getvalue().encode("utf-8")
+    return output.getvalue().encode("windows-1252", errors="replace")
 
 
 @register_handler("bank_reconciliation")
@@ -557,19 +560,28 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             logger.warning("No bank found via /bank — cannot import CSV statement")
 
         if bank_id is not None:
-            # Build DNB CSV from parsed transactions
-            dnb_csv_bytes = _build_dnb_csv(csv_transactions)
+            # Build Danske Bank CSV (windows-1252 encoding, DANSKE_BANK_CSV format)
+            danske_csv_bytes = _build_danske_bank_csv(csv_transactions)
+
+            # toDate is exclusive in Tripletex — use day AFTER last transaction
+            import datetime as _dt
+            try:
+                to_date_exclusive = (
+                    _dt.date.fromisoformat(date_to) + _dt.timedelta(days=1)
+                ).isoformat()
+            except Exception:
+                to_date_exclusive = date_to
 
             import_params = {
                 "bankId": str(bank_id),
                 "accountId": str(account_id),
                 "fromDate": date_from,
-                "toDate": date_to,
-                "fileFormat": "DNB_CSV",
+                "toDate": to_date_exclusive,
+                "fileFormat": "DANSKE_BANK_CSV",
             }
             resp_import = await client.post_multipart(
                 "/bank/statement/import",
-                file_bytes=dnb_csv_bytes,
+                file_bytes=danske_csv_bytes,
                 filename="bankutskrift.csv",
                 mime_type="text/csv",
                 params=import_params,
