@@ -48,9 +48,16 @@ Alle kommandoer bruker `scripts/compete.py`. Krever `NMIAI_ACCESS_TOKEN` i `.env
 
 ```bash
 python3 scripts/compete.py status
+python3 scripts/compete.py status -n 10      # vis kun 10 siste
+python3 scripts/compete.py status --limit 10 # samme
 ```
 
-Viser totalpoeng, antall oppgaver med poeng (av 30), og tabell med de siste 25 submissions.
+Viser totalpoeng, antall oppgaver med poeng (av 30), submissions i dag av 300, og tabell over submissions.
+
+Default viser alle submissions. Bruk `-n N` / `--limit N` for å begrense antallet rader.
+
+Tabellen har kolonnene: `#`, `Tid`, `Oppgavetype`, `Score`, `4xx`, `5xx`, `Varighet`, `Status`.
+`4xx` og `5xx` hentes fra GCS-logger og viser antall feilede API-kall per submission.
 
 ### Detaljer for en submission
 
@@ -86,6 +93,33 @@ python3 scripts/compete.py errors
 
 Viser detaljert 4xx-feilanalyse: totalt antall, siste timens feil, feil per endpoint, per oppgavetype, og vanligste feilmeldinger.
 
+### Status per oppgavetype (tasks)
+
+```bash
+python3 scripts/compete.py tasks
+```
+
+Viser aggregert statistikk per oppgavetype, hentet fra GCS-logger og leaderboard:
+
+| Kolonne | Beskrivelse |
+|---|---|
+| Oppgavetype | task_type-navn |
+| Tier | 1, 2 eller 3 |
+| Maks score | Høyeste score vi har oppnådd |
+| Avg score | Gjennomsnittlig score |
+| Forsøk | Totalt antall submissions |
+| OK/Fail | Antall vellykkede / feilede |
+| Suksess% | Andel med poeng |
+| 4xx avg | Gjennomsnittlig antall 4xx-feil per submission |
+
+### Sammenlign med lederlaget
+
+```bash
+python3 scripts/compete.py compare
+```
+
+Sammenligner vår task-score med #1 på leaderboard — viser gap per oppgavetype.
+
 ### Trigger ny submission
 
 ```bash
@@ -120,6 +154,42 @@ Handlers registreres via `@register_handler` i `app/handlers/`:
 - **tier3.py**: `create_voucher`, `reverse_voucher`, `delete_voucher`
 - **fallback.py**: `unknown` (LLM-basert fallback for ukjente oppgavetyper)
 
+## TASK_ID_MAP — oppgavenummer til type og tier
+
+Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-verktøy for å mappe oppgavenummer (01–30) til `task_type` og tier.
+
+| ID | task_type | Tier |
+|---|---|---|
+| 01 | create_supplier | 1 |
+| 02 | create_customer | 1 |
+| 03 | create_product | 1 |
+| 04 | create_employee | 1 |
+| 05 | batch_create_department | 1 |
+| 06 | create_department | 1 |
+| 07 | create_employee (variant med rolle/rettigheter) | 1 |
+| 08 | create_customer (variant med adresse) | 1 |
+| 09 | set_project_fixed_price | 2 |
+| 10 | create_invoice | 2 |
+| 11 | create_custom_dimension | 2 |
+| 12 | batch_create_department (batch-variant) | 2 |
+| 13 | register_payment | 2 |
+| 14 | create_travel_expense | 2 |
+| 15 | register_supplier_invoice | 2 |
+| 16 | register_timesheet | 2 |
+| 17 | create_credit_note | 2 |
+| 18 | reverse_payment | 2 |
+| 19 | create_employee (PDF tilbudsbrev-variant) | 3 |
+| 20 | register_expense_receipt | 3 |
+| 21 | monthly_closing | 3 |
+| 22–25 | unknown (uidentifisert) | 3 |
+| 26 | create_voucher | 3 |
+| 27 | year_end_closing | 3 |
+| 28 | correct_ledger_error | 3 |
+| 29 | bank_reconciliation | 3 |
+| 30 | run_payroll | 3 |
+
+Scoring: T1 = ×1 (maks 2), T2 = ×2 (maks 4), T3 = ×3 (maks 6)
+
 ## Viktige konkurranse-regler
 
 - **BETA-endepunkter** i Tripletex kan gi 403 — bruk alltid alternativ ved feil
@@ -127,6 +197,7 @@ Handlers registreres via `@register_handler` i `app/handlers/`:
 - **120s timeout** (Cloudflare) — ikke 5 min som tidligere antatt
 - **MVA ma aktiveres**: PUT /ledger/vatSettings med vatRegistrationStatus=VAT_REGISTERED
 - **Tier 3 apner**: 2026-03-21
+- **Daglig submission-grense: 300** submissions per dag (vises i `status`-tabellen)
 
 ## Logger
 
@@ -165,6 +236,22 @@ python3 scripts/test_e2e.py --plan    # Vis testplan uten å kjøre
 ```
 
 Full pipeline-test: prompt → parse_task() → handler → verifikasjons-GET. 32 tester, 132-138 API-kall.
+
+### test_real_prompts.py — regresjonstest med ekte competition-prompts
+
+```bash
+python3 scripts/test_real_prompts.py                          # Dry-run: vis testplan
+python3 scripts/test_real_prompts.py --live                   # Kjør mot sandbox
+python3 scripts/test_real_prompts.py --live -v                # Verbose output
+python3 scripts/test_real_prompts.py --live --tier 1          # Kun tier 1
+python3 scripts/test_real_prompts.py --live --tier 2          # Kun tier 2
+python3 scripts/test_real_prompts.py --live --tier 3          # Kun tier 3
+python3 scripts/test_real_prompts.py --live --only create_invoice,run_payroll
+```
+
+Tester bygget fra faktiske prompts mottatt under NM i AI 2026, lastet ned fra GCS (`gs://tripletex-agent-requests/`). Verifiserer at vi scorer 100% på alle oppgavetyper vi allerede har håndtert.
+
+Krever sandbox-credentials (`NMIAI_ACCESS_TOKEN` i `.env`).
 
 ## ML-verktøy
 
