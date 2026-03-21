@@ -177,6 +177,8 @@ You receive a task prompt in one of these languages: Norwegian Bokmål, Norwegia
 
 Extract the task type and relevant fields. Return ONLY valid JSON.
 
+IMPORTANT: If the prompt references an attached file (PDF, image), the file content is included in this message. Extract ALL relevant data from both the prompt text AND the attached file. For offer letters / tilbudsbrev: extract name, email, national identity number (fødselsnummer/personnummer), bank account, occupation code (STYRK), department, salary, employment percentage, start date, and work hours from the PDF.
+
 IMPORTANT: You MUST classify the task as one of the supported types below. Only use "unknown" as an absolute last resort when none of the types match at all.
 
 Supported task types and their fields:
@@ -188,7 +190,7 @@ Supported task types and their fields:
    Fields: name*, organizationNumber, email (IMPORTANT: if prompt says "email" or "e-post" without specifying type, put it in BOTH email AND invoiceEmail), invoiceEmail, phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, isSupplier (bool), website, address (object with addressLine1, addressLine2, postalCode, city)
 
 3. "create_employee" — Register a new employee
-   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber, bankAccountNumber, address (object with addressLine1, postalCode, city), role (string — extract if the prompt mentions a role like "administrator", "kontoadministrator", "accountant", "regnskapsfører", "faktureringsansvarlig", "avdelingsleder", etc.), occupationCode (string — the STYRK/occupation code if mentioned, e.g. "3313"), employmentPercentage (number 0–100 — employment percentage / stillingsprosent, e.g. 80 for 80%), annualSalary (number — annual salary in NOK if mentioned, e.g. 640000), monthlySalary (number — monthly salary in NOK if mentioned)
+   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber (11-digit Norwegian fødselsnummer/personnummer), bankAccountNumber (11-digit Norwegian bank account), address (object with addressLine1, postalCode, city), role (string — extract if the prompt mentions a role like "administrator", "kontoadministrator", "accountant", "regnskapsfører", "faktureringsansvarlig", "avdelingsleder", etc.), occupationCode (string — the STYRK/occupation code if mentioned, e.g. "3313"), employmentPercentage (number 0–100 — employment percentage / stillingsprosent, e.g. 80 for 80%), annualSalary (number — annual salary in NOK if mentioned, e.g. 640000), monthlySalary (number — monthly salary in NOK if mentioned), department (string — department name if mentioned, e.g. "Drift", "Kundeservice", "IT"), hoursPerDay (number — standard work hours per day, e.g. 7.5)
 
 4. "create_product" — Register a new product
    Fields: name*, number, priceExcludingVat (number), priceIncludingVat (number), costExcludingVat (number), description, vatCode (string — Tripletex codes: "3" = 25% standard, "31" = 15% food/middels, "33" = 12% low/transport, "5" = 0% exempt, "6" = 0% outside VAT law), isInactive (bool)

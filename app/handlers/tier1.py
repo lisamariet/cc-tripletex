@@ -177,9 +177,21 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
     else:
         payload["userType"] = fields.get("userType", "NO_ACCESS")
 
-    # department is required — use provided or fetch first available
+    # department is required — use provided ID, lookup by name, or fetch first available
     if fields.get("departmentId"):
         payload["department"] = {"id": fields["departmentId"]}
+    elif fields.get("department"):
+        # Lookup department by name
+        dept_name = fields["department"]
+        dept_resp = await client.get_cached("/department", params={"name": dept_name, "fields": "id,name"})
+        depts = dept_resp.json().get("values", [])
+        if depts:
+            payload["department"] = {"id": depts[0]["id"]}
+        else:
+            # Create the department if it doesn't exist
+            new_dept = await client.post("/department", {"name": dept_name})
+            if new_dept.status_code == 201:
+                payload["department"] = {"id": new_dept.json().get("value", {}).get("id")}
     else:
         dept_resp = await client.get_cached("/department", params={"count": 1, "fields": "id,name"})
         depts = dept_resp.json().get("values", [])
