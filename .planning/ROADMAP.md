@@ -101,11 +101,11 @@ Plans:
   2. get_cached() brukes konsekvent for vatType, paymentType og costCategory i alle handlers
   3. Alle GET-kall har ?fields=-projeksjon (bekreftet i kode-review)
   4. Minst én handler som tidligere hadde effektivitetsbonus < 1.0 viser forbedret bonus etter submit
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 03-01: Eliminer 4xx-feil + konsistentiser get_cached() på tvers av handlers
-- [ ] 03-02: Legg til ?fields=-projeksjon + fjern unødvendige GET-before-POST + asyncio.gather()
+- [ ] 03-01-PLAN.md — Eliminer 4xx + fields= projeksjon + get_cached() i T1/T2-handlers
+- [ ] 03-02-PLAN.md — Fields= projeksjon + asyncio.gather() + post_with_retry i T3-handlers
 
 ### Phase 4: T3 Robusthet
 **Goal**: T3-handlers fullfører innen 90 sekunder uten timeout eller MAX_API_CALLS-feil uansett prompt-variant

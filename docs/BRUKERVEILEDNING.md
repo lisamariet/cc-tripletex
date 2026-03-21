@@ -174,23 +174,23 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 | 11 | create_custom_dimension | 2 |
 | 12 | batch_create_department (batch-variant) | 2 |
 | 13 | register_payment | 2 |
-| 14 | create_travel_expense | 2 |
+| 14 | create_credit_note | 2 |
 | 15 | register_supplier_invoice | 2 |
 | 16 | register_timesheet | 2 |
-| 17 | create_credit_note | 2 |
+| 17 | create_travel_expense | 2 |
 | 18 | reverse_payment | 2 |
 |-|-|-|
 | 19 | create_employee (PDF tilbudsbrev-variant) | 3 |
 | 20 | unknown | 3 |
 | 21 | monthly_closing | 3 |
 | 22 | register_expense_receipt | 3 |
-| 23 | bank_reconciliation ? | 3 |
+| 23 | bank_reconciliation | 3 |
 | 24 | unknown | 3 |
 | 25 | unknown | 3 |
 | 26 | create_voucher | 3 |
 | 27 | register_payment | 3 |
 | 28 | correct_ledger_error | 3 |
-| 29 | bank_reconciliation | 3 |
+| 29 | project_lifecycle | 3 |
 | 30 | run_payroll | 3 |
 
 year_end_closing
