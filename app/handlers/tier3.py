@@ -752,6 +752,106 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
 
     logger.info(f"Bank reconciliation: account_id={account_id}, period={date_from}→{date_to}")
 
+    # Step 1b: Match CSV transactions against open customer/supplier invoices
+    # Parse invoice numbers from descriptions ("Faktura XXXX" or "Faktura #XXXX")
+    # and register payments for matching open invoices.
+    invoice_payments_registered: list[dict] = []
+    if csv_transactions:
+        import re as _re
+
+        # Get payment type ID for bank payments (cached)
+        _payment_type_id: int | None = None
+        try:
+            pt_resp = await client.get_cached("/invoice/paymentType")
+            pt_list = pt_resp.json().get("values", [])
+            for pt in pt_list:
+                if "bank" in pt.get("description", "").lower():
+                    _payment_type_id = pt["id"]
+                    break
+            if _payment_type_id is None and pt_list:
+                _payment_type_id = pt_list[0]["id"]
+        except Exception:
+            _payment_type_id = None
+
+        for txn in csv_transactions:
+            desc = txn.get("description", "")
+            amount = float(txn.get("amount", 0))
+            txn_date = txn.get("date", date_to or datetime.date.today().isoformat())
+
+            # Extract invoice number from description
+            inv_match = _re.search(r"[Ff]aktura[r]?\s*#?\s*(\d+)", desc)
+            if not inv_match:
+                continue
+            inv_number = inv_match.group(1)
+
+            if amount > 0:
+                # Incoming payment (from customer) → register customer invoice payment
+                try:
+                    inv_resp = await client.get("/invoice", params={
+                        "invoiceNumber": inv_number,
+                        "count": "5",
+                    })
+                    if inv_resp.status_code == 200:
+                        invoices = inv_resp.json().get("values", [])
+                        for inv in invoices:
+                            if str(inv.get("invoiceNumber", "")) == str(inv_number) and float(inv.get("amountRemainingCurrency", 1)) > 0:
+                                inv_id = inv["id"]
+                                pay_params: dict[str, Any] = {
+                                    "paymentDate": txn_date,
+                                    "paidAmount": amount,
+                                }
+                                if _payment_type_id:
+                                    pay_params["paymentTypeId"] = _payment_type_id
+                                pay_resp = await client.put(f"/invoice/{inv_id}/:payment", params=pay_params)
+                                if pay_resp.status_code in (200, 201):
+                                    invoice_payments_registered.append({
+                                        "invoiceId": inv_id,
+                                        "invoiceNumber": inv_number,
+                                        "amount": amount,
+                                        "type": "customer",
+                                    })
+                                    logger.info(f"Registered customer invoice payment: invoice {inv_number} = {amount}")
+                                else:
+                                    logger.warning(f"Failed to pay invoice {inv_number}: {pay_resp.text[:150]}")
+                                break
+                except Exception as _exc:
+                    logger.warning(f"Error processing customer invoice {inv_number}: {_exc}")
+
+            elif amount < 0:
+                # Outgoing payment (to supplier) → register supplier invoice payment
+                try:
+                    sinv_resp = await client.get("/supplierInvoice", params={
+                        "invoiceNumber": inv_number,
+                        "count": "5",
+                    })
+                    if sinv_resp.status_code == 200:
+                        sinvoices = sinv_resp.json().get("values", [])
+                        for sinv in sinvoices:
+                            if str(sinv.get("invoiceNumber", "")) == str(inv_number) and float(sinv.get("amountRemainingCurrency", 1)) > 0:
+                                sinv_id = sinv["id"]
+                                # Supplier invoice payment — try PUT /:payment or pay via voucher
+                                sinv_pay_resp = await client.put(f"/supplierInvoice/{sinv_id}/:payment", params={
+                                    "paymentDate": txn_date,
+                                    "paymentTypeId": str(_payment_type_id) if _payment_type_id else "1",
+                                    "paidAmount": str(-amount),
+                                })
+                                if sinv_pay_resp.status_code in (200, 201):
+                                    invoice_payments_registered.append({
+                                        "supplierInvoiceId": sinv_id,
+                                        "invoiceNumber": inv_number,
+                                        "amount": -amount,
+                                        "type": "supplier",
+                                    })
+                                    logger.info(f"Registered supplier invoice payment: invoice {inv_number} = {-amount}")
+                                else:
+                                    logger.warning(f"Failed to pay supplier invoice {inv_number}: {sinv_pay_resp.text[:150]}")
+                                break
+                except Exception as _exc:
+                    logger.warning(f"Error processing supplier invoice {inv_number}: {_exc}")
+
+    if invoice_payments_registered:
+        logger.info(f"Registered {len(invoice_payments_registered)} invoice payments from CSV")
+
     # Step 2: Import CSV as bank statement if we have CSV data
     bank_statement_id: int | None = None
     statement_import_status: str = "skipped"
@@ -871,8 +971,9 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         }
         if current_period_id:
             rec_payload["accountingPeriod"] = {"id": current_period_id}
-        if closing_balance is not None:
-            rec_payload["bankAccountClosingBalanceCurrency"] = closing_balance
+        # Do NOT send bankAccountClosingBalanceCurrency here — Tripletex will compute
+        # the correct ledger-side closing balance automatically. Sending a CSV-derived
+        # value causes a mismatch that prevents the reconciliation from being closed.
 
         resp = await client.post("/bank/reconciliation", rec_payload)
         if resp.status_code >= 400:
@@ -895,19 +996,10 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             reconciliation_id = reconciliation.get("id")
             logger.info(f"Created new reconciliation id={reconciliation_id}")
 
-    # Step 5: Update closing balance on reconciliation if needed
-    if closing_balance is not None and reconciliation_id and reconciliation:
-        if reconciliation.get("bankAccountClosingBalanceCurrency") != closing_balance:
-            update_payload = dict(reconciliation)
-            update_payload["bankAccountClosingBalanceCurrency"] = closing_balance
-            for field_name in ("changes", "url", "closedDate", "closedByContact", "closedByEmployee",
-                               "approvable", "autoPayReconciliation", "attachment", "transactions"):
-                update_payload.pop(field_name, None)
-            resp = await client.put(f"/bank/reconciliation/{reconciliation_id}", update_payload)
-            if resp.status_code in (200, 201):
-                logger.info(f"Updated closing balance to {closing_balance}")
-            else:
-                logger.warning(f"Failed to update closing balance: {resp.text[:300]}")
+    # Step 5: (intentionally removed)
+    # We do NOT override bankAccountClosingBalanceCurrency with the CSV-derived value.
+    # Tripletex computes this from the ledger. Overriding with CSV value causes a mismatch
+    # that prevents the reconciliation from being closed (422 validation error).
 
     # Step 6: Run suggest-matching
     matches_before = 0
@@ -1038,6 +1130,8 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     all_matches = resp.json().get("values", []) if resp.status_code == 200 else []
 
     # Step 8: Attempt to close the reconciliation
+    # We use whatever bankAccountClosingBalanceCurrency Tripletex has computed for us.
+    # We do NOT override it with CSV-derived values (that causes a 422 mismatch error).
     is_closed = False
     if reconciliation_id:
         try:
@@ -1079,6 +1173,9 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         result["dateFrom"] = date_from
     if date_to:
         result["dateTo"] = date_to
+    if invoice_payments_registered:
+        result["invoicePaymentsRegistered"] = len(invoice_payments_registered)
+        result["invoicePayments"] = invoice_payments_registered
 
     return result
 
