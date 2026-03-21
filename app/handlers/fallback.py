@@ -6,11 +6,19 @@ import logging
 import re
 from typing import Any
 
+import os
+
 import anthropic
+import httpx
 
 from app.config import ANTHROPIC_API_KEY
 from app.handlers import register_handler
 from app.tripletex import TripletexClient
+
+PARSER_BACKEND = os.getenv("PARSER_BACKEND", "gemini")
+_GCP_PROJECT = os.getenv("GCP_PROJECT", "ai-nm26osl-1771")
+_GCP_LOCATION = os.getenv("GCP_LOCATION", "europe-west1")
+_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 logger = logging.getLogger(__name__)
 
@@ -174,15 +182,51 @@ async def handle_unknown(client: TripletexClient, fields: dict[str, Any], prompt
 
     # Step 1: Ask LLM for API call sequence
     try:
-        llm_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=30.0)
-        message = llm_client.messages.create(
-            model=FALLBACK_MODEL,
-            max_tokens=2048,
-            system=FALLBACK_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": f"Task: {prompt}\n\nRespond with ONLY a JSON array. No explanation."}],
-        )
-        raw_text = message.content[0].text
-        logger.info(f"Fallback LLM response: {raw_text[:1000]}")
+        if PARSER_BACKEND == "gemini":
+            # Use Gemini via Vertex AI (same pattern as parser_gemini.py)
+            try:
+                import google.auth
+                import google.auth.transport.requests
+                creds, _ = google.auth.default()
+                creds.refresh(google.auth.transport.requests.Request())
+                token = creds.token
+            except Exception:
+                import subprocess
+                result = subprocess.run(
+                    ["gcloud", "auth", "print-access-token"],
+                    capture_output=True, text=True, timeout=5,
+                )
+                if result.returncode != 0:
+                    raise RuntimeError("Cannot get GCP access token")
+                token = result.stdout.strip()
+
+            url = (
+                f"https://{_GCP_LOCATION}-aiplatform.googleapis.com/v1/"
+                f"projects/{_GCP_PROJECT}/locations/{_GCP_LOCATION}/"
+                f"publishers/google/models/{_GEMINI_MODEL}:generateContent"
+            )
+            gemini_payload = {
+                "contents": [{"role": "user", "parts": [{"text": f"Task: {prompt}\n\nRespond with ONLY a JSON array. No explanation."}]}],
+                "systemInstruction": {"parts": [{"text": FALLBACK_SYSTEM_PROMPT}]},
+                "generationConfig": {"maxOutputTokens": 4096, "temperature": 0.1},
+            }
+            async with httpx.AsyncClient(timeout=30.0) as http:
+                resp = await http.post(url, json=gemini_payload, headers={"Authorization": f"Bearer {token}"})
+                resp.raise_for_status()
+                data = resp.json()
+                raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
+            logger.info(f"Fallback Gemini response: {raw_text[:1000]}")
+        else:
+            # Anthropic path (fallback when PARSER_BACKEND != gemini)
+            llm_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=30.0)
+            message = llm_client.messages.create(
+                model=FALLBACK_MODEL,
+                max_tokens=2048,
+                system=FALLBACK_SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": f"Task: {prompt}\n\nRespond with ONLY a JSON array. No explanation."}],
+            )
+            raw_text = message.content[0].text
+            logger.info(f"Fallback LLM response: {raw_text[:1000]}")
     except Exception as e:
         logger.error(f"Fallback LLM call failed: {e}")
         return {"status": "completed", "note": f"Fallback LLM error: {e}"}
