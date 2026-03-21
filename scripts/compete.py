@@ -2345,46 +2345,58 @@ def _fetch_all_changed_ids_local() -> list[str]:
 
 
 def cmd_batch(args: argparse.Namespace) -> None:
-    """Submit multiple times with interval between each."""
+    """Submit multiple times with true concurrent execution."""
     count = args.count
     interval = args.interval
     max_concurrent = getattr(args, "max_concurrent", 3)
     endpoint = ENDPOINT_URL
     api_key = os.environ.get("API_KEY", "")
 
-    print(f"{BOLD}Batch submit: {count} submissions, {interval}s mellom hver, maks {max_concurrent} samtidige{RESET}\n")
+    print(f"{BOLD}Batch submit: {count} submissions, maks {max_concurrent} samtidige, {interval}s mellom batcher{RESET}\n")
 
+    submitted = 0
     with make_client() as client:
-        for i in range(count):
-            # Throttle: wait if too many active submissions
+        while submitted < count:
+            # Wait for capacity
             if not _wait_for_capacity(client, max_concurrent):
-                print(f"  {RED}[{i+1}/{count}] Tidsavbrudd — for mange aktive submissions. Avbryter.{RESET}")
+                print(f"  {RED}Tidsavbrudd — for mange aktive submissions. Avbryter.{RESET}")
                 break
 
-            payload: dict[str, Any] = {"endpoint_url": f"{endpoint}{SOLVE_PATH}"}
-            if api_key:
-                payload["endpoint_api_key"] = api_key
+            # Check how many slots are available
+            active = _count_active_submissions(client)
+            slots = max(1, max_concurrent - active)
+            batch_size = min(slots, count - submitted)
 
-            resp = client.post(f"{API_BASE}/tasks/{TASK_ID}/submissions", json=payload)
+            # Fire off batch_size submissions rapidly
+            for j in range(batch_size):
+                i = submitted + j
+                payload: dict[str, Any] = {"endpoint_url": f"{endpoint}{SOLVE_PATH}"}
+                if api_key:
+                    payload["endpoint_api_key"] = api_key
 
-            if not resp.is_success:
-                print(f"  {RED}[{i+1}/{count}] Feilet ({resp.status_code}): {resp.text[:100]}{RESET}")
-                if resp.status_code == 429:
-                    print(f"  Rate limit — venter 60s...")
-                    time.sleep(60)
-                continue
+                resp = client.post(f"{API_BASE}/tasks/{TASK_ID}/submissions", json=payload)
 
-            result = resp.json()
-            used = result.get("daily_submissions_used", "?")
-            max_sub = result.get("daily_submissions_max", "?")
-            print(f"  {GREEN}[{i+1}/{count}]{RESET} {result.get('id','?')[:8]}... "
-                  f"status={result.get('status','?')} ({used}/{max_sub} brukt)")
+                if not resp.is_success:
+                    print(f"  {RED}[{i+1}/{count}] Feilet ({resp.status_code}): {resp.text[:100]}{RESET}")
+                    if resp.status_code == 429:
+                        print(f"  Rate limit — venter 60s...")
+                        time.sleep(60)
+                    continue
 
-            if i < count - 1:
-                print(f"  Venter {interval}s...", end="\r", flush=True)
+                result = resp.json()
+                used = result.get("daily_submissions_used", "?")
+                max_sub = result.get("daily_submissions_max", "?")
+                print(f"  {GREEN}[{i+1}/{count}]{RESET} {result.get('id','?')[:8]}... "
+                      f"status={result.get('status','?')} ({used}/{max_sub} brukt)")
+
+            submitted += batch_size
+
+            # Wait before next batch if more to send
+            if submitted < count:
+                print(f"  Sendt {batch_size} — venter {interval}s før neste batch...", flush=True)
                 time.sleep(interval)
 
-    print(f"\n{BOLD}Ferdig. Sjekk resultater: python3 scripts/compete.py status{RESET}")
+    print(f"\n{BOLD}Ferdig — {submitted} sendt. Sjekk resultater: python3 scripts/compete.py status{RESET}")
 
 
 if __name__ == "__main__":
