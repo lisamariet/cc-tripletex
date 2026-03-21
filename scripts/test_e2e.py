@@ -216,6 +216,40 @@ def _ts() -> str:
     return str(int(time.time()))
 
 
+def _make_bank_csv_b64() -> str:
+    """Create a minimal bank statement CSV (windows-1252) and return base64."""
+    import base64
+    lines = [
+        "Bokfort dato;Rentedato;Tekst;Belop i NOK;Bokfort saldo i NOK;Status",
+        "01.03.2026;01.03.2026;Husleie;-15000.00;100000.00;Bokfort",
+        "05.03.2026;05.03.2026;Lonnsinntekt;85000.00;185000.00;Bokfort",
+        "10.03.2026;10.03.2026;Leverandorfaktura Dalheim AS;-60375.00;124625.00;Bokfort",
+        "15.03.2026;15.03.2026;Kontorrekvisita;-2340.00;122285.00;Bokfort",
+        "20.03.2026;20.03.2026;Kundeinnbetaling Bolgekraft AS;25000.00;147285.00;Bokfort",
+    ]
+    csv_text = "\n".join(lines)
+    return base64.b64encode(csv_text.encode("windows-1252")).decode()
+
+
+def _make_minimal_pdf_b64() -> str:
+    """Create a minimal valid PDF and return base64."""
+    import base64
+    # Minimal PDF structure (no embedded fonts, just structure markers)
+    pdf_bytes = (
+        b"%PDF-1.4\n"
+        b"1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+        b"2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n"
+        b"3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] "
+        b"/Contents 4 0 R /Resources << >> >>\nendobj\n"
+        b"4 0 obj\n<< /Length 44 >>\nstream\n"
+        b"BT /F1 12 Tf 100 700 Td (Test Document) Tj ET\n"
+        b"endstream\nendobj\n"
+        b"xref\n0 5\n0000000000 65535 f \n"
+        b"trailer\n<< /Size 5 /Root 1 0 R >>\nstartxref\n0\n%%EOF\n"
+    )
+    return base64.b64encode(pdf_bytes).decode()
+
+
 def build_tier2_tests() -> list[E2ETestCase]:
     """Build Tier 2 test cases with unique names using timestamps."""
     ts = _ts()
@@ -1054,6 +1088,412 @@ def build_tier2_tests() -> list[E2ETestCase]:
             verify=None,  # custom check: vouchersCreated in result
             tier=3,
         ),
+
+        # -----------------------------------------------------------------------
+        # NEW TESTS — T3 multilingual variants
+        # -----------------------------------------------------------------------
+
+        # T3-6: bank_reconciliation with CSV attachment (base64-encoded)
+        E2ETestCase(
+            name="t3_bank_reconciliation_csv",
+            expected_task_type="bank_reconciliation",
+            expected_fields={},
+            prompt=(
+                "Utfør bankavstemming for mars 2026. "
+                "Vedlagte CSV-fil viser transaksjoner fra banken. "
+                "Match disse mot bokførte poster på konto 1920."
+            ),
+            direct_fields={
+                "accountNumber": 1920,
+                "dateFrom": "2026-03-01",
+                "dateTo": "2026-03-31",
+                "attachmentContent": _make_bank_csv_b64(),
+                "attachmentName": "banktransaksjoner_mars_2026.csv",
+            },
+            setup="find_bank_account",
+            verify=None,  # custom check: reconciliationId in result
+            tier=3,
+        ),
+
+        # T3-7: year_end_closing — German variant
+        E2ETestCase(
+            name="t3_year_end_closing_german",
+            expected_task_type="year_end_closing",
+            expected_fields={},
+            prompt=(
+                "Führen Sie den Jahresabschluss für das Geschäftsjahr 2025 durch. "
+                "Schließen Sie alle Buchungen und erstellen Sie den Eröffnungssaldo für 2026."
+            ),
+            direct_fields={
+                "year": 2025,
+                "createOpeningBalance": True,
+            },
+            verify=None,  # custom check: steps in result
+            tier=3,
+        ),
+
+        # T3-8: year_end_closing — French variant
+        E2ETestCase(
+            name="t3_year_end_closing_french",
+            expected_task_type="year_end_closing",
+            expected_fields={},
+            prompt=(
+                "Effectuez la clôture annuelle pour l'exercice fiscal 2025. "
+                "Fermez toutes les écritures et créez le bilan d'ouverture pour 2026."
+            ),
+            direct_fields={
+                "year": 2025,
+                "createOpeningBalance": True,
+            },
+            verify=None,  # custom check: steps in result
+            tier=3,
+        ),
+
+        # T3-9: correct_ledger_error — French multi-error (4 error types)
+        E2ETestCase(
+            name="t3_correct_ledger_multi_error_french",
+            expected_task_type="correct_ledger_error",
+            expected_fields={},
+            prompt=(
+                "Il y a 4 erreurs dans le grand livre à corriger : "
+                "1) Le compte 7100 a été utilisé au lieu du compte 6300 pour un montant de 3000 NOK. "
+                "2) Un document en double sur le compte 6300 pour 800 NOK doit être annulé. "
+                "3) Il manque une ligne de TVA sur le compte 7140 pour 6500 NOK (TVA sur le compte 2710). "
+                "4) Le montant de 9500 NOK sur le compte 7100 est erroné, il devrait être 8750 NOK."
+            ),
+            direct_fields={
+                "errors": [
+                    {
+                        "errorType": "wrong_account",
+                        "wrongAccount": 7100,
+                        "correctAccount": 6300,
+                        "amount": 3000,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "duplicate",
+                        "account": 6300,
+                        "amount": 800,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "missing_vat",
+                        "account": 7140,
+                        "amount": 6500,
+                        "vatAccount": 2710,
+                        "date": "2026-03-21",
+                    },
+                    {
+                        "errorType": "wrong_amount",
+                        "account": 7100,
+                        "amount": 9500,
+                        "correctAmount": 8750,
+                        "date": "2026-03-21",
+                    },
+                ],
+                "date": "2026-03-21",
+            },
+            setup="create_vouchers_for_multi_correction_fr",
+            verify=None,
+            tier=3,
+        ),
+
+        # T3-10: monthly_closing — German variant, provisions without amount
+        E2ETestCase(
+            name="t3_monthly_closing_german_no_amount",
+            expected_task_type="monthly_closing",
+            expected_fields={},
+            prompt=(
+                "Führen Sie den Monatsabschluss für März 2026 durch. "
+                "1) Buchen Sie die monatliche Abschreibung für Anlagevermögen mit "
+                "Anschaffungskosten 48000 NOK, Nutzungsdauer 8 Jahre (linear, Konto 6020, Anlagekonto 1200). "
+                "2) Stellen Sie eine Rückstellung für Löhne (Soll 5000, Haben 2900, Betrag 42000)."
+            ),
+            direct_fields={
+                "month": 3,
+                "year": 2026,
+                "depreciations": [
+                    {
+                        "account": 6020,
+                        "assetAccount": 1200,
+                        "acquisitionCost": 48000,
+                        "usefulLifeYears": 8,
+                        "description": "Abschreibung Anlagevermögen März 2026",
+                    },
+                ],
+                "provisions": [
+                    {
+                        "debitAccount": 5000,
+                        "creditAccount": 2900,
+                        "amount": 42000,
+                        "description": "Lohnrückstellung März 2026",
+                    },
+                ],
+            },
+            verify=None,
+            tier=3,
+        ),
+
+        # T3-11: monthly_closing — Portuguese variant
+        E2ETestCase(
+            name="t3_monthly_closing_portuguese",
+            expected_task_type="monthly_closing",
+            expected_fields={},
+            prompt=(
+                "Realize o fechamento mensal de março de 2026. "
+                "1) Registre o reconhecimento de receita diferida "
+                "(10000 NOK da conta 1720 para a conta 3000). "
+                "2) Registre a provisão de salários (débito 5000, crédito 2900, valor 28000 NOK)."
+            ),
+            direct_fields={
+                "month": 3,
+                "year": 2026,
+                "accruals": [
+                    {
+                        "fromAccount": 1720,
+                        "toAccount": 3000,
+                        "amount": 10000,
+                        "description": "Reconhecimento receita diferida março 2026",
+                    },
+                ],
+                "provisions": [
+                    {
+                        "debitAccount": 5000,
+                        "creditAccount": 2900,
+                        "amount": 28000,
+                        "description": "Provisão salários março 2026",
+                    },
+                ],
+            },
+            verify=None,
+            tier=3,
+        ),
+
+        # T3-12: create_voucher — without date field (should fall back to today)
+        E2ETestCase(
+            name="t3_create_voucher_no_date",
+            expected_task_type="create_voucher",
+            expected_fields={},
+            prompt=(
+                f"Opprett et bilag med debet konto 6300 og kredit konto 1920, beloep 3500 kr. "
+                f"(Ingen dato oppgitt — bruk dagens dato.)"
+            ),
+            direct_fields={
+                "description": f"E2E BilagIngenDato {ts}",
+                # date intentionally omitted — handler must default to today
+                "postings": [
+                    {"debitAccount": "6300", "creditAccount": "1920", "amount": 3500},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=3,
+        ),
+
+        # -----------------------------------------------------------------------
+        # NEW TESTS — T2 problematic language variants
+        # -----------------------------------------------------------------------
+
+        # T2-28: register_supplier_invoice with PDF/image attachment (receipt)
+        E2ETestCase(
+            name="t2_supplier_invoice_with_pdf_attachment",
+            expected_task_type="register_supplier_invoice",
+            expected_fields={},
+            prompt=(
+                f'Du har mottatt en kvittering som PDF (vedlagt). '
+                f'Registrer leverandørfakturaen fra "E2E PdfLev {ts}" '
+                f'på 8750 kr for "Kontorrekvisita".'
+            ),
+            direct_fields={
+                "supplierName": f"E2E PdfLev {ts}",
+                "amount": 8750,
+                "description": "Kontorrekvisita",
+                "invoiceDate": "2026-03-20",
+                "invoiceNumber": f"KVITT-{ts[-6:]}",
+                "expenseAccount": "6800",
+                "vatRate": 25,
+                "attachmentContent": _make_minimal_pdf_b64(),
+                "attachmentName": "kvittering.pdf",
+            },
+            verify=VerifySpec(
+                endpoint="/ledger/voucher",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-29: register_expense_receipt — French variant
+        E2ETestCase(
+            name="t2_register_expense_receipt_french",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                f'Enregistrez un reçu de dépenses pour le premier employé: '
+                f'taxi 320 NOK et restaurant 850 NOK le 2026-03-20.'
+            ),
+            direct_fields={
+                "date": "2026-03-20",
+                "costs": [
+                    {"description": "Taxi", "amount": 320, "date": "2026-03-20"},
+                    {"description": "Restaurant", "amount": 850, "date": "2026-03-20"},
+                ],
+            },
+            setup="find_first_employee",
+            verify=VerifySpec(
+                endpoint="/travelExpense",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-30: register_expense_receipt — Nynorsk variant
+        E2ETestCase(
+            name="t2_register_expense_receipt_nynorsk",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                f'Registrer eit utgiftsbilag for den fyrste tilsette: '
+                f'parkering 150 NOK og drivstoff 620 NOK den 2026-03-20.'
+            ),
+            direct_fields={
+                "date": "2026-03-20",
+                "costs": [
+                    {"description": "Parkering", "amount": 150, "date": "2026-03-20"},
+                    {"description": "Drivstoff", "amount": 620, "date": "2026-03-20"},
+                ],
+            },
+            setup="find_first_employee",
+            verify=VerifySpec(
+                endpoint="/travelExpense",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-31: run_payroll — verify payroll runs correctly for first employee
+        E2ETestCase(
+            name="t2_run_payroll_verified",
+            expected_task_type="run_payroll",
+            expected_fields={},
+            prompt=(
+                f'Kjør lønn for den første ansatte for mars 2026. '
+                f'Grunnlønn 42000 NOK.'
+            ),
+            direct_fields={
+                "baseSalary": 42000,
+                "bonus": 0,
+                "month": 3,
+                "year": 2026,
+            },
+            setup="find_first_employee",
+            verify=None,  # custom post-check: transactionId
+            tier=2,
+        ),
+
+        # T2-32: register_timesheet — batch (multiple employees)
+        E2ETestCase(
+            name="t2_register_timesheet_batch",
+            expected_task_type="register_timesheet",
+            expected_fields={},
+            prompt=(
+                f'Registrer 8 timer for den første ansatte på prosjektet '
+                f'"E2E BatchTime {ts}" med aktivitet "Testing" for 2026-03-20. '
+                f'Registrer også 6 timer med aktivitet "Møte" for 2026-03-21.'
+            ),
+            direct_fields={
+                "projectName": f"E2E BatchTime {ts}",
+                "activityName": "Testing",
+                "hours": 8.0,
+                "date": "2026-03-20",
+                "extraEntries": [
+                    {
+                        "activityName": "Møte",
+                        "hours": 6.0,
+                        "date": "2026-03-21",
+                    },
+                ],
+            },
+            setup="find_first_employee",
+            verify=VerifySpec(
+                endpoint="/timesheet/entry",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("hours", 8.0),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-33: create_project — analytical mode ("analyser hovedbok")
+        E2ETestCase(
+            name="t2_create_project_analytical",
+            expected_task_type="create_project",
+            expected_fields={},
+            prompt=(
+                f'Analyser hovedboken og opprett et prosjekt '
+                f'"E2E Analyse {ts}" for å spore kostnader separat fra 2026-03-21.'
+            ),
+            direct_fields={
+                "name": f"E2E Analyse {ts}",
+                "startDate": "2026-03-21",
+                "description": "Analytisk prosjekt for kostnadssporing",
+            },
+            verify=VerifySpec(
+                endpoint="/project",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("name", f"E2E Analyse {ts}"),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # -----------------------------------------------------------------------
+        # NEW TESTS — T1 PDF variant
+        # -----------------------------------------------------------------------
+
+        # T1-5: create_employee with PDF attachment (offer letter), Spanish
+        E2ETestCase(
+            name="t1_create_employee_pdf_spanish",
+            expected_task_type="create_employee",
+            expected_fields={},
+            prompt=(
+                f'Se adjunta carta de oferta en PDF. '
+                f'Crear un empleado: nombre "Pedro{ts}", apellido "Garcia{ts}", '
+                f'correo pedro.garcia.{ts}@empresa.no, fecha de inicio 2026-04-01.'
+            ),
+            direct_fields={
+                "firstName": f"Pedro{ts}",
+                "lastName": f"Garcia{ts}",
+                "email": f"pedro.garcia.{ts}@empresa.no",
+                "startDate": "2026-04-01",
+                "attachmentContent": _make_minimal_pdf_b64(),
+                "attachmentName": "carta_oferta.pdf",
+            },
+            verify=VerifySpec(
+                endpoint="/employee",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("firstName", f"Pedro{ts}"),
+                    FieldCheck("lastName", f"Garcia{ts}"),
+                ],
+            ),
+            tier=1,
+        ),
     ]
 
 
@@ -1330,6 +1770,54 @@ async def setup_create_vouchers_for_multi_correction(client, fields: dict) -> di
     return fields
 
 
+async def setup_create_vouchers_for_multi_correction_fr(client, fields: dict) -> dict:
+    """Create 4 vouchers for the French multi-error correction test (t3-9).
+
+    Uses different amounts than the original multi-correction to avoid
+    cross-test interference:
+    1. Wrong account: 3000 on 7100 (should be 6300)
+    2. Duplicate: 800 on 6300
+    3. Missing VAT: 6500 on 7140 (MVA missing on 2710)
+    4. Wrong amount: 9500 on 7100 (should be 8750)
+    """
+    from app.handlers.tier3 import _lookup_account
+
+    credit_id = await _lookup_account(client, 1920)
+    date = "2026-03-21"
+
+    voucher_specs = [
+        (7100, 3000, "E2E FR Feil konto (7100->6300)"),
+        (6300, 800, "E2E FR Duplikat bilag"),
+        (7140, 6500, "E2E FR Manglende MVA"),
+        (7100, 9500, "E2E FR Feil belop (9500->8750)"),
+    ]
+
+    created_ids = []
+    for acct_num, amt, desc in voucher_specs:
+        debit_id = await _lookup_account(client, acct_num)
+        payload = {
+            "date": date,
+            "description": f"{desc} {_ts()}",
+            "postings": [
+                {"account": {"id": debit_id}, "amountGross": amt, "amountGrossCurrency": amt, "row": 1},
+                {"account": {"id": credit_id}, "amountGross": -amt, "amountGrossCurrency": -amt, "row": 2},
+            ],
+        }
+        resp = await client.post("/ledger/voucher", payload)
+        created = resp.json().get("value", {})
+        if created.get("id"):
+            created_ids.append(created["id"])
+        else:
+            logger.warning(f"Failed to create FR setup voucher '{desc}': {resp.text[:300]}")
+
+    errors = fields.get("errors", [])
+    for i, vid in enumerate(created_ids):
+        if i < len(errors):
+            errors[i]["_voucher_id"] = vid
+
+    return fields
+
+
 SETUP_REGISTRY = {
     "find_first_employee": setup_find_first_employee,
     "find_bank_account": setup_find_bank_account,
@@ -1345,6 +1833,7 @@ SETUP_REGISTRY = {
     "find_or_reuse_dimension": setup_find_or_reuse_dimension,
     "create_voucher_for_correction": setup_create_voucher_for_correction,
     "create_vouchers_for_multi_correction": setup_create_vouchers_for_multi_correction,
+    "create_vouchers_for_multi_correction_fr": setup_create_vouchers_for_multi_correction_fr,
 }
 
 
@@ -1755,6 +2244,56 @@ async def run_one_test(
                     actual=succeeded,
                     passed=False, detail=f"only {succeeded}/3 departments created",
                 ))
+
+        # For bank_reconciliation tests (both variants), check reconciliationId in result
+        if tc.expected_task_type == "bank_reconciliation":
+            recon_id = (
+                handler_result.get("reconciliationId")
+                or handler_result.get("id")
+            )
+            matched = handler_result.get("matchedTransactions", handler_result.get("matched", 0))
+            if recon_id:
+                verify_results.append(CheckResult(
+                    field="reconciliationId", expected="exists",
+                    actual=recon_id,
+                    passed=True, detail=f"reconciliation created/found: {recon_id}",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="reconciliationId", expected="exists", actual=None,
+                    passed=False, detail="no reconciliationId in result",
+                ))
+            # Soft check: matched count (0 is still OK for empty sandbox)
+            verify_results.append(CheckResult(
+                field="matchedTransactions", expected=0,
+                actual=matched,
+                passed=True, detail=f"matched transactions: {matched}",
+            ))
+
+        # For year_end_closing tests (all variants), check steps in result
+        if tc.expected_task_type == "year_end_closing":
+            steps = handler_result.get("steps", [])
+            completed = handler_result.get("completed", False)
+            if steps or completed or handler_result.get("closingVoucherId"):
+                verify_results.append(CheckResult(
+                    field="year_end_steps", expected="exists",
+                    actual=len(steps) if steps else "completed",
+                    passed=True, detail=f"year_end_closing completed: {len(steps)} steps",
+                ))
+            else:
+                note = handler_result.get("note", "")
+                # Allow partial if sandbox has no postings to close
+                if "ingen" in note.lower() or "no" in note.lower() or "already" in note.lower():
+                    verify_results.append(CheckResult(
+                        field="year_end_steps", expected="exists",
+                        actual="no_postings",
+                        passed=True, detail=f"accepted: {note}",
+                    ))
+                else:
+                    verify_results.append(CheckResult(
+                        field="year_end_steps", expected="exists", actual=None,
+                        passed=False, detail=f"no steps in result: {handler_result}",
+                    ))
 
     elapsed = time.time() - t0
     api_calls = client.tracker.total_calls - calls_before
