@@ -38,7 +38,25 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
     date = fields.get("date") or datetime.date.today().isoformat()
     postings_input = fields.get("postings", [])
 
+    # Look up department if specified
+    department_ref = None
+    department_name = fields.get("department") or fields.get("departmentName")
+    if department_name:
+        resp = await client.get_cached("/department", params={"name": department_name})
+        dept_values = resp.json().get("values", [])
+        for d in dept_values:
+            if d.get("name", "").lower() == department_name.lower():
+                department_ref = {"id": d["id"]}
+                break
+        if not department_ref and dept_values:
+            department_ref = {"id": dept_values[0]["id"]}
+        if not department_ref:
+            logger.warning(f"Department '{department_name}' not found — proceeding without department")
+
     postings = []
+    debit_accounts_used: list[str] = []
+    credit_accounts_used: list[str] = []
+
     for idx, p in enumerate(postings_input):
         row = idx + 1  # row must be >= 1 (row 0 is system-reserved for VAT)
 
@@ -50,7 +68,7 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
         if debit_account:
             account_number = int(debit_account)
             account_id = await _lookup_account(client, account_number)
-            posting = {
+            posting: dict[str, Any] = {
                 "account": {"id": account_id},
                 "amountGross": amount,
                 "amountGrossCurrency": amount,
@@ -59,7 +77,10 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
             vat_type = await _lookup_vat_type(client, account_number)
             if vat_type:
                 posting["vatType"] = vat_type
+            if department_ref:
+                posting["department"] = department_ref
             postings.append(posting)
+            debit_accounts_used.append(str(debit_account))
 
         if credit_account:
             account_number = int(credit_account)
@@ -73,7 +94,16 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
             vat_type = await _lookup_vat_type(client, account_number)
             if vat_type:
                 posting["vatType"] = vat_type
+            if department_ref:
+                posting["department"] = department_ref
             postings.append(posting)
+            credit_accounts_used.append(str(credit_account))
+
+    # Description fallback: generate from account numbers if empty
+    if not description and (debit_accounts_used or credit_accounts_used):
+        debit_str = "/".join(debit_accounts_used) if debit_accounts_used else "-"
+        credit_str = "/".join(credit_accounts_used) if credit_accounts_used else "-"
+        description = f"Bilag {debit_str} mot {credit_str}"
 
     payload = {
         "date": date,
@@ -81,7 +111,7 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
         "postings": postings,
     }
 
-    resp = await client.post("/ledger/voucher", payload)
+    resp = await client.post_with_retry("/ledger/voucher", payload)
     data = resp.json()
 
     if resp.status_code >= 400:
@@ -94,7 +124,7 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
             "validationMessages": validation,
         }
 
-    logger.info(f"Created voucher: {data.get('value', {}).get('id')}")
+    logger.info(f"Created voucher: {data.get('value', {}).get('id')}, dept={department_name}")
     return {"status": "completed", "taskType": "create_voucher", "created": data.get("value", {})}
 
 

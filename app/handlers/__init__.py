@@ -29,6 +29,7 @@ async def execute_task(task_type: str, client: TripletexClient, fields: dict[str
     if task_type.startswith("batch_"):
         base_type = task_type[6:]  # Remove "batch_" prefix
         items = fields.get("items", [])
+        logger.info(f"Batch dispatch: {task_type} — {len(items)} items, base_type={base_type}")
         results = []
         for item in items:
             # Each item may have its own taskType — use it if available
@@ -48,12 +49,25 @@ async def execute_task(task_type: str, client: TripletexClient, fields: dict[str
                 results.append({"status": "completed", "note": f"No handler for: {item_type}"})
                 continue
 
-            logger.info(f"Batch item {len(results)+1}/{len(items)}: {item_type}")
-            result = await item_handler(client, item_fields)
+            item_idx = len(results) + 1
+            logger.info(f"Batch item {item_idx}/{len(items)}: taskType={item_type}")
+
+            # Pass prompt to fallback/unknown handlers that need it
+            if item_type == "unknown" or item_handler == HANDLER_REGISTRY.get("unknown"):
+                result = await item_handler(client, item_fields, prompt=prompt)
+            else:
+                result = await item_handler(client, item_fields)
+
             # Log batch item result for debugging
             created = result.get("created", {})
             if not created or (isinstance(created, dict) and not created.get("id")):
-                logger.warning(f"Batch item {len(results)+1}/{len(items)} ({item_type}): empty created — {result.get('error', 'unknown')}")
+                logger.warning(
+                    f"Batch item {item_idx}/{len(items)} ({item_type}): "
+                    f"empty created — {result.get('error', 'unknown')}"
+                )
+            else:
+                created_id = created.get("id") if isinstance(created, dict) else "list"
+                logger.info(f"Batch item {item_idx}/{len(items)} ({item_type}): created id={created_id}")
             results.append(result)
         return {"status": "completed", "taskType": task_type, "batch_results": results}
 

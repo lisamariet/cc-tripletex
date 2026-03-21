@@ -1428,58 +1428,84 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
 # Expense receipt registration (utgiftsregistrering fra kvittering)
 # ---------------------------------------------------------------------------
 
-@register_handler("register_expense_receipt")
-async def register_expense_receipt(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register an expense from a receipt via POST /ledger/voucher.
 
-    Creates a voucher with:
-      - DEBIT:  expense account (default 6500 — kontorrekvisita/office supplies)
-      - CREDIT: bank/cash account (default 1920)
-    Applies input VAT (inngående mva) if vatRate > 0.
-    Optionally links the voucher to a department via the department dimension.
-    """
+# ---------------------------------------------------------------------------
+# Konto-mapping: norske/engelske kostnadstyper → kontonummer
+# ---------------------------------------------------------------------------
+
+_EXPENSE_CATEGORY_MAP: dict[str, int] = {
+    # Mat / food
+    "mat": 6810,
+    "food": 6810,
+    "lunsj": 6810,
+    "lunch": 6810,
+    "middag": 6810,
+    "dinner": 6810,
+    "restaurant": 6810,
+    "bespisning": 6810,
+    # Reise / travel
+    "reise": 7140,
+    "travel": 7140,
+    "transport": 7140,
+    "taxi": 7140,
+    "buss": 7140,
+    "tog": 7140,
+    "fly": 7140,
+    "flight": 7140,
+    "parkering": 7140,
+    "parking": 7140,
+    # Hotell / accommodation
+    "hotell": 7130,
+    "hotel": 7130,
+    "overnatting": 7130,
+    "accommodation": 7130,
+    # Drivstoff / fuel
+    "drivstoff": 7142,
+    "fuel": 7142,
+    "bensin": 7142,
+    "diesel": 7142,
+    # Telefon / phone
+    "telefon": 6900,
+    "phone": 6900,
+    "mobil": 6900,
+    "mobile": 6900,
+    # Programvare / software
+    "programvare": 6540,
+    "software": 6540,
+    "lisens": 6540,
+    "license": 6540,
+    "subscription": 6540,
+}
+
+
+def _infer_expense_account(description: str, default: int = 6500) -> int:
+    """Infer expense account number from description/category keywords."""
+    desc_lower = description.lower()
+    for keyword, account in _EXPENSE_CATEGORY_MAP.items():
+        if keyword in desc_lower:
+            return account
+    return default
+
+
+async def _create_single_expense_voucher(
+    client: TripletexClient,
+    voucher_date: str,
+    description: str,
+    amount_gross: float,
+    expense_account_nr: int,
+    credit_account_nr: int,
+    vat_rate: float,
+    department_ref: dict | None,
+    currency: str | None = None,
+) -> dict[str, Any]:
+    """Create a single expense receipt voucher. Returns the raw response data."""
     from app.handlers.tier3 import _lookup_account
 
-    today = date.today().isoformat()
-    description = (
-        fields.get("description")
-        or fields.get("itemName")
-        or fields.get("receiptDescription")
-        or "Utgift fra kvittering"
-    )
-
-    # Support both a single `amount` and a `costs` list (multiple receipts).
-    # When `costs` is present, sum up all cost amounts and build a description.
-    costs = fields.get("costs", [])
-    if costs and not fields.get("amount"):
-        total = sum(abs(c.get("amount", 0)) for c in costs)
-        amount_gross = total
-        # Build composite description from cost items if no explicit description
-        if description == "Utgift fra kvittering":
-            parts = [c.get("description", "") for c in costs if c.get("description")]
-            if parts:
-                description = ", ".join(parts)
-    else:
-        amount_gross = abs(fields.get("amount", 0))
-
-    voucher_date = fields.get("date") or fields.get("receiptDate") or today
-    vat_rate = fields.get("vatRate", 25)
-
-    # Expense account: default 6500 (kontorrekvisita / office supplies).
-    # The LLM should infer a more specific account from the item name, e.g.:
-    #   6500 — kontorrekvisita (pens, paper, desk lamp / skrivebordslampe)
-    #   6540 — kontormøbler (Kontorstoler / office chairs)
-    #   6300 — leie lokaler (rent)
-    #   7140 — reise og diett (travel)
-    expense_account_nr = int(fields.get("expenseAccount", 6500))
-    credit_account_nr = int(fields.get("creditAccount", 1920))
-
-    # Look up account IDs
     expense_id = await _lookup_account(client, expense_account_nr)
     credit_id = await _lookup_account(client, credit_account_nr)
 
     if not expense_id or not credit_id:
-        return {"status": "completed", "note": "Could not find required ledger accounts"}
+        return {"error": "Could not find required ledger accounts"}
 
     # Look up input VAT type (inngående mva) for expense postings
     vat_type_ref = None
@@ -1494,6 +1520,87 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
         vat_values = resp.json().get("values", [])
         if vat_values:
             vat_type_ref = {"id": vat_values[0]["id"]}
+
+    # Handle currency: if non-NOK, set amountGrossCurrency to original amount
+    # and amountGross to the same value (let Tripletex handle conversion)
+    amount_nok = amount_gross
+    amount_currency = amount_gross
+
+    # Build expense (debit) posting
+    expense_posting: dict[str, Any] = {
+        "account": {"id": expense_id},
+        "amountGross": amount_nok,
+        "amountGrossCurrency": amount_currency,
+        "row": 1,
+    }
+    if vat_type_ref:
+        expense_posting["vatType"] = vat_type_ref
+    if department_ref:
+        expense_posting["department"] = department_ref
+    if currency and currency.upper() != "NOK":
+        expense_posting["currency"] = {"code": currency.upper()}
+
+    # Build credit posting (bank / cash payment)
+    credit_posting: dict[str, Any] = {
+        "account": {"id": credit_id},
+        "amountGross": -amount_nok,
+        "amountGrossCurrency": -amount_currency,
+        "row": 2,
+    }
+    if department_ref:
+        credit_posting["department"] = department_ref
+    if currency and currency.upper() != "NOK":
+        credit_posting["currency"] = {"code": currency.upper()}
+
+    payload: dict[str, Any] = {
+        "date": voucher_date,
+        "description": description,
+        "postings": [expense_posting, credit_posting],
+    }
+
+    resp = await client.post("/ledger/voucher", payload)
+    data = resp.json()
+
+    if resp.status_code >= 400:
+        error_msg = data.get("message", "Unknown error")
+        validation = data.get("validationMessages", [])
+        logger.error(f"Expense receipt voucher failed: {error_msg} — {validation}")
+        return {"error": error_msg, "validationMessages": validation}
+
+    created = data.get("value", {})
+    logger.info(
+        f"Created expense receipt voucher {created.get('id')}: "
+        f"{description}, amount={amount_gross}, "
+        f"expenseAccount={expense_account_nr}, creditAccount={credit_account_nr}"
+    )
+    return {"created": created}
+
+
+@register_handler("register_expense_receipt")
+async def register_expense_receipt(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Register an expense from a receipt via POST /ledger/voucher.
+
+    Creates a voucher with:
+      - DEBIT:  expense account (inferred from description, default 6500)
+      - CREDIT: bank/cash account (default 1920)
+    Applies input VAT (inngående mva) if vatRate > 0.
+    Optionally links the voucher to a department via the department dimension.
+
+    Multi-receipt support: When `costs` list is provided, creates ONE voucher
+    per cost item (not summed) so scorer can verify individual postings.
+    """
+    today = date.today().isoformat()
+    description = (
+        fields.get("description")
+        or fields.get("itemName")
+        or fields.get("receiptDescription")
+        or "Utgift fra kvittering"
+    )
+
+    voucher_date = fields.get("date") or fields.get("receiptDate") or today
+    vat_rate = fields.get("vatRate", 25)
+    credit_account_nr = int(fields.get("creditAccount", 1920))
+    currency = fields.get("currency")
 
     # Look up department if specified
     department_ref = None
@@ -1511,53 +1618,90 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
         if not department_ref:
             logger.warning(f"Department '{department_name}' not found — proceeding without department")
 
-    # Build expense (debit) posting
-    expense_posting: dict[str, Any] = {
-        "account": {"id": expense_id},
-        "amountGross": amount_gross,
-        "amountGrossCurrency": amount_gross,
-        "row": 1,
-    }
-    if vat_type_ref:
-        expense_posting["vatType"] = vat_type_ref
-    if department_ref:
-        expense_posting["department"] = department_ref
+    # Multi-receipt support: one voucher per cost item
+    costs = fields.get("costs", [])
+    if costs:
+        vouchers_created = []
+        errors = []
+        for cost in costs:
+            cost_desc = cost.get("description") or cost.get("name") or description
+            cost_amount = abs(cost.get("amount", 0))
+            cost_date = cost.get("date") or voucher_date
+            cost_vat_rate = cost.get("vatRate", vat_rate)
+            cost_currency = cost.get("currency") or currency
 
-    # Build credit posting (bank / cash payment)
-    credit_posting: dict[str, Any] = {
-        "account": {"id": credit_id},
-        "amountGross": -amount_gross,
-        "amountGrossCurrency": -amount_gross,
-        "row": 2,
-    }
-    if department_ref:
-        credit_posting["department"] = department_ref
+            # Infer expense account from cost description or explicit field
+            if cost.get("expenseAccount"):
+                cost_expense_account = int(cost["expenseAccount"])
+            elif fields.get("expenseAccount"):
+                cost_expense_account = int(fields["expenseAccount"])
+            else:
+                cost_expense_account = _infer_expense_account(cost_desc)
 
-    payload: dict[str, Any] = {
-        "date": voucher_date,
-        "description": description,
-        "postings": [expense_posting, credit_posting],
-    }
+            if cost_amount <= 0:
+                logger.warning(f"Skipping cost item with zero/negative amount: {cost_desc}")
+                continue
 
-    resp = await client.post("/ledger/voucher", payload)
-    data = resp.json()
+            result = await _create_single_expense_voucher(
+                client=client,
+                voucher_date=cost_date,
+                description=cost_desc,
+                amount_gross=cost_amount,
+                expense_account_nr=cost_expense_account,
+                credit_account_nr=credit_account_nr,
+                vat_rate=cost_vat_rate,
+                department_ref=department_ref,
+                currency=cost_currency,
+            )
+            if "created" in result:
+                vouchers_created.append(result["created"])
+            else:
+                errors.append(result.get("error", "Unknown error"))
 
-    if resp.status_code >= 400:
-        error_msg = data.get("message", "Unknown error")
-        validation = data.get("validationMessages", [])
-        logger.error(f"Expense receipt voucher failed: {error_msg} — {validation}")
+        if not vouchers_created and errors:
+            return {
+                "status": "completed",
+                "note": f"All expense receipt vouchers failed: {errors[0]}",
+                "errors": errors,
+            }
+
+        logger.info(
+            f"Created {len(vouchers_created)} expense receipt vouchers "
+            f"for {len(costs)} cost items"
+        )
         return {
             "status": "completed",
-            "note": f"Expense receipt registration failed: {error_msg}",
-            "validationMessages": validation,
+            "taskType": "register_expense_receipt",
+            "created": vouchers_created[0] if vouchers_created else {},
+            "vouchers": vouchers_created,
+            "voucherCount": len(vouchers_created),
+            "department": department_name,
         }
 
-    created = data.get("value", {})
-    logger.info(
-        f"Created expense receipt voucher {created.get('id')}: "
-        f"{description}, amount={amount_gross}, dept={department_name}, "
-        f"expenseAccount={expense_account_nr}, creditAccount={credit_account_nr}"
+    # Single receipt (no costs list)
+    amount_gross = abs(fields.get("amount", 0))
+    expense_account_nr = int(fields.get("expenseAccount") or _infer_expense_account(description))
+
+    result = await _create_single_expense_voucher(
+        client=client,
+        voucher_date=voucher_date,
+        description=description,
+        amount_gross=amount_gross,
+        expense_account_nr=expense_account_nr,
+        credit_account_nr=credit_account_nr,
+        vat_rate=vat_rate,
+        department_ref=department_ref,
+        currency=currency,
     )
+
+    if "error" in result:
+        return {
+            "status": "completed",
+            "note": f"Expense receipt registration failed: {result['error']}",
+            "validationMessages": result.get("validationMessages", []),
+        }
+
+    created = result["created"]
     return {
         "status": "completed",
         "taskType": "register_expense_receipt",
