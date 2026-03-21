@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02.1.1-score-maksimering/02.1.1-02-PLAN.md
-last_updated: "2026-03-21T18:59:00.427Z"
+stopped_at: Completed 03-effektivitet/03-02-PLAN.md
+last_updated: "2026-03-21T23:38:30.803Z"
 progress:
   total_phases: 6
-  completed_phases: 3
-  total_plans: 13
-  completed_plans: 12
+  completed_phases: 5
+  total_plans: 15
+  completed_plans: 15
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** Maks poengscore på alle 30 oppgavetyper — perfekt korrekthet + effektivitetsbonus
-**Current focus:** Phase 02.1.1 — score-maksimering
+**Current focus:** Phase 03 — effektivitet
 
 ## Current Position
 
-Phase: 02.1.1 (score-maksimering) — EXECUTING
-Plan: 3 of 3
+Phase: 03 (effektivitet) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Plan: 3 of 3
 | Phase 02.1-submission-feil-fiks P03 | 20 | 2 tasks | 1 files |
 | Phase 02.1.1-score-maksimering P01 | 15 | 2 tasks | 2 files |
 | Phase 02.1.1-score-maksimering P02 | 15 | 2 tasks | 4 files |
+| Phase 03-effektivitet P02 | 25 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,9 @@ Recent decisions affecting current work:
 - [Phase 02.1.1-score-maksimering]: create_project analytical mode: bulk /ledger/posting (1 kall) erstatter 80 individuelle /account/{id}/balance kall
 - [Phase 02.1.1-score-maksimering]: execute_ok baseres pa status=completed, ikke fravar av entity_id — note er informasjon, ikke feil
 - [Phase 02.1.1-score-maksimering]: Multi-receipt expense voucher: en voucher per cost-item (ikke summert) — scorer verifiserer per-item postings
+- [Phase 03-effektivitet]: asyncio.gather wraps only GET/_lookup_* calls — POST calls remain sequential
+- [Phase 03-effektivitet]: fields= projections target only fields actually used in response parsing — version included on /ledger/voucher/{id} for PUT-prerequisites
+- [Phase 03-effektivitet]: create_voucher pre-fetches all unique account numbers before the posting loop — eliminates N sequential _lookup_account() calls
 
 ### Pending Todos
 
@@ -110,6 +114,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T18:59:00.424Z
-Stopped at: Completed 02.1.1-score-maksimering/02.1.1-02-PLAN.md
+Last session: 2026-03-21T23:38:20.028Z
+Stopped at: Completed 03-effektivitet/03-02-PLAN.md
 Resume file: None
