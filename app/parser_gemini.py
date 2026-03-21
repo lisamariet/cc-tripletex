@@ -105,8 +105,18 @@ def _call_gemini(prompt: str, system_prompt: str, files: list[dict[str, Any]] | 
 def parse_task_gemini(
     prompt: str, files: list[dict[str, Any]] | None = None
 ) -> ParsedTask:
-    """Parse a task prompt using Gemini via REST API."""
+    """Parse a task prompt using Gemini via REST API.
+
+    Strategy: keyword pre-classification FIRST (deterministic, tested),
+    then Gemini for field extraction. Gemini only decides task_type
+    when keywords don't match.
+    """
     logger.info(f"[Gemini] Parsing task: {prompt[:200]}")
+
+    # Step 0: Keyword pre-classification — deterministic, always wins
+    keyword_type = _infer_task_type_from_keywords(prompt)
+    if keyword_type:
+        logger.info(f"[Gemini] Keyword pre-match: {keyword_type} — using Gemini for field extraction only")
 
     try:
         raw_text = _call_gemini(prompt, SYSTEM_PROMPT, files=files)
@@ -149,32 +159,27 @@ def parse_task_gemini(
     if not isinstance(parsed, dict):
         return ParsedTask(task_type="unknown", fields={}, reasoning="Unexpected format")
 
+    gemini_type = parsed.get("taskType", "unknown")
+    if gemini_type not in VALID_TASK_TYPES and gemini_type != "unknown":
+        gemini_type = "unknown"
+
+    # Keyword pre-classification WINS over Gemini for task_type
+    # Gemini is only used for field extraction (it's better at parsing fields from PDF/images)
+    if keyword_type and keyword_type in VALID_TASK_TYPES:
+        final_type = keyword_type
+        if gemini_type != keyword_type and gemini_type != "unknown":
+            logger.info(f"[Gemini] Keyword override: Gemini said '{gemini_type}' but keywords say '{keyword_type}' — using keywords")
+    elif gemini_type != "unknown":
+        final_type = gemini_type
+    else:
+        final_type = "unknown"
+
     task = ParsedTask(
-        task_type=parsed.get("taskType", "unknown"),
+        task_type=final_type,
         fields=parsed.get("fields", {}),
         confidence=parsed.get("confidence", 0.0),
         reasoning=parsed.get("reasoning", ""),
     )
 
-    if task.task_type not in VALID_TASK_TYPES and task.task_type != "unknown":
-        task.task_type = "unknown"
-
-    # Known misclassification overrides — keyword signals that MUST win over Gemini
-    import re
-    _RECEIPT_SIGNAL = re.compile(
-        r"kvittering|quittung|receipt|re[çc]u|recibo|ricevuta|kvitto",
-        re.IGNORECASE,
-    )
-    if task.task_type == "register_supplier_invoice" and _RECEIPT_SIGNAL.search(prompt):
-        logger.info(f"[Gemini] Override: {task.task_type} → register_expense_receipt (receipt signal in prompt)")
-        task.task_type = "register_expense_receipt"
-        task.reasoning = f"Override: receipt signal → register_expense_receipt. {task.reasoning}"
-
-    if task.task_type == "unknown":
-        inferred = _infer_task_type_from_keywords(prompt)
-        if inferred:
-            task.task_type = inferred
-            task.reasoning = f"Keyword: {inferred}. {task.reasoning}"
-
-    logger.info(f"[Gemini] Parsed: type={task.task_type}, confidence={task.confidence}")
+    logger.info(f"[Gemini] Parsed: type={task.task_type} (gemini={gemini_type}, keyword={keyword_type}), confidence={task.confidence}")
     return task
