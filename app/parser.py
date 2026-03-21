@@ -82,8 +82,10 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ("register_supplier_invoice", [
         r"leverand[oø]rfaktura|leverand[oø]r.{0,20}faktura",
         r"leverandorfaktura.*(?:PDF|vedlagt|attached)|(?:PDF|vedlagt|attached).*leverandorfaktura",
-        r"supplier.?invoice.*(?:PDF|attached)|(?:PDF|attached).*supplier.?invoice",
-        r"factura.*proveedor.*PDF|PDF.*factura.*proveedor",
+        r"supplier.?invoice|facture.{0,20}fournisseur|Lieferantenrechnung",
+        r"fatura.{0,30}fornecedor|factura.{0,30}proveedor",
+        r"(?:registr|registe|enregistr).{0,30}(?:fatura|factura|invoice|faktura).{0,30}(?:fornecedor|proveedor|supplier|fournisseur|Lieferant)",
+        r"(?:recebemos|received|reçu|erhalten|recibimos).{0,40}(?:fatura|factura|invoice|faktura).{0,40}(?:fornecedor|proveedor|supplier|fournisseur|Lieferant)",
     ]),
     ("create_custom_dimension", [
         r"dimensjon|dimension|dimensão|dimensión|Dimension",
