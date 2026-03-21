@@ -73,6 +73,18 @@ def get_task_tier(tx_task_id: str) -> int:
     info = TASK_ID_MAP.get(tx_task_id)
     return info["tier"] if info else 0
 
+# Reverse map: task_type -> list of task IDs (sorted)
+TASK_TYPE_TO_IDS: dict[str, list[str]] = {}
+for _tid, _info in TASK_ID_MAP.items():
+    TASK_TYPE_TO_IDS.setdefault(_info["type"], []).append(_tid)
+
+def get_task_id_for_type(task_type: str) -> str:
+    """Return task ID for a task_type. '-' if unknown or multiple."""
+    ids = TASK_TYPE_TO_IDS.get(task_type, [])
+    if len(ids) == 1:
+        return ids[0]
+    return "-"
+
 COMMON_HEADERS = {
     "accept": "*/*",
     "origin": "https://app.ainm.no",
@@ -539,6 +551,9 @@ def cmd_status(args: argparse.Namespace) -> None:
     today_count = 0
     today_str = datetime.now().strftime("%Y-%m-%d")
 
+    # task_id -> total_attempts from leaderboard detail
+    lb_attempts_by_task_id: dict[str, int] = {}
+
     # Fetch authoritative total from leaderboard
     try:
         with make_client() as lb_client:
@@ -554,6 +569,21 @@ def cmd_status(args: argparse.Namespace) -> None:
                     break
     except Exception:
         pass  # Fall back to local calculation below
+
+    # Fetch per-task attempts from leaderboard detail endpoint
+    try:
+        with make_client() as lb_client:
+            resp_detail = lb_client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
+            resp_detail.raise_for_status()
+            our_tasks = resp_detail.json()
+        if isinstance(our_tasks, list):
+            for t in our_tasks:
+                task_id = t.get("tx_task_id", "")
+                attempts = safe_int(t.get("total_attempts", 0))
+                if task_id:
+                    lb_attempts_by_task_id[task_id] = attempts
+    except Exception:
+        pass  # attempts will show "-" if unavailable
 
     # If leaderboard failed, calculate locally
     if total_score == 0.0:
@@ -584,8 +614,8 @@ def cmd_status(args: argparse.Namespace) -> None:
         print(f"  Viser {len(display_subs)} av {total_subs} submissions")
         print()
 
-    print(f"  {'#':>3}  {'Tid':<10} {'Oppgavetype':<25} {'Score':>12} {'4xx':>4} {'5xx':>4} {'Varighet':>8}  {'Status'}")
-    print(f"  {'─'*88}")
+    print(f"  {'#':>3}  {'Tid':<8} {'Task':>4} {'T':>1} {'Oppgavetype':<25} {'Score':>12} {'4xx':>4} {'5xx':>4} {'Tries':>5} {'Varighet':>8}  {'Status'}")
+    print(f"  {'─'*103}")
 
     # ANSI italic
     ITALIC = "\033[3m"
@@ -624,6 +654,14 @@ def cmd_status(args: argparse.Namespace) -> None:
         err_4xx_str = str(n_4xx) if n_4xx is not None else "-"
         err_5xx_str = str(n_5xx) if n_5xx is not None else "-"
 
+        # Task ID, tier, and tries columns
+        clean_type = task_type if not task_type.startswith("[") else ""
+        task_id_str = get_task_id_for_type(clean_type) if clean_type else "-"
+        tier_val = get_task_tier(task_id_str) if task_id_str != "-" else 0
+        tier_str = str(tier_val) if tier_val else "-"
+        tries_val = lb_attempts_by_task_id.get(task_id_str) if task_id_str != "-" else None
+        tries_str = str(tries_val) if tries_val is not None else "-"
+
         # Right-align score (compensate for ANSI)
         visible_pad = 12 - len(score_pad)
         score_display = " " * max(0, visible_pad) + score_str
@@ -632,7 +670,7 @@ def cmd_status(args: argparse.Namespace) -> None:
         task_pad = 25 - len(task_visible)
         task_col = task_display + " " * max(0, task_pad)
 
-        print(f"  {i:>3}  {ts:<10} {task_col} {score_display} {err_4xx_str:>4} {err_5xx_str:>4} {dur_str:>8}  {status}")
+        print(f"  {i:>3}  {ts:<8} {task_id_str:>4} {tier_str:>1} {task_col} {score_display} {err_4xx_str:>4} {err_5xx_str:>4} {tries_str:>5} {dur_str:>8}  {status}")
 
 
 # ──────────────────────────────────────────────
