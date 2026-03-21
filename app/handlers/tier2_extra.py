@@ -536,6 +536,35 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         f"amount_gross={amount_gross}, amount_excl_vat={amount_excl_vat}, due_date={due_date}"
     )
 
+    # 7. Upload PDF attachment to voucher if provided
+    import base64
+    raw_files: list[dict] = fields.get("_raw_files", [])
+    pdf_uploaded = False
+    if voucher_id and raw_files:
+        for rf in raw_files:
+            mime = rf.get("mime_type", "application/pdf")
+            if "pdf" in mime.lower() or "image" in mime.lower():
+                try:
+                    file_bytes = base64.b64decode(rf["content_base64"])
+                    filename = rf.get("filename", "invoice.pdf")
+                    att_resp = await client.post_multipart(
+                        f"/ledger/voucher/{voucher_id}/attachment",
+                        file_bytes=file_bytes,
+                        filename=filename,
+                        mime_type=mime,
+                    )
+                    if att_resp.status_code < 400:
+                        pdf_uploaded = True
+                        logger.info(f"Uploaded PDF attachment to voucher {voucher_id}: {filename}")
+                    else:
+                        logger.warning(
+                            f"PDF upload to voucher {voucher_id} failed ({att_resp.status_code}): "
+                            f"{att_resp.text[:200]}"
+                        )
+                except Exception as e:
+                    logger.warning(f"PDF upload exception: {e}")
+                break  # Only upload first PDF
+
     return {
         "status": "completed",
         "taskType": "register_supplier_invoice",
@@ -543,6 +572,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         "supplierId": supplier_id,
         "voucherId": voucher_id,
         "amountExclVat": amount_excl_vat,
+        "pdfUploaded": pdf_uploaded,
     }
 
 
