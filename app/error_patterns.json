@@ -249,6 +249,69 @@
       "error_message": "Feltet må fylles ut.",
       "fix": "Feltet 'employee.dateOfBirth' er påkrevd og må ha en verdi",
       "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
     }
   ],
   "POST /invoice": [
@@ -454,6 +517,27 @@
       "error_message": "Produktnummeret 4543 er i bruk.",
       "fix": "Valideringsfeil på 'number': Produktnummeret 4543 er i bruk.",
       "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
     }
   ],
   "POST /project": [
@@ -543,6 +627,48 @@
       "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
       "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
       "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
     }
   ],
   "PUT /invoice/{id}/:createCreditNote": [
@@ -551,6 +677,27 @@
       "error_type": "unknown",
       "error_message": "HTTP 422 uten feilmelding",
       "fix": "Sjekk at endpointet PUT /invoice/{id}/:createCreditNote brukes korrekt",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "status": 422
     }
   ],
@@ -615,6 +762,75 @@
       "error_type": "validation_error",
       "error_message": "Can not put postings on a voucher that already have postings",
       "fix": "Valideringsfeil på 'None': Can not put postings on a voucher that already have postings",
+      "status": 422
+    }
+  ],
+  "DELETE /employee/{id}": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    }
+  ],
+  "DELETE /customer/{id}": [
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    }
+  ],
+  "DELETE /supplier/{id}": [
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
       "status": 422
     }
   ]

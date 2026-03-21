@@ -168,6 +168,7 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 | 06 | create_department | 1 |
 | 07 | create_employee (variant med rolle/rettigheter) | 1 |
 | 08 | create_customer (variant med adresse) | 1 |
+
 | 09 | set_project_fixed_price | 2 |
 | 10 | create_invoice | 2 |
 | 11 | create_custom_dimension | 2 |
@@ -178,15 +179,21 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 | 16 | register_timesheet | 2 |
 | 17 | create_credit_note | 2 |
 | 18 | reverse_payment | 2 |
+
 | 19 | create_employee (PDF tilbudsbrev-variant) | 3 |
 | 20 | register_expense_receipt | 3 |
 | 21 | monthly_closing | 3 |
-| 22–25 | unknown (uidentifisert) | 3 |
+| 22 | register_expense_receipt | 3 |
+| 23 | unknown | 3 |
+| 24 | unknown | 3 |
+| 25 | unknown | 3 |
 | 26 | create_voucher | 3 |
-| 27 | year_end_closing | 3 |
+| 27 | register_payment | 3 |
 | 28 | correct_ledger_error | 3 |
 | 29 | bank_reconciliation | 3 |
 | 30 | run_payroll | 3 |
+
+year_end_closing
 
 Scoring: T1 = ×1 (maks 2), T2 = ×2 (maks 4), T3 = ×3 (maks 6)
 
