@@ -143,7 +143,11 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
     # EXCEPTION: "forenklet årsavslutning med avskrivninger" IS year_end_closing —
     # year-end signals override the monthly signals.
     _MONTHLY_SIGNALS = re.compile(
-        r"avskrivning|depreciation|periodisering|accrual|avsetning|provision|forskudd|prepaid|skatteavsetning|tax.?provision",
+        r"avskrivning|depreciation|depreciaci[oó]n|d[eé]pr[eé]ciation|Abschreibung|deprecia[cç][aã]o"
+        r"|periodisering|accrual|periodificaci[oó]n|periodisation|Periodenabgrenzung|periodiza[cç][aã]o"
+        r"|avsetning|provision|provisi[oó]n|provision salariale|R[uü]ckstellung|provis[aã]o"
+        r"|forskudd|prepaid|skatteavsetning|tax.?provision"
+        r"|Gehaltsrückstellung|lønnsavsetning|dotaci[oó]n|acumula[cç][aã]o",
         re.IGNORECASE,
     )
 
@@ -278,7 +282,7 @@ Supported task types and their fields:
     Fields: voucherNumber (integer — the erroneous voucher number), date (YYYY-MM-DD — date of the erroneous voucher), description (string — description to identify the erroneous voucher), correctedPostings (array of {debitAccount, creditAccount, amount} — the CORRECT postings to replace the error), correctionDescription (string — description for the correction voucher), correctionDate (YYYY-MM-DD — date for correction, defaults to original date), accountFrom (integer — the WRONG account number used in the error), accountTo (integer — the CORRECT account number), amount (number — the amount involved), creditAccount (integer — credit account for simple correction, default 1920), errors (array of error objects when MULTIPLE errors need correction — each object has: {errorType ("wrong_account" | "duplicate" | "missing_vat" | "wrong_amount"), account (integer — the account number involved), wrongAccount (integer — for wrong_account: the wrong account used), correctAccount (integer — for wrong_account: the correct account), amount (number — the amount on the erroneous posting), correctAmount (number — for wrong_amount: what it should be), vatAccount (integer — for missing_vat: the VAT account that should have been used, e.g. 2710), date (YYYY-MM-DD — date to search for the voucher)})
 
 33. "monthly_closing" — Perform monthly closing (månedsavslutning/Monatsabschluss/cierre mensual/clôture mensuelle/encerramento mensal): post accruals, depreciations, and provisions as vouchers
-    Fields: month* (integer 1-12), year* (integer), accruals (array of {fromAccount (balance sheet account to credit, e.g. 1720), toAccount (expense account to debit, e.g. 6300), amount (number), description (string)}), depreciations (array of {account (expense account for depreciation, e.g. 6020), assetAccount (balance sheet asset account to credit, e.g. 1200), acquisitionCost (number — original cost of the asset), usefulLifeYears (number — useful life in years), description (string)}), provisions (array of {debitAccount (expense account, e.g. 5000), creditAccount (liability account, e.g. 2900), amount (number), description (string)})
+    Fields: month* (integer 1-12), year* (integer), accruals (array of {fromAccount (balance sheet account to credit, e.g. 1720), toAccount (expense account to debit, e.g. 6300), amount (number), description (string)}), depreciations (array of {account (expense account for depreciation, e.g. 6020), assetAccount (balance sheet asset account to credit, e.g. 1200), acquisitionCost (number — original cost of the asset), usefulLifeYears (number — useful life in years), description (string)}), provisions (array of {debitAccount (expense account, e.g. 5000), creditAccount (liability account, e.g. 2900), amount (number), description (string)} — also known as: avsetning (nb/nn), Rückstellung/Gehaltsrückstellung (de), provisión/dotación (es), provision salariale (fr), provisão salarial (pt))
 
 34. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
 
@@ -346,6 +350,12 @@ Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Mejor
 
 Prompt: "Gjennomfør månedsavslutningen for mars 2026. 1) Registrer opptjeningen (12500 kr/mnd fra konto 1720 til utgift). 2) Konter månedlig avskrivning av anleggsmiddel med anskaffelseskost 61400 NOK, levetid 10 år (lineær til konto 6020). 3) Registrer lønnsavsetning (debet 5000, kredit 2900, beløp 35000)."
 Output: {"taskType": "monthly_closing", "fields": {"month": 3, "year": 2026, "accruals": [{"fromAccount": 1720, "toAccount": 6300, "amount": 12500, "description": "Periodisering mars 2026"}], "depreciations": [{"account": 6020, "assetAccount": 1200, "acquisitionCost": 61400, "usefulLifeYears": 10, "description": "Avskrivning anleggsmiddel mars 2026"}], "provisions": [{"debitAccount": 5000, "creditAccount": 2900, "amount": 35000, "description": "Lønnsavsetning mars 2026"}]}, "confidence": 0.95, "reasoning": "Norwegian prompt for monthly closing with accrual, depreciation, and salary provision."}
+
+Prompt: "Realizar o encerramento mensal para março de 2026. 1) Registrar a periodização (8500 kr/mês da conta 1720 para despesa 6300). 2) Registrar provisão salarial (débito 5000, crédito 2900, valor 42000)."
+Output: {"taskType": "monthly_closing", "fields": {"month": 3, "year": 2026, "accruals": [{"fromAccount": 1720, "toAccount": 6300, "amount": 8500, "description": "Periodização março 2026"}], "depreciations": [], "provisions": [{"debitAccount": 5000, "creditAccount": 2900, "amount": 42000, "description": "Provisão salarial março 2026"}]}, "confidence": 0.95, "reasoning": "Portuguese monthly closing with accrual and salary provision (provisão salarial)."}
+
+Prompt: "Führen Sie den Monatsabschluss für März 2026 durch. Buchen Sie eine Gehaltsrückstellung: Soll 5000, Haben 2900, Betrag 38000 NOK."
+Output: {"taskType": "monthly_closing", "fields": {"month": 3, "year": 2026, "accruals": [], "depreciations": [], "provisions": [{"debitAccount": 5000, "creditAccount": 2900, "amount": 38000, "description": "Gehaltsrückstellung März 2026"}]}, "confidence": 0.95, "reasoning": "German monthly closing with salary provision (Gehaltsrückstellung)."}
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt
