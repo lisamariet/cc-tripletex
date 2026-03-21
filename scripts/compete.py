@@ -671,14 +671,27 @@ def cmd_show(args: argparse.Namespace) -> None:
                 else:
                     color = YELLOW
 
-                print(f"    {j:>3}  {method:<7} {path:<42} {color}{status_code:>6}{RESET} {dur:>6.0f}ms")
+                # Show query params if present
+                qp = call.get("query_params")
+                qp_str = f"  ?{qp}" if qp else ""
+                print(f"    {j:>3}  {method:<7} {path:<42} {color}{status_code:>6}{RESET} {dur:>6.0f}ms{DIM}{qp_str}{RESET}")
 
-                # Show 4xx error body if available
+                # Show request body if present (debug mode)
+                req_body = call.get("request_body")
+                if req_body:
+                    import json as _json
+                    body_str = _json.dumps(req_body, ensure_ascii=False)[:300]
+                    print(f"         {DIM}→ {body_str}{RESET}")
+
+                # Show response body or error
                 if 400 <= status_code < 500:
                     error_body = call.get("response_body") or call.get("error") or call.get("body", "")
                     if error_body:
-                        err_str = str(error_body)[:120]
-                        print(f"         {RED}{err_str}{RESET}")
+                        err_str = str(error_body)[:300]
+                        print(f"         {RED}← {err_str}{RESET}")
+                elif call.get("response_body"):
+                    resp_str = str(call["response_body"])[:200]
+                    print(f"         {DIM}← {resp_str}{RESET}")
 
     # ── Efficiency metrics ──
     if log:

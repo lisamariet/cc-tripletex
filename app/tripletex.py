@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import json as _json
 import logging
+import os
 import re
 import time
 from typing import Any
@@ -46,12 +47,15 @@ _REQUIRED_FIELD_DEFAULTS: dict[str, Any] = {
 class TripletexClient:
     """Thin async wrapper around the Tripletex REST API with call tracking."""
 
-    def __init__(self, base_url: str, session_token: str) -> None:
+    def __init__(self, base_url: str, session_token: str, debug: bool = False) -> None:
         self.base_url = base_url.rstrip("/")
         self.auth = httpx.BasicAuth(username="0", password=session_token)
-        self.tracker = CallTracker()
+        self.debug = debug or os.getenv("TRIPLETEX_DEBUG", "").lower() in ("1", "true", "yes")
+        self.tracker = CallTracker(debug=self.debug)
         self._client = httpx.AsyncClient(timeout=30.0, auth=self.auth)
         self._cache: dict[str, httpx.Response] = {}
+        if self.debug:
+            logger.info("TripletexClient DEBUG MODE enabled — logging full request/response bodies")
 
     async def get_cached(self, path: str, params: dict[str, Any] | None = None) -> httpx.Response:
         """GET with caching — use for reference-data lookups (vatType, paymentType, costCategory, department)."""
@@ -388,20 +392,27 @@ class TripletexClient:
         logger.info(f"Tripletex {method} {url}")
         if json_body:
             logger.info(f"Payload: {json_body}")
+        if params:
+            logger.info(f"Params: {params}")
 
         t0 = time.monotonic()
         try:
             resp = await self._client.request(method, url, json=json_body, params=params)
         except Exception as exc:
             duration = (time.monotonic() - t0) * 1000
-            self.tracker.record(method, path, 0, duration, error=str(exc))
+            self.tracker.record(method, path, 0, duration, error=str(exc),
+                                url=url, query_params=params, request_body=json_body)
             raise
 
         duration = (time.monotonic() - t0) * 1000
         error_body = None
         if 400 <= resp.status_code < 500:
             error_body = resp.text[:500]
-        self.tracker.record(method, path, resp.status_code, duration, error=error_body)
+        self.tracker.record(
+            method, path, resp.status_code, duration, error=error_body,
+            url=url, query_params=params, request_body=json_body,
+            response_body=resp.text[:2000] if self.debug else None,
+        )
         logger.info(f"Response {resp.status_code} ({duration:.0f}ms): {resp.text[:500]}")
 
         # --- Error pattern recording (4xx) ---

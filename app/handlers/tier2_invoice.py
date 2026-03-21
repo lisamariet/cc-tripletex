@@ -336,8 +336,8 @@ async def _get_bank_payment_type_id(client: TripletexClient) -> int | None:
 async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
     await _ensure_bank_account(client)
 
-    # Fresh sandbox: POST customer directly — no existing customers to search for
-    customer_id = await _create_customer_directly(client, fields)
+    # Competition pre-creates customer — search first, create only if not found
+    customer_id = await _find_or_create_customer(client, fields)
     if not customer_id:
         return {"status": "completed", "note": "Could not find or create customer"}
 

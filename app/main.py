@@ -78,7 +78,7 @@ async def solve(request: Request):
             logger.error("Missing Tripletex credentials")
             result["note"] = "Missing credentials"
         else:
-            client = TripletexClient(base_url, session_token)
+            client = TripletexClient(base_url, session_token, debug=True)
             result = await execute_task(parsed_task.task_type, client, parsed_task.fields, prompt=prompt)
             # Ensure status is always "completed"
             result["status"] = "completed"
