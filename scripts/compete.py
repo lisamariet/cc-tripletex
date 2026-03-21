@@ -671,27 +671,34 @@ def cmd_show(args: argparse.Namespace) -> None:
                 else:
                     color = YELLOW
 
+                detail = getattr(args, "detail", False)
+
                 # Show query params if present
                 qp = call.get("query_params")
-                qp_str = f"  ?{qp}" if qp else ""
+                qp_str = f"  ?{qp}" if qp and detail else ""
                 print(f"    {j:>3}  {method:<7} {path:<42} {color}{status_code:>6}{RESET} {dur:>6.0f}ms{DIM}{qp_str}{RESET}")
 
-                # Show request body if present (debug mode)
-                req_body = call.get("request_body")
-                if req_body:
-                    import json as _json
-                    body_str = _json.dumps(req_body, ensure_ascii=False)[:300]
-                    print(f"         {DIM}→ {body_str}{RESET}")
+                if detail:
+                    # Show request body
+                    req_body = call.get("request_body")
+                    if req_body:
+                        import json as _json
+                        body_str = _json.dumps(req_body, ensure_ascii=False)[:500]
+                        print(f"         {DIM}→ {body_str}{RESET}")
 
-                # Show response body or error
-                if 400 <= status_code < 500:
-                    error_body = call.get("response_body") or call.get("error") or call.get("body", "")
-                    if error_body:
-                        err_str = str(error_body)[:300]
-                        print(f"         {RED}← {err_str}{RESET}")
-                elif call.get("response_body"):
-                    resp_str = str(call["response_body"])[:200]
-                    print(f"         {DIM}← {resp_str}{RESET}")
+                    # Show response body (all calls in detail mode)
+                    if 400 <= status_code < 500:
+                        error_body = call.get("response_body") or call.get("error") or ""
+                        if error_body:
+                            print(f"         {RED}← {str(error_body)[:500]}{RESET}")
+                    elif call.get("response_body"):
+                        print(f"         {DIM}← {str(call['response_body'])[:300]}{RESET}")
+                else:
+                    # Without --detail: only show 4xx errors
+                    if 400 <= status_code < 500:
+                        error_body = call.get("response_body") or call.get("error") or ""
+                        if error_body:
+                            print(f"         {RED}{str(error_body)[:120]}{RESET}")
 
     # ── Efficiency metrics ──
     if log:
@@ -1295,7 +1302,11 @@ Kommandoer:
         type=int,
         help="Submission-nummer (1=nyeste)",
     )
-    # Translation is now always automatic for non-Norwegian prompts
+    show_parser.add_argument(
+        "--detail",
+        action="store_true",
+        help="Vis full request/response body for alle API-kall (debug trace)",
+    )
 
     # submit command
     submit_parser = subparsers.add_parser("submit", help="Trigger ny submission")
