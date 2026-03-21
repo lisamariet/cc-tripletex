@@ -276,7 +276,7 @@ def _infer_task_type_from_prompt(prompt: str) -> str | None:
         ("timesheet|timer for|horas para|stunden für|heures pour|registrer.*timer|erfassen.*stunden", "register_timesheet"),
         ("tre.*avdeling|three.*department|tres departamento|drei abteilung|trois département|três departamento", "batch_create_department"),
         ("ordre|order|pedido|auftrag|commande|encomenda", "create_order"),
-        ("reiseregning|travel expense|gastos de viaje|frais de voyage|reisekosten|despesas de viagem", "create_travel_expense"),
+        ("reiseregning|travel.?expense|gastos de viaje|nota de gastos|frais de voyage|reisekosten|despesas de viagem|Reisekostenabrechnung", "create_travel_expense"),
         ("kreditnota|credit note|nota de crédito|avoir|gutschrift", "create_credit_note"),
         ("reverser.*betal|reverse.*payment|revertir.*pago|annuler.*paiement|stornieren.*zahlung", "reverse_payment"),
         ("registrer.*betal|register.*payment|registrar.*pago|enregistrer.*paiement|zahlung.*registr", "register_payment"),

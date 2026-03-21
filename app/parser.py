@@ -53,6 +53,10 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"(?:timer|hours?|horas?|Stunden|heures).{0,80}(?:prosjektfaktura|project.invoice|factura.*proyecto|fatura.*projeto|Projektrechnung|facture.*projet)",
         r"(?:prosjektfaktura|project.invoice).{0,80}(?:timer|hours?|horas?|Stunden|heures)",
     ]),
+    ("create_travel_expense", [
+        r"reiseregning|travel.?expense|gastos de viaje|frais de voyage|Reisekosten|despesas de viagem|nota de gastos",
+        r"reiserekning|reiseutgift|Reisekostenabrechnung",
+    ]),
     ("create_order", [
         r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:ordre|order|pedido|Auftrag|commande|bestilling)",
         r"Auftrag.{0,20}(?:erstellen|anlegen)",
