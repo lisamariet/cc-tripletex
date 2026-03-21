@@ -1876,6 +1876,8 @@ def cmd_tasks(args: argparse.Namespace) -> None:
 
         avg_4xx = total_4xx / forsok if forsok > 0 else None
 
+        tried = safe_int(our_entry.get("total_attempts", 0))
+
         rows.append({
             "num": task_num,
             "type": task_type,
@@ -1883,6 +1885,7 @@ def cmd_tasks(args: argparse.Namespace) -> None:
             "our": our_score,
             "top": top_score,
             "gap": gap,
+            "tried": tried,
             "forsok": forsok,
             "ok": ok,
             "fail": fail,
@@ -1901,9 +1904,10 @@ def cmd_tasks(args: argparse.Namespace) -> None:
     print(
         f"  {'Task':>4}  {'Tier':>4}  {'Oppgavetype':<30}  "
         f"{'Vår':>6}  {'#1':>6}  {'Gap':>6}  "
+        f"{'Tried':>5}  "
         f"{'Forsøk':>6}  {'OK':>4}  {'Fail':>4}  {'4xx avg':>7}"
     )
-    sep = "  " + "─" * 89
+    sep = "  " + "─" * 96
     print(sep)
 
     tier_score_ours = {1: 0.0, 2: 0.0, 3: 0.0}
@@ -1916,6 +1920,7 @@ def cmd_tasks(args: argparse.Namespace) -> None:
         our = r["our"]
         top = r["top"]
         gap = r["gap"]
+        tried = r["tried"]
         forsok = r["forsok"]
         ok = r["ok"]
         fail = r["fail"]
@@ -1943,6 +1948,7 @@ def cmd_tasks(args: argparse.Namespace) -> None:
         gap_str = f"+{gap:.1f}" if gap > 0 else f"{gap:.1f}"
         our_str = f"{our:.2f}"
         top_str = f"{top:.2f}" if top > 0 else "-"
+        tried_str = str(tried) if tried > 0 else "-"
         avg_4xx_str = f"{avg_4xx:.1f}" if avg_4xx is not None else "-"
         forsok_str = str(forsok) if forsok > 0 else "-"
         ok_str = str(ok) if forsok > 0 else "-"
@@ -1952,6 +1958,7 @@ def cmd_tasks(args: argparse.Namespace) -> None:
             f"  {num:>4}  {tier_display}{tier_pad}  {task_type:<30}  "
             f"{our_str:>6}  {top_str:>6}  "
             f"{gap_color}{gap_str:>6}{RESET}  "
+            f"{tried_str:>5}  "
             f"{forsok_str:>6}  {ok_str:>4}  {fail_str:>4}  {avg_4xx_str:>7}"
         )
 
