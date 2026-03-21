@@ -54,6 +54,8 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"bankavstemming|bank.?reconcili|conciliación.?banc|rapprochement.?banc|Bankabstimmung|conciliação.?banc",
         r"(?:avstem|reconcil|concili|rapproch).{0,30}(?:bank|konto|account|cuenta|compte|Konto|conta)",
         r"bank.?statement.?match|banktransaksjon.{0,20}match|bankutskrift",
+        r"reconcili.{0,30}extrato.?banc",
+        r"extrato.?banc.{0,30}(?:CSV|fatura|reconcili)",
     ]),
     ("monthly_closing", [
         r"månedsavslutning|monthly.?clos|cierre.?mensual|clôture.?mensuel|Monatsabschluss|encerramento.?mensal",
@@ -144,7 +146,7 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"(?:opprett|create|bokfør|cre[ea]r?|erstellen|comptabilise).{0,30}(?:bilag|voucher|asiento|lançamento|Beleg|pièce|écriture)",
     ]),
     ("register_supplier_invoice", [
-        r"(?:leverand[oø]r|supplier|innkj[øo]ps).*faktura|supplier.invoice|factura.*proveedor|fatura.*fornecedor",
+        r"(?:leverand[oø]r|supplier|innkj[øo]ps).{0,30}faktura|supplier.invoice|factura.{0,30}proveedor|fatura.{0,30}fornecedor",
         r"leverand[oø]rfaktura",
     ]),
     ("create_credit_note", [
