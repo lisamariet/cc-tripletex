@@ -315,11 +315,15 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
     # Determine if any cost line is per diem
     has_per_diem = any(_is_per_diem_cost(c) for c in fields.get("costs", []))
 
-    # Always use a date — fall back to today if missing
+    # Always use a date — fall back to today if missing or clearly wrong year
+    today = datetime.now().strftime("%Y-%m-%d")
     travel_date = fields.get("date", "")
     if not travel_date:
-        travel_date = datetime.now().strftime("%Y-%m-%d")
+        travel_date = today
         logger.info(f"No date in fields, using today: {travel_date}")
+    elif not travel_date.startswith(str(datetime.now().year)):
+        logger.warning(f"Date {travel_date} is not current year, overriding with today: {today}")
+        travel_date = today
 
     # Calculate per diem days
     total_days = 1
