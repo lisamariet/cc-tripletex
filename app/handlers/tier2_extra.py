@@ -359,6 +359,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         amount_excl_vat = amount_gross
 
     # 2. Look up accounts — use vatCode from parser if provided to map account
+    from app.handlers.tier3 import _lookup_account
     # Expense account: parser picks based on product type; fallback 4000
     expense_account_nr_raw = fields.get("expenseAccount", "4000")
     try:
