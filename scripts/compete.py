@@ -1546,57 +1546,85 @@ Kommandoer:
 #  tasks command (per task type status)
 # ──────────────────────────────────────────────
 
+def _build_task_map_from_leaderboard(task_list: list[dict]) -> dict[str, dict]:
+    """Build tx_task_id -> task entry map from leaderboard response."""
+    result: dict[str, dict] = {}
+    for t in task_list:
+        tid = t.get("tx_task_id", "")
+        if tid:
+            result[tid] = t
+    return result
+
+
+def _extract_task_list(resp_json) -> list[dict]:
+    """Extract task list from leaderboard API response (list or dict)."""
+    if isinstance(resp_json, list):
+        return resp_json
+    if isinstance(resp_json, dict):
+        return resp_json.get("tasks") or resp_json.get("data") or []
+    return []
+
+
 def cmd_tasks(args: argparse.Namespace) -> None:
-    """Aggregert status per oppgavetype fra GCS-logger og leaderboard."""
+    """Aggregert status per task (leaderboard task IDs + GCS-logger)."""
     print("Synkroniserer GCS-data...")
     sync_gcs_data()
 
     print("Henter GCS-logger...")
     gcs_logs = fetch_gcs_logs("results")
 
-    # ── Hent leaderboard-data for best_score per task ──
-    leaderboard_task_map: dict[str, dict] = {}  # task_type or tx_task_id -> task entry
-    total_score_lb = 0.0
-    total_submissions_lb = 0
+    # ── Hent leaderboard: oss + #1 ──
+    our_map: dict[str, dict] = {}   # tx_task_id -> entry
+    top_map: dict[str, dict] = {}   # tx_task_id -> entry
+    our_total = 0.0
+    top_total = 0.0
+    top_team_name = "?"
+    our_placement = "?"
+    our_team_name = "oss"
+
     try:
         with make_client() as client:
-            resp = client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
-            resp.raise_for_status()
-            our_tasks = resp.json()
-            if isinstance(our_tasks, list):
-                task_list = our_tasks
-            elif isinstance(our_tasks, dict):
-                task_list = our_tasks.get("tasks") or our_tasks.get("data") or []
-            else:
-                task_list = []
-            for t in task_list:
-                tid = t.get("tx_task_id") or t.get("task_type") or t.get("id", "")
-                if tid:
-                    leaderboard_task_map[tid] = t
-
-        # Fetch total score from leaderboard summary
-        with make_client() as client:
+            # Leaderboard summary
             resp_lb = client.get(f"{API_BASE}/tripletex/leaderboard")
             resp_lb.raise_for_status()
             leaderboard = resp_lb.json()
-        if isinstance(leaderboard, list):
-            for team in leaderboard:
-                tid = team.get("team_id") or team.get("id", "")
-                if tid == OUR_TEAM_ID:
-                    total_score_lb = safe_float(team.get("total_score", 0))
-                    total_submissions_lb = safe_int(team.get("total_submissions", 0))
-                    break
-    except Exception:
-        pass
+
+        lb_sorted = sorted(
+            leaderboard if isinstance(leaderboard, list) else [],
+            key=lambda t: safe_float(t.get("total_score", 0)),
+            reverse=True,
+        )
+        for i, team in enumerate(lb_sorted, 1):
+            tid = team.get("team_id") or team.get("id", "")
+            if i == 1:
+                top_team_name = team.get("team_name") or team.get("name", "?")
+                top_total = safe_float(team.get("total_score", 0))
+                top_team_id = tid
+            if tid == OUR_TEAM_ID:
+                our_placement = str(i)
+                our_total = safe_float(team.get("total_score", 0))
+                our_team_name = team.get("team_name") or team.get("name", "oss")
+
+        with make_client() as client:
+            print(f"Henter task-detaljer for oss ({our_team_name})...")
+            resp_us = client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
+            resp_us.raise_for_status()
+            our_map = _build_task_map_from_leaderboard(_extract_task_list(resp_us.json()))
+
+            print(f"Henter task-detaljer for #1 ({top_team_name})...")
+            resp_top = client.get(f"{API_BASE}/tripletex/leaderboard/{top_team_id}")
+            resp_top.raise_for_status()
+            top_map = _build_task_map_from_leaderboard(_extract_task_list(resp_top.json()))
+
+    except Exception as e:
+        print(f"{YELLOW}Advarsel: Kunne ikke hente leaderboard: {e}{RESET}")
 
     # ── Grupper GCS-logger per task_type ──
-    # task_type -> list of log entries
     type_logs: dict[str, list[dict]] = {}
-
     for log in gcs_logs:
         task = log.get("parsed_task", {}) or {}
         tt = task.get("task_type", "")
-        if tt in ("", "unknown", "?"):
+        if not tt or tt in ("unknown", "?", ""):
             prompt = log.get("prompt", "")
             if prompt:
                 inferred = _infer_task_type_from_prompt(prompt)
@@ -1606,167 +1634,172 @@ def cmd_tasks(args: argparse.Namespace) -> None:
             tt = "?"
         type_logs.setdefault(tt, []).append(log)
 
-    # ── Inferér Tier fra best score ──
-    def infer_tier(best_score: float) -> str:
-        if best_score > 4.0:
-            return "T3"
-        if best_score > 2.0:
-            return "T2"
-        return "T1"
-
-    # ── Bygg rader ──
-    all_task_types: set[str] = set(KNOWN_TASK_TYPES)
-    all_task_types.update(k for k in type_logs.keys() if k != "?")
-    # Also add from leaderboard
-    for lb_key in leaderboard_task_map.keys():
-        all_task_types.add(lb_key)
-    all_task_types.discard("?")
-    all_task_types.discard("")
-    all_task_types.discard("unknown")
-
-    rows = []
-    total_forsok = 0
-
-    for tt in sorted(all_task_types):
-        logs_for_type = type_logs.get(tt, [])
-
-        # Best score from leaderboard (try direct key match first)
-        lb_entry = leaderboard_task_map.get(tt)
-        best_score = safe_float((lb_entry or {}).get("best_score", 0))
-
-        # Tier
-        tier = infer_tier(best_score)
-
-        forsok = len(logs_for_type)
-        total_forsok += forsok
-
-        # Avg score: mean of normalized_score for all runs that have a result entry
-        # We look at score_raw/score_max from the log itself or fall back to nothing
-        scores_per_run: list[float] = []
-        ok_count = 0
-        fail_count = 0
+    # ── GCS-stats per task_type ──
+    # task_type -> {forsok, ok, fail, total_4xx}
+    def _gcs_stats_for_type(task_type: str) -> dict:
+        logs = type_logs.get(task_type, [])
+        forsok = len(logs)
+        ok = 0
+        fail = 0
         total_4xx = 0
-
-        for log in logs_for_type:
+        for log in logs:
             api_calls = log.get("api_calls") or []
             n_4xx = sum(1 for c in api_calls if 400 <= safe_int(c.get("status")) < 500)
             total_4xx += n_4xx
-
-            # Determine OK vs Fail for this run
             result = log.get("result") or {}
             result_status = str(result.get("status") or "").lower()
             has_error = result_status in ("error", "failed", "fail")
-
             if n_4xx == 0 and not has_error:
-                ok_count += 1
+                ok += 1
             else:
-                fail_count += 1
+                fail += 1
+        return {"forsok": forsok, "ok": ok, "fail": fail, "total_4xx": total_4xx}
 
-            # Score from log (if present)
-            score_raw = log.get("score_raw")
-            score_max = log.get("score_max")
-            norm_score = log.get("normalized_score")
-            if norm_score is not None:
-                scores_per_run.append(safe_float(norm_score))
-            elif score_raw is not None and score_max is not None and safe_float(score_max) > 0:
-                scores_per_run.append(safe_float(score_raw) / safe_float(score_max))
+    # ── Bygg rader fra TASK_ID_MAP (alle 30 task IDs) ──
+    rows = []
+    for task_num, info in TASK_ID_MAP.items():
+        task_type = info["type"]
+        tier = info["tier"]
 
-        avg_score = sum(scores_per_run) / len(scores_per_run) if scores_per_run else 0.0
-        avg_4xx = total_4xx / forsok if forsok > 0 else 0.0
-        suksess_pct = ok_count / forsok * 100 if forsok > 0 else 0.0
+        our_entry = our_map.get(task_num) or {}
+        top_entry = top_map.get(task_num) or {}
+        our_score = safe_float(our_entry.get("best_score", 0))
+        top_score = safe_float(top_entry.get("best_score", 0))
+        gap = top_score - our_score  # positive = we're behind
+
+        # GCS-stats: aggregate all GCS-logger for this task_type
+        # (multiple task IDs may share same task_type — distribute evenly)
+        task_ids_for_type = TASK_TYPE_TO_IDS.get(task_type, [task_num])
+        stats = _gcs_stats_for_type(task_type)
+        n_sharing = max(len(task_ids_for_type), 1)
+        # Distribute stats proportionally across task IDs sharing the same type
+        idx_in_type = task_ids_for_type.index(task_num) if task_num in task_ids_for_type else 0
+        if n_sharing == 1:
+            forsok = stats["forsok"]
+            ok = stats["ok"]
+            fail = stats["fail"]
+            total_4xx = stats["total_4xx"]
+        else:
+            # Split evenly, give remainder to first
+            base = stats["forsok"] // n_sharing
+            extra = 1 if idx_in_type < (stats["forsok"] % n_sharing) else 0
+            forsok = base + extra
+            base_ok = stats["ok"] // n_sharing
+            extra_ok = 1 if idx_in_type < (stats["ok"] % n_sharing) else 0
+            ok = base_ok + extra_ok
+            base_fail = stats["fail"] // n_sharing
+            extra_fail = 1 if idx_in_type < (stats["fail"] % n_sharing) else 0
+            fail = base_fail + extra_fail
+            base_4xx = stats["total_4xx"] // n_sharing
+            extra_4xx = 1 if idx_in_type < (stats["total_4xx"] % n_sharing) else 0
+            total_4xx = base_4xx + extra_4xx
+
+        avg_4xx = total_4xx / forsok if forsok > 0 else None
 
         rows.append({
-            "tt": tt,
+            "num": task_num,
+            "type": task_type,
             "tier": tier,
-            "best": best_score,
-            "avg": avg_score,
+            "our": our_score,
+            "top": top_score,
+            "gap": gap,
             "forsok": forsok,
-            "ok": ok_count,
-            "fail": fail_count,
-            "suksess_pct": suksess_pct,
+            "ok": ok,
+            "fail": fail,
             "avg_4xx": avg_4xx,
         })
 
-    # ── Sortering: T3 > T2 > T1, deretter lavest best score innen tier (mest å fikse) ──
-    tier_order = {"T3": 0, "T2": 1, "T1": 2}
-    rows.sort(key=lambda r: (tier_order.get(r["tier"], 9), r["best"]))
+    # ── Sortering: T3 først, deretter størst gap (mest å vinne) ──
+    rows.sort(key=lambda r: (-r["tier"], -r["gap"], r["num"]))
 
     # ── Skriv ut tabell ──
     print()
-    print(f"{BOLD}  Oppgavetype-status (fra GCS-logger + leaderboard){RESET}")
+    print(f"{BOLD}  Oppgavetype-status per task (leaderboard + GCS){RESET}")
     print()
 
-    hdr_tt = "Oppgavetype"
-    hdr = (
-        f"  {hdr_tt:<30} {'Tier':>4}  {'Maks':>6}  {'Avg':>5}  "
-        f"{'Forsøk':>6}  {'OK':>4}  {'Fail':>4}  {'Suksess%':>8}  {'4xx avg':>7}"
+    # Header
+    print(
+        f"  {'Task':>4}  {'Tier':>4}  {'Oppgavetype':<30}  "
+        f"{'Vår':>6}  {'#1':>6}  {'Gap':>6}  "
+        f"{'Forsøk':>6}  {'OK':>4}  {'Fail':>4}  {'4xx avg':>7}"
     )
-    sep = "  " + "─" * (len(hdr) - 2)
-    print(hdr)
+    sep = "  " + "─" * 89
     print(sep)
 
+    tier_score_ours = {1: 0.0, 2: 0.0, 3: 0.0}
+    tier_score_top = {1: 0.0, 2: 0.0, 3: 0.0}
+
     for r in rows:
-        tt = r["tt"]
+        num = r["num"]
+        task_type = r["type"]
         tier = r["tier"]
-        best = r["best"]
-        avg = r["avg"]
+        our = r["our"]
+        top = r["top"]
+        gap = r["gap"]
         forsok = r["forsok"]
         ok = r["ok"]
         fail = r["fail"]
-        suksess_pct = r["suksess_pct"]
         avg_4xx = r["avg_4xx"]
 
-        # Farge suksess%
-        if forsok == 0:
-            suk_color = DIM
-        elif suksess_pct >= 80:
-            suk_color = GREEN
-        elif suksess_pct >= 50:
-            suk_color = YELLOW
-        else:
-            suk_color = RED
+        tier_score_ours[tier] += our
+        tier_score_top[tier] += top
 
-        # Farge best
-        best_color = RED if best == 0.0 else (GREEN if best >= 1.0 else YELLOW)
+        # Gap color: grønn=0, gul>1, rød>3
+        if gap <= 0.0:
+            gap_color = GREEN
+        elif gap <= 1.0:
+            gap_color = ""
+        elif gap <= 3.0:
+            gap_color = YELLOW
+        else:
+            gap_color = RED
 
         # Tier-farge
-        tier_color = RED if tier == "T3" else (YELLOW if tier == "T2" else "")
+        tier_str = f"T{tier}"
+        tier_color = RED if tier == 3 else (YELLOW if tier == 2 else "")
+        tier_display = f"{tier_color}{tier_str}{RESET}" if tier_color else tier_str
+        tier_pad = " " * (4 - len(tier_str))
 
-        best_str = f"{best:.2f}" if best > 0 else "0.00"
-        avg_str = f"{avg:.2f}" if avg > 0 else "-"
-        suk_str = f"{suksess_pct:.0f}%" if forsok > 0 else "-"
-        avg_4xx_str = f"{avg_4xx:.1f}" if forsok > 0 else "-"
-
-        tier_display = f"{tier_color}{tier}{RESET}" if tier_color else tier
-        # Pad tier_display for alignment (ANSI codes add invisible chars)
-        tier_pad = 4 - len(tier)  # visible width is always 2 (T1/T2/T3)
+        gap_str = f"+{gap:.1f}" if gap > 0 else f"{gap:.1f}"
+        our_str = f"{our:.2f}"
+        top_str = f"{top:.2f}" if top > 0 else "-"
+        avg_4xx_str = f"{avg_4xx:.1f}" if avg_4xx is not None else "-"
+        forsok_str = str(forsok) if forsok > 0 else "-"
+        ok_str = str(ok) if forsok > 0 else "-"
+        fail_str = str(fail) if forsok > 0 else "-"
 
         print(
-            f"  {tt:<30} {tier_display}{' ' * tier_pad}  "
-            f"{best_color}{best_str:>6}{RESET}  "
-            f"{avg_str:>5}  "
-            f"{forsok:>6}  "
-            f"{ok:>4}  "
-            f"{fail:>4}  "
-            f"{suk_color}{suk_str:>8}{RESET}  "
-            f"{avg_4xx_str:>7}"
+            f"  {num:>4}  {tier_display}{tier_pad}  {task_type:<30}  "
+            f"{our_str:>6}  {top_str:>6}  "
+            f"{gap_color}{gap_str:>6}{RESET}  "
+            f"{forsok_str:>6}  {ok_str:>4}  {fail_str:>4}  {avg_4xx_str:>7}"
         )
 
     print(sep)
 
-    # ── Totallinje ──
-    total_ok = sum(r["ok"] for r in rows)
-    total_fail = sum(r["fail"] for r in rows)
-    total_types = len(rows)
+    # ── Tier-totaler ──
+    # Max mulig score per tier: T1=2*antall, T2=4*antall, T3=6*antall
+    tier_counts = {1: 0, 2: 0, 3: 0}
+    for r in rows:
+        tier_counts[r["tier"]] += 1
+    tier_max = {t: tier_counts[t] * (t * 2) for t in [1, 2, 3]}
 
-    total_score_display = f"{total_score_lb:.1f}" if total_score_lb > 0 else "?"
-    subs_display = str(total_submissions_lb) if total_submissions_lb > 0 else str(total_forsok)
+    total_our = sum(tier_score_ours.values())
+    total_top = sum(tier_score_top.values())
+    total_gap = total_top - total_our
 
     print()
+    gap_color = RED if total_gap > 3 else (YELLOW if total_gap > 1 else GREEN)
     print(
-        f"  {BOLD}Totalt: {total_types} oppgavetyper | "
-        f"{subs_display} submissions | "
-        f"Score: {total_score_display}{RESET}"
+        f"  {BOLD}Totalt: 30 tasks | "
+        f"Score: {total_our:.1f} | "
+        f"#1: {total_top:.1f} | "
+        f"Gap: {gap_color}{total_gap:.1f}{RESET}{BOLD}{RESET}"
+    )
+    print(
+        f"  T1: {tier_score_ours[1]:.1f}/{tier_max[1]:.1f} | "
+        f"T2: {tier_score_ours[2]:.1f}/{tier_max[2]:.1f} | "
+        f"T3: {tier_score_ours[3]:.1f}/{tier_max[3]:.1f}"
     )
     print()
 
