@@ -2006,40 +2006,6 @@ def _fetch_leaderboard_attempts(client: httpx.Client) -> dict[str, int]:
         return {}
 
 
-def _get_task_type_from_gcs_after(since_ts: float, timeout: float = 30.0) -> str | None:
-    """Poll lokal GCS-data for nyeste result-log nyere enn since_ts.
-
-    Venter i maks `timeout` sekunder på at GCS-sync har hentet loggen.
-    Returnerer task_type-streng eller None.
-    """
-    deadline = time.time() + timeout
-    local_dir = PROJECT_ROOT / "data" / "results"
-    while time.time() < deadline:
-        # Synk og let etter ny fil
-        sync_gcs_data()
-        logs = fetch_gcs_logs("results")
-        # Finn nyeste log nyere enn since_ts
-        for log in reversed(logs):
-            log_ts_str = log.get("timestamp", "")
-            try:
-                dt = datetime.strptime(log_ts_str[:15], "%Y%m%d_%H%M%S")
-                log_epoch = dt.timestamp()
-            except (ValueError, IndexError):
-                continue
-            if log_epoch >= since_ts - 5:  # 5s slakk for klokke-diff
-                task = log.get("parsed_task") or {}
-                tt = task.get("task_type", "")
-                if tt and tt not in ("unknown", "?", ""):
-                    return tt
-                # Prøv prompt-inferens
-                prompt = log.get("prompt", "")
-                if prompt:
-                    inferred = _infer_task_type_from_prompt(prompt)
-                    if inferred:
-                        return inferred
-        time.sleep(3)
-    return None
-
 
 def cmd_submit_track(args: argparse.Namespace) -> None:
     """Submit én om gangen med task-ID tracking via leaderboard-delta."""
@@ -2063,7 +2029,6 @@ def cmd_submit_track(args: argparse.Namespace) -> None:
             before = _fetch_leaderboard_attempts(client)
 
             # ── Submit ──
-            submit_ts = time.time()
             payload: dict[str, Any] = {"endpoint_url": f"{endpoint}{SOLVE_PATH}"}
             if api_key:
                 payload["endpoint_api_key"] = api_key
@@ -2087,6 +2052,7 @@ def cmd_submit_track(args: argparse.Namespace) -> None:
             score_raw = None
             score_max = None
             score_norm = None
+            finished_sub: dict | None = None
             if submission_id:
                 start = time.time()
                 interval_poll = 5
@@ -2103,6 +2069,7 @@ def cmd_submit_track(args: argparse.Namespace) -> None:
                                 score_raw = sub.get("score_raw")
                                 score_max = sub.get("score_max")
                                 score_norm = safe_float(sub.get("normalized_score"))
+                                finished_sub = sub
                                 break
                     if score_raw is not None:
                         break
@@ -2121,8 +2088,18 @@ def cmd_submit_track(args: argparse.Namespace) -> None:
                     changed_task_id = tid
                     break
 
-            # Hent task_type fra GCS
-            task_type_gcs = _get_task_type_from_gcs_after(submit_ts, timeout=20.0)
+            # Hent task_type fra GCS — bruk samme logikk som status/show:
+            # sync først, deretter match på sub.queued_at (server-side tidspunkt).
+            # Dette er deterministisk og ufølsomt for andre samtidige submissions.
+            sync_gcs_data()
+            gcs_logs_track = fetch_gcs_logs("results")
+            gcs_requests_track = fetch_gcs_logs("requests")
+            if finished_sub is not None:
+                task_type_gcs = get_task_type_for_sub(finished_sub, gcs_logs_track, gcs_requests_track)
+                if task_type_gcs in ("?", "", None):
+                    task_type_gcs = None
+            else:
+                task_type_gcs = None
 
             # Bestem tier fra task_id
             if changed_task_id:
