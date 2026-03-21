@@ -335,6 +335,27 @@
       "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
     }
   ],
   "POST /invoice": [
@@ -739,6 +760,20 @@
       "error_message": "Produktnummeret 77777 er i bruk.",
       "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
       "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
     }
   ],
   "POST /project": [
@@ -889,6 +924,20 @@
       "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
     }
   ],
   "PUT /invoice/{id}/:payment": [
@@ -956,6 +1005,20 @@
     }
   ],
   "DELETE /employee/{id}": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
     {
       "field": "",
       "error_type": "api_error",
@@ -1251,6 +1314,20 @@
       "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
     }
   ],
   "DELETE /supplier/{id}": [
@@ -1400,6 +1477,20 @@
       "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
       "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
       "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
     }
   ],
   "POST /timesheet/entry": [
@@ -1478,6 +1569,20 @@
       "error_type": "business_rule",
       "error_message": "Startdato for prosjektet 99625 E2E Timefoering 1774087112 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
       "fix": "Forretningsregel: Startdato for prosjektet 99625 E2E Timefoering 1774087112 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Startdato for prosjektet 99638 E2E Timefoering 1774101742 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
+      "fix": "Forretningsregel: Startdato for prosjektet 99638 E2E Timefoering 1774101742 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Startdato for prosjektet 99646 E2E Timefoering 1774102196 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
+      "fix": "Forretningsregel: Startdato for prosjektet 99646 E2E Timefoering 1774102196 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
       "status": 422
     }
   ],
