@@ -85,11 +85,11 @@ Plans:
   3. Task 28/29 (batch_create_voucher) scorer hoeyere enn 0.9/2.2
   4. Task 30 (batch_create_department) scorer hoeyere enn 0.5
   5. Task 22, 23, 25 har identifisert task_type
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [x] 02.1.1-01-PLAN.md — Fiks create_project analytical mode (80 4xx -> bulk query)
-- [ ] 02.1.1-02-PLAN.md — Forbedre expense_receipt + batch_voucher + batch_department
+- [x] 02.1.1-02-PLAN.md — Forbedre expense_receipt + batch_voucher + batch_department
 - [ ] 02.1.1-03-PLAN.md — Identifiser ukjente T3-tasks 22/23/25 via submit-track
 
 ### Phase 3: Effektivitet
