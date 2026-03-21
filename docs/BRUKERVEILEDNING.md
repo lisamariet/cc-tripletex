@@ -44,40 +44,101 @@ Denne testen:
 
 Alle kommandoer bruker `scripts/compete.py`. Krever `NMIAI_ACCESS_TOKEN` i `.env`.
 
-### Oversikt over submissions
+### Kommandooversikt
+
+| Kommando | Beskrivelse |
+|---|---|
+| `status` | Vis submissions og total score |
+| `show` | Vis detaljer for en enkelt submission |
+| `submit` | Trigger ny submission |
+| `submit-track` | Submit med task-ID tracking via leaderboard-delta |
+| `batch` | Submit N ganger med pause mellom |
+| `poll` | Overvåk nye submissions i sanntid |
+| `lb` | Vis leaderboard task-detaljer |
+| `errors` | Detaljert 4xx-feilanalyse fra logger |
+| `tasks` | Aggregert status per oppgavetype (GCS + leaderboard) |
+| `insights` | Analyser score og API-effektivitet |
+| `compare` | Sammenlign task-score med #1 på leaderboard |
+
+---
+
+### `status` — Oversikt over submissions
 
 ```bash
-python3 scripts/compete.py status
-python3 scripts/compete.py status -n 10      # vis kun 10 siste
-python3 scripts/compete.py status --limit 10 # samme
+python3 scripts/compete.py status                          # vis alle submissions
+python3 scripts/compete.py status -n 10                    # vis kun 10 siste
+python3 scripts/compete.py status --limit 10               # samme som -n
+python3 scripts/compete.py status create_invoice           # filtrer på oppgavetype
+python3 scripts/compete.py status create_invoice -n 5      # kombiner filter og limit
 ```
 
-Viser totalpoeng, antall oppgaver med poeng (av 30), submissions i dag av 300, og tabell over submissions.
+| Flag | Beskrivelse |
+|---|---|
+| `task_type_filter` | (valgfritt) Filtrer på oppgavetype, f.eks. `batch_create_department` |
+| `-n N` / `--limit N` | Vis de N siste submissions (standard: alle) |
 
-Default viser alle submissions. Bruk `-n N` / `--limit N` for å begrense antallet rader.
+Viser totalpoeng, antall oppgaver med poeng (av 30), submissions i dag av 300, og tabell over submissions.
 
 Tabellen har kolonnene: `#`, `Tid`, `Oppgavetype`, `Score`, `4xx`, `5xx`, `Varighet`, `Status`.
 `4xx` og `5xx` hentes fra GCS-logger og viser antall feilede API-kall per submission.
 
-### Detaljer for en submission
+### `show` — Detaljer for en submission
 
 ```bash
-python3 scripts/compete.py show 1    # 1 = nyeste
-python3 scripts/compete.py show 5    # 5. nyeste
+python3 scripts/compete.py show 1              # 1 = nyeste
+python3 scripts/compete.py show 5              # 5. nyeste
+python3 scripts/compete.py show 3 --detail     # inkluder full request/response body
 ```
+
+| Flag | Beskrivelse |
+|---|---|
+| `number` | (påkrevd) Submission-nummer, 1 = nyeste |
+| `--detail` | Vis full request/response body for alle API-kall (debug trace) |
 
 Viser prompt, parsed oppgave, alle API-kall med status/tid, feedback og sjekker.
 
-### Analyse av score og API-effektivitet
+### `submit` — Trigger ny submission
 
 ```bash
-python3 scripts/compete.py insights           # oversikt
-python3 scripts/compete.py insights --detail   # inkluderer 4xx-feildetaljer
+python3 scripts/compete.py submit                          # submit og poll for resultat
+python3 scripts/compete.py submit --no-poll                # ikke vent på resultat
+python3 scripts/compete.py submit --endpoint https://...   # bruk annen endpoint-URL
 ```
 
-Viser beste score per oppgavetype, forbedringsmuligheter, feilede oppgaver, og API-kallstatistikk per handler.
+| Flag | Beskrivelse |
+|---|---|
+| `--endpoint` | Endpoint-URL (standard: produksjons-URL) |
+| `--no-poll` | Ikke poll for resultat etter submit |
 
-### Overvåk nye submissions i sanntid
+### `submit-track` — Submit med task-ID tracking
+
+```bash
+python3 scripts/compete.py submit-track            # submit 1 gang med tracking
+python3 scripts/compete.py submit-track --count 5   # submit 5 ganger med tracking
+```
+
+| Flag | Beskrivelse |
+|---|---|
+| `--count N` | Antall submissions (standard: 1) |
+
+Submitter 1 om gangen og sporer hvilken task-ID som ble tildelt ved å sammenligne leaderboard-delta for og etter.
+
+### `batch` — Batch-submit
+
+```bash
+python3 scripts/compete.py batch 10                            # submit 10 ganger
+python3 scripts/compete.py batch 20 --interval 30              # 30s mellom submissions
+python3 scripts/compete.py batch 50 --max-concurrent 5         # maks 5 samtidige
+python3 scripts/compete.py batch 10 --interval 30 --max-concurrent 5
+```
+
+| Flag | Beskrivelse |
+|---|---|
+| `count` | (påkrevd) Antall submissions |
+| `--interval` | Sekunder mellom submissions (standard: 60) |
+| `--max-concurrent` | Maks samtidige submissions (standard: 3) |
+
+### `poll` — Overvåk submissions i sanntid
 
 ```bash
 python3 scripts/compete.py poll                    # default: sjekk hvert 10s, 30 min timeout
@@ -85,7 +146,20 @@ python3 scripts/compete.py poll --interval 5       # sjekk hvert 5s
 python3 scripts/compete.py poll --timeout 600      # 10 min timeout
 ```
 
-### 4xx-feilrapport
+| Flag | Beskrivelse |
+|---|---|
+| `--interval` | Sekunder mellom sjekk (standard: 10) |
+| `--timeout` | Maks ventetid i sekunder (standard: 1800 = 30 min) |
+
+### `lb` — Leaderboard
+
+```bash
+python3 scripts/compete.py lb
+```
+
+Viser leaderboard med task-detaljer. Henter fra konkurranse-API og viser score per lag. Retrier automatisk ved 429 (rate limit) med eksponentiell backoff.
+
+### `errors` — 4xx-feilrapport
 
 ```bash
 python3 scripts/compete.py errors
@@ -93,7 +167,7 @@ python3 scripts/compete.py errors
 
 Viser detaljert 4xx-feilanalyse: totalt antall, siste timens feil, feil per endpoint, per oppgavetype, og vanligste feilmeldinger.
 
-### Status per oppgavetype (tasks)
+### `tasks` — Status per oppgavetype
 
 ```bash
 python3 scripts/compete.py tasks
@@ -112,20 +186,26 @@ Viser aggregert statistikk per oppgavetype, hentet fra GCS-logger og leaderboard
 | Suksess% | Andel med poeng |
 | 4xx avg | Gjennomsnittlig antall 4xx-feil per submission |
 
-### Sammenlign med lederlaget
+### `insights` — Analyse av score og API-effektivitet
+
+```bash
+python3 scripts/compete.py insights           # oversikt
+python3 scripts/compete.py insights --detail   # inkluderer 4xx-feildetaljer
+```
+
+| Flag | Beskrivelse |
+|---|---|
+| `--detail` | Vis detaljerte 4xx-feil |
+
+Viser beste score per oppgavetype, forbedringsmuligheter, feilede oppgaver, og API-kallstatistikk per handler.
+
+### `compare` — Sammenlign med lederlaget
 
 ```bash
 python3 scripts/compete.py compare
 ```
 
 Sammenligner vår task-score med #1 på leaderboard — viser gap per oppgavetype.
-
-### Trigger ny submission
-
-```bash
-python3 scripts/compete.py submit
-python3 scripts/compete.py submit --no-poll    # ikke vent på resultat
-```
 
 ## API Key
 
@@ -160,40 +240,40 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 
 | ID | task_type | Tier |
 |---|---|---|
-| 01 | create_supplier | 1 |
+| 01 | create_employee | 1 |
 | 02 | create_customer | 1 |
 | 03 | create_product | 1 |
-| 04 | create_employee | 1 |
+| 04 | create_supplier | 1 |
 | 05 | batch_create_department | 1 |
-| 06 | create_department | 1 |
+| 06 | create_invoice / create_department | 1 |
 | 07 | create_employee (variant med rolle/rettigheter) | 1 |
 | 08 | create_customer (variant med adresse) | 1 |
 |-|-|-|
 | 09 | set_project_fixed_price | 2 |
 | 10 | create_invoice | 2 |
-| 11 | create_custom_dimension | 2 |
+| 11 | create_custom_dimension ? | 2 |
 | 12 | batch_create_department (batch-variant) | 2 |
-| 13 | register_payment | 2 |
+| 13 | create_travel_expense | 2 |
 | 14 | create_credit_note | 2 |
 | 15 | register_supplier_invoice | 2 |
 | 16 | register_timesheet | 2 |
-| 17 | create_travel_expense | 2 |
+| 17 | create_custom_dimension | 2 |
 | 18 | reverse_payment | 2 |
 |-|-|-|
 | 19 | create_employee (PDF tilbudsbrev-variant) | 3 |
-| 20 | unknown | 3 |
-| 21 | monthly_closing | 3 |
+| 20 | register_supplier_invoice | 3 |
+| 21 | create_employee (PDF) | 3 |
 | 22 | register_expense_receipt | 3 |
 | 23 | bank_reconciliation | 3 |
 | 24 | unknown | 3 |
-| 25 | unknown | 3 |
+| 25 | overdue_invoice | 3 |
 | 26 | create_voucher | 3 |
 | 27 | register_payment | 3 |
 | 28 | correct_ledger_error | 3 |
 | 29 | project_lifecycle | 3 |
 | 30 | run_payroll | 3 |
 
-year_end_closing
+Usikker: year_end_closing, monthly_closing
 
 
 Scoring: T1 = ×1 (maks 2), T2 = ×2 (maks 4), T3 = ×3 (maks 6)
