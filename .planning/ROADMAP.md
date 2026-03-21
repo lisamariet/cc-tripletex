@@ -66,12 +66,12 @@ Plans:
   4. bank_reconciliation scorer > 0 (closingBalance + match + close)
   5. monthly_closing ekstraherer provisions for alle 7 sprak
   6. Fallback-handler bruker Gemini nar PARSER_BACKEND=gemini
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 02.1-01-PLAN.md — Fiks create_employee email + create_project guard + Anthropic fallback
 - [x] 02.1-02-PLAN.md — Fiks correct_ledger_error 422 + bank_reconciliation score + monthly_closing provisions
-- [ ] 02.1-03-PLAN.md — E2E-test alle 6 fikser + deploy Cloud Run
+- [x] 02.1-03-PLAN.md — E2E-test alle 6 fikser + deploy Cloud Run
 
 ### Phase 3: Effektivitet
 **Goal**: Alle handlers med 1.0 korrekthet utløser effektivitetsbonus ved å minimere API-kall og eliminere 4xx
