@@ -315,15 +315,10 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
     # Determine if any cost line is per diem
     has_per_diem = any(_is_per_diem_cost(c) for c in fields.get("costs", []))
 
-    # Always use a date — fall back to today if missing or clearly wrong year
-    today = datetime.now().strftime("%Y-%m-%d")
-    travel_date = fields.get("date", "")
-    if not travel_date:
-        travel_date = today
-        logger.info(f"No date in fields, using today: {travel_date}")
-    elif not travel_date.startswith(str(datetime.now().year)):
-        logger.warning(f"Date {travel_date} is not current year, overriding with today: {today}")
-        travel_date = today
+    # Don't send date — let Tripletex default to today.
+    # Gemini sometimes hallucinates wrong dates (e.g. 2024 instead of 2026).
+    # Tripletex auto-sets today's date when omitted.
+    travel_date = datetime.now().strftime("%Y-%m-%d")  # Used for travelDetails calculations only
 
     # Calculate per diem days
     total_days = 1
@@ -343,11 +338,10 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
 
     destination = _extract_destination(fields)
 
-    # Create the travel expense — always include travelDetails when per diem
+    # Create the travel expense — omit date (Tripletex defaults to today)
     te_payload: dict[str, Any] = {
         "employee": {"id": employee_id},
         "title": fields.get("title", "Travel Expense"),
-        "date": travel_date,
     }
 
     if has_per_diem:
