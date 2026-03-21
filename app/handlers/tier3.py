@@ -918,3 +918,218 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
         "reversed": reversed_voucher,
         "correctionVoucher": correction_voucher,
     }
+
+
+@register_handler("monthly_closing")
+async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Perform monthly closing: post accruals, depreciations, and provisions as vouchers.
+
+    Fields:
+        month (int): Month number (1-12).
+        year (int): Year.
+        accruals (list): Periodiseringer — [{fromAccount, toAccount, amount, description}].
+        depreciations (list): Avskrivninger — [{account, assetAccount, acquisitionCost, usefulLifeYears, description}].
+        provisions (list): Avsetninger — [{debitAccount, creditAccount, amount, description}].
+    """
+    import datetime
+
+    month = fields.get("month") or datetime.date.today().month
+    year = fields.get("year") or datetime.date.today().year
+    month = int(month)
+    year = int(year)
+
+    accruals = fields.get("accruals", [])
+    depreciations = fields.get("depreciations", [])
+    provisions = fields.get("provisions", [])
+
+    # Use last day of the month as voucher date
+    if month == 12:
+        last_day = datetime.date(year, 12, 31)
+    else:
+        last_day = datetime.date(year, month + 1, 1) - datetime.timedelta(days=1)
+    voucher_date = last_day.isoformat()
+
+    created_vouchers: list[dict[str, Any]] = []
+    errors: list[str] = []
+
+    # --- 1. Accruals (periodiseringer) ---
+    for acc in accruals:
+        from_account = int(acc.get("fromAccount", 0))
+        to_account = int(acc.get("toAccount", 0))
+        amount = acc.get("amount", 0)
+        desc = acc.get("description", f"Periodisering {month}/{year}")
+
+        if not from_account or not to_account or not amount:
+            errors.append(f"Accrual missing required fields: {acc}")
+            continue
+
+        try:
+            # Debit the expense account (toAccount), credit the balance sheet account (fromAccount)
+            debit_id = await _lookup_account(client, to_account)
+            credit_id = await _lookup_account(client, from_account)
+
+            payload = {
+                "date": voucher_date,
+                "description": desc,
+                "postings": [
+                    {
+                        "account": {"id": debit_id},
+                        "amountGross": amount,
+                        "amountGrossCurrency": amount,
+                        "row": 1,
+                    },
+                    {
+                        "account": {"id": credit_id},
+                        "amountGross": -amount,
+                        "amountGrossCurrency": -amount,
+                        "row": 2,
+                    },
+                ],
+            }
+
+            resp = await client.post("/ledger/voucher", payload)
+            data = resp.json()
+            if resp.status_code >= 400:
+                error_msg = data.get("message", "Unknown error")
+                errors.append(f"Accrual voucher failed: {error_msg}")
+                logger.warning(f"Accrual voucher failed: {error_msg}")
+            else:
+                voucher = data.get("value", {})
+                created_vouchers.append({
+                    "type": "accrual",
+                    "voucherId": voucher.get("id"),
+                    "description": desc,
+                    "amount": amount,
+                })
+                logger.info(f"Created accrual voucher {voucher.get('id')}: {desc}")
+        except Exception as e:
+            errors.append(f"Accrual error: {e}")
+            logger.error(f"Accrual error: {e}")
+
+    # --- 2. Depreciations (avskrivninger) ---
+    for dep in depreciations:
+        expense_account = int(dep.get("account", 0))
+        asset_account = int(dep.get("assetAccount", 0))
+        acquisition_cost = dep.get("acquisitionCost", 0)
+        useful_life_years = dep.get("usefulLifeYears", 0)
+        desc = dep.get("description", f"Avskrivning {month}/{year}")
+
+        if not expense_account or not asset_account or not acquisition_cost or not useful_life_years:
+            errors.append(f"Depreciation missing required fields: {dep}")
+            continue
+
+        # Calculate monthly depreciation: acquisitionCost / usefulLifeYears / 12
+        monthly_amount = round(acquisition_cost / useful_life_years / 12, 2)
+
+        try:
+            debit_id = await _lookup_account(client, expense_account)
+            credit_id = await _lookup_account(client, asset_account)
+
+            payload = {
+                "date": voucher_date,
+                "description": desc,
+                "postings": [
+                    {
+                        "account": {"id": debit_id},
+                        "amountGross": monthly_amount,
+                        "amountGrossCurrency": monthly_amount,
+                        "row": 1,
+                    },
+                    {
+                        "account": {"id": credit_id},
+                        "amountGross": -monthly_amount,
+                        "amountGrossCurrency": -monthly_amount,
+                        "row": 2,
+                    },
+                ],
+            }
+
+            resp = await client.post("/ledger/voucher", payload)
+            data = resp.json()
+            if resp.status_code >= 400:
+                error_msg = data.get("message", "Unknown error")
+                errors.append(f"Depreciation voucher failed: {error_msg}")
+                logger.warning(f"Depreciation voucher failed: {error_msg}")
+            else:
+                voucher = data.get("value", {})
+                created_vouchers.append({
+                    "type": "depreciation",
+                    "voucherId": voucher.get("id"),
+                    "description": desc,
+                    "amount": monthly_amount,
+                })
+                logger.info(f"Created depreciation voucher {voucher.get('id')}: {desc}, amount={monthly_amount}")
+        except Exception as e:
+            errors.append(f"Depreciation error: {e}")
+            logger.error(f"Depreciation error: {e}")
+
+    # --- 3. Provisions (avsetninger) ---
+    for prov in provisions:
+        debit_account = int(prov.get("debitAccount", 0))
+        credit_account = int(prov.get("creditAccount", 0))
+        amount = prov.get("amount", 0)
+        desc = prov.get("description", f"Avsetning {month}/{year}")
+
+        if not debit_account or not credit_account or not amount:
+            errors.append(f"Provision missing required fields: {prov}")
+            continue
+
+        try:
+            debit_id = await _lookup_account(client, debit_account)
+            credit_id = await _lookup_account(client, credit_account)
+
+            payload = {
+                "date": voucher_date,
+                "description": desc,
+                "postings": [
+                    {
+                        "account": {"id": debit_id},
+                        "amountGross": amount,
+                        "amountGrossCurrency": amount,
+                        "row": 1,
+                    },
+                    {
+                        "account": {"id": credit_id},
+                        "amountGross": -amount,
+                        "amountGrossCurrency": -amount,
+                        "row": 2,
+                    },
+                ],
+            }
+
+            resp = await client.post("/ledger/voucher", payload)
+            data = resp.json()
+            if resp.status_code >= 400:
+                error_msg = data.get("message", "Unknown error")
+                errors.append(f"Provision voucher failed: {error_msg}")
+                logger.warning(f"Provision voucher failed: {error_msg}")
+            else:
+                voucher = data.get("value", {})
+                created_vouchers.append({
+                    "type": "provision",
+                    "voucherId": voucher.get("id"),
+                    "description": desc,
+                    "amount": amount,
+                })
+                logger.info(f"Created provision voucher {voucher.get('id')}: {desc}")
+        except Exception as e:
+            errors.append(f"Provision error: {e}")
+            logger.error(f"Provision error: {e}")
+
+    result: dict[str, Any] = {
+        "status": "completed",
+        "taskType": "monthly_closing",
+        "month": month,
+        "year": year,
+        "voucherDate": voucher_date,
+        "vouchersCreated": len(created_vouchers),
+        "vouchers": created_vouchers,
+    }
+
+    if errors:
+        result["errors"] = errors
+
+    logger.info(
+        f"Monthly closing {month}/{year}: {len(created_vouchers)} vouchers created, {len(errors)} errors"
+    )
+    return result

@@ -31,6 +31,7 @@ VALID_TASK_TYPES = {
     "bank_reconciliation",
     "year_end_closing",
     "correct_ledger_error",
+    "monthly_closing",
 }
 
 # Keyword patterns for inferring task type when LLM returns "unknown"
@@ -240,7 +241,10 @@ Supported task types and their fields:
 32. "correct_ledger_error" — Correct an error in the ledger / bookkeeping (feilretting i regnskap / error correction / Korrekturbuchung / corrección contable / correction comptable / correção contábil): find and reverse the erroneous voucher, then post a corrected voucher
     Fields: voucherNumber (integer — the erroneous voucher number), date (YYYY-MM-DD — date of the erroneous voucher), description (string — description to identify the erroneous voucher), correctedPostings (array of {debitAccount, creditAccount, amount} — the CORRECT postings to replace the error), correctionDescription (string — description for the correction voucher), correctionDate (YYYY-MM-DD — date for correction, defaults to original date), accountFrom (integer — the WRONG account number used in the error), accountTo (integer — the CORRECT account number), amount (number — the amount involved), creditAccount (integer — credit account for simple correction, default 1920)
 
-33. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
+33. "monthly_closing" — Perform monthly closing (månedsavslutning/Monatsabschluss/cierre mensual/clôture mensuelle/encerramento mensal): post accruals, depreciations, and provisions as vouchers
+    Fields: month* (integer 1-12), year* (integer), accruals (array of {fromAccount (balance sheet account to credit, e.g. 1720), toAccount (expense account to debit, e.g. 6300), amount (number), description (string)}), depreciations (array of {account (expense account for depreciation, e.g. 6020), assetAccount (balance sheet asset account to credit, e.g. 1200), acquisitionCost (number — original cost of the asset), usefulLifeYears (number — useful life in years), description (string)}), provisions (array of {debitAccount (expense account, e.g. 5000), creditAccount (liability account, e.g. 2900), amount (number), description (string)})
+
+34. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
 
 Examples:
 
@@ -294,6 +298,9 @@ Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Autom
 
 Prompt: "Establezca un precio fijo de 152400 NOK en el proyecto 'Mejora de infraestructura' para Estrella SL. Facture al cliente el 75 % del precio fijo como pago parcial."
 Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Mejora de infraestructura", "customerName": "Estrella SL", "fixedPrice": 152400, "invoicePercentage": 75}, "confidence": 0.95, "reasoning": "Spanish prompt to set fixed price on project and invoice 75% as partial payment."}
+
+Prompt: "Gjennomfør månedsavslutningen for mars 2026. 1) Registrer opptjeningen (12500 kr/mnd fra konto 1720 til utgift). 2) Konter månedlig avskrivning av anleggsmiddel med anskaffelseskost 61400 NOK, levetid 10 år (lineær til konto 6020). 3) Registrer lønnsavsetning (debet 5000, kredit 2900, beløp 35000)."
+Output: {"taskType": "monthly_closing", "fields": {"month": 3, "year": 2026, "accruals": [{"fromAccount": 1720, "toAccount": 6300, "amount": 12500, "description": "Periodisering mars 2026"}], "depreciations": [{"account": 6020, "assetAccount": 1200, "acquisitionCost": 61400, "usefulLifeYears": 10, "description": "Avskrivning anleggsmiddel mars 2026"}], "provisions": [{"debitAccount": 5000, "creditAccount": 2900, "amount": 35000, "description": "Lønnsavsetning mars 2026"}]}, "confidence": 0.95, "reasoning": "Norwegian prompt for monthly closing with accrual, depreciation, and salary provision."}
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt

@@ -936,6 +936,51 @@ def build_tier2_tests() -> list[E2ETestCase]:
             ),
             tier=3,
         ),
+
+        # T3-5: monthly_closing — post accruals, depreciations, and provisions
+        E2ETestCase(
+            name="t3_monthly_closing",
+            expected_task_type="monthly_closing",
+            expected_fields={},
+            prompt=(
+                "Gjennomfør månedsavslutningen for mars 2026. "
+                "1) Registrer opptjeningen (12500 kr/mnd fra konto 1720 til utgift 6300). "
+                "2) Konter månedlig avskrivning av anleggsmiddel med anskaffelseskost 61400 NOK, "
+                "levetid 10 år (lineær til konto 6020, anleggsmiddelkonto 1200). "
+                "3) Registrer lønnsavsetning (debet 5000, kredit 2900, beløp 35000)."
+            ),
+            direct_fields={
+                "month": 3,
+                "year": 2026,
+                "accruals": [
+                    {
+                        "fromAccount": 1720,
+                        "toAccount": 6300,
+                        "amount": 12500,
+                        "description": "Periodisering mars 2026",
+                    },
+                ],
+                "depreciations": [
+                    {
+                        "account": 6020,
+                        "assetAccount": 1200,
+                        "acquisitionCost": 61400,
+                        "usefulLifeYears": 10,
+                        "description": "Avskrivning anleggsmiddel mars 2026",
+                    },
+                ],
+                "provisions": [
+                    {
+                        "debitAccount": 5000,
+                        "creditAccount": 2900,
+                        "amount": 35000,
+                        "description": "Lønnsavsetning mars 2026",
+                    },
+                ],
+            },
+            verify=None,  # custom check: vouchersCreated in result
+            tier=3,
+        ),
     ]
 
 
@@ -1532,6 +1577,38 @@ async def run_one_test(
                     actual=len(vals),
                     passed=False, detail=f"expected 2 values, got {len(vals)}",
                 ))
+
+        # For monthly_closing, check vouchersCreated in result
+        if tc.expected_task_type == "monthly_closing":
+            vouchers_created = handler_result.get("vouchersCreated", 0)
+            vouchers = handler_result.get("vouchers", [])
+            if vouchers_created >= 3:
+                verify_results.append(CheckResult(
+                    field="vouchersCreated", expected=3,
+                    actual=vouchers_created,
+                    passed=True, detail=f"all {vouchers_created} vouchers created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="vouchersCreated", expected=3,
+                    actual=vouchers_created,
+                    passed=False, detail=f"expected 3 vouchers, got {vouchers_created}",
+                ))
+            # Verify each voucher type is present
+            voucher_types = {v.get("type") for v in vouchers}
+            for vtype in ("accrual", "depreciation", "provision"):
+                if vtype in voucher_types:
+                    verify_results.append(CheckResult(
+                        field=f"voucher_type_{vtype}", expected="exists",
+                        actual=vtype,
+                        passed=True, detail=f"{vtype} voucher created",
+                    ))
+                else:
+                    verify_results.append(CheckResult(
+                        field=f"voucher_type_{vtype}", expected="exists",
+                        actual=None,
+                        passed=False, detail=f"{vtype} voucher missing",
+                    ))
 
         # For batch_create_department, check all 3 items succeeded
         if tc.expected_task_type == "batch_create_department":
