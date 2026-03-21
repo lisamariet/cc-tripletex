@@ -1711,8 +1711,8 @@ def cmd_tasks(args: argparse.Namespace) -> None:
             "avg_4xx": avg_4xx,
         })
 
-    # ── Sortering: T3 først, deretter størst gap (mest å vinne) ──
-    rows.sort(key=lambda r: (-r["tier"], -r["gap"], r["num"]))
+    # ── Sortering: Task ID numerisk stigende (01-30) ──
+    rows.sort(key=lambda r: int(r["num"]))
 
     # ── Skriv ut tabell ──
     print()
