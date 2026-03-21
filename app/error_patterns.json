@@ -438,6 +438,48 @@
       "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
     }
   ],
   "POST /invoice": [
@@ -460,6 +502,34 @@
       "error_type": "invalid_field",
       "error_message": "Feltet eksisterer ikke i objektet.",
       "fix": "Fjern feltet 'project' fra payload — det finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
       "status": 422
     },
     {
@@ -767,6 +837,34 @@
       "error_message": "Feltet eksisterer ikke i objektet.",
       "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
       "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
     }
   ],
   "POST /product": [
@@ -852,6 +950,20 @@
       "error_type": "validation_error",
       "error_message": "Produktnummeret 4543 er i bruk.",
       "fix": "Valideringsfeil på 'number': Produktnummeret 4543 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
       "status": 422
     },
     {
@@ -1271,6 +1383,76 @@
       "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
       "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
       "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
     }
   ],
   "PUT /invoice/{id}/:createCreditNote": [
@@ -1279,6 +1461,20 @@
       "error_type": "unknown",
       "error_message": "HTTP 422 uten feilmelding",
       "fix": "Sjekk at endpointet PUT /invoice/{id}/:createCreditNote brukes korrekt",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "status": 422
     },
     {
@@ -1493,6 +1689,20 @@
       "error_message": "You do not have permission to access this feature.",
       "fix": "API-feil: You do not have permission to access this feature.",
       "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
     }
   ],
   "DELETE /customer/{id}": [
@@ -1558,9 +1768,37 @@
       "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
     }
   ],
   "DELETE /supplier/{id}": [
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
     {
       "field": "Internt felt (id)",
       "error_type": "validation_error",
@@ -1782,6 +2020,68 @@
       "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
       "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
       "status": 422
+    }
+  ],
+  "POST /travelExpense": [
+    {
+      "field": "startDate",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'startDate' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "endDate",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'endDate' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "isFixedInternationalPerDiem",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'isFixedInternationalPerDiem' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    }
+  ],
+  "POST /travelExpense/cost": [
+    {
+      "field": "expenseDate",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'expenseDate' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "vatRate",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'vatRate' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "comment",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'comment' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    }
+  ],
+  "GET /supplierInvoice/{id}": [
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    },
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
     }
   ]
 }

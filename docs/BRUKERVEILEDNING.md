@@ -184,7 +184,7 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 | 20 | unknown | 3 |
 | 21 | monthly_closing | 3 |
 | 22 | register_expense_receipt | 3 |
-| 23 | unknown | 3 |
+| 23 | bank_reconciliation ? | 3 |
 | 24 | unknown | 3 |
 | 25 | unknown | 3 |
 | 26 | create_voucher | 3 |

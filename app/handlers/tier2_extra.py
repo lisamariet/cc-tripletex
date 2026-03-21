@@ -1655,20 +1655,15 @@ async def _create_single_expense_voucher(
 
 @register_handler("register_expense_receipt")
 async def register_expense_receipt(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register an expense receipt via POST /supplierInvoice.
+    """Register an expense receipt via POST /travelExpense + /travelExpense/cost.
 
-    Kvitteringer i norsk regnskap registreres som leverandørfakturaer
-    (innkjøpsfakturaer), ikke vanlige bilag.  Flyten er identisk med
-    register_supplier_invoice:
+    Creates a travel expense for the first employee, then adds one cost line
+    per item (or a single cost line for single receipts) and uploads any PDF.
 
-      1. Finn eller opprett leverandør (butikknavn / "Kvitteringsleverandør")
-      2. POST /supplierInvoice med embedded voucher
-         - DEBIT:  utgiftskonto (inferred/explicit, default 6500)
-         - CREDIT: leverandørgjeld (konto 2400)
-
-    Multi-receipt support: When `costs` list is provided, creates ONE
-    supplierInvoice per cost item so scorer can verify individual entries.
+    Multi-receipt support: When `costs` list is provided, creates one cost line
+    per item within a single travel expense.
     """
+    import base64
     today = date.today().isoformat()
 
     default_description = (
@@ -1679,35 +1674,16 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
     )
 
     voucher_date = fields.get("date") or fields.get("receiptDate") or today
-    vat_rate = fields.get("vatRate", 25)
     department_name = fields.get("department") or fields.get("departmentName") or ""
 
-    # Supplier: use store/vendor name from receipt if available
-    supplier_name = (
-        fields.get("supplierName")
-        or fields.get("storeName")
-        or fields.get("vendorName")
-        or "Kvitteringsleverandør"
-    )
+    # 1. Find first employee
+    emp_resp = await client.get_cached("/employee", params={"count": 1})
+    employees = emp_resp.json().get("values", [])
+    if not employees:
+        return {"status": "completed", "note": "No employees found in company"}
+    employee_id = employees[0]["id"]
 
-    # Find or create supplier
-    supplier = await _find_supplier(client, fields)
-    if not supplier:
-        supplier_payload: dict[str, Any] = {
-            "name": supplier_name,
-            "isSupplier": True,
-        }
-        resp = await client.post("/supplier", supplier_payload)
-        if resp.status_code >= 400:
-            logger.error(f"register_expense_receipt: failed to create supplier: {resp.text[:300]}")
-            return {"status": "completed", "note": f"Failed to create supplier: {resp.text[:300]}"}
-        supplier = resp.json().get("value", {})
-
-    supplier_id = supplier.get("id")
-    if not supplier_id:
-        return {"status": "completed", "note": "Could not find or create supplier"}
-
-    # Look up department if specified
+    # 2. Look up department if specified
     department_ref = None
     if department_name:
         try:
@@ -1724,109 +1700,146 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
         except Exception as e:
             logger.warning(f"Could not look up department '{department_name}': {e}")
 
-    # Multi-receipt support: one supplierInvoice per cost item
+    # 3. Create travelExpense (the parent object)
+    te_payload: dict[str, Any] = {
+        "employee": {"id": employee_id},
+        "title": default_description,
+        "date": voucher_date,
+    }
+    if department_ref:
+        te_payload["department"] = department_ref
+
+    te_resp = await client.post("/travelExpense", te_payload)
+    if te_resp.status_code >= 400:
+        logger.error(f"register_expense_receipt: POST /travelExpense failed ({te_resp.status_code}): {te_resp.text[:300]}")
+        return {"status": "completed", "note": f"Failed to create travel expense: {te_resp.text[:200]}"}
+
+    te_data = te_resp.json().get("value", {})
+    te_id = te_data.get("id")
+    if not te_id:
+        return {"status": "completed", "note": "Created travelExpense but got no id"}
+    logger.info(f"register_expense_receipt: created travelExpense id={te_id}")
+
+    # 4. Look up cost category (fallback: first available)
+    cost_category_ref: dict[str, Any] | None = None
+    try:
+        cat_resp = await client.get_cached("/travelExpense/costCategory", params={"count": 50})
+        cat_values = cat_resp.json().get("values", [])
+        if cat_values:
+            cost_category_ref = {"id": cat_values[0]["id"]}
+    except Exception as e:
+        logger.warning(f"Could not look up travelExpense cost category: {e}")
+
+    # 5. Look up payment type (prefer "Utlegg" / employee paid)
+    payment_type_ref: dict[str, Any] | None = None
+    try:
+        pt_resp = await client.get_cached("/travelExpense/paymentType", params={"count": 50})
+        pt_values = pt_resp.json().get("values", [])
+        for pt in pt_values:
+            name = (pt.get("name") or "").lower()
+            if "utlegg" in name or "employee" in name or "ansatt" in name or "own" in name:
+                payment_type_ref = {"id": pt["id"]}
+                break
+        if not payment_type_ref and pt_values:
+            payment_type_ref = {"id": pt_values[0]["id"]}
+    except Exception as e:
+        logger.warning(f"Could not look up travelExpense payment type: {e}")
+
+    # 6. Add cost lines
     costs = fields.get("costs", [])
+    cost_items_created = []
+    errors: list[str] = []
+
+    # Look up vatType for cost lines (default: high rate 25% = id 1)
+    vat_type_for_cost: dict[str, Any] | None = None
+    default_vat_rate = fields.get("vatRate", 25)
+    try:
+        if default_vat_rate == 15:
+            vt_number = "11"
+        elif default_vat_rate == 12:
+            vt_number = "13"
+        elif default_vat_rate and default_vat_rate > 0:
+            vt_number = "1"
+        else:
+            vt_number = None
+        if vt_number:
+            vt_resp = await client.get_cached("/ledger/vatType", params={"number": vt_number})
+            vt_vals = vt_resp.json().get("values", [])
+            if vt_vals:
+                vat_type_for_cost = {"id": vt_vals[0]["id"]}
+    except Exception as e:
+        logger.warning(f"Could not look up vatType for cost: {e}")
+
+    async def _add_cost(desc: str, amount: float, cost_date: str) -> bool:
+        if amount <= 0:
+            return False
+        cost_payload: dict[str, Any] = {
+            "travelExpense": {"id": te_id},
+            "date": cost_date,
+            "amountCurrencyIncVat": amount,
+            "comments": desc,
+        }
+        if cost_category_ref:
+            cost_payload["costCategory"] = cost_category_ref
+        if payment_type_ref:
+            cost_payload["paymentType"] = payment_type_ref
+        if vat_type_for_cost:
+            cost_payload["vatType"] = vat_type_for_cost
+
+        cost_resp = await client.post("/travelExpense/cost", cost_payload)
+        if cost_resp.status_code >= 400:
+            errors.append(f"cost line failed ({cost_resp.status_code}): {cost_resp.text[:200]}")
+            logger.warning(f"register_expense_receipt: POST /travelExpense/cost failed: {cost_resp.text[:200]}")
+            return False
+        cost_val = cost_resp.json().get("value", {})
+        cost_items_created.append(cost_val.get("id"))
+        logger.info(f"register_expense_receipt: created cost id={cost_val.get('id')} amount={amount}")
+        return True
+
     if costs:
-        invoices_created = []
-        errors = []
         for cost in costs:
             cost_desc = cost.get("description") or cost.get("name") or default_description
             cost_amount = abs(cost.get("amount", 0))
             cost_date = cost.get("date") or voucher_date
-            cost_vat_rate = cost.get("vatRate", vat_rate)
+            await _add_cost(cost_desc, cost_amount, cost_date)
+    else:
+        amount_gross = abs(fields.get("amount", 0))
+        await _add_cost(default_description, amount_gross, voucher_date)
 
-            if cost.get("expenseAccount"):
-                cost_expense_account = int(cost["expenseAccount"])
-            elif fields.get("expenseAccount"):
-                cost_expense_account = int(fields["expenseAccount"])
-            else:
-                cost_expense_account = _infer_expense_account(cost_desc)
+    # 7. Upload PDF attachment if provided
+    raw_files: list[dict] = fields.get("_raw_files", [])
+    pdf_uploaded = False
+    if raw_files:
+        for rf in raw_files:
+            mime = rf.get("mime_type", "application/pdf")
+            if "pdf" in mime.lower() or "image" in mime.lower():
+                try:
+                    file_bytes = base64.b64decode(rf["content_base64"])
+                    filename = rf.get("filename", "receipt.pdf")
+                    att_resp = await client.post_multipart(
+                        f"/travelExpense/{te_id}/attachment",
+                        file_bytes=file_bytes,
+                        filename=filename,
+                        mime_type=mime,
+                    )
+                    if att_resp.status_code < 400:
+                        pdf_uploaded = True
+                        logger.info(f"Uploaded PDF attachment to travelExpense {te_id}: {filename}")
+                    else:
+                        logger.warning(f"PDF upload to travelExpense failed ({att_resp.status_code}): {att_resp.text[:200]}")
+                except Exception as e:
+                    logger.warning(f"PDF upload exception for travelExpense {te_id}: {e}")
+                break  # Only first PDF
 
-            if cost_amount <= 0:
-                logger.warning(f"Skipping cost item with zero/negative amount: {cost_desc}")
-                continue
-
-            result = await _create_single_expense_supplier_invoice(
-                client=client,
-                supplier_id=supplier_id,
-                invoice_date=cost_date,
-                description=cost_desc,
-                amount_gross=cost_amount,
-                expense_account_nr=cost_expense_account,
-                vat_rate=cost_vat_rate,
-                department_ref=department_ref,
-            )
-            if "created" in result:
-                invoices_created.append(result["created"])
-            else:
-                errors.append(result.get("error", "Unknown error"))
-
-        if not invoices_created and errors:
-            return {
-                "status": "completed",
-                "note": f"All expense receipt invoices failed: {errors[0]}",
-                "errors": errors,
-            }
-
-        logger.info(
-            f"Created {len(invoices_created)} expense receipt supplier invoices "
-            f"for {len(costs)} cost items"
-        )
-        # Build result objects — id = supplierInvoice id for verify against /supplierInvoice
-        invoices_for_result = []
-        for inv in invoices_created:
-            voucher_obj = inv.get("voucher") or {}
-            invoices_for_result.append({
-                "id": inv.get("id"),           # supplierInvoice id
-                "voucherId": voucher_obj.get("id"),
-            })
-
-        return {
-            "status": "completed",
-            "taskType": "register_expense_receipt",
-            "created": invoices_for_result[0] if invoices_for_result else {},
-            "vouchers": invoices_for_result,
-            "voucherCount": len(invoices_for_result),
-            "supplierId": supplier_id,
-            "department": department_name,
-        }
-
-    # Single receipt (no costs list)
-    amount_gross = abs(fields.get("amount", 0))
-    expense_account_nr = int(
-        fields.get("expenseAccount") or _infer_expense_account(default_description)
-    )
-
-    result = await _create_single_expense_supplier_invoice(
-        client=client,
-        supplier_id=supplier_id,
-        invoice_date=voucher_date,
-        description=default_description,
-        amount_gross=amount_gross,
-        expense_account_nr=expense_account_nr,
-        vat_rate=vat_rate,
-        department_ref=department_ref,
-    )
-
-    if "error" in result:
-        return {
-            "status": "completed",
-            "note": f"Expense receipt registration failed: {result['error']}",
-            "validationMessages": result.get("validationMessages", []),
-        }
-
-    created = result["created"]
-    si_id = created.get("id")
-    voucher_id = (created.get("voucher") or {}).get("id")
     return {
         "status": "completed",
         "taskType": "register_expense_receipt",
-        "created": {"id": si_id, "voucherId": voucher_id},   # id = supplierInvoice id for verify
-        "supplierId": supplier_id,
-        "voucherId": voucher_id,
-        "amount": amount_gross,
-        "expenseAccount": expense_account_nr,
+        "travelExpenseId": te_id,
+        "costLinesCreated": len(cost_items_created),
+        "pdfUploaded": pdf_uploaded,
+        "employeeId": employee_id,
         "department": department_name,
+        "errors": errors if errors else None,
     }
 
 

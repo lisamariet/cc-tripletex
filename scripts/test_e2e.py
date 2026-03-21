@@ -1392,13 +1392,7 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 ],
             },
             setup="find_first_employee",
-            verify=VerifySpec(
-                endpoint="/supplierInvoice",
-                search_by_id=True,
-                checks=[
-                    FieldCheck("id", 0, mode="gt"),
-                ],
-            ),
+            verify=None,  # custom post-check: travelExpenseId created
             tier=2,
         ),
 
@@ -1419,13 +1413,7 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 ],
             },
             setup="find_first_employee",
-            verify=VerifySpec(
-                endpoint="/supplierInvoice",
-                search_by_id=True,
-                checks=[
-                    FieldCheck("id", 0, mode="gt"),
-                ],
-            ),
+            verify=None,  # custom post-check: travelExpenseId created
             tier=2,
         ),
 
