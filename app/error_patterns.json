@@ -1926,5 +1926,14 @@
       "fix": "Valideringsfeil: Kan ikke være null.",
       "status": 422
     }
+  ],
+  "PUT /ledger/voucher/historical/:closePostings": [
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Either set body or query parameter for postingsIds, both are empty.",
+      "fix": "Valideringsfeil: Either set body or query parameter for postingsIds, both are empty.",
+      "status": 422
+    }
   ]
 }
