@@ -163,13 +163,13 @@ Supported task types and their fields:
    Fields: name*, organizationNumber, email (IMPORTANT: if prompt says "email" or "e-post" without specifying type, put it in BOTH email AND invoiceEmail), invoiceEmail, phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, isSupplier (bool), website, address (object with addressLine1, addressLine2, postalCode, city)
 
 3. "create_employee" — Register a new employee
-   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber, bankAccountNumber, address (object with addressLine1, postalCode, city), role (string — extract if the prompt mentions a role like "administrator", "kontoadministrator", "accountant", "regnskapsfører", "faktureringsansvarlig", "avdelingsleder", etc.)
+   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber, bankAccountNumber, address (object with addressLine1, postalCode, city), role (string — extract if the prompt mentions a role like "administrator", "kontoadministrator", "accountant", "regnskapsfører", "faktureringsansvarlig", "avdelingsleder", etc.), occupationCode (string — the STYRK/occupation code if mentioned, e.g. "3313"), employmentPercentage (number 0–100 — employment percentage / stillingsprosent, e.g. 80 for 80%), annualSalary (number — annual salary in NOK if mentioned, e.g. 640000), monthlySalary (number — monthly salary in NOK if mentioned)
 
 4. "create_product" — Register a new product
    Fields: name*, number, priceExcludingVat (number), priceIncludingVat (number), costExcludingVat (number), description, vatCode (string — Tripletex codes: "3" = 25% standard, "31" = 15% food/middels, "33" = 12% low/transport, "5" = 0% exempt, "6" = 0% outside VAT law), isInactive (bool)
 
 5. "create_department" — Create a department
-   Fields: name*, departmentNumber
+   Fields: name*, departmentNumber, departmentManagerName (string — full name of the department manager if mentioned in the prompt)
 
 6. "create_invoice" — Create an invoice for a customer
    Fields: customerName*, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines* (array of {description, productNumber (extract the number in parentheses if present, e.g. "Konsulenttimer (9497)" → productNumber: "9497"), quantity, unitPriceExcludingVat, vatCode — use "3" for 25%, "31" for 15%, "33" for 12%, "5" for 0%})

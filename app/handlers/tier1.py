@@ -150,6 +150,7 @@ _EMPLOYEE_KEYS = {
     "firstName", "lastName", "email", "phoneNumberMobile", "dateOfBirth",
     "startDate", "userType", "departmentId", "address", "employeeNumber",
     "nationalIdentityNumber", "bankAccountNumber", "iban", "role",
+    "occupationCode", "employmentPercentage", "annualSalary", "monthlySalary",
 }
 
 
@@ -216,6 +217,7 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
         logger.info(f"Unknown role '{role}', granted ALL_PRIVILEGES to employee {employee_id}")
 
     # Create employment record with startDate if provided
+    employment_id: int | None = None
     if employee_id and fields.get("startDate"):
         employment_payload = {
             "employee": {"id": employee_id},
@@ -223,9 +225,58 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
         }
         emp_resp = await client.post("/employee/employment", employment_payload)
         if emp_resp.status_code < 400:
+            employment_id = emp_resp.json().get("value", {}).get("id")
             logger.info(f"Created employment for {employee_id} with startDate={fields['startDate']}")
         else:
             logger.warning(f"Failed to create employment: {emp_resp.text[:200]}")
+
+    # Create employment details if salary/occupationCode/percentage is provided
+    # This covers PDF-based tasks with detailed contract data
+    has_detail_fields = any(
+        fields.get(k) is not None
+        for k in ("occupationCode", "employmentPercentage", "annualSalary", "monthlySalary")
+    )
+    if employee_id and employment_id and has_detail_fields:
+        detail_payload: dict[str, Any] = {
+            "employment": {"id": employment_id},
+            "date": fields.get("startDate") or "2026-01-01",
+            "employmentType": "ORDINARY",
+            "employmentForm": "PERMANENT",
+            "remunerationType": "MONTHLY_WAGE",
+            "workingHoursScheme": "NOT_SHIFT",
+            "percentageOfFullTimeEquivalent": fields.get("employmentPercentage") or 100.0,
+        }
+
+        # Resolve occupation code to Tripletex ID
+        occ_code = fields.get("occupationCode")
+        if occ_code:
+            try:
+                occ_resp = await client.get_cached(
+                    "/employee/employment/occupationCode",
+                    params={"nameAndCode": str(occ_code), "count": 1},
+                )
+                occ_values = occ_resp.json().get("values", [])
+                if occ_values:
+                    detail_payload["occupationCode"] = {"id": occ_values[0]["id"]}
+                    logger.info(f"Resolved occupationCode {occ_code} → id={occ_values[0]['id']}")
+            except Exception as e:
+                logger.warning(f"Failed to resolve occupationCode {occ_code}: {e}")
+
+        # Set salary: prefer annual, derive monthly, or use monthly directly
+        annual = fields.get("annualSalary")
+        monthly = fields.get("monthlySalary")
+        if annual:
+            detail_payload["annualSalary"] = annual
+            detail_payload["monthlySalary"] = round(annual / 12, 2)
+        elif monthly:
+            detail_payload["monthlySalary"] = monthly
+            detail_payload["annualSalary"] = round(monthly * 12, 2)
+
+        det_resp = await client.post("/employee/employment/details", detail_payload)
+        if det_resp.status_code < 400:
+            logger.info(f"Created employment details for employment {employment_id}")
+        else:
+            logger.warning(f"Failed to create employment details: {det_resp.text[:300]}")
 
     return {"status": "completed", "taskType": "create_employee", "created": data.get("value", {})}
 
@@ -268,9 +319,37 @@ async def create_department(client: TripletexClient, fields: dict[str, Any]) -> 
     # NOTE: salesmodules POST removed — department module is already enabled in
     # competition sandboxes.  The old call always returned 422, wasting a call
     # and incurring a 4xx penalty on the efficiency bonus.
-    payload = {"name": fields["name"]}
+    payload: dict[str, Any] = {"name": fields["name"]}
     if fields.get("departmentNumber"):
         payload["departmentNumber"] = fields["departmentNumber"]
+
+    # Look up department manager by name if provided
+    manager_name = fields.get("departmentManagerName")
+    if manager_name:
+        try:
+            parts = manager_name.strip().split()
+            search_params: dict[str, Any] = {"count": 5, "fields": "id,firstName,lastName"}
+            if len(parts) >= 2:
+                search_params["lastName"] = parts[-1]
+            else:
+                search_params["firstName"] = parts[0]
+            mgr_resp = await client.get("/employee", params=search_params)
+            employees = mgr_resp.json().get("values", [])
+            # Pick best match: prefer full name match
+            manager_id = None
+            name_lower = manager_name.lower()
+            for emp in employees:
+                full = f"{emp.get('firstName', '')} {emp.get('lastName', '')}".lower()
+                if full.strip() == name_lower or emp.get("lastName", "").lower() == parts[-1].lower():
+                    manager_id = emp["id"]
+                    break
+            if manager_id:
+                payload["departmentManager"] = {"id": manager_id}
+                logger.info(f"Resolved departmentManager '{manager_name}' → id={manager_id}")
+            else:
+                logger.warning(f"Could not find employee for departmentManager '{manager_name}'")
+        except Exception as e:
+            logger.warning(f"Failed to look up departmentManager '{manager_name}': {e}")
 
     resp = await client.post("/department", payload)
     data = resp.json()
