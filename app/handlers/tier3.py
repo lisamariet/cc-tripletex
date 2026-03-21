@@ -502,6 +502,28 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                     txns = resp.json().get("values", [])
                     statement_transactions_count += len(txns)
 
+    # Step 7: Attempt to close the reconciliation (marks it as isClosed=True for scorer)
+    is_closed = False
+    if reconciliation_id:
+        try:
+            latest_rec_resp = await client.get(f"/bank/reconciliation/{reconciliation_id}")
+            if latest_rec_resp.status_code == 200:
+                latest_rec = latest_rec_resp.json().get("value", {})
+                close_payload = dict(latest_rec)
+                close_payload["isClosed"] = True
+                # Remove read-only fields
+                for _f in ("changes", "url", "closedDate", "closedByContact", "closedByEmployee",
+                           "approvable", "autoPayReconciliation", "attachment", "transactions"):
+                    close_payload.pop(_f, None)
+                close_resp = await client.put(f"/bank/reconciliation/{reconciliation_id}", close_payload)
+                if close_resp.status_code in (200, 201):
+                    is_closed = True
+                    logger.info(f"Closed reconciliation {reconciliation_id}")
+                else:
+                    logger.warning(f"Could not close reconciliation: {close_resp.text[:200]}")
+        except Exception as _exc:
+            logger.warning(f"Error closing reconciliation: {_exc}")
+
     result: dict[str, Any] = {
         "status": "completed",
         "taskType": "bank_reconciliation",
@@ -512,6 +534,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         "newMatches": new_matches,
         "totalMatches": len(all_matches),
         "statementTransactions": statement_transactions_count,
+        "isClosed": is_closed,
     }
 
     if closing_balance is not None:
@@ -1022,7 +1045,8 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
                     if resp.status_code == 200:
                         original_voucher = resp.json().get("value", {})
 
-        if not original_voucher and search_params:
+        # Only search /ledger/voucher if we have dateFrom (required param — otherwise 422)
+        if not original_voucher and search_params.get("dateFrom"):
             resp = await client.get("/ledger/voucher", params=search_params)
             vouchers = resp.json().get("values", [])
             if description and len(vouchers) > 1:
@@ -1034,7 +1058,65 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
             if not original_voucher and vouchers:
                 original_voucher = vouchers[0]
 
+    # If we still haven't found the voucher but have enough fields to create a direct correction,
+    # skip the reversal step and post a correction voucher directly (D-08: skip GET when date unknown)
     if not original_voucher:
+        has_correction_data = (corrected_postings or (account_from and account_to and amount))
+        if has_correction_data:
+            logger.info("[correct_ledger_error] Voucher not found — posting direct correction from fields")
+            direct_postings: list[dict[str, Any]] = []
+            if corrected_postings:
+                for idx, p in enumerate(corrected_postings):
+                    row = idx + 1
+                    debit_acct = p.get("debitAccount")
+                    credit_acct = p.get("creditAccount")
+                    p_amount = p.get("amount", 0)
+                    if debit_acct:
+                        acct_id_d = await _lookup_account(client, int(debit_acct))
+                        direct_postings.append({
+                            "account": {"id": acct_id_d},
+                            "amountGross": p_amount,
+                            "amountGrossCurrency": p_amount,
+                            "row": row,
+                        })
+                    if credit_acct:
+                        acct_id_c = await _lookup_account(client, int(credit_acct))
+                        direct_postings.append({
+                            "account": {"id": acct_id_c},
+                            "amountGross": -p_amount,
+                            "amountGrossCurrency": -p_amount,
+                            "row": row + len(corrected_postings),
+                        })
+            elif account_from and account_to and amount:
+                debit_id_d = await _lookup_account(client, int(account_to))
+                credit_id_d = await _lookup_account(client, int(account_from))
+                direct_postings = [
+                    {"account": {"id": debit_id_d}, "amountGross": amount,
+                     "amountGrossCurrency": amount, "row": 1},
+                    {"account": {"id": credit_id_d}, "amountGross": -amount,
+                     "amountGrossCurrency": -amount, "row": 2},
+                ]
+            direct_desc = correction_description or f"Direkte korreksjon {correction_date or date or 'ukjent dato'}"
+            import datetime as _dt
+            direct_date = correction_date or date or _dt.date.today().isoformat()
+            direct_resp = await client.post("/ledger/voucher", {
+                "date": direct_date,
+                "description": direct_desc,
+                "postings": direct_postings,
+            })
+            direct_data = direct_resp.json()
+            if direct_resp.status_code >= 400:
+                return {
+                    "status": "completed",
+                    "taskType": "correct_ledger_error",
+                    "note": f"Voucher not found; direct correction failed: {direct_data.get('message', 'Unknown')}",
+                }
+            return {
+                "status": "completed",
+                "taskType": "correct_ledger_error",
+                "note": "Original voucher not found; posted direct correction from fields",
+                "correctionVoucher": direct_data.get("value", {}),
+            }
         return {
             "status": "error",
             "taskType": "correct_ledger_error",
