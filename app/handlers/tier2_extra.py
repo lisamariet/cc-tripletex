@@ -206,8 +206,13 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
         }
         if line.get("description"):
             order_line["description"] = line["description"]
+        line_vat_id: int | None = None
         if line.get("vatCode"):
-            order_line["vatType"] = {"number": str(line["vatCode"])}
+            line_vat_id = await _resolve_vat_type_id(client, str(line["vatCode"]))
+            if line_vat_id is not None:
+                order_line["vatType"] = {"id": line_vat_id}
+            else:
+                order_line["vatType"] = {"number": str(line["vatCode"])}
 
         # Find or create product if productNumber is given
         product_number = line.get("productNumber")
@@ -225,10 +230,8 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
                     "number": str(product_number),
                     "priceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
                 }
-                vat_code = line.get("vatCode", "3")
-                vat_id = await _resolve_vat_type_id(client, str(vat_code))
-                if vat_id is not None:
-                    product_payload["vatType"] = {"id": vat_id}
+                if line_vat_id is not None:
+                    product_payload["vatType"] = {"id": line_vat_id}
                 prod_resp = await client.post_with_retry("/product", product_payload)
                 if prod_resp.status_code in (200, 201):
                     product_id = prod_resp.json().get("value", {}).get("id")
