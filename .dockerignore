@@ -7,3 +7,7 @@ __pycache__
 .venv
 docs
 .DS_Store
+.planning
+data
+scripts
+*.md
