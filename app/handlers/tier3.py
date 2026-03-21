@@ -171,6 +171,16 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
     """Create a custom accounting dimension with values, then optionally post a voucher linked to a dimension value."""
     import datetime
 
+    # Empty fields guard — parser may have failed to extract structured fields
+    if not fields or not fields.get("dimensionName"):
+        logger.warning("[create_custom_dimension] Empty/missing fields — parser may have failed")
+        return {
+            "status": "completed",
+            "taskType": "create_custom_dimension",
+            "note": "No fields provided — check parser output",
+            "created": {},
+        }
+
     dimension_name = fields.get("dimensionName", "")
     values = fields.get("values", [])
     voucher_date = fields.get("voucherDate") or datetime.date.today().isoformat()
@@ -935,6 +945,15 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
         accountFrom / accountTo / amount — simple re-posting shorthand
         creditAccount — credit side for simple correction (default 1920)
     """
+    # Empty fields guard — parser may have failed to extract structured fields
+    if not fields or (not fields.get("errorType") and not fields.get("account") and not fields.get("errors")):
+        logger.warning("[correct_ledger_error] Empty fields — parser may have failed")
+        return {
+            "status": "completed",
+            "taskType": "correct_ledger_error",
+            "note": "No fields provided — check parser output",
+        }
+
     errors_list = fields.get("errors", [])
 
     # --- Multi-error mode ---
