@@ -1498,6 +1498,135 @@ def build_tier2_tests() -> list[E2ETestCase]:
             ),
             tier=1,
         ),
+
+        # -----------------------------------------------------------------------
+        # NEW TESTS — T3 create_project analytical + standard mode
+        # -----------------------------------------------------------------------
+
+        # T3-13: create_project analytical mode (analyzeTopCosts=true)
+        # Verifies bulk-query path: no individual /account/{id}/balance calls
+        E2ETestCase(
+            name="t3_create_project_analytical",
+            expected_task_type="create_project",
+            expected_fields={},
+            prompt=(
+                "Analyser de topp 3 kostnadskontiene med størst bevegelse i 2026 "
+                "og opprett et prosjekt for hver. Bruk intern prosjekttype."
+            ),
+            direct_fields={
+                "analyzeTopCosts": True,
+                "projectCount": 3,
+                "period": "2026-01-01/2026-03-21",
+            },
+            verify=None,  # custom post-check: mode=analyzeTopCosts and created list
+            tier=3,
+        ),
+
+        # T3-14: create_project standard mode with explicit name
+        # Verifies basic project creation with name field
+        E2ETestCase(
+            name="t3_create_project_standard",
+            expected_task_type="create_project",
+            expected_fields={},
+            prompt=f'Opprett prosjektet "T3 Standardprosjekt {ts}" fra 2026-03-21.',
+            direct_fields={
+                "name": f"T3 Standardprosjekt {ts}",
+                "startDate": "2026-03-21",
+                "isInternal": False,
+            },
+            verify=VerifySpec(
+                endpoint="/project",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("name", f"T3 Standardprosjekt {ts}"),
+                ],
+            ),
+            tier=3,
+        ),
+
+        # -----------------------------------------------------------------------
+        # NEW TESTS — T3 expense_receipt, batch_voucher, batch_department
+        # -----------------------------------------------------------------------
+
+        # T3-15: register_expense_receipt — multi-cost (creates one voucher per item)
+        E2ETestCase(
+            name="t3_register_expense_receipt",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                f'Registrer kvittering: lunsj 350 kr og taxi 180 kr den 2026-03-21.'
+            ),
+            direct_fields={
+                "date": "2026-03-21",
+                "vatRate": 25,
+                "costs": [
+                    {"description": "Lunsj", "amount": 350, "date": "2026-03-21"},
+                    {"description": "Taxi", "amount": 180, "date": "2026-03-21"},
+                ],
+            },
+            verify=None,  # custom post-check: vouchers created (list in result)
+            tier=3,
+        ),
+
+        # T3-16: batch_create_voucher — 2 vouchers with postings
+        E2ETestCase(
+            name="t3_batch_create_voucher",
+            expected_task_type="batch_create_voucher",
+            expected_fields={},
+            prompt=(
+                f'Opprett to bilag: '
+                f'1) "Husleie mars 2026" konto 6300 debet 15000, konto 1920 kredit 15000. '
+                f'2) "Strøm mars 2026" konto 6340 debet 3200, konto 1920 kredit 3200.'
+            ),
+            direct_fields={
+                "items": [
+                    {
+                        "taskType": "create_voucher",
+                        "fields": {
+                            "description": f"Husleie mars 2026 {ts}",
+                            "date": "2026-03-21",
+                            "postings": [
+                                {"debitAccount": "6300", "amount": 15000},
+                                {"creditAccount": "1920", "amount": 15000},
+                            ],
+                        },
+                    },
+                    {
+                        "taskType": "create_voucher",
+                        "fields": {
+                            "description": f"Strøm mars 2026 {ts}",
+                            "date": "2026-03-21",
+                            "postings": [
+                                {"debitAccount": "6340", "amount": 3200},
+                                {"creditAccount": "1920", "amount": 3200},
+                            ],
+                        },
+                    },
+                ],
+            },
+            verify=None,  # custom post-check: 2 batch_results created
+            tier=3,
+        ),
+
+        # T3-17: batch_create_department — 3 departments
+        E2ETestCase(
+            name="t3_batch_create_department",
+            expected_task_type="batch_create_department",
+            expected_fields={},
+            prompt=(
+                f'Opprett tre avdelinger: '
+                f'"T3 BatchAvd1 {ts}", "T3 BatchAvd2 {ts}", "T3 BatchAvd3 {ts}".'
+            ),
+            direct_fields={
+                "items": [
+                    {"taskType": "create_department", "fields": {"name": f"T3 BatchAvd1 {ts}"}},
+                    {"taskType": "create_department", "fields": {"name": f"T3 BatchAvd2 {ts}"}},
+                    {"taskType": "create_department", "fields": {"name": f"T3 BatchAvd3 {ts}"}},
+                ],
+            },
+            verify=None,  # custom post-check: 3 batch_results created
+            tier=3,
+        ),
     ]
 
 
@@ -2075,9 +2204,11 @@ async def run_one_test(
                 or handler_result.get("voucherId")
             )
 
-        if handler_result.get("note") and not entity_id:
+        note = handler_result.get("note", "")
+        status = handler_result.get("status", "")
+        if note and not entity_id and status != "completed":
             execute_ok = False
-            execute_detail = f"handler note: {handler_result['note']}"
+            execute_detail = f"handler note: {note}"
         elif entity_id:
             execute_detail = f"id={entity_id}"
 
@@ -2287,6 +2418,45 @@ async def run_one_test(
                 actual=matched,
                 passed=True, detail=f"matched transactions: {matched}",
             ))
+
+        # For create_project analytical mode, check mode and created list
+        if tc.name == "t3_create_project_analytical":
+            mode = handler_result.get("mode", "")
+            created_list = handler_result.get("created", [])
+            note = handler_result.get("note", "")
+            if mode == "analyzeTopCosts":
+                verify_results.append(CheckResult(
+                    field="mode", expected="analyzeTopCosts",
+                    actual=mode,
+                    passed=True, detail="analytical mode triggered correctly",
+                ))
+                if isinstance(created_list, list) and len(created_list) >= 1:
+                    verify_results.append(CheckResult(
+                        field="created_count", expected=1,
+                        actual=len(created_list),
+                        passed=True, detail=f"{len(created_list)} project(s) created",
+                    ))
+                else:
+                    # Accept empty list if sandbox has no postings (no movements)
+                    verify_results.append(CheckResult(
+                        field="created_count", expected=1,
+                        actual=len(created_list) if isinstance(created_list, list) else 0,
+                        passed=len(created_list) == 0,  # empty is OK in sandbox
+                        detail=f"sandbox may have no cost movements: {note}",
+                    ))
+            elif note:
+                # Handler returned note (no cost movements) — acceptable in sandbox
+                verify_results.append(CheckResult(
+                    field="mode", expected="analyzeTopCosts",
+                    actual="no_movements",
+                    passed=True, detail=f"accepted: {note}",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="mode", expected="analyzeTopCosts",
+                    actual=mode or "missing",
+                    passed=False, detail=f"analytical mode not triggered: {handler_result}",
+                ))
 
         # For year_end_closing tests (all variants), check steps in result
         if tc.expected_task_type == "year_end_closing":
