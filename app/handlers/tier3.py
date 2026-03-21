@@ -12,13 +12,29 @@ logger = logging.getLogger(__name__)
 
 
 async def _lookup_account(client: TripletexClient, account_number: int) -> int:
-    """Look up a Tripletex account ID by account number (cached)."""
+    """Look up a Tripletex account ID by account number. Creates the account if not found."""
     resp = await client.get_cached("/ledger/account", params={"number": str(account_number)})
     data = resp.json()
     values = data.get("values", [])
-    if not values:
-        raise ValueError(f"Account number {account_number} not found in Tripletex")
-    return values[0]["id"]
+    if values:
+        return values[0]["id"]
+    # Account not found — try to create it
+    _ACCOUNT_NAMES = {
+        1200: "Maskiner og anlegg", 1209: "Akkumulerte avskrivninger maskiner",
+        1210: "IT-utstyr", 1240: "Inventar", 1250: "Inventar og utstyr",
+        1920: "Bankkonto", 2400: "Leverandørgjeld", 2710: "Inngående MVA",
+    }
+    name = _ACCOUNT_NAMES.get(account_number, f"Konto {account_number}")
+    try:
+        create_resp = await client.post("/ledger/account", {"number": account_number, "name": name})
+        if create_resp.status_code == 201:
+            new_id = create_resp.json().get("value", {}).get("id")
+            if new_id:
+                logger.info(f"Created missing account {account_number}: {name} (id={new_id})")
+                return new_id
+    except Exception as e:
+        logger.warning(f"Could not create account {account_number}: {e}")
+    raise ValueError(f"Account number {account_number} not found in Tripletex")
 
 
 async def _lookup_vat_type(client: TripletexClient, account_number: int) -> dict[str, Any] | None:
