@@ -128,6 +128,176 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
     return {"status": "completed", "taskType": "create_voucher", "created": data.get("value", {})}
 
 
+@register_handler("overdue_invoice")
+async def overdue_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Handle overdue invoice: find overdue, post reminder fee voucher, create+send reminder invoice, register partial payment."""
+    from app.handlers.tier2_invoice import (
+        _ensure_bank_account, _get_bank_payment_type_id, _find_or_create_customer,
+    )
+    from app.handlers.tier1 import _resolve_vat_type_id
+
+    result: dict[str, Any] = {"status": "completed", "taskType": "overdue_invoice"}
+
+    reminder_amount = fields.get("reminderFeeAmount", 35)
+    debit_account_nr = fields.get("debitAccount", 1500)
+    credit_account_nr = fields.get("creditAccount", 3400)
+    partial_payment_amount = fields.get("partialPaymentAmount")
+    today = datetime.date.today().isoformat()
+
+    # ── Step 1: Find the overdue invoice ──
+    # Search for invoices with outstanding balance where due date has passed
+    search_params: dict[str, Any] = {
+        "invoiceDateFrom": "2000-01-01",
+        "invoiceDateTo": today,
+        "fields": "id,invoiceNumber,amount,amountCurrency,amountOutstanding,amountCurrencyOutstanding,"
+                  "customer,invoiceDueDate,amountExcludingVat,amountExcludingVatCurrency",
+    }
+    resp = await client.get("/invoice", params=search_params)
+    all_invoices = resp.json().get("values", [])
+
+    # Find overdue: has outstanding balance and is past due
+    overdue = None
+    for inv in all_invoices:
+        outstanding = inv.get("amountOutstanding") or inv.get("amountCurrencyOutstanding") or 0
+        due_date = inv.get("invoiceDueDate")
+        # Pick invoice with outstanding balance (overdue = past due date or just has outstanding balance)
+        if outstanding > 0:
+            if due_date and due_date < today:
+                overdue = inv
+                break  # Prefer actually overdue
+            elif not overdue:
+                overdue = inv  # Fallback: any invoice with outstanding balance
+
+    # If no overdue found, pick the first invoice (sandbox may have quirky dates)
+    if not overdue and all_invoices:
+        overdue = all_invoices[0]
+
+    if not overdue:
+        return {"status": "completed", "note": "No invoices found in system"}
+
+    overdue_id = overdue["id"]
+    overdue_number = overdue.get("invoiceNumber", "?")
+    customer_ref = overdue.get("customer", {})
+    customer_id = customer_ref.get("id") if isinstance(customer_ref, dict) else None
+    result["overdueInvoice"] = {"id": overdue_id, "invoiceNumber": overdue_number}
+    logger.info(f"Found overdue invoice {overdue_id} (#{overdue_number}), customer={customer_id}")
+
+    # ── Step 2: Post reminder fee voucher (debit 1500, credit 3400) ──
+    debit_id = await _lookup_account(client, int(debit_account_nr))
+    credit_id = await _lookup_account(client, int(credit_account_nr))
+
+    # For account 3400, use VAT code 0 (no VAT on reminder fees)
+    # Look up VAT type 0 explicitly
+    vat_resp = await client.get_cached("/ledger/vatType", params={"number": "0"})
+    vat_types_zero = vat_resp.json().get("values", [])
+    vat_type_zero = {"id": vat_types_zero[0]["id"]} if vat_types_zero else None
+
+    voucher_postings = [
+        {
+            "account": {"id": debit_id},
+            "amountGross": reminder_amount,
+            "amountGrossCurrency": reminder_amount,
+            "row": 1,
+        },
+        {
+            "account": {"id": credit_id},
+            "amountGross": -reminder_amount,
+            "amountGrossCurrency": -reminder_amount,
+            "row": 2,
+        },
+    ]
+    # Add customer ref to debit posting (1500 = accounts receivable needs customer)
+    if customer_id:
+        voucher_postings[0]["customer"] = {"id": customer_id}
+    # Set VAT type 0 on credit posting (3400 requires VAT code 0)
+    if vat_type_zero:
+        voucher_postings[1]["vatType"] = vat_type_zero
+
+    voucher_payload = {
+        "date": today,
+        "description": f"Reminder fee - overdue invoice #{overdue_number}",
+        "postings": voucher_postings,
+    }
+    voucher_resp = await client.post_with_retry("/ledger/voucher", voucher_payload)
+    voucher_data = voucher_resp.json()
+    if voucher_resp.status_code < 400:
+        voucher_id = voucher_data.get("value", {}).get("id")
+        result["reminderVoucher"] = {"id": voucher_id}
+        logger.info(f"Created reminder fee voucher {voucher_id}")
+    else:
+        logger.error(f"Reminder fee voucher failed: {voucher_data}")
+        result["reminderVoucherError"] = voucher_data.get("message", "")
+
+    # ── Step 3: Create invoice for the reminder fee ──
+    await _ensure_bank_account(client)
+
+    # Create order for reminder fee invoice
+    order_lines = [{
+        "count": 1,
+        "unitPriceExcludingVatCurrency": reminder_amount,
+        "description": "Purregebyr / Reminder fee",
+    }]
+    # Use VAT code 0 for reminder fee line
+    if vat_types_zero:
+        order_lines[0]["vatType"] = {"id": vat_types_zero[0]["id"]}
+
+    order_payload: dict[str, Any] = {
+        "orderDate": today,
+        "deliveryDate": today,
+        "orderLines": order_lines,
+    }
+    if customer_id:
+        order_payload["customer"] = {"id": customer_id}
+
+    order_resp = await client.post_with_retry("/order", order_payload)
+    order_data = order_resp.json().get("value", {})
+    order_id = order_data.get("id")
+
+    if order_id:
+        # ── Step 4: Invoice the order and send it ──
+        inv_resp = await client.put(f"/order/{order_id}/:invoice", params={
+            "invoiceDate": today,
+            "sendToCustomer": True,  # Send to customer as requested
+        })
+        inv_data = inv_resp.json().get("value", {})
+        reminder_invoice_id = inv_data.get("id")
+
+        if reminder_invoice_id:
+            result["reminderInvoice"] = {"id": reminder_invoice_id}
+            logger.info(f"Created and sent reminder fee invoice {reminder_invoice_id}")
+
+            # Also explicitly send if sendToCustomer didn't work
+            send_resp = await client.put(f"/invoice/{reminder_invoice_id}/:send", params={
+                "sendType": "EMAIL",
+                "overrideEmailAddress": "",
+            })
+            if send_resp.status_code < 400:
+                logger.info(f"Sent reminder invoice {reminder_invoice_id} via :send")
+            else:
+                logger.warning(f"Send invoice failed ({send_resp.status_code}), sendToCustomer may have covered it")
+        else:
+            logger.error(f"Failed to create reminder invoice from order {order_id}")
+    else:
+        logger.error(f"Failed to create order for reminder invoice: {order_resp.text[:300]}")
+
+    # ── Step 5: Register partial payment on the original overdue invoice ──
+    if partial_payment_amount and overdue_id:
+        payment_type_id = await _get_bank_payment_type_id(client)
+        pay_resp = await client.put(f"/invoice/{overdue_id}/:payment", params={
+            "paymentDate": today,
+            "paymentTypeId": payment_type_id,
+            "paidAmount": partial_payment_amount,
+        })
+        if pay_resp.status_code < 400:
+            result["partialPayment"] = {"invoiceId": overdue_id, "amount": partial_payment_amount}
+            logger.info(f"Registered partial payment {partial_payment_amount} on invoice {overdue_id}")
+        else:
+            logger.error(f"Partial payment failed: {pay_resp.text[:300]}")
+            result["partialPaymentError"] = pay_resp.json().get("message", "")
+
+    return result
+
+
 @register_handler("reverse_voucher")
 async def reverse_voucher(client: TripletexClient, fields: dict[str, Any]) -> dict:
     voucher_id = fields.get("_voucher_id")
@@ -1055,6 +1225,8 @@ async def _find_voucher_by_account_and_amount(
     amount: float,
     date: str | None = None,
     already_seen: set[int] | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
 ) -> dict[str, Any] | None:
     """Find a voucher by searching postings for a specific account + amount combination.
 
@@ -1062,35 +1234,53 @@ async def _find_voucher_by_account_and_amount(
     Strategy 2: Search all vouchers and check their postings (fallback for sandboxes where
                 posting search by accountId may return empty).
 
-    NOTE: Both /ledger/posting and /ledger/voucher require dateFrom+dateTo — return None
-    immediately if date is unknown to avoid 422 errors.
+    Date handling:
+    - If `date` is given: search that exact date (dateFrom=dateTo=date for postings,
+      dateFrom=date/dateTo=date+1 for vouchers)
+    - If `date` is None but `date_from`/`date_to` are given: use those as the search window
+    - If nothing is given: fall back to last 3 months to avoid returning None blindly
     """
     import datetime as _dt
 
-    if not date:
-        # Cannot search without a date — both endpoints require dateFrom/dateTo
-        logger.warning(
-            f"[_find_voucher_by_account_and_amount] No date provided for account {account_number} "
-            "— cannot search /ledger/posting or /ledger/voucher (dateFrom required)"
+    today = _dt.date.today()
+
+    if date:
+        search_from = date
+        try:
+            search_to_posting = date  # inclusive for /ledger/posting
+            search_to_voucher = (_dt.date.fromisoformat(date) + _dt.timedelta(days=1)).isoformat()
+        except ValueError:
+            search_to_posting = date
+            search_to_voucher = date
+    elif date_from or date_to:
+        search_from = date_from or date_to
+        end_date = date_to or date_from
+        search_to_posting = end_date
+        # /ledger/voucher requires dateTo > dateFrom — add 1 day to end
+        try:
+            search_to_voucher = (_dt.date.fromisoformat(end_date) + _dt.timedelta(days=1)).isoformat()
+        except ValueError:
+            search_to_voucher = end_date
+    else:
+        # No date info — fall back to last 3 months
+        fallback_from = (today - _dt.timedelta(days=92)).isoformat()
+        fallback_to = today.isoformat()
+        logger.info(
+            f"[_find_voucher_by_account_and_amount] No date for account {account_number} "
+            f"— searching last 3 months ({fallback_from} → {fallback_to})"
         )
-        return None
+        search_from = fallback_from
+        search_to_posting = fallback_to
+        search_to_voucher = (today + _dt.timedelta(days=1)).isoformat()
 
     acct_id = await _lookup_account(client, account_number)
-
-    # /ledger/posting accepts dateFrom == dateTo (inclusive on both ends)
-    # /ledger/voucher requires dateTo > dateFrom (exclusive upper bound) → add 1 day
-    try:
-        date_obj = _dt.date.fromisoformat(date)
-        date_next = (date_obj + _dt.timedelta(days=1)).isoformat()
-    except ValueError:
-        date_next = date  # fallback — keep original
 
     # Strategy 1: Search postings directly
     params: dict[str, Any] = {
         "accountId": str(acct_id),
         "count": "100",
-        "dateFrom": date,
-        "dateTo": date,
+        "dateFrom": search_from,
+        "dateTo": search_to_posting,
     }
     posting_resp = await client.get("/ledger/posting", params=params)
     if posting_resp.status_code < 400:
@@ -1109,11 +1299,11 @@ async def _find_voucher_by_account_and_amount(
             f"({posting_resp.status_code}): {posting_resp.text[:200]}"
         )
 
-    # Strategy 2: Search vouchers by date range (dateTo must be > dateFrom — use next day)
+    # Strategy 2: Search vouchers by date range (dateTo must be > dateFrom)
     voucher_params: dict[str, Any] = {
         "count": "100",
-        "dateFrom": date,
-        "dateTo": date_next,
+        "dateFrom": search_from,
+        "dateTo": search_to_voucher,
     }
     voucher_resp = await client.get("/ledger/voucher", params=voucher_params)
     if voucher_resp.status_code >= 400:

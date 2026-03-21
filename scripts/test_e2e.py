@@ -1673,14 +1673,10 @@ def build_tier2_tests() -> list[E2ETestCase]:
         # NEW T3 TESTS — from real competition prompts (2026-03-21)
         # -----------------------------------------------------------------------
 
-        # T3-18: create_voucher — overdue invoice + purregebyr + partial payment (Norwegian)
-        # Real prompt: "En av kundene dine har en forfalt faktura. Finn den forfalte
-        # fakturaen og bokfor et purregebyr pa 50 kr. Debet kundefordringer (1500),
-        # kredit purregebyr (3400). Opprett også en faktura for purregebyret til kunden
-        # og send den. Registrer i tillegg en delbetaling på 5000 kr på den forfalte fakturaen."
+        # T3-18: overdue_invoice — overdue invoice + purregebyr + partial payment (Norwegian)
         E2ETestCase(
-            name="t3_create_voucher_purregebyr_norwegian",
-            expected_task_type="create_voucher",
+            name="t3_overdue_invoice_norwegian",
+            expected_task_type="overdue_invoice",
             expected_fields={},
             prompt=(
                 "En av kundene dine har en forfalt faktura. "
@@ -1690,11 +1686,10 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 "Registrer i tillegg en delbetaling på 5000 kr på den forfalte fakturaen."
             ),
             direct_fields={
-                "description": f"Purregebyr E2E {ts}",
-                "date": "2026-03-21",
-                "postings": [
-                    {"debitAccount": "1500", "creditAccount": "3400", "amount": 50},
-                ],
+                "reminderFeeAmount": 50,
+                "debitAccount": 1500,
+                "creditAccount": 3400,
+                "partialPaymentAmount": 5000,
             },
             setup="create_overdue_invoice_for_purregebyr",
             verify=VerifySpec(
@@ -1707,12 +1702,10 @@ def build_tier2_tests() -> list[E2ETestCase]:
             tier=3,
         ),
 
-        # T3-19: create_voucher — overdue invoice + purregebyr (French variant)
-        # Real prompt: "L'un de vos clients a une facture en retard. Trouvez la facture
-        # en retard et enregistrez des frais de rappel de 65 NOK."
+        # T3-19: overdue_invoice — overdue invoice + purregebyr (French variant)
         E2ETestCase(
-            name="t3_create_voucher_purregebyr_french",
-            expected_task_type="create_voucher",
+            name="t3_overdue_invoice_french",
+            expected_task_type="overdue_invoice",
             expected_fields={},
             prompt=(
                 "L'un de vos clients a une facture en retard. "
@@ -1722,11 +1715,10 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 "De plus, enregistrez un paiement partiel de 5000 NOK sur la facture en retard."
             ),
             direct_fields={
-                "description": f"Frais de rappel E2E {ts}",
-                "date": "2026-03-21",
-                "postings": [
-                    {"debitAccount": "1500", "creditAccount": "3400", "amount": 65},
-                ],
+                "reminderFeeAmount": 65,
+                "debitAccount": 1500,
+                "creditAccount": 3400,
+                "partialPaymentAmount": 5000,
             },
             setup="create_overdue_invoice_for_purregebyr",
             verify=VerifySpec(
@@ -2818,6 +2810,7 @@ async def run_one_test(
                 or handler_result.get("productId")
                 or handler_result.get("deletedId")
                 or handler_result.get("voucherId")
+                or (handler_result.get("reminderVoucher", {}) or {}).get("id")
             )
 
         note = handler_result.get("note", "")

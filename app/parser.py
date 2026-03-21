@@ -33,6 +33,7 @@ VALID_TASK_TYPES = {
     "correct_ledger_error",
     "monthly_closing",
     "register_expense_receipt",
+    "overdue_invoice",
 }
 
 # Keyword patterns for inferring task type when LLM returns "unknown"
@@ -99,6 +100,12 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ("create_travel_expense", [
         r"reiseregning|travel.?expense|gastos de viaje|frais de voyage|Reisekosten|despesas de viagem|nota de gastos",
         r"reiserekning|reiseutgift|Reisekostenabrechnung",
+    ]),
+    ("overdue_invoice", [
+        r"(?:overdue|forfalt|vencida|en retard|überfällig|rappel).{0,60}(?:invoice|faktura|fatura|factura|Rechnung|facture)",
+        r"(?:invoice|faktura|fatura|factura|Rechnung|facture).{0,60}(?:overdue|forfalt|vencida|en retard|überfällig)",
+        r"(?:reminder|purre|rappel|lembrete|Mahn).{0,30}(?:fee|gebyr|gebühr|frais|taxa)",
+        r"purregebyr|Mahngebühr|frais de rappel|taxa de lembrete|reminder fee",
     ]),
     ("create_order", [
         r"(?:opprett|create|cre[ea]r?|erstellen).{0,30}(?:ordre|order|pedido|Auftrag|commande|bestilling)",
@@ -205,10 +212,10 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
                 if task_type == "monthly_closing" and _YEAR_END_SIGNALS.search(prompt_lower):
                     logger.info(f"Keyword match '{pattern}' → monthly_closing, but year-end signals present → year_end_closing")
                     return "year_end_closing"
-                # If we matched set_project_fixed_price but prompt is about reminder/late fees, use create_voucher
+                # If we matched set_project_fixed_price but prompt is about reminder/late fees, use overdue_invoice
                 if task_type == "set_project_fixed_price" and _REMINDER_FEE_SIGNALS.search(prompt_lower):
-                    logger.info(f"Keyword match '{pattern}' → set_project_fixed_price, but reminder fee signals present → create_voucher")
-                    return "create_voucher"
+                    logger.info(f"Keyword match '{pattern}' → set_project_fixed_price, but reminder fee signals present → overdue_invoice")
+                    return "overdue_invoice"
                 logger.info(f"Keyword match: '{pattern}' → {task_type}")
                 return task_type
     return None
@@ -343,7 +350,11 @@ Supported task types and their fields:
     Fields: description* (item name / what was purchased, e.g. "Skrivebordlampe", "Kontorstoler"), amount* (number — gross amount including VAT), date (YYYY-MM-DD — receipt date, default today), department (string — department name if mentioned, e.g. "Kvalitetskontroll", "Drift"), expenseAccount (integer — choose the most appropriate Norwegian expense account based on the item: 6500=kontorrekvisita/office supplies/desk lamp, 6540=kontormøbler/furniture/office chairs, 6300=leie lokaler, 7140=reise, 4000=varekjøp — default 6500), creditAccount (integer — default 1920 for bank), vatRate (integer percent — 25 for standard goods/services, 15 for food, 0 for exempt — default 25)
     IMPORTANT: Infer expenseAccount from the item name: "Skrivebordlampe" / "lampe" / "lampa" → 6500; "Kontorstoler" / "stol" / "chair" / "chaise" / "Stuhl" / "silla" → 6540; "kontorrekvisita" / "papir" / "penn" → 6500. Default to 6500 if uncertain.
 
-35. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
+35. "overdue_invoice" — Handle overdue invoice: find the overdue invoice, post a reminder fee voucher, create and send a reminder fee invoice to the customer, and optionally register a partial payment on the overdue invoice. This is a COMPOSITE task — do NOT classify as "create_voucher" if the prompt also asks to create an invoice and/or register a payment.
+    IMPORTANT: If the prompt mentions "overdue", "reminder fee", "purregebyr", "frais de rappel", "taxa de lembrete", "Mahngebühr", "rappelgebühr", "forfalt faktura", "facture en retard", "fatura vencida", "überfällige Rechnung" AND also mentions creating an invoice or registering a payment, this is "overdue_invoice", NOT "create_voucher".
+    Fields: reminderFeeAmount* (number — the reminder fee amount in NOK), debitAccount (integer, default 1500 — accounts receivable), creditAccount (integer, default 3400 — reminder fee income), partialPaymentAmount (number — amount of partial payment on overdue invoice, if mentioned)
+
+36. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
 
 Examples:
 
@@ -404,11 +415,14 @@ Output: {"taskType": "create_project", "fields": {"analyzeTopCosts": true, "proj
 Prompt: "Totalkostnadene auka monaleg frå januar til februar 2026. Analyser hovudboka og finn dei tre kostnadskontoane med størst auke i beløp. Opprett eit internt prosjekt for kvar av dei tre kontoane med kontoens namn. Opprett også ein aktivitet for kvart prosjekt."
 Output: {"taskType": "create_project", "fields": {"analyzeTopCosts": true, "projectCount": 3, "isInternal": true, "period": "2026-01-01/2026-02-28", "createActivity": true}, "confidence": 0.88, "reasoning": "Norwegian Nynorsk prompt identical in meaning to the Bokmål version above — analyze ledger, find top-3 cost accounts, create internal projects with activities."}
 
+Prompt: "One of your customers has an overdue invoice. Find the overdue invoice and post a reminder fee of 35 NOK. Debit accounts receivable (1500), credit reminder fees (3400). Also create an invoice for the reminder fee to the customer and send it. Additionally, register a partial payment of 5000 NOK on the overdue invoice."
+Output: {"taskType": "overdue_invoice", "fields": {"reminderFeeAmount": 35, "debitAccount": 1500, "creditAccount": 3400, "partialPaymentAmount": 5000}, "confidence": 0.96, "reasoning": "English prompt about an overdue invoice with MULTIPLE actions: find overdue, post reminder fee voucher, create+send reminder invoice, register partial payment. This is 'overdue_invoice' (composite), NOT 'create_voucher'."}
+
 Prompt: "L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 50 NOK. Debit creances clients (1500), credit revenus de rappel (3400). Créez également une facture pour les frais de rappel au client et envoyez-la. De plus, enregistrez un paiement partiel de 5000 NOK sur la facture en retard."
-Output: {"taskType": "create_voucher", "fields": {"description": "Frais de rappel", "postings": [{"debitAccount": 1500, "creditAccount": 3400, "amount": 50, "description": "Frais de rappel client"}]}, "confidence": 0.80, "reasoning": "French prompt about a late invoice with reminder fees (frais de rappel) and partial payment. This is NOT set_project_fixed_price — 'paiement partiel' here refers to a partial payment on an overdue invoice, not invoicing a percentage of a fixed-price project. Primary action is posting a reminder fee voucher (debit 1500, credit 3400)."}
+Output: {"taskType": "overdue_invoice", "fields": {"reminderFeeAmount": 50, "debitAccount": 1500, "creditAccount": 3400, "partialPaymentAmount": 5000}, "confidence": 0.95, "reasoning": "French prompt about an overdue invoice (facture en retard) with MULTIPLE actions: post reminder fee voucher, create invoice for the fee, send it, AND register partial payment. This is 'overdue_invoice' (composite task), NOT 'create_voucher' (which only handles journal entries)."}
 
 Prompt: "Um dos seus clientes tem uma fatura vencida. Encontre a fatura vencida e registe uma taxa de lembrete de 70 NOK. Débito contas a receber (1500), crédito receitas de lembrete (3400). Também crie uma fatura para a taxa de lembrete ao cliente."
-Output: {"taskType": "create_voucher", "fields": {"description": "Taxa de lembrete", "postings": [{"debitAccount": 1500, "creditAccount": 3400, "amount": 70, "description": "Taxa de lembrete - cliente em atraso"}]}, "confidence": 0.82, "reasoning": "Portuguese prompt about an overdue invoice with a reminder fee (taxa de lembrete). This is NOT set_project_fixed_price — there is no project creation or fixed price involved. Primary action is posting a reminder fee voucher."}
+Output: {"taskType": "overdue_invoice", "fields": {"reminderFeeAmount": 70, "debitAccount": 1500, "creditAccount": 3400}, "confidence": 0.93, "reasoning": "Portuguese prompt about an overdue invoice (fatura vencida) with MULTIPLE actions: post reminder fee voucher AND create invoice for the fee. This is 'overdue_invoice' (composite), NOT 'create_voucher'. No partial payment mentioned in this variant."}
 
 Prompt: "Sett fastpris 430750 kr på prosjektet 'Automatisering' for Havbris AS (org.nr 967636665). Prosjektleder er Kari Olsen."
 Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Automatisering", "customerName": "Havbris AS", "customerOrgNumber": "967636665", "fixedPrice": 430750, "projectManagerName": "Kari Olsen"}, "confidence": 0.96, "reasoning": "Norwegian prompt to create a project with a fixed price for a customer."}
