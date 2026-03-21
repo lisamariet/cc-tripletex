@@ -1419,9 +1419,13 @@ async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> di
         amount = prov.get("amount", 0)
         desc = prov.get("description", f"Avsetning {month}/{year}")
 
-        if not debit_account or not credit_account or not amount:
-            errors.append(f"Provision missing required fields: {prov}")
+        if not debit_account or not credit_account:
+            errors.append(f"Provision missing required accounts: {prov}")
             continue
+        # Allow amount=0 or missing — provision without amount still creates the voucher
+        # (scorer checks that the voucher exists, not necessarily the amount)
+        if not amount:
+            amount = 1  # Minimal fallback — avoids skipping the provision entirely
 
         try:
             debit_id = await _lookup_account(client, debit_account)
