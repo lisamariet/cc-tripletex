@@ -170,7 +170,18 @@ def _needs_translation(text: str) -> bool:
 
 
 def _translate_prompt(prompt: str) -> str | None:
-    """Translate a prompt to Norwegian using Claude."""
+    """Translate a prompt to Norwegian using Google Translate (free, no key needed),
+    with Anthropic Claude as fallback."""
+    # Strategy 1: Google Translate via deep-translator (free, fast)
+    try:
+        from deep_translator import GoogleTranslator
+        result = GoogleTranslator(source="auto", target="no").translate(prompt)
+        if result and result.strip():
+            return result.strip()
+    except Exception:
+        pass
+
+    # Strategy 2: Anthropic Claude API
     try:
         import anthropic
         api_key = os.environ.get("ANTHROPIC_API_KEY", "")
