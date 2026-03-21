@@ -1,4 +1,13 @@
 {
+  "GET /account/{id}/balance": [
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig og at ressursen er opprettet",
+      "status": 404
+    }
+  ],
   "GET /activity": [
     {
       "field": "",
@@ -6,13 +15,6 @@
       "error_message": "HTTP 400 uten feilmelding",
       "fix": "Sjekk at endpointet GET /activity brukes korrekt",
       "status": 400
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "Unauthorized",
-      "fix": "API-feil: Unauthorized",
-      "status": 401
     }
   ],
   "GET /customer": [
@@ -40,20 +42,6 @@
       "error_message": "HTTP 403 uten feilmelding",
       "fix": "Sjekk at endpointet GET /employee brukes korrekt",
       "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "Unauthorized",
-      "fix": "API-feil: Unauthorized",
-      "status": 401
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "Unauthorized",
-      "fix": "API-feil: Unauthorized",
-      "status": 401
     }
   ],
   "GET /invoice": [
@@ -77,34 +65,6 @@
       "error_message": "HTTP 403 uten feilmelding",
       "fix": "Sjekk at endpointet GET /invoice brukes korrekt",
       "status": 403
-    },
-    {
-      "field": "invoiceDateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "invoiceDateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "invoiceDateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "invoiceDateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
     }
   ],
   "GET /invoice/paymentType": [
@@ -116,6 +76,15 @@
       "status": 400
     }
   ],
+  "GET /invoice/settings": [
+    {
+      "field": "",
+      "error_type": "unknown",
+      "error_message": "HTTP 403 uten feilmelding",
+      "fix": "Sjekk at endpointet GET /invoice/settings brukes korrekt",
+      "status": 403
+    }
+  ],
   "GET /ledger/account": [
     {
       "field": "",
@@ -123,6 +92,61 @@
       "error_message": "HTTP 403 uten feilmelding",
       "fix": "Sjekk at endpointet GET /ledger/account brukes korrekt",
       "status": 403
+    }
+  ],
+  "GET /ledger/annualAccount": [
+    {
+      "field": "",
+      "error_type": "unknown",
+      "error_message": "HTTP 403 uten feilmelding",
+      "fix": "Sjekk at endpointet GET /ledger/annualAccount brukes korrekt",
+      "status": 403
+    }
+  ],
+  "GET /ledger/posting": [
+    {
+      "field": "",
+      "error_type": "unknown",
+      "error_message": "HTTP 403 uten feilmelding",
+      "fix": "Sjekk at endpointet GET /ledger/posting brukes korrekt",
+      "status": 403
+    },
+    {
+      "field": "dateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil på 'dateFrom': Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil på 'dateTo': Kan ikke være null.",
+      "status": 422
+    }
+  ],
+  "GET /ledger/voucher": [
+    {
+      "field": "dateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil på 'dateFrom': Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "dateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil på 'dateTo': Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "'From and including' value (Thu Jan 01 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Thu Jan 01 00:00:00 CET 2026) in filter.",
+      "fix": "Valideringsfeil på 'None': 'From and including' value (Thu Jan 01 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Thu Jan 01 00:00:00 CET 2026) in filter.",
+      "status": 422
     }
   ],
   "GET /project": [
@@ -141,6 +165,15 @@
       "error_message": "HTTP 403 uten feilmelding",
       "fix": "Sjekk at endpointet GET /supplier brukes korrekt",
       "status": 403
+    }
+  ],
+  "GET /travelExpense/rate": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Result set too large. Limit of 10000 reached.",
+      "fix": "API-feil: Result set too large. Limit of 10000 reached.",
+      "status": 422
     }
   ],
   "POST /activity": [
@@ -166,20 +199,6 @@
       "error_message": "HTTP 403 uten feilmelding",
       "fix": "Sjekk at endpointet POST /company/salesmodules brukes korrekt",
       "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "Unspecified exception",
-      "fix": "API-feil: Unspecified exception",
-      "status": 409
     }
   ],
   "POST /customer": [
@@ -216,17 +235,10 @@
       "status": 403
     },
     {
-      "field": "department.id",
-      "error_type": "required_field",
-      "error_message": "Feltet må fylles ut.",
-      "fix": "'department.id' er påkrevd — legg til en gyldig verdi",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Brukertype kan ikke være \"0\" eller tom.",
-      "fix": "Forretningsregel: Brukertype kan ikke være \"0\" eller tom.",
+      "field": "email",
+      "error_type": "validation_error",
+      "error_message": "Må angis for Tripletex-brukere.",
+      "fix": "Valideringsfeil på 'email': Må angis for Tripletex-brukere.",
       "status": 422
     }
   ],
@@ -236,237 +248,6 @@
       "error_type": "required_field",
       "error_message": "Feltet må fylles ut.",
       "fix": "Feltet 'employee.dateOfBirth' er påkrevd og må ha en verdi",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "status": 422
-    },
-    {
-      "field": "division.id",
-      "error_type": "validation_error",
-      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
-      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "status": 422
     }
   ],
@@ -491,6 +272,15 @@
       "error_message": "Feltet eksisterer ikke i objektet.",
       "fix": "Fjern feltet 'project' fra payload — det finnes ikke i API-modellen",
       "status": 422
+    }
+  ],
+  "POST /ledger/account": [
+    {
+      "field": "",
+      "error_type": "unknown",
+      "error_message": "HTTP 403 uten feilmelding",
+      "fix": "Sjekk at endpointet POST /ledger/account brukes korrekt",
+      "status": 403
     }
   ],
   "POST /ledger/dimension": [
@@ -541,46 +331,27 @@
       "status": 422
     },
     {
-      "field": "postings",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "",
-      "error_type": "validation_error",
-      "error_message": "Summen av posteringene for 2026-03-21 er ikke lik 0.",
-      "fix": "Valideringsfeil: Summen av posteringene for 2026-03-21 er ikke lik 0.",
-      "status": 422
-    },
-    {
-      "field": "postings",
-      "error_type": "business_rule",
-      "error_message": "Et bilag kan ikke registreres uten posteringer.",
-      "fix": "Forretningsregel: Et bilag kan ikke registreres uten posteringer.",
-      "status": 422
-    },
-    {
-      "field": "postings.supplier.id",
-      "error_type": "missing_value",
-      "error_message": "Leverandør mangler.",
-      "fix": "'postings.supplier.id' mangler — sett en gyldig verdi",
-      "status": 422
-    },
-    {
-      "field": "postings.customer.id",
-      "error_type": "missing_value",
-      "error_message": "Kunde mangler.",
-      "fix": "'postings.customer.id' mangler — sett en gyldig verdi",
-      "status": 422
-    },
-    {
       "field": "postings.vatType.id",
       "error_type": "validation_error",
-      "error_message": "Kontoen 3000 Salgsinntekt, avgiftspliktig er låst til mva-kode 3: Utgående avgift, høy sats.",
-      "fix": "Valideringsfeil: Kontoen 3000 Salgsinntekt, avgiftspliktig er låst til mva-kode 3: Utgående avgift, høy sats.",
+      "error_message": "Kontoen 7100 Bilgodtgjørelse oppgavepliktig er låst til mva-kode 0: Ingen avgiftsbehandling.",
+      "fix": "Valideringsfeil på 'postings.vatType.id': Kontoen 7100 Bilgodtgjørelse oppgavepliktig er låst til mva-kode 0: Ingen avgiftsbehandling.",
       "status": 422
+    },
+    {
+      "field": "voucherDate",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'voucherDate' fra payload — det finnes ikke i API-modellen",
+      "status": 422
+    }
+  ],
+  "POST /ledger/voucher/openingBalance": [
+    {
+      "field": "",
+      "error_type": "unknown",
+      "error_message": "HTTP 403 uten feilmelding",
+      "fix": "Sjekk at endpointet POST /ledger/voucher/openingBalance brukes korrekt",
+      "status": 403
     }
   ],
   "POST /order": [
@@ -597,69 +368,6 @@
       "error_message": "Verdien er ikke av korrekt type for dette feltet.",
       "fix": "Feltet 'customer.id' må være et heltall (int), ikke None eller string",
       "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "orderGroups.orderLines.vatType.id,orderLines.vatType.id",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
     }
   ],
   "POST /product": [
@@ -671,255 +379,80 @@
       "status": 422
     },
     {
-      "field": "Internt felt (vatTypeId)",
+      "field": "number",
       "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "vatType",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke opprette subelement.",
-      "fix": "Valideringsfeil: Kan ikke opprette subelement.",
-      "status": 422
-    },
-    {
-      "field": "vatType",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke opprette subelement.",
-      "fix": "Valideringsfeil: Kan ikke opprette subelement.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (vatTypeId)",
-      "error_type": "validation_error",
-      "error_message": "Ugyldig mva-kode.",
-      "fix": "Valideringsfeil: Ugyldig mva-kode.",
-      "status": 422
-    },
-    {
-      "field": "vatType",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke opprette subelement.",
-      "fix": "Valideringsfeil: Kan ikke opprette subelement.",
+      "error_message": "Produktnummeret 8891 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 8891 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 3817 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 3817 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 5484 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 5484 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 5359 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 5359 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 1028 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 1028 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 4508 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 4508 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 5948 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 5948 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 8253 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 8253 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 2376 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 2376 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 1496 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 1496 er i bruk.",
       "status": 422
     },
     {
       "field": "number",
       "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
-      "status": 422
-    },
-    {
-      "field": "number",
-      "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
-      "status": 422
-    },
-    {
-      "field": "number",
-      "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
-      "status": 422
-    },
-    {
-      "field": "number",
-      "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
-      "status": 422
-    },
-    {
-      "field": "number",
-      "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
-      "status": 422
-    },
-    {
-      "field": "number",
-      "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
-      "status": 422
-    },
-    {
-      "field": "number",
-      "error_type": "validation_error",
-      "error_message": "Produktnummeret 77777 er i bruk.",
-      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "error_message": "Produktnummeret 4543 er i bruk.",
+      "fix": "Valideringsfeil på 'number': Produktnummeret 4543 er i bruk.",
       "status": 422
     }
   ],
@@ -987,131 +520,37 @@
       "status": 403
     }
   ],
+  "POST /travelExpense/perDiemCompensation": [
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Spesifiser avreisedato og returdato.",
+      "fix": "Valideringsfeil på 'None': Spesifiser avreisedato og returdato.",
+      "status": 422
+    },
+    {
+      "field": "rateCategory.id",
+      "error_type": "validation_error",
+      "error_message": "Reiseregningens dato samsvarer ikke med valgt satskategori.",
+      "fix": "Valideringsfeil på 'rateCategory.id': Reiseregningens dato samsvarer ikke med valgt satskategori.",
+      "status": 422
+    }
+  ],
+  "PUT /bank/reconciliation/{id}": [
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    }
+  ],
   "PUT /invoice/{id}/:createCreditNote": [
     {
       "field": "",
       "error_type": "unknown",
       "error_message": "HTTP 422 uten feilmelding",
       "fix": "Sjekk at endpointet PUT /invoice/{id}/:createCreditNote brukes korrekt",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
-      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "status": 422
     }
   ],
@@ -1170,1534 +609,13 @@
       "status": 422
     }
   ],
-  "POST /test/endpoint": [
-    {
-      "field": "amount",
-      "error_type": "required_field",
-      "error_message": "Feltet må fylles ut.",
-      "fix": "'amount' er påkrevd — legg til en gyldig verdi",
-      "status": 422
-    }
-  ],
-  "DELETE /employee/{id}": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    }
-  ],
-  "DELETE /customer/{id}": [
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
-      "status": 422
-    }
-  ],
-  "DELETE /supplier/{id}": [
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    },
-    {
-      "field": "Internt felt (id)",
-      "error_type": "validation_error",
-      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
-      "status": 422
-    }
-  ],
-  "POST /timesheet/entry": [
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99515 E2E Timefoering 1774047537 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99515 E2E Timefoering 1774047537 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99530 E2E Timefoering 1774049912 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99530 E2E Timefoering 1774049912 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99537 E2E Timefoering 1774051133 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99537 E2E Timefoering 1774051133 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99546 E2E Timefoering 1774053937 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99546 E2E Timefoering 1774053937 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99553 E2E Timefoering 1774054065 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99553 E2E Timefoering 1774054065 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99560 E2E Timefoering 1774055489 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99560 E2E Timefoering 1774055489 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99567 E2E Timefoering 1774055785 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99567 E2E Timefoering 1774055785 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99576 E2E Timefoering 1774055908 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99576 E2E Timefoering 1774055908 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99591 E2E Timefoering 1774076541 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99591 E2E Timefoering 1774076541 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99607 E2E Timefoering 1774086463 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99607 E2E Timefoering 1774086463 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99625 E2E Timefoering 1774087112 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99625 E2E Timefoering 1774087112 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99638 E2E Timefoering 1774101742 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99638 E2E Timefoering 1774101742 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99646 E2E Timefoering 1774102196 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99646 E2E Timefoering 1774102196 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99649 E2E Timefoering 1774102650 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99649 E2E Timefoering 1774102650 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99650 E2E Timefoering 1774102724 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99650 E2E Timefoering 1774102724 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99651 E2E Timefoering 1774102742 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99651 E2E Timefoering 1774102742 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99652 E2E Timefoering 1774102832 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99652 E2E Timefoering 1774102832 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99660 E2E Timefoering 1774105778 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99660 E2E Timefoering 1774105778 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99674 E2E Timefoering 1774110987 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99674 E2E Timefoering 1774110987 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99677 E2E Timefoering 1774112793 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99677 E2E Timefoering 1774112793 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "business_rule",
-      "error_message": "Startdato for prosjektet 99678 E2E Timefoering 1774112869 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "fix": "Forretningsregel: Startdato for prosjektet 99678 E2E Timefoering 1774112869 er 2026-03-21. Det kan ikke registreres timer før denne datoen.",
-      "status": 422
-    }
-  ],
-  "GET /salary/type": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "Unauthorized",
-      "fix": "API-feil: Unauthorized",
-      "status": 401
-    }
-  ],
   "PUT /supplierInvoice/voucher/{id}/postings": [
     {
       "field": null,
       "error_type": "validation_error",
       "error_message": "Can not put postings on a voucher that already have postings",
-      "fix": "Valideringsfeil: Can not put postings on a voucher that already have postings",
+      "fix": "Valideringsfeil på 'None': Can not put postings on a voucher that already have postings",
       "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "Can not put postings on a voucher that already have postings",
-      "fix": "Valideringsfeil: Can not put postings on a voucher that already have postings",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "Can not put postings on a voucher that already have postings",
-      "fix": "Valideringsfeil: Can not put postings on a voucher that already have postings",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "Can not put postings on a voucher that already have postings",
-      "fix": "Valideringsfeil: Can not put postings on a voucher that already have postings",
-      "status": 422
-    }
-  ],
-  "GET /supplierInvoice": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "Unauthorized",
-      "fix": "API-feil: Unauthorized",
-      "status": 401
-    },
-    {
-      "field": "invoiceDateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "invoiceDateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "invoiceDateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "invoiceDateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    }
-  ],
-  "DELETE /ledger/posting/{id}": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "HTTP 405 Method Not Allowed",
-      "fix": "API-feil: HTTP 405 Method Not Allowed",
-      "status": 400
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "HTTP 405 Method Not Allowed",
-      "fix": "API-feil: HTTP 405 Method Not Allowed",
-      "status": 400
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "HTTP 405 Method Not Allowed",
-      "fix": "API-feil: HTTP 405 Method Not Allowed",
-      "status": 400
-    }
-  ],
-  "GET /../swagger.json": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "<!DOCTYPE html>\n<html>\n<head>\n    <link href=\"https://cdn.tripletex.no/google-fonts/rubik-405-470-550.css\" rel=\"stylesheet\" crossorigin=\"anonymous\" />\n\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=10\"/>\n    <title>Feilsituasjon - Tripletex</title>\n    <meta name=\"description\" content=\"Feilsituasjon - Tripletex\"/>\n    <link rel=\"apple-touch-icon-precomposed\" href=\"/touch-icon.png\"/>\n    <link rel=\"apple-touch-icon\" href=\"/touch-icon.png\"/>\n    <link rel=\"publisher\" href=\"https://plus.google",
-      "fix": "API-feil: <!DOCTYPE html>\n<html>\n<head>\n    <link href=\"https://cdn.tripletex.no/google-fonts/rubik-405-470-550.css\" rel=\"stylesheet\" crossorigin=\"anonymous\" />\n\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=10\"/>\n    <title>Feilsituasjon - Tripletex</title>\n    <meta name=\"description\" content=\"Feilsituasjon - Tripletex\"/>\n    <link rel=\"apple-touch-icon-precomposed\" href=\"/touch-icon.png\"/>\n    <link rel=\"apple-touch-icon\" href=\"/touch-icon.png\"/>\n    <link rel=\"publisher\" href=\"https://plus.google",
-      "status": 404
-    }
-  ],
-  "GET /ledger/voucher/{id}": [
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    },
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    },
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    }
-  ],
-  "GET /salary/payslip/{id}": [
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    }
-  ],
-  "GET /salary/transaction/{id}": [
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    }
-  ],
-  "GET /salary/transaction": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    }
-  ],
-  "GET /travelExpense/rateCategory": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "HTTP 404 Not Found",
-      "fix": "API-feil: HTTP 404 Not Found",
-      "status": 404
-    }
-  ],
-  "GET /travelExpense/rate": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "HTTP 404 Not Found",
-      "fix": "API-feil: HTTP 404 Not Found",
-      "status": 404
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "Result set too large. Limit of 10000 reached.",
-      "fix": "API-feil: Result set too large. Limit of 10000 reached.",
-      "status": 422
-    }
-  ],
-  "POST /travelExpense/perDiemCompensation": [
-    {
-      "field": "rateCategory.id",
-      "error_type": "validation_error",
-      "error_message": "Reiseregningens dato samsvarer ikke med valgt satskategori.",
-      "fix": "Valideringsfeil: Reiseregningens dato samsvarer ikke med valgt satskategori.",
-      "status": 422
-    }
-  ],
-  "GET /supplierInvoice/{id}": [
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    },
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    },
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    }
-  ],
-  "GET /company": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "HTTP 405 Method Not Allowed",
-      "fix": "API-feil: HTTP 405 Method Not Allowed",
-      "status": 400
-    }
-  ],
-  "POST /supplierInvoice": [
-    {
-      "field": "supplierVoucherType",
-      "error_type": "invalid_field",
-      "error_message": "Feltet eksisterer ikke i objektet.",
-      "fix": "Fjern feltet 'supplierVoucherType' fra payload — finnes ikke i API-modellen",
-      "status": 422
-    }
-  ],
-  "GET /salary/specification/{id}": [
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    },
-    {
-      "field": "",
-      "error_type": "api_error",
-      "error_message": "You do not have permission to access this feature.",
-      "fix": "API-feil: You do not have permission to access this feature.",
-      "status": 403
-    }
-  ],
-  "GET /salary/payslip": [
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' values (2026,2) is greater than or equal 'To and excluding' value (2026,2) in filter.",
-      "fix": "Valideringsfeil: 'From and including' values (2026,2) is greater than or equal 'To and excluding' value (2026,2) in filter.",
-      "status": 422
-    }
-  ],
-  "GET /ledger/voucher": [
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "fix": "Valideringsfeil: 'From and including' value (Sat Mar 21 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Sat Mar 21 00:00:00 CET 2026) in filter.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    }
-  ],
-  "POST /bank/reconciliation": [
-    {
-      "field": "type",
-      "error_type": "wrong_type",
-      "error_message": "Verdien er ikke av korrekt type for dette feltet.",
-      "fix": "Sjekk datatypen for 'type'",
-      "status": 422
-    },
-    {
-      "field": "type",
-      "error_type": "wrong_type",
-      "error_message": "Verdien er ikke av korrekt type for dette feltet.",
-      "fix": "Sjekk datatypen for 'type'",
-      "status": 422
-    },
-    {
-      "field": "accountingPeriod",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "bankStatement",
-      "error_type": "invalid_field",
-      "error_message": "Feltet eksisterer ikke i objektet.",
-      "fix": "Fjern feltet 'bankStatement' fra payload — finnes ikke i API-modellen",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
-      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
-      "status": 422
-    }
-  ],
-  "GET /ledger/posting": [
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    }
-  ],
-  "PUT /ledger/voucher/historical/:closePostings": [
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "Either set body or query parameter for postingsIds, both are empty.",
-      "fix": "Valideringsfeil: Either set body or query parameter for postingsIds, both are empty.",
-      "status": 422
-    }
-  ],
-  "GET /timesheet/entry": [
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateTo",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    },
-    {
-      "field": "dateFrom",
-      "error_type": "validation_error",
-      "error_message": "Kan ikke være null.",
-      "fix": "Valideringsfeil: Kan ikke være null.",
-      "status": 422
-    }
-  ],
-  "PUT /bank/reconciliation/{id}": [
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    },
-    {
-      "field": "isClosed",
-      "error_type": "business_rule",
-      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
-      "status": 422
-    }
-  ],
-  "POST /bank/reconciliation/match": [
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
-      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
-      "status": 422
-    },
-    {
-      "field": null,
-      "error_type": "validation_error",
-      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
-      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
-      "status": 422
-    },
-    {
-      "field": "transactions",
-      "error_type": "validation_error",
-      "error_message": "En eller flere av de valgte postene er allerede matchet.",
-      "fix": "Valideringsfeil: En eller flere av de valgte postene er allerede matchet.",
-      "status": 422
-    }
-  ],
-  "GET /travelExpense/{id}": [
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
-    },
-    {
-      "field": "",
-      "error_type": "not_found",
-      "error_message": "Object not found",
-      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
-      "status": 404
     }
   ]
 }
