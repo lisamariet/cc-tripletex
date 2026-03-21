@@ -1678,23 +1678,32 @@ async def monthly_closing(client: TripletexClient, fields: dict[str, Any]) -> di
             debit_id = await _lookup_account(client, to_account)
             credit_id = await _lookup_account(client, from_account)
 
+            # Look up VAT type for revenue/sales accounts (3000-series)
+            debit_vat = await _lookup_vat_type(client, to_account)
+            credit_vat = await _lookup_vat_type(client, from_account)
+
+            debit_posting: dict[str, Any] = {
+                "account": {"id": debit_id},
+                "amountGross": amount,
+                "amountGrossCurrency": amount,
+                "row": 1,
+            }
+            if debit_vat:
+                debit_posting["vatType"] = debit_vat
+
+            credit_posting: dict[str, Any] = {
+                "account": {"id": credit_id},
+                "amountGross": -amount,
+                "amountGrossCurrency": -amount,
+                "row": 2,
+            }
+            if credit_vat:
+                credit_posting["vatType"] = credit_vat
+
             payload = {
                 "date": voucher_date,
                 "description": desc,
-                "postings": [
-                    {
-                        "account": {"id": debit_id},
-                        "amountGross": amount,
-                        "amountGrossCurrency": amount,
-                        "row": 1,
-                    },
-                    {
-                        "account": {"id": credit_id},
-                        "amountGross": -amount,
-                        "amountGrossCurrency": -amount,
-                        "row": 2,
-                    },
-                ],
+                "postings": [debit_posting, credit_posting],
             }
 
             resp = await client.post("/ledger/voucher", payload)

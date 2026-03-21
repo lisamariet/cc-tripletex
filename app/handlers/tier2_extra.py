@@ -1447,7 +1447,21 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
         or fields.get("receiptDescription")
         or "Utgift fra kvittering"
     )
-    amount_gross = abs(fields.get("amount", 0))
+
+    # Support both a single `amount` and a `costs` list (multiple receipts).
+    # When `costs` is present, sum up all cost amounts and build a description.
+    costs = fields.get("costs", [])
+    if costs and not fields.get("amount"):
+        total = sum(abs(c.get("amount", 0)) for c in costs)
+        amount_gross = total
+        # Build composite description from cost items if no explicit description
+        if description == "Utgift fra kvittering":
+            parts = [c.get("description", "") for c in costs if c.get("description")]
+            if parts:
+                description = ", ".join(parts)
+    else:
+        amount_gross = abs(fields.get("amount", 0))
+
     voucher_date = fields.get("date") or fields.get("receiptDate") or today
     vat_rate = fields.get("vatRate", 25)
 

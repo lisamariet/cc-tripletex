@@ -451,18 +451,27 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
     # Use the invoice's gross amount (including VAT) for paidAmount.
     # The paidAmount parameter is "in invoice currency" and must cover the full
     # outstanding amount to register a full payment.
-    # Use amountOutstanding first (handles partially paid invoices), then gross total.
-    # Must check `is not None` because 0.0 is a valid amount (fully paid).
-    amount_outstanding = invoice.get("amountOutstanding")
-    if amount_outstanding is None:
-        amount_outstanding = invoice.get("amountCurrencyOutstanding")
+    #
+    # NOTE: Tripletex sandbox returns overflow/garbage values for amountOutstanding
+    # and amountCurrencyOutstanding (e.g. -41943040000.0).  Use amountCurrency
+    # (gross total incl. VAT) as the authoritative source for paidAmount.
+    # This is correct for a fresh unpaid invoice where outstanding == gross total.
+    # For partially-paid invoices, use amountOutstanding only if it is a
+    # sensible positive value (within 2x of gross).
     amount_gross = invoice.get("amountCurrency") or invoice.get("amount") or 0
+    amount_gross = abs(amount_gross)
 
-    # Prefer outstanding amount (it accounts for any prior partial payments).
-    # If outstanding is 0 but gross is positive, it means invoice is already paid —
-    # use gross in that case (we're registering the payment).
-    if amount_outstanding is not None and amount_outstanding != 0:
-        amount = amount_outstanding
+    amount_outstanding_raw = invoice.get("amountOutstanding")
+    if amount_outstanding_raw is None:
+        amount_outstanding_raw = invoice.get("amountCurrencyOutstanding")
+
+    # Sanity-check: outstanding must be in [0, 2 * gross] to be usable
+    if (
+        amount_outstanding_raw is not None
+        and amount_outstanding_raw >= 0
+        and (amount_gross == 0 or amount_outstanding_raw <= amount_gross * 2)
+    ):
+        amount = amount_outstanding_raw
     elif amount_gross:
         amount = amount_gross
     else:
