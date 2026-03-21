@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: "Fullført 01-03-PLAN.md: BETA-endepunkt-fjerning fra tier3.py og fallback.py"
-last_updated: "2026-03-21T13:53:05.738Z"
+stopped_at: Completed 01-korrekthet-tier-3/01-01-PLAN.md
+last_updated: "2026-03-21T14:06:11.313Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 01 (korrekthet-tier-3) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: 2 of 4
 
 *Updated after each plan completion*
 | Phase 01-korrekthet-tier-3 P03 | 12 | 1 tasks | 2 files |
+| Phase 01-korrekthet-tier-3 P01 | 45 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,8 @@ Recent decisions affecting current work:
 - Init: Aldri submit uten E2E-verifisering mot sandbox (MEMORY.md)
 - [Phase 01-korrekthet-tier-3]: Graceful skip for opening_balance: sikrere enn standard voucher-API, unngår 403 + 4xx-straff
 - [Phase 01-korrekthet-tier-3]: BETA-fjerning er absolutt: fjern alle referanser inkl. input-felt og kommentarer
+- [Phase 01-korrekthet-tier-3]: create_employee: employment/details opprettes med occupationCode, percentage, salary for PDF-baserte kontrakter
+- [Phase 01-korrekthet-tier-3]: create_department: departmentManager resolves via employee etternavn-søk for å dekke manager-sjekker i scorer
 
 ### Pending Todos
 
@@ -75,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T13:53:05.735Z
-Stopped at: Fullført 01-03-PLAN.md: BETA-endepunkt-fjerning fra tier3.py og fallback.py
+Last session: 2026-03-21T14:06:11.311Z
+Stopped at: Completed 01-korrekthet-tier-3/01-01-PLAN.md
 Resume file: None

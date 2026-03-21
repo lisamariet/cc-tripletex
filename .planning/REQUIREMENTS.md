@@ -14,8 +14,8 @@
 
 ### Lav-score korrekthet
 
-- [ ] **CORR-01**: Fiks felt-mapping på task 04 (T1, score 0.86 → 1.0)
-- [ ] **CORR-02**: Fiks felt-mapping på task 06 (T1, score 0.86 → 1.0)
+- [x] **CORR-01**: Fiks felt-mapping på task 04 (T1, score 0.86 → 1.0)
+- [x] **CORR-02**: Fiks felt-mapping på task 06 (T1, score 0.86 → 1.0)
 - [ ] **CORR-03**: Forbedre task 10 (T2, score 1.63 → 3.7+)
 - [ ] **CORR-04**: Forbedre task 13 (T2, score 1.38 → 3.1+)
 - [ ] **CORR-05**: Forbedre task 15 (T2, score 0.50 → 4.0)
@@ -62,8 +62,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CORR-01 | Phase 1 | Pending |
-| CORR-02 | Phase 1 | Pending |
+| CORR-01 | Phase 1 | Complete |
+| CORR-02 | Phase 1 | Complete |
 | CORR-03 | Phase 1 | Pending |
 | CORR-04 | Phase 1 | Pending |
 | CORR-05 | Phase 1 | Pending |
