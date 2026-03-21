@@ -229,7 +229,7 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
                 vat_id = await _resolve_vat_type_id(client, str(vat_code))
                 if vat_id is not None:
                     product_payload["vatType"] = {"id": vat_id}
-                prod_resp = await client.post("/product", product_payload)
+                prod_resp = await client.post_with_retry("/product", product_payload)
                 if prod_resp.status_code in (200, 201):
                     product_id = prod_resp.json().get("value", {}).get("id")
                     if product_id:
@@ -244,7 +244,7 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
         "deliveryDate": fields.get("deliveryDate") or today,
         "orderLines": order_lines,
     }
-    resp = await client.post("/order", order_payload)
+    resp = await client.post_with_retry("/order", order_payload)
     data = resp.json()
     order = data.get("value", {})
     order_id = order.get("id")
@@ -402,7 +402,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if due_date:
         si_payload["invoiceDueDate"] = due_date
 
-    resp = await client.post("/supplierInvoice", si_payload)
+    resp = await client.post_with_retry("/supplierInvoice", si_payload)
     data = resp.json()
 
     if resp.status_code >= 400:
@@ -906,7 +906,7 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
                 ],
             }
 
-            resp = await client.post("/salary/transaction", payload)
+            resp = await client.post_with_retry("/salary/transaction", payload)
             data = resp.json()
 
             if resp.status_code in (200, 201):

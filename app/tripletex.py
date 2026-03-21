@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import copy
+import json as _json
 import logging
+import re
 import time
 from typing import Any
 
@@ -12,6 +15,7 @@ from app.models import CallTracker
 # Graceful imports — RAG and error patterns are optional enhancements
 try:
     from app.error_patterns import check_payload as _ep_check_payload
+    from app.error_patterns import get_known_errors as _ep_get_known_errors
     from app.error_patterns import record_error as _ep_record_error
     _HAS_ERROR_PATTERNS = True
 except Exception:  # pragma: no cover
@@ -24,6 +28,19 @@ except Exception:  # pragma: no cover
     _HAS_RAG = False
 
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Default values for known required fields (used by _apply_known_fixes)
+# ---------------------------------------------------------------------------
+_REQUIRED_FIELD_DEFAULTS: dict[str, Any] = {
+    "name": "Default",
+    "invoiceDate": "2026-01-01",
+    "orderDate": "2026-01-01",
+    "deliveryDate": "2026-01-01",
+    "date": "2026-01-01",
+    "description": "Auto-generated",
+    "currency": {"id": 1},
+}
 
 
 class TripletexClient:
@@ -56,30 +73,292 @@ class TripletexClient:
 
     async def post(self, path: str, payload: dict[str, Any] | None = None, params: dict[str, Any] | None = None) -> httpx.Response:
         self._warn_invalid_fields("POST", path, payload)
-        self._check_error_patterns("POST", path, payload)
+        payload = self._preflight_correct("POST", path, payload)
         return await self._request("POST", path, json_body=payload, params=params)
 
     async def put(self, path: str, payload: dict[str, Any] | None = None, params: dict[str, Any] | None = None) -> httpx.Response:
         self._warn_invalid_fields("PUT", path, payload)
-        self._check_error_patterns("PUT", path, payload)
+        payload = self._preflight_correct("PUT", path, payload)
         return await self._request("PUT", path, json_body=payload, params=params)
 
     async def delete(self, path: str) -> httpx.Response:
         return await self._request("DELETE", path)
 
-    # -- error pattern pre-flight ---------------------------------------------
+    # -- smart retry methods -------------------------------------------------
+
+    async def post_with_retry(
+        self,
+        path: str,
+        payload: dict[str, Any],
+        params: dict[str, Any] | None = None,
+        max_retries: int = 1,
+    ) -> httpx.Response:
+        """POST with smart retry on 422 — applies rule-based fixes and retries once.
+
+        NEVER retries 403 (token/permission errors).
+        """
+        resp = await self.post(path, payload, params=params)
+
+        if resp.status_code != 422 or max_retries < 1:
+            return resp
+
+        # Parse validation messages and attempt fix
+        try:
+            corrected = await self._apply_known_fixes(
+                "POST", path, payload, resp,
+            )
+            if corrected is not None:
+                logger.info(f"[SmartRetry] Retrying POST {path} with corrected payload")
+                resp = await self.post(path, corrected, params=params)
+        except Exception as exc:
+            logger.debug(f"[SmartRetry] Fix attempt failed (non-fatal): {exc}")
+
+        return resp
+
+    async def put_with_retry(
+        self,
+        path: str,
+        payload: dict[str, Any],
+        params: dict[str, Any] | None = None,
+        max_retries: int = 1,
+    ) -> httpx.Response:
+        """PUT with smart retry on 422 — applies rule-based fixes and retries once.
+
+        NEVER retries 403 (token/permission errors).
+        """
+        resp = await self.put(path, payload, params=params)
+
+        if resp.status_code != 422 or max_retries < 1:
+            return resp
+
+        # Parse validation messages and attempt fix
+        try:
+            corrected = await self._apply_known_fixes(
+                "PUT", path, payload, resp,
+            )
+            if corrected is not None:
+                logger.info(f"[SmartRetry] Retrying PUT {path} with corrected payload")
+                resp = await self.put(path, corrected, params=params)
+        except Exception as exc:
+            logger.debug(f"[SmartRetry] Fix attempt failed (non-fatal): {exc}")
+
+        return resp
+
+    # -- rule-based 422 fix --------------------------------------------------
+
+    async def _apply_known_fixes(
+        self,
+        method: str,
+        path: str,
+        payload: dict[str, Any],
+        resp: httpx.Response,
+    ) -> dict[str, Any] | None:
+        """Parse 422 validationMessages and apply rule-based corrections.
+
+        Returns a corrected payload copy, or None if no fix was applied.
+        """
+        try:
+            err_data = _json.loads(resp.text[:4000])
+        except (ValueError, TypeError):
+            return None
+
+        validation_msgs = err_data.get("validationMessages") or []
+        if not validation_msgs:
+            # Try top-level message
+            msg = err_data.get("message", "")
+            if msg:
+                validation_msgs = [{"field": "", "message": msg}]
+            else:
+                return None
+
+        fixed = copy.deepcopy(payload)
+        any_fix = False
+
+        for vm in validation_msgs:
+            field = vm.get("field", "")
+            msg = vm.get("message", "")
+            msg_lower = msg.lower()
+
+            # Rule 1: "allerede i bruk" + field="number" → entity already exists
+            if ("allerede i bruk" in msg_lower or "already in use" in msg_lower) and "number" in field.lower():
+                # Try to find existing entity via GET and return its ID
+                existing = await self._find_existing_by_number(path, fixed)
+                if existing is not None:
+                    logger.info(f"[SmartRetry] Entity already exists on {path}, found id={existing}")
+                    # Can't really fix the payload — the caller needs the existing entity
+                    # Return None so the caller handles it
+                    return None
+
+            # Rule 2: "eksisterer ikke i objektet" / "does not exist" → remove field
+            if "eksisterer ikke" in msg_lower or "does not exist in the object" in msg_lower:
+                if field and self._remove_field(fixed, field):
+                    logger.info(f"[SmartRetry] Removed invalid field '{field}' from payload")
+                    any_fix = True
+
+            # Rule 3: "Kan ikke opprette subelement" → convert vatType from number to id
+            if "kan ikke opprette subelement" in msg_lower or "cannot create sub-element" in msg_lower:
+                if self._fix_subelement_refs(fixed):
+                    logger.info(f"[SmartRetry] Converted subelement references (number→id) in payload")
+                    any_fix = True
+
+            # Rule 4: "må fylles ut" / "required" → add defaults
+            if "må fylles ut" in msg_lower or "required" in msg_lower:
+                if field:
+                    # Extract the simple field name (last part of dotted path)
+                    simple_field = field.split(".")[-1]
+                    if simple_field in _REQUIRED_FIELD_DEFAULTS and simple_field not in fixed:
+                        fixed[simple_field] = copy.deepcopy(_REQUIRED_FIELD_DEFAULTS[simple_field])
+                        logger.info(f"[SmartRetry] Added default for required field '{simple_field}'")
+                        any_fix = True
+
+        return fixed if any_fix else None
+
+    async def _find_existing_by_number(self, path: str, payload: dict[str, Any]) -> int | None:
+        """Try to find an existing entity by its 'number' field via GET.
+
+        Returns the entity ID if found, None otherwise.
+        """
+        number = payload.get("number")
+        if not number:
+            return None
+
+        # Derive the list endpoint from the POST path
+        # e.g. /product → GET /product?number=X
+        try:
+            resp = await self.get(path, params={"number": str(number), "fields": "id,number"})
+            if resp.status_code == 200:
+                values = resp.json().get("values", [])
+                if values:
+                    return values[0].get("id")
+        except Exception:
+            pass
+        return None
 
     @staticmethod
-    def _check_error_patterns(method: str, path: str, payload: dict[str, Any] | None) -> None:
-        """Run pre-flight check against known error patterns (non-blocking)."""
+    def _remove_field(payload: dict[str, Any], field_path: str) -> bool:
+        """Remove a field from payload by dotted path. Returns True if removed."""
+        parts = field_path.split(".")
+        current = payload
+        for part in parts[:-1]:
+            if isinstance(current, dict) and part in current:
+                current = current[part]
+            elif isinstance(current, list):
+                # Try to find the field in list items
+                for item in current:
+                    if isinstance(item, dict) and part in item:
+                        current = item[part]
+                        break
+                else:
+                    return False
+            else:
+                return False
+
+        target_key = parts[-1]
+        if isinstance(current, dict) and target_key in current:
+            del current[target_key]
+            return True
+        elif isinstance(current, list):
+            removed = False
+            for item in current:
+                if isinstance(item, dict) and target_key in item:
+                    del item[target_key]
+                    removed = True
+            return removed
+        return False
+
+    @staticmethod
+    def _fix_subelement_refs(payload: dict[str, Any]) -> bool:
+        """Convert vatType references from {"number": "3"} to {"id": <int>}.
+
+        Also handles nested structures like orderLines[].vatType.
+        Returns True if any fix was applied.
+        """
+        fixed = False
+
+        def _fix_vat_in_dict(d: dict) -> bool:
+            nonlocal fixed
+            vat = d.get("vatType")
+            if isinstance(vat, dict) and "number" in vat and "id" not in vat:
+                # Convert number-based ref to id-based — use number as id (heuristic)
+                num = vat["number"]
+                try:
+                    d["vatType"] = {"id": int(num)}
+                    fixed = True
+                except (ValueError, TypeError):
+                    pass
+            return fixed
+
+        _fix_vat_in_dict(payload)
+
+        # Check nested lists (orderLines, postings, etc.)
+        for key, value in payload.items():
+            if isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict):
+                        _fix_vat_in_dict(item)
+            elif isinstance(value, dict):
+                _fix_vat_in_dict(value)
+
+        return fixed
+
+    # -- active pre-flight correction ----------------------------------------
+
+    @staticmethod
+    def _preflight_correct(method: str, path: str, payload: dict[str, Any] | None) -> dict[str, Any] | None:
+        """Run pre-flight correction against known error patterns.
+
+        Instead of just logging warnings, actively removes fields that have
+        historically caused 'eksisterer ikke' errors. Returns the (possibly
+        modified) payload.
+        """
         if not _HAS_ERROR_PATTERNS or not payload:
-            return
+            return payload
+
         try:
-            warnings = _ep_check_payload(path, method, payload)
-            for w in warnings:
-                logger.warning(f"[Error Patterns] {w}")
+            known = _ep_get_known_errors(path, method)
+            if not known:
+                return payload
+
+            corrected = False
+            for pattern in known:
+                field = pattern.get("field", "")
+                error_type = pattern.get("error_type", "")
+                error_msg = pattern.get("error_message", "")
+
+                # Remove fields that historically caused "eksisterer ikke"
+                if error_type == "invalid_field" and field:
+                    parts = field.split(".")
+                    current = payload
+                    removable = True
+                    for part in parts[:-1]:
+                        if isinstance(current, dict) and part in current:
+                            current = current[part]
+                        else:
+                            removable = False
+                            break
+                    if removable and isinstance(current, dict):
+                        target = parts[-1]
+                        if target in current:
+                            del current[target]
+                            logger.info(
+                                f"[PreFlight] Removed '{field}' from {method} {path} "
+                                f"(known error: {error_msg})"
+                            )
+                            corrected = True
+
+            # Also run the check_payload for warnings (non-blocking)
+            try:
+                warnings = _ep_check_payload(path, method, payload)
+                for w in warnings:
+                    logger.warning(f"[Error Patterns] {w}")
+            except Exception:
+                pass
+
+            return payload
+
         except Exception as exc:
-            logger.debug(f"Error pattern check failed (non-fatal): {exc}")
+            logger.debug(f"Pre-flight correction failed (non-fatal): {exc}")
+            return payload
 
     # -- payload validation ---------------------------------------------------
 
@@ -135,7 +414,6 @@ class TripletexClient:
         # --- RAG suggest_fix logging (422 on POST/PUT) ---
         if resp.status_code == 422 and method in ("POST", "PUT") and _HAS_RAG:
             try:
-                import json as _json
                 try:
                     err_parsed = _json.loads(resp.text[:2000])
                 except (ValueError, TypeError):
