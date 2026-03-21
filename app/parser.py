@@ -125,6 +125,14 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
 ]
 
 
+_YEAR_END_SIGNALS = re.compile(
+    r"årsavslutning|årsoppgjør|year.?end|cierre.*anual|encerramento.*anual|"
+    r"Jahresabschluss|clôture.*annuelle|forenkl.*årsavslut|simplified.*year.?end|"
+    r"cierre.*simplificado|encerramento.*simplificado|clôture.*simplifiée",
+    re.IGNORECASE,
+)
+
+
 def _infer_task_type_from_keywords(prompt: str) -> str | None:
     """Try to infer task type from keywords in the prompt. Returns None if no match."""
     prompt_lower = prompt.lower()
@@ -132,6 +140,8 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
     # Disambiguation: if prompt mentions year-end closing keywords BUT also mentions
     # depreciations/accruals/provisions, it should be monthly_closing (posting vouchers)
     # rather than year_end_closing (closing accounting periods).
+    # EXCEPTION: "forenklet årsavslutning med avskrivninger" IS year_end_closing —
+    # year-end signals override the monthly signals.
     _MONTHLY_SIGNALS = re.compile(
         r"avskrivning|depreciation|periodisering|accrual|avsetning|provision|forskudd|prepaid|skatteavsetning|tax.?provision",
         re.IGNORECASE,
@@ -142,8 +152,17 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
             if re.search(pattern, prompt_lower, re.IGNORECASE):
                 # If we matched year_end_closing but prompt has monthly_closing signals, reclassify
                 if task_type == "year_end_closing" and _MONTHLY_SIGNALS.search(prompt_lower):
-                    logger.info(f"Keyword match '{pattern}' → year_end_closing, but monthly signals present → monthly_closing")
+                    if _YEAR_END_SIGNALS.search(prompt_lower):
+                        # Year-end + avskrivning = forenklet årsavslutning, IKKE monthly_closing
+                        logger.info(f"Keyword match '{pattern}' → year_end_closing (year-end signals override monthly signals)")
+                        return "year_end_closing"
+                    logger.info(f"Keyword match '{pattern}' → monthly_closing (monthly signals without year-end context)")
                     return "monthly_closing"
+                # If we matched monthly_closing but prompt has year-end signals, reclassify to year_end_closing
+                # (e.g. "cierre anual simplificado" with "depreciación" should be year_end_closing)
+                if task_type == "monthly_closing" and _YEAR_END_SIGNALS.search(prompt_lower):
+                    logger.info(f"Keyword match '{pattern}' → monthly_closing, but year-end signals present → year_end_closing")
+                    return "year_end_closing"
                 logger.info(f"Keyword match: '{pattern}' → {task_type}")
                 return task_type
     return None

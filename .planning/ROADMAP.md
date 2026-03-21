@@ -46,12 +46,12 @@ Plans:
   2. E2E-tester for alle fire tasks passerer mot sandbox uten feil
   3. Submit av task 09 og/eller 17 (T2) gir score > 0 på leaderboard
   4. Submit av task 11 og/eller 12 (T1) gir score > 0 på leaderboard
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 02-01: Diagnostiser GCS-logger for task 09, 11, 12, 17 — finn task_type + feilårsak
-- [ ] 02-02: Fiks parser-klassifisering (keyword-regler) og handler(s) for nullscore-tasks
-- [ ] 02-03: E2E-verifiser og submit
+- [ ] 02-01-PLAN.md — Deploy Cloud Run + fiks compete.py tooling (score-beregning, submit-throttling)
+- [ ] 02-02-PLAN.md — Fiks parser-disambiguering og handler-robusthet for nullscore-tasks
+- [ ] 02-03-PLAN.md — E2E-verifiser nullscore-fikser mot sandbox og deploy
 
 ### Phase 3: Effektivitet
 **Goal**: Alle handlers med 1.0 korrekthet utløser effektivitetsbonus ved å minimere API-kall og eliminere 4xx
