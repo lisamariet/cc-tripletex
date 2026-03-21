@@ -84,7 +84,7 @@ def _call_gemini(prompt: str, system_prompt: str, files: list[dict[str, Any]] | 
     payload = {
         "contents": [{"role": "user", "parts": parts}],
         "systemInstruction": {"parts": [{"text": system_prompt}]},
-        "generationConfig": {"temperature": 0, "maxOutputTokens": 2048},
+        "generationConfig": {"temperature": 0, "maxOutputTokens": 8192},
     }
     resp = httpx.post(url, json=payload, headers={"Authorization": f"Bearer {token}"}, timeout=30.0)
 
