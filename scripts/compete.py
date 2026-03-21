@@ -446,31 +446,44 @@ def cmd_status(args: argparse.Namespace) -> None:
     except Exception:
         pass
 
-    # ── Summary line ──
+    # ── Summary line (from leaderboard — authoritative best-per-task) ──
     total_score = 0.0
-    best_scores: dict[str, float] = {}
+    tasks_with_score = 0
     today_count = 0
     today_str = datetime.now().strftime("%Y-%m-%d")
 
+    # Fetch authoritative total from leaderboard
+    try:
+        with make_client() as lb_client:
+            resp_lb = lb_client.get(f"{API_BASE}/tripletex/leaderboard")
+            resp_lb.raise_for_status()
+            leaderboard = resp_lb.json()
+        if isinstance(leaderboard, list):
+            for team in leaderboard:
+                tid = team.get("team_id") or team.get("id", "")
+                if tid == OUR_TEAM_ID:
+                    total_score = safe_float(team.get("total_score", 0))
+                    tasks_with_score = int(team.get("tasks_with_score", 0) or team.get("tasks_touched", 0) or 0)
+                    break
+    except Exception:
+        pass  # Fall back to local calculation below
+
+    # If leaderboard failed, calculate locally
+    if total_score == 0.0:
+        best_scores: dict[str, float] = {}
+        for sub in submissions:
+            task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
+            if task_type != "?" and not task_type.startswith("["):
+                score_val = safe_float(sub.get("normalized_score")) or 0.0
+                if score_val > best_scores.get(task_type, 0.0):
+                    best_scores[task_type] = score_val
+        total_score = sum(best_scores.values())
+        tasks_with_score = sum(1 for v in best_scores.values() if v > 0)
+
     for sub in submissions:
-        norm = safe_float(sub.get("normalized_score"))
-        raw = safe_float(sub.get("score_raw"))
-        mx = safe_float(sub.get("score_max"))
-        task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
-
-        # Track best per task type (for real task types, including keyword-inferred)
-        if task_type != "?" and not task_type.startswith("["):
-            current_best = best_scores.get(task_type, 0.0)
-            score_val = safe_float(sub.get("normalized_score")) or 0.0
-            if score_val > current_best:
-                best_scores[task_type] = score_val
-
         ts = sub.get("queued_at") or ""
         if today_str in ts:
             today_count += 1
-
-    total_score = sum(best_scores.values())
-    tasks_with_score = sum(1 for v in best_scores.values() if v > 0)
 
     print()
     print(f"{BOLD}  Totalpoeng: {total_score:.1f} | Oppgaver med poeng: {tasks_with_score}/30 | Submissions i dag: {today_count}/32{RESET}")
