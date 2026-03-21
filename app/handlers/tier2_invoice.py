@@ -51,7 +51,7 @@ async def _try_update_existing_account(client: TripletexClient) -> bool:
         return True
 
     acct_id = acct["id"]
-    full_resp = await client.get(f"/ledger/account/{acct_id}")
+    full_resp = await client.get_cached(f"/ledger/account/{acct_id}")
     full_acct = full_resp.json().get("value", {})
     if not full_acct:
         return False

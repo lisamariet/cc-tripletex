@@ -50,7 +50,7 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> int
 
 async def _get_cost_category(client: TripletexClient) -> int | None:
     """Get first available cost category ID."""
-    resp = await client.get_cached("/travelExpense/costCategory")
+    resp = await client.get_cached("/travelExpense/costCategory", params={"fields": "id,title"})
     cats = resp.json().get("values", [])
     # Prefer "Kontorrekvisita" or similar generic category
     for cat in cats:
@@ -511,6 +511,7 @@ async def delete_travel_expense(client: TripletexClient, fields: dict[str, Any])
         if employee_id:
             params["employeeId"] = employee_id
 
+        params["fields"] = "id,title,employee"
         resp = await client.get("/travelExpense", params=params)
         expenses = resp.json().get("values", [])
 

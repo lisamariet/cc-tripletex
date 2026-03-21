@@ -37,6 +37,7 @@ async def _analyze_top_cost_accounts(client: TripletexClient, project_count: int
             "accountNumberTo": "7999",
             "from": 0,
             "count": 1000,
+            "fields": "id,amount,account(number,name)",
         })
         if resp.status_code < 400:
             postings = resp.json().get("values", [])
@@ -72,6 +73,7 @@ async def _analyze_top_cost_accounts(client: TripletexClient, project_count: int
                 "accountNumberTo": "7999",
                 "from": 0,
                 "count": 100,
+                "fields": "id,number,name",
             })
             if acc_resp.status_code < 400:
                 for acc in acc_resp.json().get("values", []):
@@ -136,7 +138,7 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
                         "isProjectActivity": True,
                         "isGeneral": False,
                     }
-                    act_resp = await client.post("/activity", act_payload)
+                    act_resp = await client.post_with_retry("/activity", act_payload)
                     activity_data = act_resp.json().get("value", {})
                 except Exception as e:
                     logger.warning(f"[create_project] Could not create activity for project {proj_id}: {e}")
@@ -163,7 +165,7 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
     pm_id = None
     pm_email = fields.get("projectManagerEmail")
     if pm_email:
-        resp = await client.get("/employee", params={"email": pm_email})
+        resp = await client.get("/employee", params={"email": pm_email, "fields": "id,firstName,lastName,email"})
         employees = resp.json().get("values", [])
         if employees:
             pm_id = employees[0]["id"]
@@ -177,6 +179,7 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
             params["lastName"] = " ".join(parts[1:])
         else:
             params["firstName"] = parts[0]
+        params["fields"] = "id,firstName,lastName,email"
         resp = await client.get("/employee", params=params)
         employees = resp.json().get("values", [])
         if employees:
@@ -184,7 +187,7 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
 
     if pm_id is None:
         # Use first available employee (cached — same across session)
-        resp = await client.get_cached("/employee", params={"count": 1})
+        resp = await client.get_cached("/employee", params={"count": 1, "fields": "id,firstName,lastName"})
         employees = resp.json().get("values", [])
         if employees:
             pm_id = employees[0]["id"]
@@ -208,7 +211,7 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
     if fields.get("isClosed") is not None:
         project_payload["isClosed"] = fields["isClosed"]
 
-    resp = await client.post("/project", project_payload)
+    resp = await client.post_with_retry("/project", project_payload)
     data = resp.json()
     logger.info(f"Created project: {data.get('value', {}).get('id')}")
     return {"status": "completed", "taskType": "create_project", "created": data.get("value", {})}
@@ -225,13 +228,14 @@ async def _find_project_manager(client: TripletexClient, name: str | None) -> in
             params["lastName"] = " ".join(parts[1:])
         else:
             params["firstName"] = parts[0]
+        params["fields"] = "id,firstName,lastName,email"
         resp = await client.get("/employee", params=params)
         employees = resp.json().get("values", [])
         if employees:
             pm_id = employees[0]["id"]
 
     if pm_id is None:
-        resp = await client.get_cached("/employee", params={"count": 1})
+        resp = await client.get_cached("/employee", params={"count": 1, "fields": "id,firstName,lastName"})
         employees = resp.json().get("values", [])
         if employees:
             pm_id = employees[0]["id"]
@@ -269,7 +273,7 @@ async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any
     if fields.get("endDate"):
         project_payload["endDate"] = fields["endDate"]
 
-    resp = await client.post("/project", project_payload)
+    resp = await client.post_with_retry("/project", project_payload)
     data = resp.json()
     project = data.get("value", {})
     project_id = project.get("id")
@@ -321,7 +325,7 @@ async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any
             }
             if project_id:
                 order_payload["project"] = {"id": project_id}
-            order_resp = await client.post("/order", order_payload)
+            order_resp = await client.post_with_retry("/order", order_payload)
             order = order_resp.json().get("value", {})
             order_id = order.get("id")
 
