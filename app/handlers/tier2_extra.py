@@ -1508,18 +1508,25 @@ async def _create_single_expense_voucher(
         return {"error": "Could not find required ledger accounts"}
 
     # Look up input VAT type (inngående mva) for expense postings
+    # Tripletex vatType number mapping (inngående/input VAT):
+    #   "1"  = Fradrag inngående avgift, høy sats (25%) — default
+    #   "11" = Fradrag inngående avgift, middels sats (15%)
+    #   "13" = Fradrag inngående avgift, lav sats (12%)
     vat_type_ref = None
     if vat_rate and vat_rate > 0:
-        vat_type_number = "11"  # Inngående mva 25%
+        vat_type_number = "1"   # default: Inngående mva 25% (høy sats)
         if vat_rate == 15:
-            vat_type_number = "13"
+            vat_type_number = "11"  # Inngående mva 15% (middels sats)
         elif vat_rate == 12:
-            vat_type_number = "14"
+            vat_type_number = "13"  # Inngående mva 12% (lav sats)
+        elif vat_rate == 0:
+            vat_type_number = None
 
-        resp = await client.get_cached("/ledger/vatType", params={"number": vat_type_number})
-        vat_values = resp.json().get("values", [])
-        if vat_values:
-            vat_type_ref = {"id": vat_values[0]["id"]}
+        if vat_type_number:
+            resp = await client.get_cached("/ledger/vatType", params={"number": vat_type_number})
+            vat_values = resp.json().get("values", [])
+            if vat_values:
+                vat_type_ref = {"id": vat_values[0]["id"]}
 
     # Handle currency: if non-NOK, set amountGrossCurrency to original amount
     # and amountGross to the same value (let Tripletex handle conversion)
