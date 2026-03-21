@@ -272,8 +272,11 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
             if line.get("description"):
                 order_line["description"] = line["description"]
             if line.get("vatCode"):
-                # Use number-based reference — id-based fails in sandbox
-                order_line["vatType"] = {"number": str(line["vatCode"])}
+                vat_id = await _resolve_vat_type_id(client, str(line["vatCode"]))
+                if vat_id is not None:
+                    order_line["vatType"] = {"id": vat_id}
+                else:
+                    order_line["vatType"] = {"number": str(line["vatCode"])}
             order_lines.append(order_line)
     elif fields.get("amount"):
         # Single line from amount + description
@@ -348,7 +351,11 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
         if line.get("description"):
             order_line["description"] = line["description"]
         if line.get("vatCode"):
-            order_line["vatType"] = {"number": str(line["vatCode"])}
+            vat_id = await _resolve_vat_type_id(client, str(line["vatCode"]))
+            if vat_id is not None:
+                order_line["vatType"] = {"id": vat_id}
+            else:
+                order_line["vatType"] = {"number": str(line["vatCode"])}
 
         # If productNumber is given, find or create the product and link it
         product_number = line.get("productNumber")
@@ -371,7 +378,7 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
                 vat_id = await _resolve_vat_type_id(client, str(vat_code))
                 if vat_id is not None:
                     product_payload["vatType"] = {"id": vat_id}
-                prod_resp = await client.post("/product", product_payload)
+                prod_resp = await client.post_with_retry("/product", product_payload)
                 if prod_resp.status_code in (200, 201):
                     product_id = prod_resp.json().get("value", {}).get("id")
                     if product_id:
@@ -391,7 +398,7 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
         "deliveryDate": order_date,
         "orderLines": order_lines,
     }
-    resp = await client.post("/order", order_payload)
+    resp = await client.post_with_retry("/order", order_payload)
     order = resp.json().get("value", {})
     order_id = order.get("id")
 

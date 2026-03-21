@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 _VAT_CODE_TO_ID: dict[str, int] = {
     "3": 3,    # 25% standard (Utgående MVA, høy sats)
     "31": 31,  # 15% food (middels sats)
-    "33": 33,  # 12% transport/low (lav sats)
+    "33": 32,  # 12% transport/low (lav sats) — NB: number=33 but id=32!
     "5": 5,    # 0% exempt
     "6": 6,    # 0% outside VAT law
 }
