@@ -61,6 +61,7 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"erreurs?.{0,30}grand.?livre|grand.?livre.{0,30}erreurs?",
     ]),
     ("register_supplier_invoice", [
+        r"leverand[oø]rfaktura|leverand[oø]r.{0,20}faktura",
         r"leverandorfaktura.*(?:PDF|vedlagt|attached)|(?:PDF|vedlagt|attached).*leverandorfaktura",
         r"supplier.?invoice.*(?:PDF|attached)|(?:PDF|attached).*supplier.?invoice",
         r"factura.*proveedor.*PDF|PDF.*factura.*proveedor",
@@ -115,7 +116,8 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"(?:opprett|create|bokfør|cre[ea]r?|erstellen|comptabilise).{0,30}(?:bilag|voucher|asiento|lançamento|Beleg|pièce|écriture)",
     ]),
     ("register_supplier_invoice", [
-        r"(?:leverandør|supplier|innkjøps).*faktura|supplier.invoice|factura.*proveedor|fatura.*fornecedor",
+        r"(?:leverand[oø]r|supplier|innkj[øo]ps).*faktura|supplier.invoice|factura.*proveedor|fatura.*fornecedor",
+        r"leverand[oø]rfaktura",
     ]),
     ("create_credit_note", [
         r"kreditnota|credit.?note|nota de crédito|Gutschrift|note de crédit|avoir",
@@ -176,7 +178,7 @@ Supported task types and their fields:
    IMPORTANT: If the prompt mentions product numbers like "(4783)" next to product names, include productNumber in each line.
 
 7. "register_payment" — Register payment on an existing invoice (customer pays)
-   Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount, paymentDate (YYYY-MM-DD), invoiceDescription (what the invoice was for, e.g. "Maintenance"), lines (array of {description, quantity, unitPriceExcludingVat, vatCode} — extract if the prompt describes invoice line items)
+   Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount, paymentDate (YYYY-MM-DD), invoiceDescription (what the invoice was for, e.g. "Maintenance"), lines (array of {description, quantity, unitPriceExcludingVat, vatCode} — extract if the prompt describes invoice line items), foreignCurrency (string ISO code if invoice was in foreign currency, e.g. "EUR"), foreignAmount (number — invoice amount in foreign currency), invoiceExchangeRate (number — exchange rate when invoice was issued, NOK per 1 unit of foreign currency), paymentExchangeRate (number — exchange rate when payment was made), agioAccount (integer — ledger account for agio/disagio forex difference, default 8060 for agio/gain or 8160 for disagio/loss)
 
 8. "reverse_payment" — Reverse/cancel a payment on an invoice (e.g. returned by bank, undo payment)
    Fields: customerName, customerOrgNumber, invoiceNumber (integer only), amount, paymentDate (YYYY-MM-DD), invoiceDescription, lines (array of {description, quantity, unitPriceExcludingVat, vatCode})
@@ -233,9 +235,10 @@ Supported task types and their fields:
 25. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
     Fields: supplierName, supplierOrgNumber, organizationNumber, amount (gross total including VAT), description, invoiceDate (YYYY-MM-DD), expenseAccount (account number, default "4000"), invoiceNumber (the supplier's invoice reference, e.g. "INV-2026-4855"), vatRate (integer percent, e.g. 25 for 25%, default 25)
 
-26. "register_timesheet" — Register hours/timesheet entry for an employee, AND optionally generate a project invoice to the customer based on the registered hours (registrere timer, Stunden erfassen, registar horas, enregistrer heures, prosjektfaktura, project invoice)
-    Fields: employeeName, employeeEmail, projectName, activityName, hours* (number), date (YYYY-MM-DD), comment, hourlyRate (number — NOK per hour, extract if prompt mentions timesats/hourly rate/taxa horária/taux horaire/Stundensatz), customerName (the customer to invoice), customerOrgNumber (customer org number)
+26. "register_timesheet" — Register hours/timesheet entry for one or more employees on a project/activity, AND optionally generate a project invoice to the customer based on the registered hours (registrere timer, Stunden erfassen, registar horas, enregistrer heures, prosjektfaktura, project invoice)
+    Fields: employeeName, employeeEmail, projectName, activityName, hours* (number), date (YYYY-MM-DD), comment, hourlyRate (number — NOK per hour, extract if prompt mentions timesats/hourly rate/taxa horária/taux horaire/Stundensatz), customerName (the customer to invoice), customerOrgNumber (customer org number), projectBudget (number — total project budget/NOK if mentioned), employees (array — use when MULTIPLE employees are mentioned, each with: {name (full name), email (if provided), hours (number), activityName (if specified per employee)}), supplierName (name of supplier if a supplier cost is part of the project), supplierOrgNumber, supplierAmount (NOK amount of supplier cost if mentioned), supplierExpenseAccount (account number for supplier cost, default 4000)
     IMPORTANT: If the prompt asks to BOTH register hours AND generate an invoice/project invoice, this is ONE task of type "register_timesheet" — do NOT split it into two separate tasks. Extract hourlyRate, customerName, and customerOrgNumber as fields.
+    IMPORTANT for multiple employees: If the prompt mentions multiple employees with hours (e.g. "Carlos García 40 timer og Rafael García 47 timer"), use the "employees" array field with each employee's details. Each entry must have: name (full name), email (if mentioned), hours (number), activityName (if specified per employee).
 
 27. "create_invoice_from_pdf" — Create an invoice from an attached PDF (scanned invoice)
     Fields: customerName, customerOrgNumber, invoiceDate (YYYY-MM-DD), dueDate (YYYY-MM-DD), lines (array of {description, quantity, unitPriceExcludingVat, vatCode}), totalAmount (number)
@@ -300,6 +303,15 @@ Output: {"taskType": "run_payroll", "fields": {"employeeName": "Laura Schneider"
 
 Prompt: "Run payroll for William Taylor (william.taylor@example.org) for this month. The base salary is 39400 NOK. Add a one-time bonus of 11800 NOK on top of the base salary."
 Output: {"taskType": "run_payroll", "fields": {"employeeName": "William Taylor", "employeeEmail": "william.taylor@example.org", "baseSalary": 39400, "bonus": 11800}, "confidence": 0.95, "reasoning": "English prompt to run payroll with base salary and bonus."}
+
+Prompt: "Me sende ein faktura på 8387 EUR til Dalheim AS (org.nr 847589930) då kursen var 11.99 NOK/EUR. Kunden har no betalt, men kursen er 12.84 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (agio) på rett konto."
+Output: {"taskType": "register_payment", "fields": {"customerName": "Dalheim AS", "customerOrgNumber": "847589930", "foreignCurrency": "EUR", "foreignAmount": 8387, "invoiceExchangeRate": 11.99, "paymentExchangeRate": 12.84, "agioAccount": 8060}, "confidence": 0.95, "reasoning": "Norwegian Nynorsk prompt to register payment on EUR invoice with currency gain (agio). Invoice was 8387 EUR at rate 11.99, payment received at rate 12.84 — difference is agio (valutagevinst) booked to account 8060."}
+
+Prompt: "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema' (Dorada SL, org. nº 888398554): 1) Proyecto con presupuesto de 460950 NOK. 2) Registre horas: Carlos García (carlos.garcia@example.org) 40 horas y Rafael García (rafael.garcia@example.org) 47 horas. 3) Registre costo de proveedor de 41650 NOK de Estrella SL (org. nº 913385853). 4) Cree una factura al cliente."
+Output: {"taskType": "register_timesheet", "fields": {"projectName": "Actualización Sistema", "customerName": "Dorada SL", "customerOrgNumber": "888398554", "projectBudget": 460950, "employees": [{"name": "Carlos García", "email": "carlos.garcia@example.org", "hours": 40}, {"name": "Rafael García", "email": "rafael.garcia@example.org", "hours": 47}], "supplierName": "Estrella SL", "supplierOrgNumber": "913385853", "supplierAmount": 41650, "supplierExpenseAccount": 4000}, "confidence": 0.94, "reasoning": "Spanish project lifecycle prompt with multiple employees registering hours, supplier cost, and project invoice to customer."}
+
+Prompt: "Du har motteke ein leverandorfaktura (sjaa vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren viss den ikkje finst. Bruk rett utgiftskonto og inngaaande MVA."
+Output: {"taskType": "register_supplier_invoice", "fields": {"description": "Leverandørfaktura fra vedlagt PDF", "expenseAccount": 4000, "vatRate": 25}, "confidence": 0.90, "reasoning": "Norwegian Nynorsk prompt to register a supplier invoice from PDF. leverandorfaktura (Nynorsk) = leverandørfaktura (Bokmål)."}
 
 Prompt: "Sett fastpris 430750 kr på prosjektet 'Automatisering' for Havbris AS (org.nr 967636665). Prosjektleder er Kari Olsen."
 Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Automatisering", "customerName": "Havbris AS", "customerOrgNumber": "967636665", "fixedPrice": 430750, "projectManagerName": "Kari Olsen"}, "confidence": 0.96, "reasoning": "Norwegian prompt to create a project with a fixed price for a customer."}

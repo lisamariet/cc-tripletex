@@ -298,15 +298,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     with an embedded voucher.  The voucher postings are used as the credit side;
     Tripletex auto-generates the AP credit posting.
     """
+    from datetime import timedelta
+
     # 1. Find or create the supplier
     supplier = await _find_supplier(client, fields)
     if not supplier:
         supplier_payload: dict[str, Any] = {
             "name": fields.get("supplierName") or fields.get("name", "Unknown Supplier"),
+            "isSupplier": True,
         }
         org_nr = fields.get("supplierOrgNumber") or fields.get("organizationNumber")
         if org_nr:
-            supplier_payload["organizationNumber"] = org_nr
+            supplier_payload["organizationNumber"] = str(org_nr)
         resp = await client.post("/supplier", supplier_payload)
         if resp.status_code >= 400:
             logger.error(f"Failed to create supplier: {resp.text[:300]}")
@@ -320,10 +323,25 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     today = date.today().isoformat()
 
     description = fields.get("description") or fields.get("invoiceDescription") or "Leverandørfaktura"
-    amount = abs(fields.get("amount", 0))
+    amount_gross = abs(fields.get("amount", 0))  # Amount INCLUDING VAT (gross)
     invoice_date = fields.get("invoiceDate") or today
     invoice_number = fields.get("invoiceNumber") or ""
     due_date = fields.get("dueDate") or fields.get("invoiceDueDate") or ""
+
+    # Default due date: 30 days after invoice date
+    if not due_date:
+        try:
+            inv_date_obj = date.fromisoformat(invoice_date)
+            due_date = (inv_date_obj + timedelta(days=30)).isoformat()
+        except ValueError:
+            due_date = ""
+
+    # Calculate amount excluding VAT
+    vat_rate = fields.get("vatRate", 25)
+    if vat_rate and vat_rate > 0:
+        amount_excl_vat = round(amount_gross / (1 + vat_rate / 100), 2)
+    else:
+        amount_excl_vat = amount_gross
 
     # 2. Look up accounts
     from app.handlers.tier3 import _lookup_account
@@ -380,12 +398,14 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
             vat_type_ref = {"id": vat_values[0]["id"]}
 
     # 5. Build voucher postings (expense debit only — Tripletex auto-generates
-    #    the AP credit posting for supplierInvoice entities)
+    #    the AP credit posting for supplierInvoice entities).
+    # NOTE: Do NOT put supplier on the expense line — only on the AP line.
+    #       Tripletex will reject with "Leverandør mangler" if supplier is on
+    #       an expense account posting.
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
-        "supplier": {"id": supplier_id},
-        "amountGross": amount,
-        "amountGrossCurrency": amount,
+        "amountGross": amount_gross,
+        "amountGrossCurrency": amount_gross,
         "row": 1,
     }
     if vat_type_ref:
@@ -403,7 +423,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     si_payload: dict[str, Any] = {
         "invoiceDate": invoice_date,
         "supplier": {"id": supplier_id},
-        "amountCurrency": amount,
+        "amountCurrency": amount_gross,
         "currency": {"id": 1},
         "voucher": voucher_obj,
     }
@@ -419,13 +439,14 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         error_msg = data.get("message", "Unknown error")
         validation = data.get("validationMessages", [])
         logger.error(f"POST /supplierInvoice failed ({resp.status_code}): {error_msg} — {validation}")
-        # Fallback: create via /ledger/voucher if /supplierInvoice fails (e.g. 403)
-        # For plain vouchers, we need balanced postings (add AP credit side)
+        # Fallback: create via /ledger/voucher if /supplierInvoice fails (e.g. 500/403)
+        # For plain vouchers, we need balanced postings (add AP credit side with supplier).
+        # The AP (accounts payable konto 2400) posting must have the supplier reference.
         ap_posting: dict[str, Any] = {
             "account": {"id": payable_id},
             "supplier": {"id": supplier_id},
-            "amountGross": -amount,
-            "amountGrossCurrency": -amount,
+            "amountGross": -amount_gross,
+            "amountGrossCurrency": -amount_gross,
             "row": 2,
         }
         fallback_voucher = dict(voucher_obj)
@@ -437,13 +458,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     created = data.get("value", {})
     si_id = created.get("id")
     voucher_id = (created.get("voucher") or {}).get("id")
-    logger.info(f"Created supplier invoice: si_id={si_id}, voucher_id={voucher_id}")
+    logger.info(
+        f"Created supplier invoice: si_id={si_id}, voucher_id={voucher_id}, "
+        f"amount_gross={amount_gross}, amount_excl_vat={amount_excl_vat}, due_date={due_date}"
+    )
 
     return {
         "status": "completed",
         "taskType": "register_supplier_invoice",
         "created": created,
+        "supplierId": supplier_id,
         "voucherId": voucher_id,
+        "amountExclVat": amount_excl_vat,
     }
 
 
@@ -541,106 +567,194 @@ async def _find_activity(client: TripletexClient, name: str) -> dict | None:
     return values[0] if values else None
 
 
-async def _find_or_create_activity(client: TripletexClient, name: str) -> int | None:
-    """Find activity by name or create a new PROJECT_GENERAL_ACTIVITY. Returns activity ID."""
-    activity = await _find_activity(client, name)
-    if activity:
-        return activity["id"]
+async def _find_or_create_activity(
+    client: TripletexClient,
+    name: str,
+    project_id: int | None = None,
+) -> int | None:
+    """Find activity by name or create a new PROJECT_GENERAL_ACTIVITY.
 
-    # Create as project general activity so it can be used on any project
-    payload = {
-        "name": name,
-        "activityType": "PROJECT_GENERAL_ACTIVITY",
-    }
-    resp = await client.post("/activity", payload)
-    created = resp.json().get("value", {})
-    return created.get("id")
+    If project_id is provided, also link the activity to the project via
+    POST /project/projectActivity so it can be used in timesheet entries.
+    Returns activity ID.
+    """
+    activity = await _find_activity(client, name)
+    if not activity:
+        # Create as project general activity
+        payload = {
+            "name": name,
+            "activityType": "PROJECT_GENERAL_ACTIVITY",
+        }
+        resp = await client.post("/activity", payload)
+        if resp.status_code >= 400:
+            logger.warning(f"Failed to create activity '{name}': {resp.text[:200]}")
+            return None
+        activity = resp.json().get("value", {})
+
+    activity_id = activity.get("id")
+    if not activity_id:
+        return None
+
+    # Link activity to project if provided (required before using in timesheet entry)
+    if project_id:
+        link_resp = await client.post("/project/projectActivity", {
+            "project": {"id": project_id},
+            "activity": {"id": activity_id},
+        })
+        if link_resp.status_code < 400:
+            logger.info(f"Linked activity {activity_id} ({name}) to project {project_id}")
+        elif link_resp.status_code != 409:  # 409 = already linked, that's OK
+            logger.debug(
+                f"Could not link activity {activity_id} to project {project_id}: "
+                f"{link_resp.status_code} {link_resp.text[:200]}"
+            )
+
+    return activity_id
 
 
 @register_handler("register_timesheet")
 async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register a timesheet entry (hours) for an employee on a project/activity.
+    """Register timesheet entry/entries for one or more employees on a project/activity.
 
-    If hourlyRate and customerName are provided, also generates a project invoice
-    by creating an order linked to the project and invoicing it.
+    Supports:
+    - Single employee: uses employeeName/employeeEmail/hours
+    - Multiple employees: uses employees[] array
+    - Optional project invoice generation (hourlyRate + customerName)
+    - Optional supplier invoice for project costs (supplierName + supplierAmount)
     """
-    # 1. Find employee
-    employee = await _find_employee(client, fields)
-    if not employee:
-        return {"status": "completed", "note": "Employee not found"}
-    employee_id = employee["id"]
-
-    # 2. Find or create project (reuse employee_id as PM to avoid extra GET /employee)
     project_name = fields.get("projectName") or fields.get("project")
     if not project_name:
         return {"status": "completed", "note": "Project name is required"}
-    project_id = await _find_or_create_project(client, project_name, pm_id=employee_id)
+
+    entry_date = fields.get("date") or date.today().isoformat()
+    activity_name = fields.get("activityName") or fields.get("activity")
+
+    # Build list of employees to register hours for
+    employees_list = fields.get("employees") or []
+    if not employees_list:
+        # Single-employee mode
+        employees_list = [{
+            "name": fields.get("employeeName") or fields.get("name", ""),
+            "email": fields.get("employeeEmail") or fields.get("email"),
+            "hours": fields.get("hours", 0),
+            "activityName": activity_name,
+        }]
+
+    # 1. Find first employee to use as project manager
+    first_emp_fields = {
+        "employeeName": employees_list[0].get("name", ""),
+        "employeeEmail": employees_list[0].get("email"),
+    }
+    first_employee = await _find_employee(client, first_emp_fields)
+    first_emp_id = first_employee["id"] if first_employee else None
+
+    # 2. Find or create project
+    project_id = await _find_or_create_project(client, project_name, pm_id=first_emp_id)
     if not project_id:
         return {"status": "completed", "note": "Could not find or create project"}
 
-    # 3. Find or create activity
-    activity_name = fields.get("activityName") or fields.get("activity")
-    if not activity_name:
-        # Default to first available activity for the project
-        resp = await client.get("/activity/%3EforTimeSheet", params={"projectId": project_id})
-        activities = resp.json().get("values", [])
-        if activities:
-            activity_id = activities[0]["id"]
+    # 3. Default activity (link to project so it can be used in timesheet entries)
+    default_activity_id = None
+    if activity_name:
+        default_activity_id = await _find_or_create_activity(client, activity_name, project_id=project_id)
+
+    # 4. Register hours for each employee
+    created_entries = []
+    total_hours = 0.0
+
+    for emp_spec in employees_list:
+        emp_name = emp_spec.get("name", "")
+        emp_email = emp_spec.get("email")
+        emp_hours = emp_spec.get("hours", 0)
+        emp_activity_name = emp_spec.get("activityName") or activity_name
+
+        if not emp_name and not emp_email:
+            continue
+
+        # Find employee
+        emp_fields: dict[str, Any] = {"employeeName": emp_name}
+        if emp_email:
+            emp_fields["employeeEmail"] = emp_email
+        employee = await _find_employee(client, emp_fields)
+        if not employee:
+            logger.warning(f"Employee not found: {emp_name} ({emp_email})")
+            continue
+        employee_id = employee["id"]
+
+        # Resolve activity for this employee (link to project if it's a new one)
+        if emp_activity_name and emp_activity_name != activity_name:
+            act_id = await _find_or_create_activity(client, emp_activity_name, project_id=project_id)
         else:
-            return {"status": "completed", "note": "No activity specified and none available for project"}
-    else:
-        activity_id = await _find_or_create_activity(client, activity_name)
-        if not activity_id:
-            return {"status": "completed", "note": "Could not find or create activity"}
+            act_id = default_activity_id
 
-    # 4. Build and POST timesheet entry
-    hours = fields.get("hours", 0)
-    entry_date = fields.get("date") or date.today().isoformat()
+        if not act_id:
+            # Try first available activity for project
+            resp = await client.get("/activity/%3EforTimeSheet", params={"projectId": project_id})
+            activities = resp.json().get("values", [])
+            act_id = activities[0]["id"] if activities else None
 
-    entry_payload: dict[str, Any] = {
-        "employee": {"id": employee_id},
-        "project": {"id": project_id},
-        "activity": {"id": activity_id},
-        "date": entry_date,
-        "hours": hours,
-    }
-    if fields.get("comment"):
-        entry_payload["comment"] = fields["comment"]
+        if not act_id:
+            logger.warning(f"No activity available for employee {emp_name} on project {project_name}")
+            continue
 
-    resp = await client.post("/timesheet/entry", entry_payload)
-    data = resp.json()
-
-    if resp.status_code >= 400:
-        error_msg = data.get("message", "Unknown error")
-        validation = data.get("validationMessages", [])
-        return {
-            "status": "completed",
-            "note": f"Timesheet entry failed: {error_msg}",
-            "validationMessages": validation,
+        # Post timesheet entry
+        entry_payload: dict[str, Any] = {
+            "employee": {"id": employee_id},
+            "project": {"id": project_id},
+            "activity": {"id": act_id},
+            "date": entry_date,
+            "hours": emp_hours,
         }
+        if fields.get("comment"):
+            entry_payload["comment"] = fields["comment"]
 
-    created = data.get("value", {})
-    logger.info(f"Created timesheet entry: {created.get('id')} — {hours}h for employee {employee_id}")
+        resp = await client.post("/timesheet/entry", entry_payload)
+        if resp.status_code < 400:
+            created = resp.json().get("value", {})
+            created_entries.append(created)
+            total_hours += emp_hours
+            logger.info(f"Created timesheet entry: {created.get('id')} — {emp_hours}h for {emp_name}")
+        else:
+            error_msg = resp.json().get("message", "Unknown error")
+            logger.warning(f"Timesheet entry failed for {emp_name}: {error_msg}")
 
-    # 5. If hourlyRate + customerName are provided, generate a project invoice
-    hourly_rate = fields.get("hourlyRate")
-    customer_name = fields.get("customerName")
-    if hourly_rate and customer_name:
-        invoice_result = await _create_project_invoice(
-            client, fields, project_id, project_name, hours, hourly_rate, activity_name or "Timer",
-        )
-        return {
-            "status": "completed",
-            "taskType": "register_timesheet",
-            "created": created,
-            "projectInvoice": invoice_result,
-        }
-
-    return {
+    result: dict[str, Any] = {
         "status": "completed",
         "taskType": "register_timesheet",
-        "created": created,
+        "entries": len(created_entries),
+        "totalHours": total_hours,
     }
+    if created_entries:
+        result["created"] = created_entries[0]  # Keep for backward compat
+
+    # 5. Register supplier cost if provided
+    supplier_amount = fields.get("supplierAmount")
+    supplier_name = fields.get("supplierName")
+    if supplier_amount and supplier_name:
+        from app.handlers.tier2_extra import register_supplier_invoice as _rsi
+        si_fields: dict[str, Any] = {
+            "supplierName": supplier_name,
+            "supplierOrgNumber": fields.get("supplierOrgNumber"),
+            "amount": supplier_amount,
+            "description": f"Prosjektkostnad: {project_name}",
+            "expenseAccount": fields.get("supplierExpenseAccount", 4000),
+            "vatRate": 25,
+        }
+        si_result = await _rsi(client, si_fields)
+        result["supplierInvoice"] = si_result
+        logger.info(f"Registered supplier invoice for {supplier_name}: {supplier_amount} NOK")
+
+    # 6. Generate project invoice if hourlyRate + customerName are provided
+    hourly_rate = fields.get("hourlyRate")
+    customer_name = fields.get("customerName")
+    if hourly_rate and customer_name and total_hours > 0:
+        invoice_result = await _create_project_invoice(
+            client, fields, project_id, project_name, total_hours, hourly_rate,
+            activity_name or "Timer",
+        )
+        result["projectInvoice"] = invoice_result
+
+    return result
 
 
 async def _create_project_invoice(

@@ -470,7 +470,73 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
         "paidAmount": amount,
     })
     logger.info(f"Registered payment on invoice {invoice_id}, amount={amount}")
-    return {"status": "completed", "taskType": "register_payment", "invoiceId": invoice_id}
+
+    result: dict[str, Any] = {
+        "status": "completed",
+        "taskType": "register_payment",
+        "invoiceId": invoice_id,
+    }
+
+    # Handle foreign currency agio/disagio if invoice was in foreign currency.
+    # Agio = currency gain when payment rate > invoice rate (e.g. EUR is stronger)
+    # Post a corrective voucher to account 8060 (agio) or 8160 (disagio).
+    foreign_currency = fields.get("foreignCurrency")
+    foreign_amount = fields.get("foreignAmount")
+    invoice_rate = fields.get("invoiceExchangeRate")
+    payment_rate = fields.get("paymentExchangeRate")
+
+    if foreign_currency and foreign_amount and invoice_rate and payment_rate:
+        rate_diff = payment_rate - invoice_rate
+        agio_amount = round(abs(foreign_amount) * abs(rate_diff), 2)
+
+        if agio_amount > 0.01:
+            is_gain = rate_diff > 0  # gain when payment rate > invoice rate (NOK value went up)
+            # Account 8060 = agio (currency gain), 8160 = disagio (currency loss)
+            default_agio_account = 8060 if is_gain else 8160
+            agio_account_nr = fields.get("agioAccount") or default_agio_account
+            # Bank account for the other side
+            bank_account_nr = 1920
+
+            from app.handlers.tier3 import _lookup_account as _la
+            bank_id = await _la(client, bank_account_nr)
+            agio_id = await _la(client, int(agio_account_nr))
+
+            if bank_id and agio_id:
+                # Agio gain: DEBIT bank 1920, CREDIT agio income 8060
+                # Disagio loss: DEBIT disagio expense 8160, CREDIT bank 1920
+                if is_gain:
+                    postings = [
+                        {"account": {"id": bank_id}, "amountGross": agio_amount,
+                         "amountGrossCurrency": agio_amount, "row": 1},
+                        {"account": {"id": agio_id}, "amountGross": -agio_amount,
+                         "amountGrossCurrency": -agio_amount, "row": 2},
+                    ]
+                else:
+                    postings = [
+                        {"account": {"id": agio_id}, "amountGross": agio_amount,
+                         "amountGrossCurrency": agio_amount, "row": 1},
+                        {"account": {"id": bank_id}, "amountGross": -agio_amount,
+                         "amountGrossCurrency": -agio_amount, "row": 2},
+                    ]
+                agio_voucher = {
+                    "date": payment_date,
+                    "description": f"Valutadifferanse ({foreign_currency} {foreign_amount:.0f}): "
+                                   f"kurs {invoice_rate} → {payment_rate}",
+                    "postings": postings,
+                }
+                agio_resp = await client.post("/ledger/voucher", agio_voucher)
+                if agio_resp.status_code < 400:
+                    agio_voucher_id = agio_resp.json().get("value", {}).get("id")
+                    logger.info(
+                        f"Created {'agio' if is_gain else 'disagio'} voucher {agio_voucher_id}: "
+                        f"{agio_amount} NOK ({foreign_currency} rate diff {rate_diff})"
+                    )
+                    result["agioVoucherId"] = agio_voucher_id
+                    result["agioAmount"] = agio_amount
+                else:
+                    logger.warning(f"Agio voucher creation failed: {agio_resp.text[:300]}")
+
+    return result
 
 
 @register_handler("reverse_payment")
