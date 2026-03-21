@@ -159,9 +159,17 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
         logger.warning("[create_project] Missing 'name' field — parser may have failed")
         return {"status": "completed", "taskType": "create_project", "note": "No name provided"}
 
-    # Projects need a project manager — find the first employee if not specified
+    # Projects need a project manager — find by email (most precise) or name
     pm_id = None
-    if fields.get("projectManagerName"):
+    pm_email = fields.get("projectManagerEmail")
+    if pm_email:
+        resp = await client.get("/employee", params={"email": pm_email})
+        employees = resp.json().get("values", [])
+        if employees:
+            pm_id = employees[0]["id"]
+            logger.info(f"[create_project] Found PM by email {pm_email}: id={pm_id}")
+
+    if pm_id is None and fields.get("projectManagerName"):
         parts = fields["projectManagerName"].strip().split()
         params: dict[str, Any] = {}
         if len(parts) >= 2:

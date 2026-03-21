@@ -294,7 +294,7 @@ Supported task types and their fields:
     Fields: employeeName, travelExpenseTitle, travelExpenseId
 
 12. "create_project" — Create a project (without fixed price)
-    Fields: name*, customerName, customerOrgNumber, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), projectManagerName, isClosed (bool)
+    Fields: name*, customerName, customerOrgNumber, startDate (YYYY-MM-DD), endDate (YYYY-MM-DD), projectManagerName, projectManagerEmail (email address of the PM if provided), isClosed (bool)
     ANALYTICAL MODE: If the prompt asks to first analyze the ledger/accounts and then create projects based on the results (e.g. "find the top 3 cost accounts and create one project per account"), set analyzeTopCosts=true and projectCount=N (number of projects to create). In this case, name is NOT required — the handler will derive project names from the analysis.
     Example analytical fields: {"analyzeTopCosts": true, "projectCount": 3, "isInternal": true, "period": "2026-01-01/2026-02-28"}
 
