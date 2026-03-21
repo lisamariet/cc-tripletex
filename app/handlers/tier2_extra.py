@@ -1023,13 +1023,30 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     # 6. ALSO create a manual voucher with full Norwegian payroll postings.
     #    This provides a secondary verification path via ledger/posting.
     #    Norwegian payroll requires: salary, tax deduction, AGA, net bank payment.
-    salary_account_id = await _lookup_account_id(client, 5000)   # Lønn til ansatte
-    bank_account_id = await _lookup_account_id(client, 1920)     # Bankinnskudd
-    tax_account_id = await _lookup_account_id(client, 2600)      # Forskuddstrekk
-    aga_expense_id = await _lookup_account_id(client, 5400)      # Arbeidsgiveravgift
-    aga_payable_id = await _lookup_account_id(client, 2770)      # Skyldig arbeidsgiveravgift
-    vacation_payable_id = await _lookup_account_id(client, 2940) # Skyldig feriepenger
-    vacation_expense_id = await _lookup_account_id(client, 5020) # Feriepenger
+    #    Fetch all required accounts in one batch call to minimize API calls.
+    accounts_resp = await client.get_cached(
+        "/ledger/account",
+        params={"number": "1920,2600,2770,2940,5000,5020,5400", "fields": "id,number", "count": 10},
+    )
+    account_map: dict[int, int] = {}  # account_number -> account_id
+    for acc in accounts_resp.json().get("values", []):
+        account_map[acc["number"]] = acc["id"]
+
+    salary_account_id = account_map.get(5000)    # Lønn til ansatte
+    bank_account_id = account_map.get(1920)      # Bankinnskudd
+    tax_account_id = account_map.get(2600)        # Forskuddstrekk
+    aga_expense_id = account_map.get(5400)        # Arbeidsgiveravgift
+    aga_payable_id = account_map.get(2770)        # Skyldig arbeidsgiveravgift
+    vacation_payable_id = account_map.get(2940)   # Skyldig feriepenger
+    vacation_expense_id = account_map.get(5020)   # Feriepenger
+
+    # Look up "Lønnsbilag" voucher type for proper categorization
+    vt_resp = await client.get_cached("/ledger/voucherType", params={"name": "Lønnsbilag"})
+    salary_voucher_type_ref = None
+    for vt in vt_resp.json().get("values", []):
+        if "lønn" in vt.get("name", "").lower():
+            salary_voucher_type_ref = {"id": vt["id"]}
+            break
 
     voucher_id = None
     if salary_account_id and bank_account_id:
@@ -1129,11 +1146,13 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
             })
             row += 1
 
-        voucher_payload = {
+        voucher_payload: dict[str, Any] = {
             "date": voucher_date,
             "description": description,
             "postings": postings,
         }
+        if salary_voucher_type_ref:
+            voucher_payload["voucherType"] = salary_voucher_type_ref
 
         resp = await client.post("/ledger/voucher", voucher_payload)
         if resp.status_code < 400:

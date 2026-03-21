@@ -1142,6 +1142,28 @@ async def setup_find_bank_account(client, fields: dict) -> dict:
     return fields
 
 
+async def setup_create_voucher_for_correction(client, fields: dict) -> dict:
+    """Create a voucher with wrong account (7100) that will be corrected to 6300."""
+    from app.handlers.tier3 import _lookup_account
+    debit_id = await _lookup_account(client, 7100)  # Wrong account (reisekostnad)
+    credit_id = await _lookup_account(client, 1920)
+    payload = {
+        "date": "2026-03-21",
+        "description": f"E2E Feilført reisekostnad {_ts()}",
+        "postings": [
+            {"account": {"id": debit_id}, "amountGross": 5000, "amountGrossCurrency": 5000, "row": 1},
+            {"account": {"id": credit_id}, "amountGross": -5000, "amountGrossCurrency": -5000, "row": 2},
+        ],
+    }
+    resp = await client.post("/ledger/voucher", payload)
+    created = resp.json().get("value", {})
+    if not created.get("id"):
+        raise RuntimeError(f"Failed to create voucher for correction: {resp.text[:300]}")
+    fields["_voucher_id"] = created.get("id")
+    fields["voucherNumber"] = created.get("number")
+    return fields
+
+
 SETUP_REGISTRY = {
     "find_first_employee": setup_find_first_employee,
     "find_bank_account": setup_find_bank_account,
@@ -1155,6 +1177,7 @@ SETUP_REGISTRY = {
     "create_voucher_for_reverse": setup_create_voucher_for_reverse,
     "create_voucher_for_delete": setup_create_voucher_for_delete,
     "find_or_reuse_dimension": setup_find_or_reuse_dimension,
+    "create_voucher_for_correction": setup_create_voucher_for_correction,
 }
 
 
@@ -1370,6 +1393,11 @@ async def run_one_test(
         # Extract entity ID from result
         created = handler_result.get("created", {})
         entity_id = created.get("id") if isinstance(created, dict) else None
+        if not entity_id:
+            # Check correctionVoucher for correct_ledger_error handler
+            correction = handler_result.get("correctionVoucher", {})
+            if isinstance(correction, dict) and correction.get("id"):
+                entity_id = correction["id"]
         if not entity_id:
             entity_id = (
                 handler_result.get("invoiceId")

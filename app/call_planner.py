@@ -247,13 +247,17 @@ def _plan_run_payroll(fields: dict) -> list[dict]:
         # If no division: GET /municipality + POST /division
         {"method": "GET", "path": "/employee/employment",
          "description": "Check employment", "conditional": False},
-        # If no employment: POST /employee/employment
+        # If no employment: POST /employee/employment + details
+        {"method": "GET", "path": "/salary/type",
+         "description": "Look up Fastlønn type (cached)", "conditional": False},
+        {"method": "GET", "path": "/salary/type",
+         "description": "Look up Bonus type (cached)", "conditional": False},
+        {"method": "POST", "path": "/salary/transaction",
+         "description": "Create salary transaction with payslip", "conditional": False},
         {"method": "GET", "path": "/ledger/account",
-         "description": "Look up salary account 5000 (cached)", "conditional": False},
-        {"method": "GET", "path": "/ledger/account",
-         "description": "Look up bank account 1920 (cached)", "conditional": False},
+         "description": "Look up payroll accounts (batch cached)", "conditional": False},
         {"method": "POST", "path": "/ledger/voucher",
-         "description": "Create payroll voucher (manual posting)", "conditional": False},
+         "description": "Create payroll voucher with tax/AGA/vacation", "conditional": False},
     ]
 
 
