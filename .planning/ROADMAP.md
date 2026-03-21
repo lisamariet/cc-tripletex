@@ -50,7 +50,7 @@ Plans:
 
 Plans:
 - [ ] 02-01-PLAN.md — Deploy Cloud Run + fiks compete.py tooling (score-beregning, submit-throttling)
-- [ ] 02-02-PLAN.md — Fiks parser-disambiguering og handler-robusthet for nullscore-tasks
+- [x] 02-02-PLAN.md — Fiks parser-disambiguering og handler-robusthet for nullscore-tasks
 - [ ] 02-03-PLAN.md — E2E-verifiser nullscore-fikser mot sandbox og deploy
 
 ### Phase 3: Effektivitet

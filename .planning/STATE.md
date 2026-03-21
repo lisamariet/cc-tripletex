@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-korrekthet-tier-3/01-02-PLAN.md
-last_updated: "2026-03-21T14:25:36.679Z"
+stopped_at: Completed 02-nullscore-fix/02-02-PLAN.md
+last_updated: "2026-03-21T15:04:18.544Z"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 7
+  completed_plans: 5
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** Maks poengscore på alle 30 oppgavetyper — perfekt korrekthet + effektivitetsbonus
-**Current focus:** Phase 01 — korrekthet-tier-3
+**Current focus:** Phase 02 — nullscore-fix
 
 ## Current Position
 
-Phase: 01 (korrekthet-tier-3) — EXECUTING
-Plan: 4 of 4
+Phase: 02 (nullscore-fix) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Plan: 4 of 4
 | Phase 01-korrekthet-tier-3 P01 | 45 | 1 tasks | 2 files |
 | Phase 01-korrekthet-tier-3 P04 | 2 | 2 tasks | 1 files |
 | Phase 01-korrekthet-tier-3 P02 | 90 | 1 tasks | 3 files |
+| Phase 02-nullscore-fix P02 | 15 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Recent decisions affecting current work:
 - [Phase 01-korrekthet-tier-3]: register_payment: agio/disagio konto 8060 (gain) / 8160 (loss) ved multi-valuta betaling
 - [Phase 01-korrekthet-tier-3]: register_timesheet: employees[]-array for multi-ansatt, POST /project/projectActivity foer timesheet-oppfoering
 - [Phase 01-korrekthet-tier-3]: Task 10 Nynorsk-fix: leverand[o\u00f8]rfaktura regex i parser sikrer korrekt klassifisering
+- [Phase 02-nullscore-fix]: Toveis disambiguering i parser: monthly+year_end-signal -> year_end_closing (keyword-regler evalueres top-down)
+- [Phase 02-nullscore-fix]: create_order: allerede korrekt orderLines-implementasjon, ingen endring
 
 ### Pending Todos
 
@@ -86,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T14:25:36.676Z
-Stopped at: Completed 01-korrekthet-tier-3/01-02-PLAN.md
+Last session: 2026-03-21T15:04:18.541Z
+Stopped at: Completed 02-nullscore-fix/02-02-PLAN.md
 Resume file: None

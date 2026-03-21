@@ -8,8 +8,8 @@
 ### Nullscore-diagnose og -fiks
 
 - [ ] **NULL-01**: Identifiser task_type for task 09, 11, 12, 17 via GCS-logger/submissions
-- [ ] **NULL-02**: Fiks parser-klassifisering for alle 4 nullscore-tasks
-- [ ] **NULL-03**: Fiks/opprett manglende handlers for nullscore-tasks
+- [x] **NULL-02**: Fiks parser-klassifisering for alle 4 nullscore-tasks
+- [x] **NULL-03**: Fiks/opprett manglende handlers for nullscore-tasks
 - [ ] **NULL-04**: Verifiser nullscore-fixer mot sandbox E2E
 
 ### Lav-score korrekthet
@@ -76,8 +76,8 @@
 | T3-05 | Phase 1 | Complete |
 | T3-06 | Phase 1 | Complete |
 | NULL-01 | Phase 2 | Pending |
-| NULL-02 | Phase 2 | Pending |
-| NULL-03 | Phase 2 | Pending |
+| NULL-02 | Phase 2 | Complete |
+| NULL-03 | Phase 2 | Complete |
 | NULL-04 | Phase 2 | Pending |
 | EFF-01 | Phase 3 | Pending |
 | EFF-02 | Phase 3 | Pending |
