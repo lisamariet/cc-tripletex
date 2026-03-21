@@ -1664,6 +1664,7 @@ Kommandoer:
   lb          Vis leaderboard task-detaljer
   errors      Detaljert 4xx-feilanalyse fra logger
   show-submission TS  Vis submission nærmest et tidspunkt (ISO-format)
+  identify-tasks  Identifiser task-typer via tx_tasks → submissions → GCS
         """,
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1745,6 +1746,9 @@ Kommandoer:
     # tasks command
     subparsers.add_parser("tasks", help="Aggregert status per oppgavetype (GCS + leaderboard)")
 
+    # identify-tasks command
+    subparsers.add_parser("identify-tasks", help="Identifiser task-typer via tx_tasks → submissions → GCS")
+
     # batch command
     batch_parser = subparsers.add_parser("batch", help="Submit N ganger med pause mellom")
     batch_parser.add_argument("count", type=int, help="Antall submissions")
@@ -1807,6 +1811,8 @@ Kommandoer:
         cmd_submit_track(args)
     elif args.command == "show-submission":
         cmd_show_submission(args)
+    elif args.command == "identify-tasks":
+        cmd_identify_tasks(args)
 
 
 # ──────────────────────────────────────────────
@@ -2436,6 +2442,180 @@ def cmd_submit_track(args: argparse.Namespace) -> None:
 def _fetch_all_changed_ids_local() -> list[str]:
     """Hjelpefunksjon — returnerer alltid tom liste (brukes kun for type-hint)."""
     return []
+
+
+def cmd_identify_tasks(args: argparse.Namespace) -> None:
+    """Identifiser task-typer ved å matche tx_tasks med submissions og GCS-logger."""
+    print("Synkroniserer GCS-data...")
+    sync_gcs_data()
+
+    print("Henter GCS-logger...")
+    gcs_logs = fetch_gcs_logs("results")
+    gcs_requests = fetch_gcs_logs("requests")
+
+    with make_client() as client:
+        # ── 1. Hent tx_tasks ──
+        print("Henter tx_tasks...")
+        resp_tx = client.get(f"{API_BASE}/tasks/{TASK_ID}/tx_tasks")
+        resp_tx.raise_for_status()
+        tx_tasks_raw = resp_tx.json()
+        if isinstance(tx_tasks_raw, dict):
+            tx_tasks = tx_tasks_raw.get("data") or tx_tasks_raw.get("tx_tasks") or []
+        elif isinstance(tx_tasks_raw, list):
+            tx_tasks = tx_tasks_raw
+        else:
+            tx_tasks = []
+        print(f"  {len(tx_tasks)} tx_tasks hentet")
+
+        # ── 2. Hent submissions ──
+        print("Henter submissions...")
+        submissions = normalize_submissions(fetch_submissions(client))
+        print(f"  {len(submissions)} submissions hentet")
+
+    # ── 3. Match tx_tasks → submissions → GCS task_type ──
+    rows: list[dict] = []
+
+    for tx_task in tx_tasks:
+        tx_id = tx_task.get("id", "")
+        last_attempt = tx_task.get("last_attempt_at", "")
+
+        # Derive short task number (last 2 chars or full id)
+        # tx_task_id format varies — try to extract the 2-digit suffix
+        short_id = tx_id[-2:] if len(tx_id) >= 2 else tx_id
+        # Strip leading zeros for lookup but keep for display
+        current_info = TASK_ID_MAP.get(short_id, {})
+        current_type = current_info.get("type", "unknown")
+        current_tier = current_info.get("tier", 0)
+
+        discovered_type = "?"
+        matched_sub_id = "-"
+        matched_sub_ts = "-"
+
+        if last_attempt:
+            # Parse last_attempt_at
+            try:
+                dt_attempt = datetime.fromisoformat(last_attempt.replace("Z", "+00:00")).replace(tzinfo=None)
+            except Exception:
+                dt_attempt = None
+
+            if dt_attempt:
+                # Find closest submission
+                best_sub = None
+                best_delta = timedelta(minutes=10)
+
+                for sub in submissions:
+                    sub_ts = sub.get("created_at") or sub.get("queued_at") or ""
+                    if not sub_ts:
+                        continue
+                    try:
+                        dt_sub = datetime.fromisoformat(sub_ts.replace("Z", "+00:00")).replace(tzinfo=None)
+                        delta = abs(dt_sub - dt_attempt)
+                        if delta < best_delta:
+                            best_delta = delta
+                            best_sub = sub
+                    except Exception:
+                        continue
+
+                if best_sub:
+                    matched_sub_id = str(best_sub.get("id", "?"))[:8]
+                    matched_sub_ts = format_timestamp(best_sub.get("created_at") or best_sub.get("queued_at"))
+                    # Look up task_type from GCS logs
+                    task_type_gcs = get_task_type_for_sub(best_sub, gcs_logs, gcs_requests)
+                    if task_type_gcs and task_type_gcs not in ("?", "", "unknown"):
+                        discovered_type = task_type_gcs
+
+        rows.append({
+            "tx_id": short_id,
+            "current_type": current_type,
+            "discovered_type": discovered_type,
+            "tier": current_tier,
+            "last_attempt": format_timestamp(last_attempt) if last_attempt else "-",
+            "matched_sub": matched_sub_id,
+            "matched_sub_ts": matched_sub_ts,
+        })
+
+    # Sort by task number
+    rows.sort(key=lambda r: int(r["tx_id"]) if r["tx_id"].isdigit() else 999)
+
+    # ── 4. Print table ──
+    print()
+    print(f"{BOLD}  Task-identifisering: tx_tasks → submissions → GCS task_type{RESET}")
+    print()
+    print(
+        f"  {'Task':>4}  {'T':>1}  {'Nåværende type':<28}  "
+        f"{'Oppdaget type':<28}  {'Match':>5}  "
+        f"{'Sist forsøk':<20}  {'Sub-ID':<10}"
+    )
+    sep = "  " + "─" * 110
+    print(sep)
+
+    updates: list[dict] = []
+
+    for r in rows:
+        tx_id = r["tx_id"]
+        current = r["current_type"]
+        discovered = r["discovered_type"]
+        tier = r["tier"]
+        last = r["last_attempt"]
+        sub_id = r["matched_sub"]
+
+        # Determine match status
+        if discovered == "?":
+            match_icon = f"{DIM}  ?  {RESET}"
+        elif current == discovered:
+            match_icon = f"{GREEN}  ✓  {RESET}"
+        elif current in ("unknown", "?"):
+            match_icon = f"{CYAN} NEW {RESET}"
+            updates.append(r)
+        else:
+            match_icon = f"{YELLOW} UPD {RESET}"
+            updates.append(r)
+
+        # Color discovered type
+        if discovered == "?":
+            disc_display = f"{DIM}{'?':<28}{RESET}"
+        elif current == discovered:
+            disc_display = f"{GREEN}{discovered:<28}{RESET}"
+        elif current in ("unknown", "?"):
+            disc_display = f"{CYAN}{discovered:<28}{RESET}"
+        else:
+            disc_display = f"{YELLOW}{discovered:<28}{RESET}"
+
+        tier_str = str(tier) if tier else "?"
+        print(
+            f"  {tx_id:>4}  {tier_str:>1}  {current:<28}  "
+            f"{disc_display}  {match_icon}  "
+            f"{last:<20}  {sub_id:<10}"
+        )
+
+    print(sep)
+
+    # ── 5. Summary ──
+    n_confirmed = sum(1 for r in rows if r["discovered_type"] != "?" and r["current_type"] == r["discovered_type"])
+    n_new = sum(1 for r in rows if r["discovered_type"] != "?" and r["current_type"] in ("unknown", "?"))
+    n_changed = sum(1 for r in rows if r["discovered_type"] != "?" and r["current_type"] not in ("unknown", "?", r["discovered_type"]))
+    n_unknown = sum(1 for r in rows if r["discovered_type"] == "?")
+
+    print()
+    print(
+        f"  {BOLD}Totalt: {len(rows)} tasks | "
+        f"{GREEN}Bekreftet: {n_confirmed}{RESET}{BOLD} | "
+        f"{CYAN}Nye: {n_new}{RESET}{BOLD} | "
+        f"{YELLOW}Endret: {n_changed}{RESET}{BOLD} | "
+        f"{DIM}Ukjent: {n_unknown}{RESET}"
+    )
+
+    if updates:
+        print(f"\n{BOLD}Foreslåtte oppdateringer for TASK_ID_MAP:{RESET}")
+        for r in updates:
+            old = r["current_type"]
+            new = r["discovered_type"]
+            tid = r["tx_id"]
+            tier = r["tier"]
+            print(f'    "{tid}": {{"type": "{new}", "tier": {tier}}},  '
+                  f'# {old} → {new}')
+
+    print()
 
 
 def cmd_batch(args: argparse.Namespace) -> None:
