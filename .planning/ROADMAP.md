@@ -46,10 +46,10 @@ Plans:
   2. E2E-tester for alle fire tasks passerer mot sandbox uten feil
   3. Submit av task 09 og/eller 17 (T2) gir score > 0 på leaderboard
   4. Submit av task 11 og/eller 12 (T1) gir score > 0 på leaderboard
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 
 Plans:
-- [ ] 02-01-PLAN.md — Deploy Cloud Run + fiks compete.py tooling (score-beregning, submit-throttling)
+- [x] 02-01-PLAN.md — Deploy Cloud Run + fiks compete.py tooling (score-beregning, submit-throttling)
 - [x] 02-02-PLAN.md — Fiks parser-disambiguering og handler-robusthet for nullscore-tasks
 - [ ] 02-03-PLAN.md — E2E-verifiser nullscore-fikser mot sandbox og deploy
 
@@ -89,6 +89,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Korrekthet & Tier 3 | 4/4 | Complete   | 2026-03-21 |
-| 2. Nullscore Fix | 0/3 | Not started | - |
+| 2. Nullscore Fix | 2/3 | In Progress|  |
 | 3. Effektivitet | 0/2 | Not started | - |
 | 4. T3 Robusthet | 0/1 | Not started | - |
