@@ -1460,10 +1460,10 @@ _EXPENSE_CATEGORY_MAP: dict[str, int] = {
     "overnatting": 7130,
     "accommodation": 7130,
     # Drivstoff / fuel
-    "drivstoff": 7142,
-    "fuel": 7142,
-    "bensin": 7142,
-    "diesel": 7142,
+    "drivstoff": 7140,
+    "fuel": 7140,
+    "bensin": 7140,
+    "diesel": 7140,
     # Telefon / phone
     "telefon": 6900,
     "phone": 6900,
