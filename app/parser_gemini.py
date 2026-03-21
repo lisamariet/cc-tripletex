@@ -61,23 +61,34 @@ def _get_access_token() -> str:
     raise RuntimeError("Cannot get GCP access token — neither ADC nor gcloud available")
 
 
-def _call_gemini(prompt: str, system_prompt: str) -> str:
-    """Call Gemini via Vertex AI REST API."""
+def _call_gemini(prompt: str, system_prompt: str, files: list[dict[str, Any]] | None = None) -> str:
+    """Call Gemini via Vertex AI REST API. Supports inline files (PDF, images)."""
     token = _get_access_token()
     url = (
         f"https://{_GCP_LOCATION}-aiplatform.googleapis.com/v1/"
         f"projects/{_GCP_PROJECT}/locations/{_GCP_LOCATION}/"
         f"publishers/google/models/{_GEMINI_MODEL}:generateContent"
     )
+
+    # Build parts: files first (so Gemini sees them before the text prompt)
+    parts: list[dict[str, Any]] = []
+    if files:
+        for f in files:
+            content_b64 = f.get("content_base64", "")
+            mime_type = f.get("mime_type", "application/pdf")
+            if content_b64:
+                parts.append({"inlineData": {"mimeType": mime_type, "data": content_b64}})
+                logger.info(f"[Gemini] Attached file: {f.get('filename', '?')} ({mime_type}, {len(content_b64)} chars b64)")
+    parts.append({"text": prompt})
+
     payload = {
-        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+        "contents": [{"role": "user", "parts": parts}],
         "systemInstruction": {"parts": [{"text": system_prompt}]},
         "generationConfig": {"temperature": 0, "maxOutputTokens": 2048},
     }
     resp = httpx.post(url, json=payload, headers={"Authorization": f"Bearer {token}"}, timeout=30.0)
 
     if resp.status_code == 401:
-        # Token expired, clear cache and retry once
         global _cached_token
         _cached_token = None
         token = _get_access_token()
@@ -98,13 +109,7 @@ def parse_task_gemini(
     logger.info(f"[Gemini] Parsing task: {prompt[:200]}")
 
     try:
-        user_text = prompt
-        if files:
-            file_descriptions = [f"[Attached file: {f.get('name', f.get('filename', 'unknown'))}]" for f in files]
-            if file_descriptions:
-                user_text = user_text + "\n\n" + "\n".join(file_descriptions)
-
-        raw_text = _call_gemini(user_text, SYSTEM_PROMPT)
+        raw_text = _call_gemini(prompt, SYSTEM_PROMPT, files=files)
         logger.info(f"[Gemini] Response: {raw_text[:500]}")
 
     except Exception as e:
