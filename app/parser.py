@@ -41,7 +41,8 @@ VALID_TASK_TYPES = {
 _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ("project_lifecycle", [
         r"(?:complete|full|entire|execute).{0,30}project.?lifecycle",
-        r"(?:komplett|fullstendig|utfør).{0,30}prosjekt.?livssyklus",
+        r"(?:komplett|fullstendig|utfør|gjennomfør).{0,30}prosjekt.?(?:livs)?syklus",
+        r"(?:hele|komplett).{0,20}prosjekt.?(?:livs)?syklus",
         r"ciclo.{0,20}vida.{0,20}(?:completo|del).{0,20}proyecto",
         r"cycle.{0,20}vie.{0,20}(?:complet|du).{0,20}projet",
         r"(?:kompletten?|vollständigen?).{0,20}Projekt.?(?:lebens)?zyklus",
