@@ -307,6 +307,7 @@ async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any
                         "count": 1,
                         "unitPriceExcludingVatCurrency": partial_amount,
                         "description": description,
+                        "vatType": {"id": 3},  # Utgående avgift, høy sats 25% (standard norsk B2B)
                     }
                 ],
             }
