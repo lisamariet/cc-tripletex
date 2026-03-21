@@ -597,7 +597,8 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 "projectName": f"E2E Timefoering {ts}",
                 "activityName": "Utvikling",
                 "hours": 7.5,
-                "date": "2026-03-20",
+                # Use today so project startDate == entry_date (no "before startDate" 422)
+                "date": __import__("datetime").date.today().isoformat(),
             },
             setup="find_first_employee",
             verify=VerifySpec(

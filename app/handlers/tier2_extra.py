@@ -396,31 +396,35 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         voucher_type_ref = {"id": vt_values[0]["id"]}
 
     # 4. Look up the correct INPUT VAT type (inngående mva) for supplier invoices.
-    #    Tripletex VAT type numbers:
-    #      1 = Utgående mva 25% (output, for sales) — NOT for purchases
-    #     11 = Inngående mva 25% (input, for purchases)
-    #     13 = Inngående mva 15% (input, food/beverage)
-    #     14 = Inngående mva 12% (input, transport/cinema)
-    # Also accept vatCode string from parser (same numbering scheme)
+    #    Tripletex /ledger/vatType number field (NOT the same as Norwegian MVA code):
+    #      "1"  = Fradrag inngående avgift, høy sats (25%) — standard inngående for purchases
+    #      "11" = Fradrag inngående avgift, middels sats (15%) — food/beverage
+    #      "13" = Fradrag inngående avgift, lav sats (12%) — transport/cinema
+    #       "0" = Ingen avgiftsbehandling (0%)
+    #    Norwegian BAS vatCode (from parser): 11=25%, 13=15%, 14=12%
+    #    These are DIFFERENT numbering schemes — map BAS code → Tripletex number.
     vat_code_str = str(fields.get("vatCode", "")).strip()
     if vat_code_str in ("11", "13", "14", "0"):
-        # Parser provided explicit vatCode — map to vatRate for consistency
-        vat_type_number = vat_code_str if vat_code_str != "0" else None
-        if vat_code_str == "13":
+        # Parser provided explicit BAS vatCode — map to Tripletex number and vatRate
+        if vat_code_str == "11":
+            vat_type_number = "1"   # Tripletex: inngående 25%
+            vat_rate = 25
+        elif vat_code_str == "13":
+            vat_type_number = "11"  # Tripletex: inngående 15%
             vat_rate = 15
         elif vat_code_str == "14":
+            vat_type_number = "13"  # Tripletex: inngående 12%
             vat_rate = 12
-        elif vat_code_str == "0":
+        else:  # "0"
+            vat_type_number = None
             vat_rate = 0
-        else:
-            vat_rate = 25
     else:
         vat_rate = fields.get("vatRate", 25)
-        vat_type_number = "11"  # default: Inngående mva 25%
+        vat_type_number = "1"   # default: Inngående mva 25% (Tripletex number "1")
         if vat_rate == 15:
-            vat_type_number = "13"
+            vat_type_number = "11"  # Tripletex: inngående 15%
         elif vat_rate == 12:
-            vat_type_number = "14"
+            vat_type_number = "13"  # Tripletex: inngående 12%
         elif vat_rate == 0:
             vat_type_number = None
 
@@ -585,10 +589,17 @@ async def _find_project(client: TripletexClient, name: str) -> dict | None:
     return values[0] if values else None
 
 
-async def _find_or_create_project(client: TripletexClient, name: str, pm_id: int | None = None) -> int | None:
+async def _find_or_create_project(
+    client: TripletexClient,
+    name: str,
+    pm_id: int | None = None,
+    entry_date: str | None = None,
+) -> int | None:
     """Find project by name or create a new one. Returns project ID.
 
     If pm_id is provided, use it as project manager (avoids extra GET /employee).
+    If entry_date is provided, project startDate is set to the earlier of entry_date
+    and today — so that timesheet entries on entry_date are always valid.
     """
     project = await _find_project(client, name)
     if project:
@@ -600,10 +611,16 @@ async def _find_or_create_project(client: TripletexClient, name: str, pm_id: int
         employees = resp.json().get("values", [])
         pm_id = employees[0]["id"] if employees else None
 
+    # Project startDate must be <= entry_date so timesheet entries are valid
+    today = date.today().isoformat()
+    start_date = today
+    if entry_date and entry_date < today:
+        start_date = entry_date
+
     payload: dict[str, Any] = {
         "name": name,
         "isInternal": False,
-        "startDate": date.today().isoformat(),
+        "startDate": start_date,
     }
     if pm_id:
         payload["projectManager"] = {"id": pm_id}
@@ -705,8 +722,8 @@ async def register_timesheet(client: TripletexClient, fields: dict[str, Any]) ->
     first_employee = await _find_employee(client, first_emp_fields)
     first_emp_id = first_employee["id"] if first_employee else None
 
-    # 2. Find or create project
-    project_id = await _find_or_create_project(client, project_name, pm_id=first_emp_id)
+    # 2. Find or create project (pass entry_date so startDate <= entry_date)
+    project_id = await _find_or_create_project(client, project_name, pm_id=first_emp_id, entry_date=entry_date)
     if not project_id:
         return {"status": "completed", "note": "Could not find or create project"}
 
