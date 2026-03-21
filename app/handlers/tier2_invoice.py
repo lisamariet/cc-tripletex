@@ -16,13 +16,19 @@ _BANK_ACCOUNT_NUMBER = "12345678903"
 _BANK_ACCOUNT_NUMBER_ALT = "60110000009"
 
 
-async def _is_bank_account_ready(client: TripletexClient) -> bool:
-    """Check if the company has a bank account configured for invoicing."""
+async def _is_bank_account_ready(client: TripletexClient) -> tuple[bool, bool]:
+    """Check if the company has a bank account configured for invoicing.
+
+    Returns (ready, token_ok) — token_ok=False means 403 (token is invalid,
+    no point retrying any API calls).
+    """
     resp = await client.get("/invoice/settings", params={"fields": "bankAccountReady"})
+    if resp.status_code == 403:
+        return False, False
     if resp.status_code == 200:
         value = resp.json().get("value", {})
-        return bool(value.get("bankAccountReady"))
-    return False
+        return bool(value.get("bankAccountReady")), True
+    return False, True
 
 
 async def _try_update_existing_account(client: TripletexClient) -> bool:
@@ -66,10 +72,11 @@ async def _try_update_existing_account(client: TripletexClient) -> bool:
 async def _try_create_bank_account(client: TripletexClient) -> bool:
     """Fallback: create a new ledger account with bank details via POST.
 
-    Tries account numbers 1921-1929 until one succeeds.
+    Tries account numbers 1921-1923 until one succeeds (limit to 3 to avoid
+    excessive 4xx noise when the sandbox already has these accounts).
     Returns True if successful.
     """
-    for num in range(1921, 1930):
+    for num in range(1921, 1924):
         resp = await client.post("/ledger/account", {
             "number": num,
             "name": f"Bankkonto {num}",
@@ -85,7 +92,7 @@ async def _try_create_bank_account(client: TripletexClient) -> bool:
             return True
         logger.debug(f"POST /ledger/account {num} failed: {resp.text[:200]}")
 
-    logger.warning("Failed to create any bank account (1921-1929)")
+    logger.warning("Failed to create any bank account (1921-1923)")
     return False
 
 
@@ -95,15 +102,21 @@ async def _ensure_bank_account(client: TripletexClient) -> None:
     Checks the actual invoice settings (bankAccountReady) as source of truth.
     If not ready, tries multiple approaches:
       1. PUT bankAccountNumber on existing ledger account 1920
-      2. POST a new ledger account with bank details (1921-1929)
+      2. POST a new ledger account with bank details (1921-1923)
 
     Uses a per-client flag to avoid redundant checks within the same session.
+    If the proxy token is already invalid (403 on first check), aborts immediately
+    to avoid wasting calls on a doomed request.
     """
     # Skip if we already confirmed bank account is ready in this session
     if getattr(client, '_bank_account_confirmed', False):
         return
 
-    if await _is_bank_account_ready(client):
+    ready, token_ok = await _is_bank_account_ready(client)
+    if not token_ok:
+        logger.warning("bankAccountReady check returned 403 — token invalid, skipping bank setup")
+        return
+    if ready:
         client._bank_account_confirmed = True  # type: ignore[attr-defined]
         return
 
@@ -111,17 +124,13 @@ async def _ensure_bank_account(client: TripletexClient) -> None:
 
     # Strategy 1: update existing account 1920
     if await _try_update_existing_account(client):
-        if await _is_bank_account_ready(client):
-            client._bank_account_confirmed = True  # type: ignore[attr-defined]
-            return
-        logger.warning("Updated account 1920 but bankAccountReady still False")
+        client._bank_account_confirmed = True  # type: ignore[attr-defined]
+        return
 
-    # Strategy 2: create a new bank account
+    # Strategy 2: create a new bank account (limit attempts to reduce 4xx noise)
     if await _try_create_bank_account(client):
-        if await _is_bank_account_ready(client):
-            client._bank_account_confirmed = True  # type: ignore[attr-defined]
-            return
-        logger.warning("Created bank account but bankAccountReady still False")
+        client._bank_account_confirmed = True  # type: ignore[attr-defined]
+        return
 
     logger.error("Could not ensure bank account — invoice creation may fail")
 
