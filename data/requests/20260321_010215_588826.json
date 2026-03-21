@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_010215_588826",
+  "prompt": "Opprett en ordre for kunden Stormberg AS (org.nr 870531559) med produktene Vedlikehold (4665) til 35200 kr og Systemutvikling (7431) til 4400 kr. Konverter ordren til faktura og registrer full betaling.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "RvXu1-Te7dmmzRCGqVl9RcS2BAXTC8wcOxdMapXUvKs"
+  }
+}

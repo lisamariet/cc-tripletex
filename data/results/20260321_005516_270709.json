@@ -1,0 +1,67 @@
+{
+  "timestamp": "20260321_005516_270709",
+  "prompt": "El cliente Solmar SL (org. nº 866440034) tiene una factura pendiente de 30000 NOK sin IVA por \"Almacenamiento en la nube\". Registre el pago completo de esta factura.",
+  "parsed_task": {
+    "task_type": "register_payment",
+    "fields": {
+      "customerName": "Solmar SL",
+      "customerOrgNumber": "866440034",
+      "amount": 30000,
+      "invoiceDescription": "Almacenamiento en la nube",
+      "lines": [
+        {
+          "description": "Almacenamiento en la nube",
+          "quantity": 1,
+          "unitPriceExcludingVat": 30000,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2090.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 2216.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 2327.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/paymentType",
+      "status": 200,
+      "duration_ms": 2115.6,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147558122/:payment",
+      "status": 200,
+      "duration_ms": 2226.8,
+      "error": null
+    }
+  ],
+  "total_calls": 5,
+  "error_count_4xx": 0,
+  "total_duration_ms": 12482.7,
+  "result": {
+    "status": "completed",
+    "taskType": "register_payment",
+    "invoiceId": 2147558122
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_005834_039234",
+  "prompt": "Registre 39 horas para Miguel Sánchez (miguel.sanchez@example.org) en la actividad \"Analyse\" del proyecto \"Migración de datos\" para Montaña SL (org. nº 802639244). Tarifa por hora: 1000 NOK/h. Genere una factura de proyecto al cliente basada en las horas registradas.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "V92dM-xfhEA0yxZpJeuqib_0zWpUKTN3a-yzc9CJeaI"
+  }
+}

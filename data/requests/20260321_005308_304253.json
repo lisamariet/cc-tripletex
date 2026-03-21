@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_005308_304253",
+  "prompt": "The customer Brightstone Ltd (org no. 846305157) has complained about the invoice for \"Data Advisory\" (38000 NOK excl. VAT). Issue a full credit note that reverses the entire invoice.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "amT2ljuJUjtX8R-KDUr84zjzeiO99GUJsxDaIAdmmEY"
+  }
+}

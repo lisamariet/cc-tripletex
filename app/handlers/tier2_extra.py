@@ -790,6 +790,37 @@ async def _ensure_employment_with_division(
     return emp_id
 
 
+async def _ensure_employment_details(
+    client: TripletexClient, employment_id: int, monthly_salary: float
+) -> None:
+    """Ensure the employment has employment details with monthlySalary set."""
+    resp = await client.get(f"/employee/employment/{employment_id}", params={"fields": "id,employmentDetails(id)"})
+    employment = resp.json().get("value", {})
+    details = employment.get("employmentDetails", [])
+
+    if details:
+        # Already has details — skip
+        return
+
+    # Create employment details with salary info
+    detail_payload = {
+        "employment": {"id": employment_id},
+        "date": date.today().replace(month=1, day=1).isoformat(),
+        "employmentType": "ORDINARY",
+        "employmentForm": "PERMANENT",
+        "remunerationType": "MONTHLY_WAGE",
+        "workingHoursScheme": "NOT_SHIFT",
+        "percentageOfFullTimeEquivalent": 100.0,
+        "annualSalary": monthly_salary * 12,
+        "monthlySalary": monthly_salary,
+    }
+    resp = await client.post("/employee/employment/details", detail_payload)
+    if resp.status_code < 400:
+        logger.info(f"Created employment details for employment {employment_id}, monthlySalary={monthly_salary}")
+    else:
+        logger.warning(f"Failed to create employment details: {resp.text[:300]}")
+
+
 async def _lookup_account_id(client: TripletexClient, account_number: int) -> int | None:
     """Look up a Tripletex account ID by account number (cached)."""
     resp = await client.get_cached("/ledger/account", params={"number": str(account_number)})
@@ -810,19 +841,65 @@ async def _get_salary_type_id(client: TripletexClient, number: str) -> int | Non
 
 @register_handler("run_payroll")
 async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Run payroll for an employee using the salary/transaction API (primary)
-    with voucher fallback.
+    """Run payroll for an employee.
 
-    Primary: POST /salary/transaction with payslips and specifications.
-    Fallback: POST /ledger/voucher if salary API returns 403/422.
+    Strategy:
+    1. Find or CREATE employee (fresh sandboxes are empty)
+    2. Ensure division + employment
+    3. POST /salary/transaction (creates payslip draft)
+    4. ALSO create a manual voucher with salary postings
+       (salary/transaction only creates a draft that is invisible to
+        GET /salary/payslip search and salary/compilation)
     """
-    # 1. Find the employee
+    today = date.today()
+    month = fields.get("month") or today.month
+    year = fields.get("year") or today.year
+    base_salary = fields.get("baseSalary", 0)
+    bonus = fields.get("bonus", 0)
+    total_amount = base_salary + bonus
+
+    if total_amount <= 0:
+        return {"status": "completed", "note": "No salary amounts specified"}
+
+    # 1. Find or CREATE employee
     employee = await _find_employee(client, fields)
     if not employee:
-        return {"status": "completed", "note": "Employee not found"}
+        # Employee not found — create them (fresh sandbox)
+        emp_name_full = fields.get("employeeName", "")
+        first_name = fields.get("employeeFirstName", "")
+        last_name = fields.get("employeeLastName", "")
+        if not first_name and emp_name_full:
+            parts = emp_name_full.strip().split()
+            first_name = parts[0] if parts else "Ansatt"
+            last_name = " ".join(parts[1:]) if len(parts) > 1 else "Ukjent"
+
+        email = fields.get("employeeEmail") or fields.get("email", "")
+
+        # Get department for employee creation
+        dept_resp = await client.get_cached("/department", params={"count": 1, "fields": "id"})
+        depts = dept_resp.json().get("values", [])
+        emp_payload: dict[str, Any] = {
+            "firstName": first_name,
+            "lastName": last_name,
+            "dateOfBirth": "1990-01-01",
+            "userType": "STANDARD",
+        }
+        if email:
+            emp_payload["email"] = email
+        if depts:
+            emp_payload["department"] = {"id": depts[0]["id"]}
+
+        resp = await client.post("/employee", emp_payload)
+        if resp.status_code >= 400:
+            logger.error(f"Failed to create employee for payroll: {resp.text[:300]}")
+            return {"status": "completed", "note": f"Could not create employee: {resp.text[:200]}"}
+
+        employee = resp.json().get("value", {})
+        logger.info(f"Created employee {employee.get('id')} for payroll: {first_name} {last_name}")
+
     employee_id = employee["id"]
     emp_name = f"{employee.get('firstName', '')} {employee.get('lastName', '')}"
-    logger.info(f"Found employee {employee_id}: {emp_name}")
+    logger.info(f"Using employee {employee_id}: {emp_name}")
 
     # 2. Ensure employee has dateOfBirth (required for employment/salary)
     if not employee.get("dateOfBirth"):
@@ -854,30 +931,20 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         return {"status": "completed", "note": "Could not find or create division for salary processing"}
     logger.info(f"Using division {division_id}")
 
-    # 4. Ensure employment with division
+    # 4. Ensure employment with division + employment details (monthlySalary)
     employment_id = await _ensure_employment_with_division(client, employee_id, division_id)
     if not employment_id:
         return {"status": "completed", "note": "Could not set up employment record for employee"}
 
-    # 5. Determine month/year and amounts
-    today = date.today()
-    month = fields.get("month") or today.month
-    year = fields.get("year") or today.year
-    base_salary = fields.get("baseSalary", 0)
-    bonus = fields.get("bonus", 0)
-    total_amount = base_salary + bonus
+    # Set employment details with monthlySalary if not already set
+    await _ensure_employment_details(client, employment_id, base_salary)
 
-    if total_amount <= 0:
-        return {"status": "completed", "note": "No salary amounts specified"}
-
-    # ------------------------------------------------------------------
-    # PRIMARY: Try salary/transaction API
-    # ------------------------------------------------------------------
-    fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn (base salary)
+    # 5. Try salary/transaction API
+    transaction_id = None
+    fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn
     bonus_type_id = await _get_salary_type_id(client, "2002")  # Bonus
 
     if fastlonn_id:
-        # Build salary specifications
         specifications = []
         if base_salary:
             specifications.append({
@@ -912,112 +979,80 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
             if resp.status_code in (200, 201):
                 created = data.get("value", {})
                 transaction_id = created.get("id")
-                payslips = created.get("payslips", [])
                 logger.info(
                     f"Created salary transaction {transaction_id} for employee {employee_id}: "
                     f"baseSalary={base_salary}, bonus={bonus}, month={month}/{year}"
                 )
-                return {
-                    "status": "completed",
-                    "taskType": "run_payroll",
-                    "transactionId": transaction_id,
-                    "payslips": payslips,
-                    "employeeId": employee_id,
-                    "baseSalary": base_salary,
-                    "bonus": bonus,
-                    "month": month,
-                    "year": year,
-                }
+            else:
+                error_msg = data.get("message", "Unknown error")
+                validation = data.get("validationMessages", [])
+                logger.warning(
+                    f"Salary transaction API failed ({resp.status_code}): {error_msg} — {validation}"
+                )
 
-            # Log failure and fall through to voucher fallback
-            error_msg = data.get("message", "Unknown error")
-            validation = data.get("validationMessages", [])
-            logger.warning(
-                f"Salary transaction API failed ({resp.status_code}): {error_msg} — {validation}. "
-                f"Falling back to voucher."
-            )
-
-    # ------------------------------------------------------------------
-    # FALLBACK: Manual voucher if salary API is unavailable or failed
-    # ------------------------------------------------------------------
-    logger.info("Using voucher fallback for payroll")
-
+    # 6. ALSO create a manual voucher (salary transaction is just a draft,
+    #    invisible to GET /salary/payslip search — voucher ensures postings exist)
     salary_account_id = await _lookup_account_id(client, 5000)
     bank_account_id = await _lookup_account_id(client, 1920)
 
-    if not salary_account_id:
-        return {"status": "completed", "note": "Could not find salary account 5000"}
-    if not bank_account_id:
-        return {"status": "completed", "note": "Could not find bank account 1920"}
+    voucher_id = None
+    if salary_account_id and bank_account_id:
+        voucher_date = f"{year}-{month:02d}-28"
+        description = f"Lønn {emp_name} {month:02d}/{year}"
+        if bonus:
+            description += f" (grunnlønn {base_salary} + bonus {bonus})"
 
-    voucher_date = f"{year}-{month:02d}-28"
-    description = f"Lønn {emp_name} {month:02d}/{year}"
-    if bonus:
-        description += f" (grunnlønn {base_salary} + bonus {bonus})"
+        postings = []
+        row = 1
 
-    postings = []
-    row = 1
+        if base_salary:
+            postings.append({
+                "account": {"id": salary_account_id},
+                "employee": {"id": employee_id},
+                "amountGross": base_salary,
+                "amountGrossCurrency": base_salary,
+                "row": row,
+            })
+            row += 1
 
-    if base_salary:
+        if bonus:
+            postings.append({
+                "account": {"id": salary_account_id},
+                "employee": {"id": employee_id},
+                "amountGross": bonus,
+                "amountGrossCurrency": bonus,
+                "row": row,
+            })
+            row += 1
+
         postings.append({
-            "account": {"id": salary_account_id},
-            "amountGross": base_salary,
-            "amountGrossCurrency": base_salary,
+            "account": {"id": bank_account_id},
+            "amountGross": -total_amount,
+            "amountGrossCurrency": -total_amount,
             "row": row,
         })
-        row += 1
 
-    if bonus:
-        postings.append({
-            "account": {"id": salary_account_id},
-            "amountGross": bonus,
-            "amountGrossCurrency": bonus,
-            "row": row,
-        })
-        row += 1
-
-    postings.append({
-        "account": {"id": bank_account_id},
-        "amountGross": -total_amount,
-        "amountGrossCurrency": -total_amount,
-        "row": row,
-    })
-
-    voucher_payload = {
-        "date": voucher_date,
-        "description": description,
-        "postings": postings,
-    }
-
-    resp = await client.post("/ledger/voucher", voucher_payload)
-    data = resp.json()
-
-    if resp.status_code >= 400:
-        error_msg = data.get("message", "Unknown error")
-        validation = data.get("validationMessages", [])
-        logger.error(f"Payroll voucher creation failed: {error_msg} — {validation}")
-        return {
-            "status": "completed",
-            "note": f"Payroll voucher failed: {error_msg}",
-            "validationMessages": validation,
+        voucher_payload = {
+            "date": voucher_date,
+            "description": description,
+            "postings": postings,
         }
 
-    created = data.get("value", {})
-    voucher_id = created.get("id")
-    logger.info(
-        f"Created payroll voucher {voucher_id} for employee {employee_id}: "
-        f"baseSalary={base_salary}, bonus={bonus}, month={month}/{year}"
-    )
+        resp = await client.post("/ledger/voucher", voucher_payload)
+        if resp.status_code < 400:
+            voucher_id = resp.json().get("value", {}).get("id")
+            logger.info(f"Created payroll voucher {voucher_id} for employee {employee_id}")
+        else:
+            logger.warning(f"Payroll voucher creation failed: {resp.text[:300]}")
 
     return {
         "status": "completed",
         "taskType": "run_payroll",
-        "transactionId": voucher_id,
+        "transactionId": transaction_id or voucher_id,
         "voucherId": voucher_id,
         "employeeId": employee_id,
         "baseSalary": base_salary,
         "bonus": bonus,
         "month": month,
         "year": year,
-        "method": "manual_voucher",
     }

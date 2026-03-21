@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_003843_034079",
+  "prompt": "Erstellen Sie eine Rechnung für den Kunden Eichenhof GmbH (Org.-Nr. 936374492) mit drei Produktzeilen: Wartung (2878) zu 21850 NOK mit 25 % MwSt., Cloud-Speicher (5486) zu 4400 NOK mit 15 % MwSt. (Lebensmittel), und Systementwicklung (3795) zu 10650 NOK mit 0 % MwSt. (befreit).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "vb3idRSVnw1a_zIATq9YEmbzyX596rKY14W7-Xg8E3c"
+  }
+}

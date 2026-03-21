@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_005104_388591",
+  "prompt": "Registre una nota de gastos de viaje para Pablo Sánchez (pablo.sanchez@example.org) por \"Visita cliente Tromsø\". El viaje duró 2 días con dietas (tarifa diaria 800 NOK). Gastos: billete de avión 4000 NOK y taxi 450 NOK.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "eSE-qyIozIHKCgb5gPryZeCo9YrCw3C7sgl9ahw3v8Q"
+  }
+}

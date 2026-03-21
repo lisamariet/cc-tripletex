@@ -1,0 +1,111 @@
+{
+  "timestamp": "20260321_005104_388591",
+  "prompt": "Registre una nota de gastos de viaje para Pablo Sánchez (pablo.sanchez@example.org) por \"Visita cliente Tromsø\". El viaje duró 2 días con dietas (tarifa diaria 800 NOK). Gastos: billete de avión 4000 NOK y taxi 450 NOK.",
+  "parsed_task": {
+    "task_type": "create_travel_expense",
+    "fields": {
+      "employeeName": "Pablo Sánchez",
+      "employeeEmail": "pablo.sanchez@example.org",
+      "title": "Visita cliente Tromsø",
+      "destination": "Tromsø",
+      "costs": [
+        {
+          "description": "Per diem (2 days)",
+          "amount": 1600,
+          "currency": "NOK"
+        },
+        {
+          "description": "Billete de avión",
+          "amount": 4000,
+          "currency": "NOK"
+        },
+        {
+          "description": "Taxi",
+          "amount": 450,
+          "currency": "NOK"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 2059.5,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense",
+      "status": 201,
+      "duration_ms": 2090.5,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/travelExpense/costCategory",
+      "status": 200,
+      "duration_ms": 2152.3,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/travelExpense/paymentType",
+      "status": 200,
+      "duration_ms": 1915.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/travelExpense/rate",
+      "status": 422,
+      "duration_ms": 2116.7,
+      "error": "{\"status\":422,\"code\":23000,\"message\":\"Result set too large. Limit of 10000 reached.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"4f779483-6bd0-4ca3-8883-cb4dad6053fe\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/travelExpense/rateCategory",
+      "status": 200,
+      "duration_ms": 2249.4,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense/perDiemCompensation",
+      "status": 422,
+      "duration_ms": 1837.4,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Spesifiser avreisedato og returdato.\",\"path\":null,\"rootId\":null}],\"requestId\":\"e58d2997-c683-4830-ae64-7d60a2c918a7\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense/cost",
+      "status": 201,
+      "duration_ms": 2679.3,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense/cost",
+      "status": 201,
+      "duration_ms": 1977.0,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense/cost",
+      "status": 201,
+      "duration_ms": 2403.1,
+      "error": null
+    }
+  ],
+  "total_calls": 10,
+  "error_count_4xx": 2,
+  "total_duration_ms": 37143.8,
+  "result": {
+    "status": "completed",
+    "taskType": "create_travel_expense",
+    "travelExpenseId": 11146563
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "timestamp": "20260321_010139_280624",
+  "prompt": "Registrer 13 timar for Sigrid Neset (sigrid.neset@example.org) på aktiviteten \"Rådgivning\" i prosjektet \"Systemoppgradering\" for Nordlys AS (org.nr 836112784). Timesats: 1150 kr/t. Generer ein prosjektfaktura til kunden basert på dei registrerte timane.",
+  "parsed_task": {
+    "task_type": "register_timesheet",
+    "fields": {
+      "employeeName": "Sigrid Neset",
+      "employeeEmail": "sigrid.neset@example.org",
+      "activityName": "Rådgivning",
+      "projectName": "Systemoppgradering",
+      "hours": 13,
+      "hourlyRate": 1150,
+      "customerName": "Nordlys AS",
+      "customerOrgNumber": "836112784"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 2508.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 2463.3,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/activity",
+      "status": 200,
+      "duration_ms": 2048.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 2220.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2218.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 2241.1,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 2519.1,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401982894/:invoice",
+      "status": 200,
+      "duration_ms": 2453.1,
+      "error": null
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 20469.9,
+  "result": {
+    "status": "completed",
+    "taskType": "register_timesheet",
+    "created": {
+      "id": 175905972,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175905972",
+      "project": {
+        "id": 401980837,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/project/401980837"
+      },
+      "activity": {
+        "id": 5876350,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/activity/5876350"
+      },
+      "date": "2026-03-21",
+      "hours": 13.0,
+      "chargeableHours": 13.0,
+      "employee": {
+        "id": 18605225,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18605225"
+      },
+      "timeClocks": [],
+      "comment": "",
+      "locked": false,
+      "chargeable": false,
+      "invoice": null,
+      "hourlyRate": 0.0,
+      "hourlyCost": 0.0,
+      "hourlyCostPercentage": 0,
+      "projectChargeableHours": 13.0
+    },
+    "projectInvoice": {
+      "status": "completed",
+      "invoice": {
+        "id": 2147561375,
+        "version": 5,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147561375",
+        "invoiceNumber": 1,
+        "invoiceDate": "2026-03-21",
+        "customer": {
+          "id": 108305419,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108305419"
+        },
+        "creditedInvoice": 0,
+        "isCredited": false,
+        "invoiceDueDate": "2026-04-04",
+        "kid": "",
+        "invoiceComment": "",
+        "comment": "",
+        "orders": [
+          {
+            "id": 401982894,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/order/401982894"
+          }
+        ],
+        "orderLines": [
+          {
+            "id": 1607528628,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607528628"
+          }
+        ],
+        "travelReports": [],
+        "projectInvoiceDetails": [
+          {
+            "id": 1965751489,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965751489"
+          }
+        ],
+        "voucher": {
+          "id": 608882519,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608882519"
+        },
+        "deliveryDate": "2026-03-21",
+        "amount": 14950.0,
+        "amountCurrency": 14950.0,
+        "amountExcludingVat": 14950.0,
+        "amountExcludingVatCurrency": 14950.0,
+        "amountRoundoff": 0,
+        "amountRoundoffCurrency": 0,
+        "amountOutstanding": 14950.0,
+        "amountCurrencyOutstanding": 14950.0,
+        "amountOutstandingTotal": 14950.0,
+        "amountCurrencyOutstandingTotal": 14950.0,
+        "sumRemits": 0,
+        "currency": {
+          "id": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+        },
+        "isCreditNote": false,
+        "isCharged": true,
+        "isApproved": true,
+        "postings": [
+          {
+            "id": 3845069815,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845069815"
+          }
+        ],
+        "reminders": [],
+        "invoiceRemarks": "",
+        "invoiceRemark": null,
+        "isPeriodizationPossible": true,
+        "documentId": 1024186599
+      }
+    }
+  }
+}

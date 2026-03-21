@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_005439_014464",
+  "prompt": "Créez une commande pour le client Océan SARL (nº org. 984524706) avec les produits Licence logicielle (7127) à 6750 NOK et Stockage cloud (8796) à 9700 NOK. Convertissez la commande en facture et enregistrez le paiement intégral.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "1EePl09FGslHfNmAIojABLSXgqckkFaIKrlfPfb16H0"
+  }
+}
