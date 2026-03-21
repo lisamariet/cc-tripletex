@@ -292,10 +292,11 @@ async def create_order(client: TripletexClient, fields: dict[str, Any]) -> dict:
 
 @register_handler("register_supplier_invoice")
 async def register_supplier_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register a supplier invoice (innkjøpsfaktura) as a voucher with correct VAT and voucherType.
+    """Register a supplier invoice via POST /supplierInvoice.
 
-    Uses POST /ledger/voucher with voucherType = "Leverandørfaktura" so the voucher
-    is properly classified as a supplier invoice in Tripletex.
+    This creates a proper supplierInvoice entity (visible via GET /supplierInvoice)
+    with an embedded voucher.  The voucher postings are used as the credit side;
+    Tripletex auto-generates the AP credit posting.
     """
     # 1. Find or create the supplier
     supplier = await _find_supplier(client, fields)
@@ -322,6 +323,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     amount = abs(fields.get("amount", 0))
     invoice_date = fields.get("invoiceDate") or today
     invoice_number = fields.get("invoiceNumber") or ""
+    due_date = fields.get("dueDate") or fields.get("invoiceDueDate") or ""
 
     # 2. Look up accounts
     from app.handlers.tier3 import _lookup_account
@@ -344,10 +346,6 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         voucher_type_ref = {"id": vt_values[0]["id"]}
 
     # 4. Look up the correct input VAT type based on the rate from the prompt.
-    # Norwegian input VAT (inngående MVA) codes:
-    #   "1"  = 25% høy sats
-    #   "11" = 15% middels sats
-    #   "13" = 12% lav sats
     vat_rate = fields.get("vatRate", 25)
     vat_type_number = "1"  # default: 25%
     if vat_rate == 15:
@@ -364,8 +362,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         if vat_values:
             vat_type_ref = {"id": vat_values[0]["id"]}
 
-    # 5. Build the expense posting (debit) — with VAT type so Tripletex auto-creates the
-    # MVA posting.  amountGross is the full amount INCLUDING VAT.
+    # 5. Build voucher postings (expense debit + AP credit)
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
         "supplier": {"id": supplier_id},
@@ -375,10 +372,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     }
     if vat_type_ref:
         expense_posting["vatType"] = vat_type_ref
-    if invoice_number:
-        expense_posting["invoiceNumber"] = str(invoice_number)
 
-    # 6. Build the AP posting (credit 2400) — no VAT type, full gross amount
     ap_posting: dict[str, Any] = {
         "account": {"id": payable_id},
         "supplier": {"id": supplier_id},
@@ -386,16 +380,61 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         "amountGrossCurrency": -amount,
         "row": 2,
     }
-    if invoice_number:
-        ap_posting["invoiceNumber"] = str(invoice_number)
 
-    voucher_payload: dict[str, Any] = {
+    voucher_obj: dict[str, Any] = {
         "date": invoice_date,
         "description": f"Leverandørfaktura: {description}",
         "postings": [expense_posting, ap_posting],
     }
     if voucher_type_ref:
-        voucher_payload["voucherType"] = voucher_type_ref
+        voucher_obj["voucherType"] = voucher_type_ref
+
+    # 6. Build and POST the supplierInvoice payload
+    si_payload: dict[str, Any] = {
+        "invoiceDate": invoice_date,
+        "supplier": {"id": supplier_id},
+        "amountCurrency": amount,
+        "currency": {"id": 1},
+        "voucher": voucher_obj,
+    }
+    if invoice_number:
+        si_payload["invoiceNumber"] = str(invoice_number)
+    if due_date:
+        si_payload["invoiceDueDate"] = due_date
+
+    resp = await client.post("/supplierInvoice", si_payload)
+    data = resp.json()
+
+    if resp.status_code >= 400:
+        error_msg = data.get("message", "Unknown error")
+        validation = data.get("validationMessages", [])
+        logger.error(f"POST /supplierInvoice failed ({resp.status_code}): {error_msg} — {validation}")
+        # Fallback: create via /ledger/voucher if /supplierInvoice fails (e.g. 403)
+        return await _register_supplier_invoice_via_voucher(
+            client, fields, voucher_obj, invoice_number, supplier_id,
+        )
+
+    created = data.get("value", {})
+    si_id = created.get("id")
+    voucher_id = (created.get("voucher") or {}).get("id")
+    logger.info(f"Created supplier invoice: si_id={si_id}, voucher_id={voucher_id}")
+
+    return {
+        "status": "completed",
+        "taskType": "register_supplier_invoice",
+        "created": created,
+        "voucherId": voucher_id,
+    }
+
+
+async def _register_supplier_invoice_via_voucher(
+    client: TripletexClient,
+    fields: dict[str, Any],
+    voucher_payload: dict[str, Any],
+    invoice_number: str,
+    supplier_id: int,
+) -> dict:
+    """Fallback: register supplier invoice via POST /ledger/voucher."""
     if invoice_number:
         voucher_payload["externalVoucherNumber"] = str(invoice_number)
         voucher_payload["vendorInvoiceNumber"] = str(invoice_number)
@@ -406,7 +445,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if resp.status_code >= 400:
         error_msg = data.get("message", "Unknown error")
         validation = data.get("validationMessages", [])
-        logger.error(f"Supplier invoice voucher failed: {error_msg} — {validation}")
+        logger.error(f"Voucher fallback failed: {error_msg} — {validation}")
         return {
             "status": "completed",
             "note": f"Voucher creation failed: {error_msg}",
@@ -414,50 +453,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         }
 
     created = data.get("value", {})
-    voucher_id = created.get("id")
-    logger.info(f"Created supplier invoice voucher: {voucher_id}")
-
-    # Try to register the voucher as a proper supplier invoice via the
-    # supplierInvoice/voucher/{id}/postings endpoint.  This makes the invoice
-    # visible through GET /supplierInvoice which is what the competition checks.
-    if voucher_id:
-        try:
-            # Build OrderLinePosting items from the expense posting(s)
-            # The PUT endpoint expects debit postings only (the expense side).
-            postings_list = created.get("postings", [])
-            debit_postings = []
-            for p in postings_list:
-                gross = p.get("amountGross", 0)
-                if gross > 0:  # debit posting
-                    olp: dict[str, Any] = {"posting": {"id": p["id"]}}
-                    debit_postings.append(olp)
-
-            if debit_postings:
-                si_resp = await client.put(
-                    f"/supplierInvoice/voucher/{voucher_id}/postings",
-                    debit_postings,
-                    params={"sendToLedger": "false"},
-                )
-                if si_resp.status_code < 300:
-                    si_data = si_resp.json().get("value", {})
-                    si_id = si_data.get("id")
-                    logger.info(f"Registered supplier invoice via voucher postings: si_id={si_id}")
-                    # Return the supplierInvoice entity so verification can find it
-                    if si_id:
-                        return {
-                            "status": "completed",
-                            "taskType": "register_supplier_invoice",
-                            "created": si_data,
-                            "voucherId": voucher_id,
-                        }
-                else:
-                    logger.warning(
-                        f"supplierInvoice/voucher/{voucher_id}/postings failed "
-                        f"({si_resp.status_code}): {si_resp.text[:300]}"
-                    )
-        except Exception as e:
-            logger.warning(f"Failed to register supplier invoice postings: {e}")
-
+    logger.info(f"Created supplier invoice voucher (fallback): {created.get('id')}")
     return {"status": "completed", "taskType": "register_supplier_invoice", "created": created}
 
 

@@ -1,0 +1,277 @@
+{
+  "timestamp": "20260320_235906_403826",
+  "prompt": "Nous avons reçu la facture INV-2026-4914 du fournisseur Océan SARL (nº org. 853705209) de 56300 NOK TTC. Le montant concerne des services de bureau (compte 6500). Enregistrez la facture fournisseur avec la TVA déductible correcte (25 %).",
+  "parsed_task": {
+    "task_type": "register_supplier_invoice",
+    "fields": {
+      "supplierName": "Océan SARL",
+      "supplierOrgNumber": "853705209",
+      "amount": 56300,
+      "description": "services de bureau",
+      "invoiceNumber": "INV-2026-4914",
+      "expenseAccount": 6500,
+      "vatRate": 25
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 226.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 216.3,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 189.1,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 191.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 204.9,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 504.7,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/supplierInvoice/voucher/608879180/postings",
+      "status": 422,
+      "duration_ms": 204.5,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Can not put postings on a voucher that already have postings\",\"path\":null,\"rootId\":null}],\"requestId\":\"19e8106b-0a17-48bb-ab7a-7b3f8633e3fa\"}"
+    }
+  ],
+  "total_calls": 7,
+  "error_count_4xx": 1,
+  "total_duration_ms": 4148.5,
+  "result": {
+    "status": "completed",
+    "taskType": "register_supplier_invoice",
+    "created": {
+      "id": 608879180,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879180",
+      "date": "2026-03-20",
+      "number": 1,
+      "tempNumber": 0,
+      "year": 2026,
+      "description": "Leverandørfaktura: services de bureau",
+      "voucherType": {
+        "id": 10947166,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/10947166"
+      },
+      "reverseVoucher": null,
+      "postings": [
+        {
+          "id": 3845060783,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845060783",
+          "voucher": {
+            "id": 608879180,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879180"
+          },
+          "date": "2026-03-20",
+          "description": "Leverandørfaktura: services de bureau",
+          "account": {
+            "id": 461608723,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/461608723"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": {
+            "id": 108301029,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108301029"
+          },
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1"
+          },
+          "amount": 45040.0,
+          "amountCurrency": 45040.0,
+          "amountGross": 56300,
+          "amountGrossCurrency": 56300,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "INV-2026-4914",
+          "termOfPayment": null,
+          "row": 1,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": false,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845060784,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845060784",
+          "voucher": {
+            "id": 608879180,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879180"
+          },
+          "date": "2026-03-20",
+          "description": "Leverandørfaktura: services de bureau",
+          "account": {
+            "id": 461608516,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/461608516"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": {
+            "id": 108301029,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108301029"
+          },
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": -56300.0,
+          "amountCurrency": -56300.0,
+          "amountGross": -56300.0,
+          "amountGrossCurrency": -56300.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "INV-2026-4914",
+          "termOfPayment": null,
+          "row": 2,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845060785,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845060785",
+          "voucher": {
+            "id": 608879180,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879180"
+          },
+          "date": "2026-03-20",
+          "description": "Leverandørfaktura: services de bureau",
+          "account": {
+            "id": 461608538,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/461608538"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": null,
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": 11260.0,
+          "amountCurrency": 11260.0,
+          "amountGross": 11260.0,
+          "amountGrossCurrency": 11260.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 0,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": true,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        }
+      ],
+      "document": null,
+      "attachment": null,
+      "externalVoucherNumber": "INV-2026-4914",
+      "ediDocument": null,
+      "supplierVoucherType": null,
+      "wasAutoMatched": false,
+      "vendorInvoiceNumber": null,
+      "numberAsString": "1-2026"
+    }
+  }
+}
