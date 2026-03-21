@@ -1482,6 +1482,7 @@ def cmd_lb(args: argparse.Namespace) -> None:
         resp_us.raise_for_status()
         our_tasks = resp_us.json()
 
+        time.sleep(0.5)  # Rate limit: avoid 429 errors
         print(f"Henter task-detaljer for #1...")
         resp_top = client.get(f"{API_BASE}/tripletex/leaderboard/{top_team_id}")
         resp_top.raise_for_status()
