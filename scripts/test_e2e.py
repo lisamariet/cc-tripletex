@@ -575,7 +575,7 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 "description": "Kontorrekvisita",
             },
             verify=VerifySpec(
-                endpoint="/ledger/voucher",
+                endpoint="/supplierInvoice",
                 search_by_id=True,
                 checks=[
                     FieldCheck("id", 0, mode="gt"),
@@ -928,7 +928,7 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 "vatRate": 25,
             },
             verify=VerifySpec(
-                endpoint="/ledger/voucher",
+                endpoint="/supplierInvoice",
                 search_by_id=True,
                 checks=[
                     FieldCheck("id", 0, mode="gt"),

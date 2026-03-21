@@ -456,13 +456,14 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         except Exception as e:
             logger.warning(f"Could not look up department '{dept_name}': {e}")
 
-    # 5. Build voucher postings (expense debit only — Tripletex auto-generates
-    #    the AP credit posting for supplierInvoice entities).
-    # NOTE: Do NOT put supplier on the expense line — only on the AP line.
-    #       Tripletex will reject with "Leverandør mangler" if supplier is on
-    #       an expense account posting.
+    # 5. Build voucher postings (expense debit + AP credit).
+    # Tripletex /supplierInvoice requires BOTH postings:
+    #   - Expense debit posting WITH supplier reference on the expense account line
+    #   - AP credit posting (konto 2400) WITH supplier reference
+    # Without both postings + supplier ref on expense, POST /supplierInvoice returns 500.
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
+        "supplier": {"id": supplier_id},
         "amountGross": amount_gross,
         "amountGrossCurrency": amount_gross,
         "row": 1,
@@ -472,10 +473,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if department_ref:
         expense_posting["department"] = department_ref
 
+    ap_posting: dict[str, Any] = {
+        "account": {"id": payable_id},
+        "supplier": {"id": supplier_id},
+        "amountGross": -amount_gross,
+        "amountGrossCurrency": -amount_gross,
+        "row": 2,
+    }
+
     voucher_obj: dict[str, Any] = {
         "date": invoice_date,
         "description": f"Leverandørfaktura: {description}",
-        "postings": [expense_posting],
+        "postings": [expense_posting, ap_posting],
     }
     if voucher_type_ref:
         voucher_obj["voucherType"] = voucher_type_ref
@@ -500,20 +509,10 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         error_msg = data.get("message", "Unknown error")
         validation = data.get("validationMessages", [])
         logger.error(f"POST /supplierInvoice failed ({resp.status_code}): {error_msg} — {validation}")
-        # Fallback: create via /ledger/voucher if /supplierInvoice fails (e.g. 500/403)
-        # For plain vouchers, we need balanced postings (add AP credit side with supplier).
-        # The AP (accounts payable konto 2400) posting must have the supplier reference.
-        ap_posting: dict[str, Any] = {
-            "account": {"id": payable_id},
-            "supplier": {"id": supplier_id},
-            "amountGross": -amount_gross,
-            "amountGrossCurrency": -amount_gross,
-            "row": 2,
-        }
-        fallback_voucher = dict(voucher_obj)
-        fallback_voucher["postings"] = [expense_posting, ap_posting]
+        # Fallback: create via /ledger/voucher if /supplierInvoice still fails
+        # voucher_obj already has both expense + AP postings with supplier refs
         return await _register_supplier_invoice_via_voucher(
-            client, fields, fallback_voucher, invoice_number, supplier_id,
+            client, fields, voucher_obj, invoice_number, supplier_id,
         )
 
     created = data.get("value", {})
