@@ -884,6 +884,75 @@ def cmd_show(args: argparse.Namespace) -> None:
 
 
 # ──────────────────────────────────────────────
+#  show-submission command (lookup by timestamp)
+# ──────────────────────────────────────────────
+
+def cmd_show_submission(args: argparse.Namespace) -> None:
+    """Find and display the submission closest to a given timestamp."""
+    target_ts = args.timestamp
+    try:
+        dt_target = datetime.fromisoformat(target_ts.replace("Z", "+00:00"))
+        # Ensure timezone-aware
+        if dt_target.tzinfo is None:
+            dt_target = dt_target.replace(tzinfo=timezone.utc)
+    except Exception:
+        print(f"{RED}Ugyldig timestamp: {target_ts}{RESET}")
+        print("Forventet ISO-format, f.eks. 2026-03-21T23:02:26.833562+00:00")
+        return
+
+    with make_client() as client:
+        print("Henter submissions...")
+        submissions = normalize_submissions(fetch_submissions(client))
+
+    if not submissions:
+        print("Ingen submissions funnet.")
+        return
+
+    # Find closest submission by timestamp
+    best_sub = None
+    best_delta = None
+    for sub in submissions:
+        sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
+        if not sub_ts:
+            continue
+        try:
+            dt_sub = datetime.fromisoformat(sub_ts.replace("Z", "+00:00"))
+            if dt_sub.tzinfo is None:
+                dt_sub = dt_sub.replace(tzinfo=timezone.utc)
+            delta = abs((dt_sub - dt_target).total_seconds())
+            if best_delta is None or delta < best_delta:
+                best_delta = delta
+                best_sub = sub
+        except Exception:
+            continue
+
+    if best_sub is None:
+        print(f"{RED}Fant ingen submission nær {target_ts}{RESET}")
+        return
+
+    matched_ts = best_sub.get("queued_at") or best_sub.get("created_at") or ""
+    print(f"Fant submission med tidspunkt {format_timestamp(matched_ts)} (delta: {best_delta:.1f}s)")
+
+    # Sort to find the index (1-based, newest first)
+    sorted_subs = sorted(
+        submissions,
+        key=lambda s: s.get("queued_at") or "",
+        reverse=True,
+    )
+    sub_index = next(
+        (i + 1 for i, s in enumerate(sorted_subs) if s is best_sub),
+        None,
+    )
+
+    # Reuse cmd_show by creating a mock args object
+    class _ShowArgs:
+        number = sub_index
+        detail = getattr(args, "detail", False)
+
+    cmd_show(_ShowArgs())
+
+
+# ──────────────────────────────────────────────
 #  insights command (improved)
 # ──────────────────────────────────────────────
 
@@ -1594,6 +1663,7 @@ Kommandoer:
   compare     Sammenlign task-score med #1 på leaderboard
   lb          Vis leaderboard task-detaljer
   errors      Detaljert 4xx-feilanalyse fra logger
+  show-submission TS  Vis submission nærmest et tidspunkt (ISO-format)
         """,
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1696,6 +1766,21 @@ Kommandoer:
         help="Antall submissions (default: 1)",
     )
 
+    # show-submission command
+    show_sub_parser = subparsers.add_parser(
+        "show-submission",
+        help="Vis detaljer for submission nærmest et gitt tidspunkt (ISO-format)",
+    )
+    show_sub_parser.add_argument(
+        "timestamp",
+        help="Tidspunkt i ISO-format, f.eks. 2026-03-21T23:02:26.833562+00:00",
+    )
+    show_sub_parser.add_argument(
+        "--detail",
+        action="store_true",
+        help="Vis full request/response body for alle API-kall (debug trace)",
+    )
+
     args = parser.parse_args()
 
     if args.command == "status":
@@ -1720,6 +1805,8 @@ Kommandoer:
         cmd_tasks(args)
     elif args.command == "submit-track":
         cmd_submit_track(args)
+    elif args.command == "show-submission":
+        cmd_show_submission(args)
 
 
 # ──────────────────────────────────────────────
