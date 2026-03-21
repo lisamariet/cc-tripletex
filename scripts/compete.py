@@ -1443,11 +1443,26 @@ def cmd_compare(args: argparse.Namespace) -> None:
 def cmd_lb(args: argparse.Namespace) -> None:
     """Show all 30 tasks from leaderboard with attempts, score and task_type."""
     with make_client() as client:
+
+        def _fetch_with_retry(url: str, label: str, max_retries: int = 3) -> list | dict:
+            for attempt in range(max_retries):
+                if attempt > 0:
+                    wait = 2 ** attempt
+                    print(f"  Rate limited — venter {wait}s...")
+                    time.sleep(wait)
+                resp = client.get(url)
+                if resp.status_code == 429:
+                    continue
+                resp.raise_for_status()
+                return resp.json()
+            print(f"  {RED}Feil: Kunne ikke hente {label} etter {max_retries} forsøk (429){RESET}")
+            return []
+
         # Fetch leaderboard to find #1 team and our placement
         print("Henter leaderboard...")
-        resp_lb = client.get(f"{API_BASE}/tripletex/leaderboard")
-        resp_lb.raise_for_status()
-        leaderboard = resp_lb.json()
+        leaderboard = _fetch_with_retry(f"{API_BASE}/tripletex/leaderboard", "leaderboard")
+        if not leaderboard:
+            return
 
         # Sort by total score descending to find #1
         if isinstance(leaderboard, list):
@@ -1476,17 +1491,13 @@ def cmd_lb(args: argparse.Namespace) -> None:
                 our_team_name = team.get("team_name") or team.get("name", "oss")
                 break
 
-        # Fetch task details for us and #1
+        time.sleep(1)  # Small delay after leaderboard fetch
         print(f"Henter task-detaljer for oss ({our_team_name})...")
-        resp_us = client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
-        resp_us.raise_for_status()
-        our_tasks = resp_us.json()
+        our_tasks = _fetch_with_retry(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}", "våre tasks")
 
-        time.sleep(0.5)  # Rate limit: avoid 429 errors
+        time.sleep(1)
         print(f"Henter task-detaljer for #1...")
-        resp_top = client.get(f"{API_BASE}/tripletex/leaderboard/{top_team_id}")
-        resp_top.raise_for_status()
-        top_tasks = resp_top.json()
+        top_tasks = _fetch_with_retry(f"{API_BASE}/tripletex/leaderboard/{top_team_id}", "#1 tasks")
 
     # Build lookup dicts: tx_task_id -> {best_score, total_attempts}
     our_map: dict[str, dict] = {}
