@@ -2345,30 +2345,35 @@ def _fetch_all_changed_ids_local() -> list[str]:
 
 
 def cmd_batch(args: argparse.Namespace) -> None:
-    """Submit multiple times with true concurrent execution."""
+    """Submit with continuous slot-filling — sends a new submission as soon as a slot opens."""
     count = args.count
-    interval = args.interval
     max_concurrent = getattr(args, "max_concurrent", 3)
+    poll_interval = getattr(args, "interval", 10)
     endpoint = ENDPOINT_URL
     api_key = os.environ.get("API_KEY", "")
 
-    print(f"{BOLD}Batch submit: {count} submissions, maks {max_concurrent} samtidige, {interval}s mellom batcher{RESET}\n")
+    print(f"{BOLD}Batch submit: {count} submissions, maks {max_concurrent} samtidige, poller hver {poll_interval}s{RESET}\n")
 
     submitted = 0
+    completed_at_start = 0
+
     with make_client() as client:
+        # Count already-completed submissions for progress tracking
+        try:
+            resp = client.get(f"{API_BASE}/tasks/{TASK_ID}/submissions")
+            all_subs = resp.json() if resp.is_success else []
+            completed_at_start = sum(1 for s in all_subs if s.get("status") in ("completed", "failed", "error"))
+        except Exception:
+            pass
+
         while submitted < count:
-            # Wait for capacity
-            if not _wait_for_capacity(client, max_concurrent):
-                print(f"  {RED}Tidsavbrudd — for mange aktive submissions. Avbryter.{RESET}")
-                break
-
-            # Check how many slots are available
             active = _count_active_submissions(client)
-            slots = max(1, max_concurrent - active)
-            batch_size = min(slots, count - submitted)
 
-            # Fire off batch_size submissions rapidly
-            for j in range(batch_size):
+            # Fill available slots
+            slots = max(0, max_concurrent - active)
+            to_send = min(slots, count - submitted)
+
+            for j in range(to_send):
                 i = submitted + j
                 payload: dict[str, Any] = {"endpoint_url": f"{endpoint}{SOLVE_PATH}"}
                 if api_key:
@@ -2379,7 +2384,7 @@ def cmd_batch(args: argparse.Namespace) -> None:
                 if not resp.is_success:
                     print(f"  {RED}[{i+1}/{count}] Feilet ({resp.status_code}): {resp.text[:100]}{RESET}")
                     if resp.status_code == 429:
-                        print(f"  Rate limit — venter 60s...")
+                        print(f"  {YELLOW}Rate limit — venter 60s...{RESET}")
                         time.sleep(60)
                     continue
 
@@ -2387,14 +2392,26 @@ def cmd_batch(args: argparse.Namespace) -> None:
                 used = result.get("daily_submissions_used", "?")
                 max_sub = result.get("daily_submissions_max", "?")
                 print(f"  {GREEN}[{i+1}/{count}]{RESET} {result.get('id','?')[:8]}... "
-                      f"status={result.get('status','?')} ({used}/{max_sub} brukt)")
+                      f"sendt ({used}/{max_sub} brukt)")
 
-            submitted += batch_size
+            submitted += to_send
 
-            # Wait before next batch if more to send
+            # If more to send, poll until a slot opens
             if submitted < count:
-                print(f"  Sendt {batch_size} — venter {interval}s før neste batch...", flush=True)
-                time.sleep(interval)
+                waited = 0
+                max_wait = 600  # 10 min max wait per slot
+                while waited < max_wait:
+                    time.sleep(poll_interval)
+                    waited += poll_interval
+                    new_active = _count_active_submissions(client)
+                    if new_active < max_concurrent:
+                        if new_active < active:
+                            print(f"  {YELLOW}Slot ledig ({new_active}/{max_concurrent} aktive) — sender neste...{RESET}")
+                        break
+                    print(f"  ⏳ {new_active}/{max_concurrent} aktive — venter... ({waited}s)", end="\r", flush=True)
+                else:
+                    print(f"\n  {RED}Tidsavbrudd etter {max_wait}s. Avbryter.{RESET}")
+                    break
 
     print(f"\n{BOLD}Ferdig — {submitted} sendt. Sjekk resultater: python3 scripts/compete.py status{RESET}")
 
