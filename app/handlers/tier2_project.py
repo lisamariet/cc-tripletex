@@ -12,7 +12,11 @@ logger = logging.getLogger(__name__)
 
 
 async def _analyze_top_cost_accounts(client: TripletexClient, project_count: int, period: str | None) -> list[dict[str, Any]]:
-    """Fetch ledger postings and return the top-N cost accounts by net movement."""
+    """Fetch ledger postings in bulk and return the top-N cost accounts by net movement.
+
+    Uses a single bulk GET /ledger/posting (cost range 4000-7999) instead of
+    individual per-account /account/{id}/balance calls to avoid 80+ 4xx errors.
+    """
     from datetime import date
 
     # Parse period string "YYYY-MM-DD/YYYY-MM-DD"
@@ -23,37 +27,66 @@ async def _analyze_top_cost_accounts(client: TripletexClient, project_count: int
         date_from = parts[0].strip()
         date_to = parts[1].strip()
 
-    # Cost accounts are typically in range 4000–7999 (Norwegian chart of accounts)
-    resp = await client.get("/ledger/account", params={
-        "from": 0,
-        "count": 500,
-        "isApplicableForSupplierInvoice": False,
-    })
-    all_accounts = resp.json().get("values", [])
-    # Filter to cost accounts (4000–7999)
-    cost_accounts = [a for a in all_accounts if 4000 <= int(a.get("number", 0)) <= 7999]
+    # --- PRIMARY: bulk GET /ledger/posting for cost accounts 4000-7999 ---
+    postings: list[dict[str, Any]] = []
+    try:
+        resp = await client.get("/ledger/posting", params={
+            "dateFrom": date_from,
+            "dateTo": date_to,
+            "accountNumberFrom": "4000",
+            "accountNumberTo": "7999",
+            "from": 0,
+            "count": 1000,
+        })
+        if resp.status_code < 400:
+            postings = resp.json().get("values", [])
+    except Exception as exc:
+        logger.warning(f"[_analyze_top_cost_accounts] /ledger/posting failed: {exc}")
 
-    # Fetch postings for each account and sum up the movement
-    # Use /ledger/openPost or sum via /account/:id/balance — but simplest is to query postings
     account_movements: list[dict[str, Any]] = []
-    for acc in cost_accounts[:80]:  # Cap to avoid too many calls
-        acc_id = acc.get("id")
-        acc_number = acc.get("number")
-        acc_name = acc.get("name", str(acc_number))
-        try:
-            bal_resp = await client.get(f"/account/{acc_id}/balance", params={
-                "periodDateFrom": date_from,
-                "periodDateTo": date_to,
-            })
-            bal_data = bal_resp.json()
-            net = abs(bal_data.get("value", 0) or 0)
-            if net > 0:
-                account_movements.append({"id": acc_id, "number": acc_number, "name": acc_name, "movement": net})
-        except Exception:
-            continue
 
-    # Sort by movement descending, return top N
-    account_movements.sort(key=lambda x: x["movement"], reverse=True)
+    if postings:
+        # Aggregate in Python: group by account number, sum absolute amounts
+        agg: dict[str, dict[str, Any]] = {}
+        for p in postings:
+            acc = p.get("account") or {}
+            number = str(acc.get("number", ""))
+            if not number:
+                continue
+            if number not in agg:
+                agg[number] = {
+                    "number": number,
+                    "name": acc.get("name", number),
+                    "movement": 0.0,
+                }
+            agg[number]["movement"] += abs(float(p.get("amount", 0) or 0))
+
+        account_movements = list(agg.values())
+    else:
+        # --- FALLBACK: GET /ledger/account filtered to cost range, return top-N
+        #     by account number (deterministic, no per-account balance calls) ---
+        logger.info("[_analyze_top_cost_accounts] No postings found — using account fallback")
+        try:
+            acc_resp = await client.get("/ledger/account", params={
+                "accountNumberFrom": "4000",
+                "accountNumberTo": "7999",
+                "from": 0,
+                "count": 100,
+            })
+            if acc_resp.status_code < 400:
+                for acc in acc_resp.json().get("values", []):
+                    number = str(acc.get("number", ""))
+                    if number:
+                        account_movements.append({
+                            "number": number,
+                            "name": acc.get("name", number),
+                            "movement": 0.0,
+                        })
+        except Exception as exc:
+            logger.warning(f"[_analyze_top_cost_accounts] /ledger/account fallback failed: {exc}")
+
+    # Sort by movement descending (fallback: by number ascending for determinism)
+    account_movements.sort(key=lambda x: (-x["movement"], x["number"]))
     return account_movements[:project_count]
 
 
@@ -83,13 +116,14 @@ async def create_project(client: TripletexClient, fields: dict[str, Any]) -> dic
             project_name = f"{acc['number']} {acc['name']}"
             payload: dict[str, Any] = {
                 "name": project_name,
-                "isInternal": is_internal,
+                "isInternal": True,  # always True for cost-analysis projects
                 "startDate": fields.get("startDate") or today,
+                "number": str(acc["number"]),  # project number matches account number
             }
             if pm_id:
                 payload["projectManager"] = {"id": pm_id}
 
-            proj_resp = await client.post("/project", payload)
+            proj_resp = await client.post_with_retry("/project", payload)
             proj_data = proj_resp.json().get("value", {})
             proj_id = proj_data.get("id")
             logger.info(f"[create_project] Created analytical project '{project_name}' id={proj_id}")
