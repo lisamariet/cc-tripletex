@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_002554_723171",
+  "prompt": "Crie o produto \"Design web\" com número de produto 4775. O preço é 27300 NOK sem IVA, utilizando a taxa padrão de 25 %.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "dS9-A7axj_OpxkVaMH5UecFZhl2syEaYAWbhh2zUwQU"
+  }
+}

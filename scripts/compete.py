@@ -22,6 +22,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 API_BASE = "https://api.ainm.no"
 ENDPOINT_URL = "https://tripletex-agent-753459644453.europe-west1.run.app"
 TASK_ID = "cccccccc-cccc-cccc-cccc-cccccccccccc"  # Tripletex challenge task ID
+OUR_TEAM_ID = "ecfa24d3-9b1b-4ef2-a164-8568cf17839e"
 SOLVE_PATH = "/solve"
 
 COMMON_HEADERS = {
@@ -1085,6 +1086,153 @@ def _print_poll_result(sub: dict, timestamp: str) -> None:
 
 
 # ──────────────────────────────────────────────
+#  compare command
+# ──────────────────────────────────────────────
+
+def cmd_compare(args: argparse.Namespace) -> None:
+    """Compare our task scores with the #1 team on the leaderboard."""
+    with make_client() as client:
+        # 1. Fetch leaderboard to find #1 team
+        print("Henter leaderboard...")
+        resp_lb = client.get(f"{API_BASE}/tripletex/leaderboard")
+        resp_lb.raise_for_status()
+        leaderboard = resp_lb.json()
+
+        # Sort by total score descending to find #1
+        if isinstance(leaderboard, list):
+            lb_sorted = sorted(leaderboard, key=lambda t: safe_float(t.get("total_score", 0)), reverse=True)
+        else:
+            print(f"{RED}Uventet leaderboard-format{RESET}")
+            return
+
+        if not lb_sorted:
+            print("Tomt leaderboard.")
+            return
+
+        top_team = lb_sorted[0]
+        top_team_id = top_team.get("team_id") or top_team.get("id", "")
+        top_team_name = top_team.get("team_name") or top_team.get("name", "ukjent")
+        top_team_score = safe_float(top_team.get("total_score", 0))
+
+        # Find our placement
+        our_placement = "?"
+        our_total_from_lb = 0.0
+        our_team_name = "oss"
+        for i, team in enumerate(lb_sorted, 1):
+            tid = team.get("team_id") or team.get("id", "")
+            if tid == OUR_TEAM_ID:
+                our_placement = str(i)
+                our_total_from_lb = safe_float(team.get("total_score", 0))
+                our_team_name = team.get("team_name") or team.get("name", "oss")
+                break
+
+        # 2. Fetch task details for both teams
+        print(f"Henter task-detaljer for oss ({our_team_name})...")
+        resp_us = client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
+        resp_us.raise_for_status()
+        our_tasks = resp_us.json()
+
+        print(f"Henter task-detaljer for #1 ({top_team_name})...")
+        resp_top = client.get(f"{API_BASE}/tripletex/leaderboard/{top_team_id}")
+        resp_top.raise_for_status()
+        top_tasks = resp_top.json()
+
+    # Build lookup dicts: tx_task_id -> {best_score, total_attempts}
+    our_map: dict[str, dict] = {}
+    if isinstance(our_tasks, list):
+        for t in our_tasks:
+            tid = t.get("tx_task_id", "")
+            if tid:
+                our_map[tid] = t
+    elif isinstance(our_tasks, dict):
+        for t in our_tasks.get("tasks", our_tasks.get("data", [])):
+            tid = t.get("tx_task_id", "")
+            if tid:
+                our_map[tid] = t
+
+    top_map: dict[str, dict] = {}
+    if isinstance(top_tasks, list):
+        for t in top_tasks:
+            tid = t.get("tx_task_id", "")
+            if tid:
+                top_map[tid] = t
+    elif isinstance(top_tasks, dict):
+        for t in top_tasks.get("tasks", top_tasks.get("data", [])):
+            tid = t.get("tx_task_id", "")
+            if tid:
+                top_map[tid] = t
+
+    # Merge all task IDs
+    all_task_ids = sorted(set(list(our_map.keys()) + list(top_map.keys())))
+
+    # Build comparison rows
+    rows = []
+    sum_ours = 0.0
+    sum_top = 0.0
+    for tid in all_task_ids:
+        our_score = safe_float((our_map.get(tid) or {}).get("best_score", 0))
+        top_score = safe_float((top_map.get(tid) or {}).get("best_score", 0))
+        our_attempts = safe_int((our_map.get(tid) or {}).get("total_attempts", 0))
+        top_attempts = safe_int((top_map.get(tid) or {}).get("total_attempts", 0))
+        gap = our_score - top_score
+        sum_ours += our_score
+        sum_top += top_score
+
+        # Use short task ID (last 2 digits or first meaningful part)
+        short_id = tid[-2:] if len(tid) >= 2 else tid
+
+        rows.append({
+            "task_id": short_id,
+            "full_id": tid,
+            "our_score": our_score,
+            "top_score": top_score,
+            "gap": gap,
+            "our_attempts": our_attempts,
+            "top_attempts": top_attempts,
+        })
+
+    # Sort by gap ascending (biggest negative gap first = most to gain)
+    rows.sort(key=lambda r: r["gap"])
+
+    # Print output
+    total_gap = sum_ours - sum_top
+
+    print()
+    print(f"{BOLD}  SAMMENLIGNING MED #1 ({top_team_name} — {top_team_score:.2f} poeng){RESET}")
+    print(f"  {DIM}Vi er #{our_placement} ({our_team_name} — {sum_ours:.2f} poeng){RESET}")
+    print()
+    print(f"  {'Task':<6} {'Vår score':>10} {'#1 score':>10} {'Gap':>8} {'Forsøk':>10}")
+    print(f"  {'─' * 50}")
+
+    for row in rows:
+        gap = row["gap"]
+        if gap > 0.001:
+            color = GREEN
+        elif gap < -0.001:
+            color = RED
+        else:
+            color = GREEN
+
+        gap_str = f"{gap:+.2f}"
+        attempts_str = f"{row['our_attempts']}/{row['top_attempts']}"
+
+        print(f"  {color}{row['task_id']:<6} {row['our_score']:>10.4f} {row['top_score']:>10.4f} {gap_str:>8} {attempts_str:>10}{RESET}")
+
+    print(f"  {'─' * 50}")
+
+    # Sum line
+    sum_gap = sum_ours - sum_top
+    if sum_gap > 0.001:
+        color = GREEN
+    elif sum_gap < -0.001:
+        color = RED
+    else:
+        color = GREEN
+    print(f"  {color}{BOLD}{'Sum':<6} {sum_ours:>10.2f} {sum_top:>10.2f} {sum_gap:>+8.2f}{RESET}")
+    print()
+
+
+# ──────────────────────────────────────────────
 #  main
 # ──────────────────────────────────────────────
 
@@ -1099,6 +1247,7 @@ Kommandoer:
   insights    Dyp analyse av score og API-effektivitet
   poll        Overvåk nye submissions i sanntid
   submit      Trigger ny submission
+  compare     Sammenlign task-score med #1 på leaderboard
         """,
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1151,6 +1300,9 @@ Kommandoer:
         help="Maks ventetid i sekunder (default: 1800 = 30 min)",
     )
 
+    # compare command
+    subparsers.add_parser("compare", help="Sammenlign task-score med #1 på leaderboard")
+
     # errors command
     subparsers.add_parser("errors", help="Detaljert 4xx-feilanalyse fra logger")
 
@@ -1176,6 +1328,8 @@ Kommandoer:
         cmd_errors(args)
     elif args.command == "poll":
         cmd_poll(args)
+    elif args.command == "compare":
+        cmd_compare(args)
 
 
 # ──────────────────────────────────────────────

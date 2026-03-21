@@ -1,0 +1,17 @@
+{
+  "timestamp": "20260321_002936_711971",
+  "prompt": "Registre una nota de gastos de viaje para Laura López (laura.lopez@example.org) por \"Visita cliente Oslo\". El viaje duró 2 días con dietas (tarifa diaria 800 NOK). Gastos: billete de avión 3700 NOK y taxi 200 NOK.",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 5767.0,
+  "result": {
+    "status": "completed",
+    "note": "Fallback LLM error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZFHDse4d6bQwxq88ofC3'}"
+  }
+}
