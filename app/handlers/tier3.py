@@ -445,7 +445,7 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
     # Note: activeOnly param has inverted behaviour in some sandbox versions —
     # omit it to get all dimensions reliably.
     existing_dimension = None
-    resp = await client.get("/ledger/accountingDimensionName", params={"fields": "id,name,dimensionName,dimensionIndex,active"})
+    resp = await client.get("/ledger/accountingDimensionName", params={"fields": "id,dimensionName,dimensionIndex,active"})
     data = resp.json()
     for dim in data.get("values", []):
         if dim.get("dimensionName", "").lower() == dimension_name.lower():
