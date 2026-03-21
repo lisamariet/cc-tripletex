@@ -608,6 +608,18 @@ def cmd_status(args: argparse.Namespace) -> None:
     print(f"{BOLD}  Totalpoeng: {total_score:.1f} | Oppgaver med poeng: {tasks_with_score}/30 | Submissions i dag: {today_count}/300{RESET}")
     print()
 
+    # ── Filter by task type if specified ──
+    filter_type = getattr(args, "task_type_filter", None)
+    if filter_type:
+        filtered_subs = []
+        for s in submissions:
+            task_type = get_task_type_for_sub(s, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
+            if task_type == filter_type:
+                filtered_subs.append(s)
+        submissions = filtered_subs
+        print(f"  Filtrert på: {filter_type} ({len(submissions)} submissions)")
+        print()
+
     # ── Table ──
     total_subs = len(submissions)
     limit = getattr(args, "limit", None)
@@ -1576,6 +1588,12 @@ Kommandoer:
 
     # status command
     status_parser = subparsers.add_parser("status", help="Vis submissions og total score")
+    status_parser.add_argument(
+        "task_type_filter",
+        nargs="?",
+        default=None,
+        help="Filtrer på oppgavetype (f.eks. batch_create_department)",
+    )
     status_parser.add_argument(
         "-n", "--limit",
         type=int,
