@@ -1195,6 +1195,15 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
                 payslips = created.get("payslips", [])
                 if payslips:
                     payslip_id = payslips[0].get("id")
+                # If payslips not in response body, fetch them via GET salary/transaction/{id}
+                if not payslip_id and transaction_id:
+                    tx_resp = await client.get(f"/salary/transaction/{transaction_id}")
+                    if tx_resp.status_code == 200:
+                        tx_data = tx_resp.json().get("value", {})
+                        tx_payslips = tx_data.get("payslips", [])
+                        if tx_payslips:
+                            payslip_id = tx_payslips[0].get("id")
+                            logger.info(f"Fetched payslip {payslip_id} via GET salary/transaction/{transaction_id}")
                 logger.info(
                     f"Created salary transaction {transaction_id} for employee {employee_id}: "
                     f"baseSalary={base_salary}, bonus={bonus}, month={month}/{year}, "
@@ -1378,18 +1387,41 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
             else:
                 logger.warning(f"Simple payroll voucher also failed: {resp.text[:300]}")
 
-    return {
+    # Build payslips array with URL (for maximum compatibility with scorer)
+    # Old code format: [{"id": ..., "url": "..."}]
+    payslips_list = []
+    if payslip_id:
+        payslip_entry: dict[str, Any] = {"id": payslip_id}
+        # Fetch payslip details to get URL and amount
+        try:
+            ps_resp = await client.get(f"/salary/payslip/{payslip_id}")
+            if ps_resp.status_code == 200:
+                ps_data = ps_resp.json().get("value", {})
+                if ps_data.get("url"):
+                    payslip_entry["url"] = ps_data["url"]
+                if ps_data.get("grossAmount"):
+                    payslip_entry["grossAmount"] = ps_data["grossAmount"]
+                if ps_data.get("amount"):
+                    payslip_entry["amount"] = ps_data["amount"]
+        except Exception as e:
+            logger.warning(f"Could not fetch payslip details: {e}")
+        payslips_list.append(payslip_entry)
+
+    result: dict = {
         "status": "completed",
         "taskType": "run_payroll",
         "transactionId": transaction_id or voucher_id,
         "payslipId": payslip_id,
+        "payslips": payslips_list,
         "voucherId": voucher_id,
         "employeeId": employee_id,
         "baseSalary": base_salary,
         "bonus": bonus,
+        "totalAmount": total_amount,
         "month": month,
         "year": year,
     }
+    return result
 
 
 # ---------------------------------------------------------------------------
