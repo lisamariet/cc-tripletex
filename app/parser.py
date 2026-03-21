@@ -32,6 +32,7 @@ VALID_TASK_TYPES = {
     "year_end_closing",
     "correct_ledger_error",
     "monthly_closing",
+    "register_expense_receipt",
 }
 
 # Keyword patterns for inferring task type when LLM returns "unknown"
@@ -121,6 +122,13 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ]),
     ("create_credit_note", [
         r"kreditnota|credit.?note|nota de crédito|Gutschrift|note de crédit|avoir",
+    ]),
+    ("register_expense_receipt", [
+        r"kvittering|receipt|reçu|Quittung|recibo|ricevuta|kvitto",
+        r"(?:registrer?|bokfør|record|enregistr|regist[ea]r?|erfassen|registrar).{0,40}(?:kvittering|receipt|reçu|Quittung|recibo|ricevuta|kvitto)",
+        r"(?:utgift|expense|Ausgabe|dépense|gasto|despesa).{0,40}(?:kvittering|receipt|reçu|Quittung|recibo|avdeling|département|department|Abteilung)",
+        r"(?:kvittering|receipt|reçu|Quittung|recibo).{0,40}(?:utgift|expense|Ausgabe|dépense|gasto|despesa|avdeling|department)",
+        r"depense.*recu|recu.*depense|dépense.*reçu|reçu.*dépense",
     ]),
 ]
 
@@ -258,7 +266,8 @@ Supported task types and their fields:
     Fields: customerName*, customerOrgNumber, orderDate (YYYY-MM-DD), deliveryDate (YYYY-MM-DD), lines (array of {description, productNumber (if given in parentheses), quantity, unitPriceExcludingVat, vatCode}), convertToInvoice (bool — true if prompt asks to convert/invoice), registerPayment (bool — true if prompt asks to register payment)
 
 25. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
-    Fields: supplierName, supplierOrgNumber, organizationNumber, amount (gross total including VAT), description, invoiceDate (YYYY-MM-DD), expenseAccount (account number, default "4000"), invoiceNumber (the supplier's invoice reference, e.g. "INV-2026-4855"), vatRate (integer percent, e.g. 25 for 25%, default 25)
+    Fields: supplierName, supplierOrgNumber, organizationNumber, amount (gross total including VAT — extract from attached receipt/PDF if present), amountExcludingVat (number — net amount excl. VAT, extract from receipt if present), description, productName (name of the product/service purchased — extract from receipt/PDF), invoiceDate (YYYY-MM-DD), invoiceNumber (the supplier's invoice reference, e.g. "INV-2026-4855"), vatRate (integer percent, e.g. 25 for 25%, default 25), vatCode (Tripletex VAT code for INPUT VAT: "11" = 25% standard input, "13" = 15% food/middels input, "14" = 12% low/transport input, "0" = no VAT — default "11" for standard purchases), expenseAccount (account number — map based on purchase type: 6010=office supplies/kontorrekvisita, 6540=IT equipment/datautstyr, 6000=office furniture/kontormøbler, 5000=materials/materialer, 7140=travel/reise, 4000=general purchases; default "6010" if office supplies, "6540" if electronics/IT, "6000" if furniture/møbler), department (department name — extract from prompt, e.g. "Drift", "IT", "Salg")
+    RECEIPT/PDF EXTRACTION: If a receipt or invoice PDF/image is attached, extract ALL of the following from it: supplierName, supplierOrgNumber, amount (total inkl. MVA), amountExcludingVat (total ekskl. MVA), vatRate, invoiceDate, invoiceNumber, and productName (the main product/service). Do NOT leave amount as 0 if a receipt is attached — read it from the document.
 
 26. "register_timesheet" — Register hours/timesheet entry for one or more employees on a project/activity, AND optionally generate a project invoice to the customer based on the registered hours (registrere timer, Stunden erfassen, registar horas, enregistrer heures, prosjektfaktura, project invoice)
     Fields: employeeName, employeeEmail, projectName, activityName, hours* (number), date (YYYY-MM-DD), comment, hourlyRate (number — NOK per hour, extract if prompt mentions timesats/hourly rate/taxa horária/taux horaire/Stundensatz), customerName (the customer to invoice), customerOrgNumber (customer org number), projectBudget (number — total project budget/NOK if mentioned), employees (array — use when MULTIPLE employees are mentioned, each with: {name (full name), email (if provided), hours (number), activityName (if specified per employee)}), supplierName (name of supplier if a supplier cost is part of the project), supplierOrgNumber, supplierAmount (NOK amount of supplier cost if mentioned), supplierExpenseAccount (account number for supplier cost, default 4000)
@@ -286,7 +295,11 @@ Supported task types and their fields:
 33. "monthly_closing" — Perform monthly closing (månedsavslutning/Monatsabschluss/cierre mensual/clôture mensuelle/encerramento mensal): post accruals, depreciations, and provisions as vouchers
     Fields: month* (integer 1-12), year* (integer), accruals (array of {fromAccount (balance sheet account to credit, e.g. 1720), toAccount (expense account to debit, e.g. 6300), amount (number), description (string)}), depreciations (array of {account (expense account for depreciation, e.g. 6020), assetAccount (balance sheet asset account to credit, e.g. 1200), acquisitionCost (number — original cost of the asset), usefulLifeYears (number — useful life in years), description (string)}), provisions (array of {debitAccount (expense account, e.g. 5000), creditAccount (liability account, e.g. 2900), amount (number), description (string)} — also known as: avsetning (nb/nn), Rückstellung/Gehaltsrückstellung (de), provisión/dotación (es), provision salariale (fr), provisão salarial (pt))
 
-34. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
+34. "register_expense_receipt" — Register an expense from a receipt/kvittering (utgift fra kvittering / dépense du reçu / Ausgabe aus Quittung / gasto del recibo / despesa do recibo). Creates a voucher with debit on expense account and credit on bank (1920). Apply correct input VAT (inngående mva) if applicable. Link to department if specified.
+    Fields: description* (item name / what was purchased, e.g. "Skrivebordlampe", "Kontorstoler"), amount* (number — gross amount including VAT), date (YYYY-MM-DD — receipt date, default today), department (string — department name if mentioned, e.g. "Kvalitetskontroll", "Drift"), expenseAccount (integer — choose the most appropriate Norwegian expense account based on the item: 6500=kontorrekvisita/office supplies/desk lamp, 6540=kontormøbler/furniture/office chairs, 6300=leie lokaler, 7140=reise, 4000=varekjøp — default 6500), creditAccount (integer — default 1920 for bank), vatRate (integer percent — 25 for standard goods/services, 15 for food, 0 for exempt — default 25)
+    IMPORTANT: Infer expenseAccount from the item name: "Skrivebordlampe" / "lampe" / "lampa" → 6500; "Kontorstoler" / "stol" / "chair" / "chaise" / "Stuhl" / "silla" → 6540; "kontorrekvisita" / "papir" / "penn" → 6500. Default to 6500 if uncertain.
+
+35. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
 
 Examples:
 
@@ -336,7 +349,10 @@ Prompt: "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema'
 Output: {"taskType": "register_timesheet", "fields": {"projectName": "Actualización Sistema", "customerName": "Dorada SL", "customerOrgNumber": "888398554", "projectBudget": 460950, "employees": [{"name": "Carlos García", "email": "carlos.garcia@example.org", "hours": 40}, {"name": "Rafael García", "email": "rafael.garcia@example.org", "hours": 47}], "supplierName": "Estrella SL", "supplierOrgNumber": "913385853", "supplierAmount": 41650, "supplierExpenseAccount": 4000}, "confidence": 0.94, "reasoning": "Spanish project lifecycle prompt with multiple employees registering hours, supplier cost, and project invoice to customer."}
 
 Prompt: "Du har motteke ein leverandorfaktura (sjaa vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren viss den ikkje finst. Bruk rett utgiftskonto og inngaaande MVA."
-Output: {"taskType": "register_supplier_invoice", "fields": {"description": "Leverandørfaktura fra vedlagt PDF", "expenseAccount": 4000, "vatRate": 25}, "confidence": 0.90, "reasoning": "Norwegian Nynorsk prompt to register a supplier invoice from PDF. leverandorfaktura (Nynorsk) = leverandørfaktura (Bokmål)."}
+Output: {"taskType": "register_supplier_invoice", "fields": {"description": "Leverandørfaktura fra vedlagt PDF", "expenseAccount": 4000, "vatRate": 25, "vatCode": "11"}, "confidence": 0.90, "reasoning": "Norwegian Nynorsk prompt to register a supplier invoice from PDF. Extract all amounts, supplier info and product name from the attached PDF. leverandorfaktura (Nynorsk) = leverandørfaktura (Bokmål)."}
+
+Prompt: "Vi treng Kontorstoler fra denne kvitteringa bokfort pa avdeling Drift. Bruk rett utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling."
+Output: {"taskType": "register_supplier_invoice", "fields": {"productName": "Kontorstoler", "department": "Drift", "expenseAccount": 6000, "vatRate": 25, "vatCode": "11", "description": "Kontorstoler - avdeling Drift"}, "confidence": 0.92, "reasoning": "Nynorsk prompt: 'Kontorstoler' = office chairs → account 6000 (furniture/møbler). Department 'Drift' specified. 25% standard input VAT (vatCode 11). All amounts, supplierName and invoiceDate must be extracted from the attached receipt PDF/image."}
 
 Prompt: "Sett fastpris 430750 kr på prosjektet 'Automatisering' for Havbris AS (org.nr 967636665). Prosjektleder er Kari Olsen."
 Output: {"taskType": "set_project_fixed_price", "fields": {"projectName": "Automatisering", "customerName": "Havbris AS", "customerOrgNumber": "967636665", "fixedPrice": 430750, "projectManagerName": "Kari Olsen"}, "confidence": 0.96, "reasoning": "Norwegian prompt to create a project with a fixed price for a customer."}
@@ -358,6 +374,12 @@ Output: {"taskType": "monthly_closing", "fields": {"month": 3, "year": 2026, "ac
 
 Prompt: "Führen Sie den Monatsabschluss für März 2026 durch. Buchen Sie eine Gehaltsrückstellung: Soll 5000, Haben 2900, Betrag 38000 NOK."
 Output: {"taskType": "monthly_closing", "fields": {"month": 3, "year": 2026, "accruals": [], "depreciations": [], "provisions": [{"debitAccount": 5000, "creditAccount": 2900, "amount": 38000, "description": "Gehaltsrückstellung März 2026"}]}, "confidence": 0.95, "reasoning": "German monthly closing with salary provision (Gehaltsrückstellung)."}
+
+Prompt: "Nous avons besoin de la depense Skrivebordlampe de ce recu enregistree au departement Kvalitetskontroll. Utilisez le bon compte de charges et assurez le traitement correct de la TVA."
+Output: {"taskType": "register_expense_receipt", "fields": {"description": "Skrivebordlampe", "department": "Kvalitetskontroll", "expenseAccount": 6500, "vatRate": 25}, "confidence": 0.94, "reasoning": "French prompt to register a desk lamp expense from a receipt in the Kvalitetskontroll department. Skrivebordlampe is office equipment → account 6500 (kontorrekvisita). Standard 25% input VAT applies."}
+
+Prompt: "Vi treng Kontorstoler fra denne kvitteringa bokfort pa avdeling Drift. Bruk rett utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling."
+Output: {"taskType": "register_expense_receipt", "fields": {"description": "Kontorstoler", "department": "Drift", "expenseAccount": 6540, "vatRate": 25}, "confidence": 0.95, "reasoning": "Norwegian Nynorsk prompt to register office chairs (Kontorstoler) from a receipt for the Drift department. Furniture/chairs → account 6540 (kontormøbler). Standard 25% input VAT applies."}
 
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt

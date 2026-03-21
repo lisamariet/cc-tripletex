@@ -322,7 +322,17 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
 
     today = date.today().isoformat()
 
-    description = fields.get("description") or fields.get("invoiceDescription") or "Leverandørfaktura"
+    product_name = fields.get("productName") or ""
+    raw_description = fields.get("description") or fields.get("invoiceDescription") or ""
+    if product_name and raw_description:
+        description = f"{product_name} — {raw_description}"
+    elif product_name:
+        description = product_name
+    elif raw_description:
+        description = raw_description
+    else:
+        description = "Leverandørfaktura"
+
     amount_gross = abs(fields.get("amount", 0))  # Amount INCLUDING VAT (gross)
     invoice_date = fields.get("invoiceDate") or today
     invoice_number = fields.get("invoiceNumber") or ""
@@ -336,16 +346,25 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         except ValueError:
             due_date = ""
 
-    # Calculate amount excluding VAT
+    # Use parser-provided amountExcludingVat if available, otherwise calculate
     vat_rate = fields.get("vatRate", 25)
-    if vat_rate and vat_rate > 0:
+    if fields.get("amountExcludingVat"):
+        amount_excl_vat = abs(float(fields["amountExcludingVat"]))
+        # If we have excl. VAT but not gross, derive gross
+        if not amount_gross and amount_excl_vat:
+            amount_gross = round(amount_excl_vat * (1 + vat_rate / 100), 2)
+    elif vat_rate and vat_rate > 0:
         amount_excl_vat = round(amount_gross / (1 + vat_rate / 100), 2)
     else:
         amount_excl_vat = amount_gross
 
-    # 2. Look up accounts
-    from app.handlers.tier3 import _lookup_account
-    expense_account_nr = int(fields.get("expenseAccount", "4000"))
+    # 2. Look up accounts — use vatCode from parser if provided to map account
+    # Expense account: parser picks based on product type; fallback 4000
+    expense_account_nr_raw = fields.get("expenseAccount", "4000")
+    try:
+        expense_account_nr = int(expense_account_nr_raw)
+    except (ValueError, TypeError):
+        expense_account_nr = 4000
     expense_id = await _lookup_account(client, expense_account_nr)
     payable_id = await _lookup_account(client, 2400)
 
@@ -381,14 +400,28 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     #     11 = Inngående mva 25% (input, for purchases)
     #     13 = Inngående mva 15% (input, food/beverage)
     #     14 = Inngående mva 12% (input, transport/cinema)
-    vat_rate = fields.get("vatRate", 25)
-    vat_type_number = "11"  # default: Inngående mva 25%
-    if vat_rate == 15:
-        vat_type_number = "13"
-    elif vat_rate == 12:
-        vat_type_number = "14"
-    elif vat_rate == 0:
-        vat_type_number = None
+    # Also accept vatCode string from parser (same numbering scheme)
+    vat_code_str = str(fields.get("vatCode", "")).strip()
+    if vat_code_str in ("11", "13", "14", "0"):
+        # Parser provided explicit vatCode — map to vatRate for consistency
+        vat_type_number = vat_code_str if vat_code_str != "0" else None
+        if vat_code_str == "13":
+            vat_rate = 15
+        elif vat_code_str == "14":
+            vat_rate = 12
+        elif vat_code_str == "0":
+            vat_rate = 0
+        else:
+            vat_rate = 25
+    else:
+        vat_rate = fields.get("vatRate", 25)
+        vat_type_number = "11"  # default: Inngående mva 25%
+        if vat_rate == 15:
+            vat_type_number = "13"
+        elif vat_rate == 12:
+            vat_type_number = "14"
+        elif vat_rate == 0:
+            vat_type_number = None
 
     vat_type_ref = None
     if vat_type_number:
@@ -396,6 +429,27 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         vat_values = resp.json().get("values", [])
         if vat_values:
             vat_type_ref = {"id": vat_values[0]["id"]}
+
+    # 4b. Look up department if specified
+    department_ref = None
+    dept_name = fields.get("department") or ""
+    if dept_name:
+        try:
+            dept_resp = await client.get_cached("/department", params={"name": dept_name, "count": 10})
+            dept_values = dept_resp.json().get("values", [])
+            # Find exact (case-insensitive) match first, then partial
+            for dv in dept_values:
+                if dv.get("name", "").lower() == dept_name.lower():
+                    department_ref = {"id": dv["id"]}
+                    break
+            if not department_ref and dept_values:
+                department_ref = {"id": dept_values[0]["id"]}
+            if department_ref:
+                logger.info(f"Found department '{dept_name}' → id={department_ref['id']}")
+            else:
+                logger.warning(f"Department '{dept_name}' not found in Tripletex")
+        except Exception as e:
+            logger.warning(f"Could not look up department '{dept_name}': {e}")
 
     # 5. Build voucher postings (expense debit only — Tripletex auto-generates
     #    the AP credit posting for supplierInvoice entities).
@@ -410,6 +464,8 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     }
     if vat_type_ref:
         expense_posting["vatType"] = vat_type_ref
+    if department_ref:
+        expense_posting["department"] = department_ref
 
     voucher_obj: dict[str, Any] = {
         "date": invoice_date,
@@ -1316,4 +1372,135 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
         "bonus": bonus,
         "month": month,
         "year": year,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Expense receipt registration (utgiftsregistrering fra kvittering)
+# ---------------------------------------------------------------------------
+
+@register_handler("register_expense_receipt")
+async def register_expense_receipt(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Register an expense from a receipt via POST /ledger/voucher.
+
+    Creates a voucher with:
+      - DEBIT:  expense account (default 6500 — kontorrekvisita/office supplies)
+      - CREDIT: bank/cash account (default 1920)
+    Applies input VAT (inngående mva) if vatRate > 0.
+    Optionally links the voucher to a department via the department dimension.
+    """
+    from app.handlers.tier3 import _lookup_account
+
+    today = date.today().isoformat()
+    description = (
+        fields.get("description")
+        or fields.get("itemName")
+        or fields.get("receiptDescription")
+        or "Utgift fra kvittering"
+    )
+    amount_gross = abs(fields.get("amount", 0))
+    voucher_date = fields.get("date") or fields.get("receiptDate") or today
+    vat_rate = fields.get("vatRate", 25)
+
+    # Expense account: default 6500 (kontorrekvisita / office supplies).
+    # The LLM should infer a more specific account from the item name, e.g.:
+    #   6500 — kontorrekvisita (pens, paper, desk lamp / skrivebordslampe)
+    #   6540 — kontormøbler (Kontorstoler / office chairs)
+    #   6300 — leie lokaler (rent)
+    #   7140 — reise og diett (travel)
+    expense_account_nr = int(fields.get("expenseAccount", 6500))
+    credit_account_nr = int(fields.get("creditAccount", 1920))
+
+    # Look up account IDs
+    expense_id = await _lookup_account(client, expense_account_nr)
+    credit_id = await _lookup_account(client, credit_account_nr)
+
+    if not expense_id or not credit_id:
+        return {"status": "completed", "note": "Could not find required ledger accounts"}
+
+    # Look up input VAT type (inngående mva) for expense postings
+    vat_type_ref = None
+    if vat_rate and vat_rate > 0:
+        vat_type_number = "11"  # Inngående mva 25%
+        if vat_rate == 15:
+            vat_type_number = "13"
+        elif vat_rate == 12:
+            vat_type_number = "14"
+
+        resp = await client.get_cached("/ledger/vatType", params={"number": vat_type_number})
+        vat_values = resp.json().get("values", [])
+        if vat_values:
+            vat_type_ref = {"id": vat_values[0]["id"]}
+
+    # Look up department if specified
+    department_ref = None
+    department_name = fields.get("department") or fields.get("departmentName")
+    if department_name:
+        resp = await client.get_cached("/department", params={"name": department_name})
+        dept_values = resp.json().get("values", [])
+        # Prefer exact match (case-insensitive)
+        for d in dept_values:
+            if d.get("name", "").lower() == department_name.lower():
+                department_ref = {"id": d["id"]}
+                break
+        if not department_ref and dept_values:
+            department_ref = {"id": dept_values[0]["id"]}
+        if not department_ref:
+            logger.warning(f"Department '{department_name}' not found — proceeding without department")
+
+    # Build expense (debit) posting
+    expense_posting: dict[str, Any] = {
+        "account": {"id": expense_id},
+        "amountGross": amount_gross,
+        "amountGrossCurrency": amount_gross,
+        "row": 1,
+    }
+    if vat_type_ref:
+        expense_posting["vatType"] = vat_type_ref
+    if department_ref:
+        expense_posting["department"] = department_ref
+
+    # Build credit posting (bank / cash payment)
+    credit_posting: dict[str, Any] = {
+        "account": {"id": credit_id},
+        "amountGross": -amount_gross,
+        "amountGrossCurrency": -amount_gross,
+        "row": 2,
+    }
+    if department_ref:
+        credit_posting["department"] = department_ref
+
+    payload: dict[str, Any] = {
+        "date": voucher_date,
+        "description": description,
+        "postings": [expense_posting, credit_posting],
+    }
+
+    resp = await client.post("/ledger/voucher", payload)
+    data = resp.json()
+
+    if resp.status_code >= 400:
+        error_msg = data.get("message", "Unknown error")
+        validation = data.get("validationMessages", [])
+        logger.error(f"Expense receipt voucher failed: {error_msg} — {validation}")
+        return {
+            "status": "completed",
+            "note": f"Expense receipt registration failed: {error_msg}",
+            "validationMessages": validation,
+        }
+
+    created = data.get("value", {})
+    logger.info(
+        f"Created expense receipt voucher {created.get('id')}: "
+        f"{description}, amount={amount_gross}, dept={department_name}, "
+        f"expenseAccount={expense_account_nr}, creditAccount={credit_account_nr}"
+    )
+    return {
+        "status": "completed",
+        "taskType": "register_expense_receipt",
+        "created": created,
+        "voucherId": created.get("id"),
+        "amount": amount_gross,
+        "expenseAccount": expense_account_nr,
+        "department": department_name,
     }
