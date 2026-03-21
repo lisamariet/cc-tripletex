@@ -786,48 +786,68 @@ def cmd_insights(args: argparse.Namespace) -> None:
     print(f"    {BOLD}Sum beste poeng:{RESET}      {total_best:.1f}")
     print(f"    {BOLD}Unike oppgavetyper:{RESET}   {len(task_best)}/30")
 
-    # ── Per-task-type table (sorted by best score descending) ──
-    if task_best:
-        print(f"\n  {BOLD}Beste score per oppgavetype (sortert etter score):{RESET}")
-        print(f"    {'Oppgavetype':<28} {'Beste':>8} {'Norm':>6} {'Forsøk':>7} {'Snitt 4xx':>10} {'Status'}")
-        print(f"    {'─'*80}")
+    # ── Collect ALL known task types (from KNOWN_TASK_TYPES, registered handlers, GCS logs, and submissions) ──
+    all_task_types: set[str] = set(KNOWN_TASK_TYPES)
+    try:
+        from app.handlers import HANDLER_REGISTRY
+        all_task_types.update(k for k in HANDLER_REGISTRY.keys() if k != "unknown")
+    except ImportError:
+        pass
+    all_task_types.update(task_best.keys())
+    all_task_types.update(handler_stats_map.keys())
+    # Remove noise entries
+    all_task_types.discard("?")
+    all_task_types.discard("")
+    all_task_types.discard("unknown")
 
-        # Sort by best_norm descending
-        sorted_tasks = sorted(task_best.keys(), key=lambda t: task_best[t]["best_norm"], reverse=True)
+    # Ensure all task types have entries in task_best (fill with zeros for unseen)
+    for tt in all_task_types:
+        if tt not in task_best:
+            task_best[tt] = {
+                "best_raw": 0, "best_max": 0, "best_norm": 0, "count": 0,
+                "scores": [],
+            }
 
-        for task_type in sorted_tasks:
-            tb = task_best[task_type]
-            norm = tb["best_norm"]
-            color = score_color(norm)
+    # ── Per-task-type table (sorted by best score descending, then alpha) ──
+    print(f"\n  {BOLD}Beste score per oppgavetype (sortert etter score):{RESET}")
+    print(f"    {'Oppgavetype':<28} {'Beste':>8} {'Norm':>6} {'Forsøk':>7} {'Snitt 4xx':>10} {'Status'}")
+    print(f"    {'─'*80}")
+
+    # Sort by best_norm descending, then alphabetically
+    sorted_tasks = sorted(task_best.keys(), key=lambda t: (-task_best[t]["best_norm"], t))
+
+    for task_type in sorted_tasks:
+        tb = task_best[task_type]
+        norm = tb["best_norm"]
+        color = score_color(norm)
+
+        if tb["count"] == 0:
+            raw_str = "-"
+            norm_str = "-"
+        else:
             raw_str = f"{tb['best_raw']:.1f}/{tb['best_max']:.0f}"
             norm_str = f"{norm:.0%}"
 
-            # Get 4xx stats from GCS logs for this task type
-            avg_4xx_str = "-"
-            for ht, hs in handler_stats_map.items():
-                if ht == task_type:
-                    avg_4xx = hs["errors_4xx"] / hs["runs"] if hs["runs"] > 0 else 0
-                    avg_4xx_str = f"{avg_4xx:.1f}"
-                    break
+        # Get 4xx stats from GCS logs for this task type
+        avg_4xx_str = "-"
+        hs = handler_stats_map.get(task_type)
+        if hs and hs["runs"] > 0:
+            avg_4xx = hs["errors_4xx"] / hs["runs"]
+            avg_4xx_str = f"{avg_4xx:.1f}"
 
-            if norm >= 1.0:
-                status = f"{GREEN}perfekt{RESET}"
-            elif norm > 0:
-                status = f"{YELLOW}kan forbedres{RESET}"
-            else:
-                status = f"{RED}feilet{RESET}"
+        if tb["count"] == 0:
+            status = f"{DIM}ikke testet{RESET}"
+        elif norm >= 1.0:
+            status = f"{GREEN}perfekt{RESET}"
+        elif norm > 0:
+            status = f"{YELLOW}kan forbedres{RESET}"
+        else:
+            status = f"{RED}feilet{RESET}"
 
-            print(f"    {task_type:<28} {color}{raw_str:>8}{RESET} {color}{norm_str:>6}{RESET} {tb['count']:>7} {avg_4xx_str:>10} {status}")
+        print(f"    {task_type:<28} {color}{raw_str:>8}{RESET} {color}{norm_str:>6}{RESET} {tb['count']:>7} {avg_4xx_str:>10} {status}")
 
-    # ── Missing task types ──
-    seen_types = set(task_best.keys())
-    # We don't know the exact 30 types, but we can show what we know
-    unseen_from_known = [t for t in KNOWN_TASK_TYPES if t not in seen_types]
-    if unseen_from_known:
-        print(f"\n  {BOLD}Oppgavetyper vi ikke har truffet ennå:{RESET}")
-        for t in sorted(unseen_from_known):
-            print(f"    {DIM}• {t}{RESET}")
-        print(f"    {DIM}(NB: listen er basert på kjente typer, faktisk sett kan variere){RESET}")
+    print(f"    {'─'*80}")
+    print(f"    {BOLD}Totalt: {len(sorted_tasks)} oppgavetyper{RESET}")
 
     # ── Improvement opportunities ──
     improvable = {k: v for k, v in task_best.items() if 0 < v["best_norm"] < 1.0}
@@ -837,9 +857,9 @@ def cmd_insights(args: argparse.Namespace) -> None:
             tb = improvable[task_type]
             print(f"    {YELLOW}• {task_type}: {tb['best_norm']:.0%} ({tb['best_raw']:.1f}/{tb['best_max']:.0f}){RESET}")
 
-    failed_types = {k: v for k, v in task_best.items() if v["best_norm"] == 0}
+    failed_types = {k: v for k, v in task_best.items() if v["best_norm"] == 0 and v["count"] > 0}
     if failed_types:
-        print(f"\n  {BOLD}Feilet oppgaver (0 poeng):{RESET}")
+        print(f"\n  {BOLD}Feilet oppgaver (0 poeng, med forsøk):{RESET}")
         for task_type in sorted(failed_types.keys()):
             tb = failed_types[task_type]
             print(f"    {RED}• {task_type}: {tb['count']} forsøk{RESET}")

@@ -1,0 +1,78 @@
+{
+  "timestamp": "20260321_004008_461269",
+  "prompt": "Enregistrez le fournisseur Colline SARL avec le numéro d'organisation 915612865. E-mail : faktura@collinesarl.no.",
+  "parsed_task": {
+    "task_type": "create_supplier",
+    "fields": {
+      "name": "Colline SARL",
+      "organizationNumber": "915612865",
+      "email": "faktura@collinesarl.no",
+      "invoiceEmail": "faktura@collinesarl.no",
+      "overdueNoticeEmail": "faktura@collinesarl.no"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 201,
+      "duration_ms": 2547.0,
+      "error": null
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3818.8,
+  "result": {
+    "status": "completed",
+    "taskType": "create_supplier",
+    "created": {
+      "id": 108307107,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108307107",
+      "name": "Colline SARL",
+      "organizationNumber": "915612865",
+      "supplierNumber": 20001,
+      "customerNumber": 0,
+      "isSupplier": true,
+      "isCustomer": false,
+      "isInactive": false,
+      "email": "faktura@collinesarl.no",
+      "invoiceEmail": "faktura@collinesarl.no",
+      "overdueNoticeEmail": "faktura@collinesarl.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "isPrivateIndividual": false,
+      "showProducts": false,
+      "accountManager": null,
+      "postalAddress": {
+        "id": 405464855,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405464855"
+      },
+      "physicalAddress": {
+        "id": 405464854,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405464854"
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "bankAccountPresentation": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "ledgerAccount": {
+        "id": 365283951,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/365283951"
+      },
+      "language": "NO",
+      "isWholesaler": false,
+      "displayName": "Colline SARL (20001)",
+      "locale": "no_NO",
+      "website": ""
+    }
+  }
+}
