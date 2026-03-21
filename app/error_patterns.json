@@ -172,6 +172,13 @@
       "error_message": "Feltet må fylles ut.",
       "fix": "'department.id' er påkrevd — legg til en gyldig verdi",
       "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Brukertype kan ikke være \"0\" eller tom.",
+      "fix": "Forretningsregel: Brukertype kan ikke være \"0\" eller tom.",
+      "status": 422
     }
   ],
   "POST /employee/employment": [
