@@ -42,8 +42,10 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ("project_lifecycle", [
         r"(?:complete|full|entire|execute).{0,30}project.?lifecycle",
         r"(?:komplett|fullstendig|utfør).{0,30}prosjekt.?livssyklus",
-        r"(?:budget|budsjett).{0,80}(?:log.?time|registrer?.{0,10}timer).{0,80}(?:supplier.?cost|leverandør.?kostnad).{0,80}(?:invoice|faktura)",
-        r"(?:log.?time|registrer?.{0,10}timer).{0,80}(?:supplier.?cost|leverandør.?kostnad|supplier.{0,10}(?:cost|expense|invoice)).{0,80}(?:customer.?invoice|kundefaktura|create.{0,10}(?:a\s+)?(?:customer\s+)?invoice)",
+        r"ciclo.{0,20}vida.{0,20}(?:completo|del).{0,20}proyecto",
+        r"cycle.{0,20}vie.{0,20}(?:complet|du).{0,20}projet",
+        r"(?:kompletten?|vollständigen?).{0,20}Projekt.?(?:lebens)?zyklus",
+        r"ciclo.{0,20}vida.{0,20}(?:completo|do).{0,20}projeto",
     ]),
     ("year_end_closing", [
         r"årsavslutning|årsoppgjør|year.?end.?clos|cierre.?de.?año|clôture.?annuelle|Jahresabschluss|encerramento.?anual",
@@ -210,7 +212,7 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
         bool(re.search(r"budget|budsjett|Budget|Haushalt|orçamento|presupuesto", prompt_lower)),
         bool(re.search(r"(?:log|registrer?).{0,20}(?:time|timer|hours?|horas?|Stunden|heures)|timesheet|timeliste|\d+\s*(?:hours?|timer|Stunden|heures|horas?)", prompt_lower)),
         bool(re.search(r"supplier.{0,20}(?:cost|expense|invoice)|leverandør.{0,20}(?:kostnad|faktura)|Lieferant.{0,20}(?:kosten|rechnung)|co[uû]t.{0,20}fournisseur|custo.{0,20}fornecedor|costo.{0,20}proveedor", prompt_lower)),
-        bool(re.search(r"(?:customer|kunde|client|Kunde|cliente).{0,20}(?:invoice|faktura|facture|Rechnung|factura|fatura)|fakturer.{0,20}kunden|invoice.{0,20}(?:for|to).{0,20}(?:the|project)", prompt_lower)),
+        bool(re.search(r"(?:customer|kunde|client|Kunde|cliente).{0,20}(?:invoice|faktura|facture|Rechnung|factura|fatura)|fakturer.{0,20}kunden|invoice.{0,20}(?:for|to).{0,20}(?:the|project)|factura.{0,20}(?:al\s+)?client|fatura.{0,20}client|Rechnung.{0,20}(?:an\s+)?(?:den\s+)?Kund", prompt_lower)),
     ])
     if _plc_signals >= 3:
         logger.info(f"Multi-signal match ({_plc_signals}/4 signals) → project_lifecycle")
