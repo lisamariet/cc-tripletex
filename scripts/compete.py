@@ -749,15 +749,22 @@ def cmd_status(args: argparse.Namespace) -> None:
             ts_display = log_ts_raw[:8]
             sort_key = ""
 
+        raw_prompt = log.get("prompt") or ""
+        prompt_snippet = (raw_prompt[:50] + "...") if len(raw_prompt) > 50 else raw_prompt
+
+        confidence = safe_float(parsed.get("confidence", 0))
+
         log_entries.append({
             "sort_key": sort_key,
             "ts": ts_display,
             "task_type": task_type,
+            "confidence": confidence,
             "n_4xx": n_4xx,
             "n_5xx": n_5xx,
             "duration_ms": duration_ms,
             "rev": rev_str,
             "total_calls": len(api_calls),
+            "prompt": prompt_snippet,
         })
 
     # Sort by timestamp descending
@@ -777,8 +784,8 @@ def cmd_status(args: argparse.Namespace) -> None:
         print(f"  Viser {len(display_logs)} av {total_logs} logger")
         print()
 
-    print(f"  {'#':>3}  {'Tid':<8} {'Oppgavetype':<25} {'Kall':>4} {'4xx':>4} {'5xx':>4} {'Rev':>5} {'Varighet':>8}")
-    print(f"  {'─'*70}")
+    print(f"  {'#':>3}  {'Tid':<8} {'Oppgavetype':<25} {'Conf':>5} {'Kall':>4} {'4xx':>4} {'5xx':>4} {'Rev':>5} {'Varighet':>8}  {'Prompt'}")
+    print(f"  {'─'*131}")
 
     for i, entry in enumerate(display_logs, 1):
         task_visible = entry["task_type"][:25]
@@ -793,12 +800,29 @@ def cmd_status(args: argparse.Namespace) -> None:
         err_5xx_str = f"{RED}{n_5xx}{RESET}" if n_5xx > 0 else f"{DIM}{n_5xx}{RESET}"
         err_5xx_visible = str(n_5xx)
 
+        # Confidence column with color coding
+        conf = entry["confidence"]
+        if conf > 0:
+            conf_pct = f"{conf * 100:.0f}%" if conf <= 1.0 else f"{conf:.0f}%"
+            if conf >= 0.85:
+                conf_str = f"{GREEN}{conf_pct}{RESET}"
+            elif conf >= 0.70:
+                conf_str = f"{DIM}{conf_pct}{RESET}"
+            else:
+                conf_str = f"{RED}{conf_pct}{RESET}"
+            conf_visible = conf_pct
+        else:
+            conf_str = f"{DIM}-{RESET}"
+            conf_visible = "-"
+        pad_conf = 5 - len(conf_visible)
+        col_conf = " " * max(0, pad_conf) + conf_str
+
         pad_4xx = 4 - len(err_4xx_visible)
         pad_5xx = 4 - len(err_5xx_visible)
         col_4xx = " " * max(0, pad_4xx) + err_4xx_str
         col_5xx = " " * max(0, pad_5xx) + err_5xx_str
 
-        print(f"  {i:>3}  {entry['ts']:<8} {task_col} {entry['total_calls']:>4} {col_4xx} {col_5xx} {entry['rev']:>5} {dur_str:>8}")
+        print(f"  {i:>3}  {entry['ts']:<8} {task_col} {col_conf} {entry['total_calls']:>4} {col_4xx} {col_5xx} {entry['rev']:>5} {dur_str:>8}  {DIM}{entry['prompt']}{RESET}")
 
     # ── Table 2: Submissions + candidate GCS logs (nearest in time) ──
     print()

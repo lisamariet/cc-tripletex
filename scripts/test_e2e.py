@@ -387,6 +387,39 @@ def build_tier2_tests() -> list[E2ETestCase]:
             tier=2,
         ),
 
+        # T2-2b: register_payment with foreign currency (EUR) and disagio
+        E2ETestCase(
+            name="t2_register_payment_currency_disagio",
+            expected_task_type="register_payment",
+            expected_fields={},
+            prompt=(
+                f'We sent an invoice for 2052 EUR to "E2E Northwave {ts}" (org no. 883808568) '
+                f'when the exchange rate was 10.97 NOK/EUR. The customer has now paid, but the '
+                f'rate is 10.01 NOK/EUR. Register the payment and post the exchange rate '
+                f'difference (disagio) to the correct account.'
+            ),
+            direct_fields={
+                "customerName": f"E2E Northwave {ts}",
+                "customerOrgNumber": "883808568",
+                "foreignCurrency": "EUR",
+                "foreignAmount": 2052,
+                "invoiceExchangeRate": 10.97,
+                "paymentExchangeRate": 10.01,
+                "agioAccount": 8160,
+                "lines": [
+                    {"description": "Services", "quantity": 1, "unitPriceExcludingVat": 22510.44, "vatCode": "3"},
+                ],
+            },
+            verify=VerifySpec(
+                endpoint="/invoice",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("id", 0, mode="gt"),
+                ],
+            ),
+            tier=2,
+        ),
+
         # T2-3: create_credit_note — Norwegian prompt
         E2ETestCase(
             name="t2_create_credit_note",

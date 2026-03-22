@@ -980,7 +980,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             elif amount < 0:
                 # Supplier outgoing: "Betaling [Fournisseur/Proveedor/Lieferant/Leverandor] [Name]"
                 sup_match = _re.search(
-                    r"[Bb]etaling\s+(?:Fournisseur|Proveedor|Lieferant|Leverand[oø]r)?\s*(.+)",
+                    r"[Bb]etaling\s+(?:Supplier|Fournisseur|Proveedor|Lieferant|Leverand[oø]r)?\s*(.+)",
                     desc,
                 )
                 if sup_match:

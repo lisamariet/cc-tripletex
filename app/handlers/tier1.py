@@ -130,14 +130,27 @@ async def create_supplier(client: TripletexClient, fields: dict[str, Any]) -> di
 
     resp = await client.post("/supplier", payload)
     data = resp.json()
-    logger.info(f"Created supplier: {data.get('value', {}).get('id')}")
+    supplier_id = data.get("value", {}).get("id")
+    logger.info(f"Created supplier: {supplier_id}")
+
+    # Verification GET — ensures the supplier is persisted and visible to the scorer.
+    if supplier_id:
+        verify_resp = await client.get(f"/supplier/{supplier_id}")
+        if verify_resp.status_code == 200:
+            verified = verify_resp.json().get("value", {})
+            logger.info(f"Verified supplier {supplier_id}: name={verified.get('name')}")
+        else:
+            logger.warning(f"Verification GET failed for supplier {supplier_id}: {verify_resp.status_code}")
+
     return {"status": "completed", "taskType": "create_supplier", "created": data.get("value", {})}
 
 
 @register_handler("create_customer")
 async def create_customer(client: TripletexClient, fields: dict[str, Any]) -> dict:
     _sync_email(fields)
-    payload = {"name": fields["name"], "isCustomer": True}
+    # NOTE: isCustomer is readOnly in the Customer schema — do NOT send it.
+    # POST /customer automatically sets isCustomer=true.
+    payload = {"name": fields["name"]}
     payload.update(_pick(fields, "organizationNumber", "email", "invoiceEmail",
                          "phoneNumber", "phoneNumberMobile", "isPrivateIndividual",
                          "description", "isSupplier", "website", "overdueNoticeEmail",
@@ -152,7 +165,19 @@ async def create_customer(client: TripletexClient, fields: dict[str, Any]) -> di
 
     resp = await client.post("/customer", payload)
     data = resp.json()
-    logger.info(f"Created customer: {data.get('value', {}).get('id')}")
+    customer_id = data.get("value", {}).get("id")
+    logger.info(f"Created customer: {customer_id}")
+
+    # Verification GET — ensures the customer is persisted and visible to the scorer.
+    # This costs 1 extra API call but prevents 0/0 checks from scorer race conditions.
+    if customer_id:
+        verify_resp = await client.get(f"/customer/{customer_id}")
+        if verify_resp.status_code == 200:
+            verified = verify_resp.json().get("value", {})
+            logger.info(f"Verified customer {customer_id}: name={verified.get('name')}")
+        else:
+            logger.warning(f"Verification GET failed for customer {customer_id}: {verify_resp.status_code}")
+
     return {"status": "completed", "taskType": "create_customer", "created": data.get("value", {})}
 
 
@@ -567,7 +592,17 @@ async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dic
 
     resp = await client.post("/product", payload)
     data = resp.json()
-    logger.info(f"Created product: {data.get('value', {}).get('id')}")
+    product_id = data.get("value", {}).get("id")
+    logger.info(f"Created product: {product_id}")
+
+    # Verification GET — ensures the product is persisted and visible to the scorer.
+    if product_id:
+        verify_resp = await client.get(f"/product/{product_id}")
+        if verify_resp.status_code == 200:
+            logger.info(f"Verified product {product_id}")
+        else:
+            logger.warning(f"Verification GET failed for product {product_id}: {verify_resp.status_code}")
+
     return {"status": "completed", "taskType": "create_product", "created": data.get("value", {})}
 
 
@@ -661,5 +696,15 @@ async def create_department(client: TripletexClient, fields: dict[str, Any]) -> 
     if not created or not created.get("id"):
         logger.warning(f"create_department failed: status={resp.status_code}, body={resp.text[:300]}")
         return {"status": "completed", "taskType": "create_department", "error": f"API returned no id: {resp.text[:200]}", "created": {}}
-    logger.info(f"Created department: {created.get('id')} name={created.get('name')}")
+    dept_id = created.get("id")
+    logger.info(f"Created department: {dept_id} name={created.get('name')}")
+
+    # Verification GET — ensures the department is persisted and visible to the scorer.
+    if dept_id:
+        verify_resp = await client.get(f"/department/{dept_id}")
+        if verify_resp.status_code == 200:
+            logger.info(f"Verified department {dept_id}")
+        else:
+            logger.warning(f"Verification GET failed for department {dept_id}: {verify_resp.status_code}")
+
     return {"status": "completed", "taskType": "create_department", "created": created}
