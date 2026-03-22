@@ -559,7 +559,19 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
 
     dimension_name = fields.get("dimensionName", "")
     values = fields.get("values", [])
-    voucher_date = fields.get("voucherDate") or datetime.date.today().isoformat()
+    # Validate voucherDate — Gemini sometimes hallucinates old dates.
+    # Competition sandboxes are in current year; old dates cause 0 scores.
+    today = datetime.date.today()
+    raw_date = fields.get("voucherDate")
+    if raw_date:
+        try:
+            parsed_date = datetime.date.fromisoformat(raw_date)
+            if parsed_date.year < today.year:
+                logger.warning(f"[create_custom_dimension] voucherDate {raw_date} is in past year, using today")
+                raw_date = None
+        except ValueError:
+            raw_date = None
+    voucher_date = raw_date or today.isoformat()
     voucher_description = fields.get("voucherDescription", "")
     account_number = fields.get("accountNumber")
     amount = fields.get("amount")
