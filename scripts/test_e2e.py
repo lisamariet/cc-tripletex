@@ -10,6 +10,8 @@ Usage:
     python3 scripts/test_e2e.py --live       # Execute tests against sandbox
     python3 scripts/test_e2e.py --live -v    # Verbose output
     python3 scripts/test_e2e.py --live --only create_customer,create_supplier
+    python3 scripts/test_e2e.py --live --group invoice  # All tests where expected_task_type contains "invoice"
+    python3 scripts/test_e2e.py --live --group monthly,bank,expense  # Multiple groups
     python3 scripts/test_e2e.py --live --tier2   # Only Tier 2 tests
 """
 from __future__ import annotations
@@ -2172,6 +2174,29 @@ def build_tier2_tests() -> list[E2ETestCase]:
             tier=3,
         ),
 
+        # T3-xx: register_expense_receipt — vatLocked account 7350 (representasjon)
+        E2ETestCase(
+            name="t3_expense_receipt_voucher_7350_vatlocked",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                "Precisamos da despesa de Kaffemøte deste recibo registada "
+                "no departamento Salg. Use a conta de despesas correta e "
+                "garanta o tratamento correto do IVA."
+            ),
+            direct_fields={
+                "description": "Kaffemøte",
+                "amount": 12000,
+                "date": "2026-02-12",
+                "department": "Salg",
+                "expenseAccount": 7350,
+                "creditAccount": 1920,
+                "vatRate": 15,  # Parser may send wrong vatRate; handler must use vatLocked=0
+            },
+            verify=None,
+            tier=3,
+        ),
+
         # -----------------------------------------------------------------------
         # Project Lifecycle
         # -----------------------------------------------------------------------
@@ -3452,6 +3477,8 @@ def main():
                         help="Verbose output")
     parser.add_argument("--only", type=str, default="",
                         help="Comma-separated list of test names to run")
+    parser.add_argument("--group", type=str, default="",
+                        help="Comma-separated handler substrings to match on expected_task_type (e.g. invoice,payment)")
     parser.add_argument("--tier2", action="store_true",
                         help="Only run Tier 2 tests")
     parser.add_argument("--all", action="store_true",
@@ -3477,6 +3504,19 @@ def main():
             print(red(f"No test cases match: {args.only}"))
             print(f"Available: {', '.join(all_names)}")
             sys.exit(1)
+
+    if args.group:
+        groups = [g.strip() for g in args.group.split(",")]
+        test_cases = [
+            tc for tc in test_cases
+            if any(g in tc.expected_task_type for g in groups)
+        ]
+        if not test_cases:
+            all_types = sorted(set(tc.expected_task_type for tc in TIER1_TESTS + tier2_tests))
+            print(red(f"No tests match groups: {args.group}"))
+            print(f"Available task types: {', '.join(all_types)}")
+            sys.exit(1)
+        print(bold(f"Matched {len(test_cases)} tests for groups: {', '.join(groups)}"))
 
     if args.verbose:
         logging.getLogger("e2e").setLevel(logging.DEBUG)

@@ -1622,12 +1622,10 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
         expense_account_nr = _infer_expense_account(description)
         logger.info(f"Inferred expense account {expense_account_nr} from description '{description}'")
 
-    # Override: if parser picked wrong account, use keyword-based inference as correction
-    if expense_account_nr:
-        inferred = _infer_expense_account(description, default=0)
-        if inferred and inferred != int(expense_account_nr):
-            logger.info(f"Overriding expense account {expense_account_nr} → {inferred} based on description '{description}'")
-            expense_account_nr = inferred
+    # NOTE: Removed account override logic — parser is trusted when it provides
+    # an expenseAccount. The keyword-based _infer_expense_account can produce
+    # false positives (e.g. "Kontorstoler med transport" → 7140) and was causing
+    # regressions (0/10 score).
 
     if department_name and expense_account_nr:
         from app.handlers.tier3 import _lookup_account
@@ -1636,13 +1634,29 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
         amount_gross = abs(fields.get("amount", 0))
         vat_rate = fields.get("vatRate", 25)
 
-        # Representasjon/mat → 15% MVA (middels sats), not 25%
-        if int(expense_account_nr) in (7350, 6810) and vat_rate == 25:
-            vat_rate = 15
-            logger.info(f"MVA override: account {expense_account_nr} (mat/representasjon) → 15%")
+        # Resolve accounts — also check if expense account is VAT-locked
+        expense_acct_resp = await client.get_cached(
+            "/ledger/account", params={"number": str(int(expense_account_nr))}
+        )
+        expense_acct_values = expense_acct_resp.json().get("values", [])
+        if not expense_acct_values:
+            return {"status": "completed", "note": f"Account {expense_account_nr} not found"}
+        expense_acct = expense_acct_values[0]
+        expense_id = expense_acct["id"]
+        acct_vat_locked = expense_acct.get("vatLocked", False)
+        acct_vat_type_id = (expense_acct.get("vatType") or {}).get("id")
 
-        # Resolve accounts
-        expense_id = await _lookup_account(client, int(expense_account_nr))
+        if acct_vat_locked and acct_vat_type_id is not None:
+            # Account is locked to a specific VAT code — override parser's vatRate.
+            # vatType id=0 means "no VAT" (0%), so vat_rate should be 0.
+            # For other locked vatTypes we'd need to look up the percentage,
+            # but in practice locked accounts use vatType 0 (no VAT).
+            vat_rate = 0 if acct_vat_type_id == 0 else vat_rate
+            logger.info(
+                f"MVA override: account {expense_account_nr} vatLocked=true, "
+                f"using account vatType id={acct_vat_type_id}, vatRate={vat_rate}"
+            )
+
         bank_id = await _lookup_account(client, 1920)
 
         # Resolve department
@@ -1661,7 +1675,10 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
 
         # Resolve VAT type
         vat_type_id = None
-        if vat_rate and vat_rate > 0:
+        if acct_vat_locked and acct_vat_type_id is not None:
+            # Use the account's locked VAT type directly
+            vat_type_id = acct_vat_type_id
+        elif vat_rate and vat_rate > 0:
             if vat_rate == 15:
                 vt_code = "11"
             elif vat_rate == 12:
@@ -1682,7 +1699,7 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
             "amountGrossCurrency": amount_gross,
             "row": 1,
         }
-        if vat_type_id:
+        if vat_type_id is not None:
             debit_posting["vatType"] = {"id": vat_type_id}
         if dept_id:
             debit_posting["department"] = {"id": dept_id}

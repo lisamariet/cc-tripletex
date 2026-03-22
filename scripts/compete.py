@@ -359,8 +359,22 @@ def _infer_task_type_from_prompt(prompt: str) -> str | None:
     return None
 
 
+# Global set to track which GCS logs have been claimed by a submission (1-to-1 matching)
+_claimed_gcs_logs: set[str] = set()
+
+
+def reset_gcs_log_claims() -> None:
+    """Reset claimed GCS logs — call before each status/show batch."""
+    _claimed_gcs_logs.clear()
+
+
 def _find_best_gcs_log(sub: dict, gcs_logs: list[dict]) -> dict | None:
-    """Find the closest GCS log for a submission within 10 min window."""
+    """Find the closest UNCLAIMED GCS log for a submission within 10 min window.
+
+    Uses 1-to-1 matching: once a GCS log is matched to a submission, it cannot
+    be reused by another submission. This prevents duplicate task types when
+    two submissions are close in time.
+    """
     sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
     if not sub_ts or not gcs_logs:
         return None
@@ -376,6 +390,9 @@ def _find_best_gcs_log(sub: dict, gcs_logs: list[dict]) -> dict | None:
         log_ts = log.get("timestamp", "")
         if not log_ts:
             continue
+        # Skip already claimed logs
+        if log_ts in _claimed_gcs_logs:
+            continue
         try:
             dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
             delta = abs(dt_log - dt_sub)
@@ -384,6 +401,10 @@ def _find_best_gcs_log(sub: dict, gcs_logs: list[dict]) -> dict | None:
                 best_log = log
         except Exception:
             continue
+
+    # Claim this log so no other submission can use it
+    if best_log:
+        _claimed_gcs_logs.add(best_log.get("timestamp", ""))
 
     return best_log
 
@@ -430,32 +451,11 @@ def get_task_type_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[di
 
     Returns the task_type if known. If unknown, infers from prompt keywords.
     """
-    sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
-    if not sub_ts:
-        return "?"
-    try:
-        dt_sub = datetime.fromisoformat(sub_ts.replace("Z", "+00:00")).replace(tzinfo=None)
-    except Exception:
-        return "?"
-
+    best_log = _find_best_gcs_log(sub, gcs_logs)
     best_type = "?"
-    best_delta = timedelta(minutes=10)
-    best_log = None
-
-    for log in gcs_logs:
-        log_ts = log.get("timestamp", "")
-        if not log_ts:
-            continue
-        try:
-            dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
-            delta = abs(dt_log - dt_sub)
-            if delta < best_delta:
-                best_delta = delta
-                task = log.get("parsed_task", {}) or {}
-                best_type = task.get("task_type", "?")
-                best_log = log
-        except Exception:
-            continue
+    if best_log:
+        task = best_log.get("parsed_task", {}) or {}
+        best_type = task.get("task_type", "?")
 
     # If task_type is still unknown, infer from prompt keywords
     if best_type in ("?", "", "unknown"):
@@ -548,6 +548,7 @@ def cmd_status(args: argparse.Namespace) -> None:
     """Fetch and display recent submissions with summary."""
     # Always sync GCS data so task types are available
     sync_gcs_data()
+    reset_gcs_log_claims()  # Reset 1-to-1 matching for this batch
     with make_client() as client:
         print("Henter submissions...")
         submissions = normalize_submissions(fetch_submissions(client))
@@ -651,15 +652,21 @@ def cmd_status(args: argparse.Namespace) -> None:
         norm = sub.get("normalized_score")
         duration = safe_int(sub.get("duration_ms"))
         status = sub.get("status", "-")
-        task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
 
-        # Format task type: dim+italic for prompt snippets
-        if task_type.startswith("["):
-            task_display = f"{DIM}{ITALIC}{task_type[:25]}{RESET}"
-            task_visible = task_type[:25]
+        # Don't show task type for queued/processing submissions — we don't know yet
+        if status in ("queued", "processing"):
+            task_type = ""
+            task_display = f"{DIM}i kø...{RESET}"
+            task_visible = "i kø..."
         else:
-            task_display = task_type[:25]
-            task_visible = task_type[:25]
+            task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
+            # Format task type: dim+italic for prompt snippets
+            if task_type.startswith("["):
+                task_display = f"{DIM}{ITALIC}{task_type[:25]}{RESET}"
+                task_visible = task_type[:25]
+            else:
+                task_display = task_type[:25]
+                task_visible = task_type[:25]
 
         if raw is not None and mx is not None:
             norm_f = safe_float(norm)
@@ -691,11 +698,9 @@ def cmd_status(args: argparse.Namespace) -> None:
         # Revision from GCS log
         rev_str = get_revision_for_sub(sub, gcs_logs)
 
-        # Task ID, tier columns
-        clean_type = task_type if not task_type.startswith("[") else ""
-        task_id_str = get_task_id_for_type(clean_type) if clean_type else "-"
-        tier_val = get_task_tier(task_id_str) if task_id_str != "-" else 0
-        tier_str = str(tier_val) if tier_val else "-"
+        # Task ID not reliably known (task types rotate across IDs)
+        task_id_str = "-"
+        tier_str = "-"
 
         # Right-align score (compensate for ANSI)
         visible_pad = 12 - len(score_pad)
@@ -2561,6 +2566,9 @@ def cmd_submit_track(args: argparse.Namespace) -> None:
                 else:
                     score_str = f"{DIM}(ingen score){RESET}"
                 print(f"  {YELLOW}Ingen task-delta funnet{RESET} — Score: {score_str}  Type: {task_str}")
+
+            # Update before-snapshot for next iteration to avoid false delta detection
+            before = after
 
             if i < count - 1:
                 print(f"\n  Venter 5s for leaderboard-oppdatering...\n")

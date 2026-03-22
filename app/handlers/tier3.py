@@ -1923,33 +1923,22 @@ async def _correct_single_error(
                 already_reversed.add(vid)
                 result["reversedVoucherId"] = vid
 
-                # Step 3: Re-post with VAT type so Tripletex auto-generates the VAT line
-                # Look up inngående MVA vatType (number=1 for 25% input VAT)
-                vat_type_ref = None
-                vat_resp = await client.get_cached("/ledger/vatType", params={"number": "1"})
-                vat_types = vat_resp.json().get("values", [])
-                if vat_types:
-                    vat_type_ref = {"id": vat_types[0]["id"]}
-
+                # Step 3: Re-post with original net amount + explicit VAT line (Alt C)
+                # Reversal undid the original; now re-create with correct VAT treatment
                 source_acct_id = await _lookup_account(client, source_account)
                 credit_acct_id = await _lookup_account(client, credit_account)
-
-                # Post with amountGross = net + VAT, vatType triggers auto MVA line
-                debit_posting: dict[str, Any] = {
-                    "account": {"id": source_acct_id},
-                    "amountGross": gross_amount,
-                    "amountGrossCurrency": gross_amount,
-                    "row": 1,
-                }
-                if vat_type_ref:
-                    debit_posting["vatType"] = vat_type_ref
+                vat_acct_id = await _lookup_account(client, vat_account)
 
                 correction_payload = {
                     "date": reversal_date,
                     "description": f"Korreksjon: manglende MVA for konto {source_account}",
                     "postings": [
-                        debit_posting,
-                        {"account": {"id": credit_acct_id}, "amountGross": -gross_amount, "amountGrossCurrency": -gross_amount, "row": 2},
+                        # Original expense posting (net amount, same as before)
+                        {"account": {"id": source_acct_id}, "amountGross": amount, "amountGrossCurrency": amount, "row": 1},
+                        # The missing VAT line
+                        {"account": {"id": vat_acct_id}, "amountGross": vat_amount, "amountGrossCurrency": vat_amount, "row": 2},
+                        # Credit (bank/motkonto) for total gross
+                        {"account": {"id": credit_acct_id}, "amountGross": -gross_amount, "amountGrossCurrency": -gross_amount, "row": 3},
                     ],
                 }
                 corr_resp = await client.post_with_retry("/ledger/voucher", correction_payload)
