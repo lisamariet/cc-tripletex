@@ -40,7 +40,7 @@ TASK_ID_MAP: dict[str, dict] = {
     # T2 tasks (×2, max 4.0)
     "09": {"type": "set_project_fixed_price", "tier": 2},
     "10": {"type": "create_invoice", "tier": 2},           # identified from submissions
-    "11": {"type": "create_custom_dimension", "tier": 2},  # identified from submissions
+    "11": {"type": "register_supplier_invoice", "tier": 2},  # corrected — was create_custom_dimension
     "12": {"type": "run_payroll", "tier": 2},  # corrected — was batch_create_department
     "13": {"type": "create_travel_expense", "tier": 2},    # identified from submissions
     "14": {"type": "create_credit_note", "tier": 2},       # identified from submissions
