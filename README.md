@@ -1,6 +1,18 @@
 # Tripletex AI Accounting Agent — NM i AI 2026
 
-En AI-agent som løser regnskapsoppgaver i Tripletex for [NM i AI 2026](https://ainm.no)-konkurransen. Agenten mottar et naturlig språk-prompt (på 7 språk), parser oppgaven med LLM, og utfører de nødvendige API-kallene mot Tripletex.
+En AI-agent som løser regnskapsoppgaver i Tripletex for [NM i AI 2026](https://ainm.no)-konkurransen.
+
+Agenten mottar et naturlig språk-prompt (på **7 språk**: nb, en, es, pt, nn, de, fr), parser oppgaven med embedding-klassifisering og LLM, og utfører de nødvendige API-kallene mot Tripletex REST API. Hver submission starter med en fersk sandbox-konto — agenten må opprette alle forutsetninger selv.
+
+**Repo:** [github.com/lisamariet/cc-tripletex](https://github.com/lisamariet/cc-tripletex)
+
+### Nøkkeltall
+
+- **38 registrerte handlers** for 30 oppgavetyper (Tier 1–3)
+- **78 E2E-tester** mot sandbox
+- **Scoring: 72+ poeng** av ~120 mulig (maks 6.0 per Tier 3-oppgave)
+- **Deploy:** Cloud Run europe-west1
+- **Parser:** Vertex AI embeddings → Claude Haiku/Gemini → keyword-fallback
 
 ## Kom i gang
 
@@ -14,7 +26,7 @@ En AI-agent som løser regnskapsoppgaver i Tripletex for [NM i AI 2026](https://
 ### 1. Klon og installer
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/lisamariet/cc-tripletex.git
 cd cc-accounting-ai-tripletex
 pip install -r requirements.txt
 ```
@@ -75,13 +87,29 @@ python3 scripts/compete.py tasks            # Status per oppgavetype
 ## Arkitektur
 
 ```
-POST /solve → Parser (Embedding → LLM → Keyword) → Handler Registry → Tripletex API
+POST /solve
+    |
+    v
+Parser Pipeline (Embedding → LLM → Keyword)
+    |
+    v
+Handler Registry (38 handlers, Tier 1–3)
+    |
+    v
+TripletexClient (async httpx, smart retry, call tracking)
+    |
+    v
+Tripletex REST API (via proxy)
+    |
+    v
+GCS Logging (requests + results)
 ```
 
-- **Parser**: Multi-stage pipeline med embedding-klassifisering, LLM (Haiku/Gemini), og keyword-fallback
-- **35 registrerte handlers**: Dekker opprettelse, oppdatering, sletting, fakturering, bilag, lønn, bankavstemminger m.m.
-- **TripletexClient**: Async HTTP-klient med automatisk kallsporing og smart retry
-- **GCS-logging**: Alle requests og resultater lagres for analyse
+- **Multi-stage parser**: Vertex AI embedding-klassifisering (10ms first-pass) → LLM (Haiku/Gemini) med few-shot → keyword-fallback. Konfigurerbar via `PARSER_BACKEND`.
+- **38 registrerte handlers**: Dekker opprettelse, oppdatering, sletting, fakturering, bilag, lønn, bankavstemminger, årsavslutning m.m. Organisert i tier1, tier2 (invoice, travel, project, extra), tier3, og fallback.
+- **TripletexClient**: Async HTTP-klient med automatisk kallsporing (`CallTracker`), `post_with_retry` for 422-feilretting, og regelbasert payload-korreksjon.
+- **7 språk**: Prompts på norsk bokmål, nynorsk, engelsk, spansk, portugisisk, tysk og fransk.
+- **GCS-logging**: Alle requests og resultater lagres til `tripletex-agent-requests`-bøtta for analyse og debugging.
 
 ## Prosjektstruktur
 
@@ -134,10 +162,39 @@ docs/
 | `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini-modell |
 | `TRIPLETEX_DEBUG` | — | Aktiver detaljert API-logging |
 
+## Teknologier
+
+| Komponent | Teknologi |
+|---|---|
+| Backend | Python 3.12, FastAPI 0.115, Uvicorn |
+| HTTP-klient | httpx (async) |
+| LLM-parsing | Claude Haiku (primær), Gemini 2.5 Flash (alternativ) |
+| Embeddings | Vertex AI text-embeddings (cosine similarity) |
+| Logging | Google Cloud Storage |
+| Deploy | Cloud Run (europe-west1), Docker (python:3.12-slim) |
+| Validering | Pydantic 2.0+, OpenAPI-spec-validering |
+
+## Scoring-system
+
+Poeng per oppgave = `korrekthet * tier_multiplier * effektivitet`:
+
+| Tier | Multiplier | Eksempler |
+|---|---|---|
+| Tier 1 | x1 | create_supplier, create_customer, create_employee |
+| Tier 2 | x2 | create_invoice, register_payment, create_travel_expense |
+| Tier 3 | x3 | bank_reconciliation, year_end_closing, create_voucher |
+
+Effektivitet belønner færre API-kall og null 4xx-feil. Maks 6.0 per Tier 3-oppgave.
+
 ## Dokumentasjon
 
+- [Arkitektur](ARCHITECTURE.md) — Systemarkitektur, lag, designprinsipper
 - [Brukerveiledning](docs/BRUKERVEILEDNING.md) — Workflow, CLI-kommandoer, deploy, testing
 - [E2E-testplan](docs/E2E-TESTPLAN.md) — Testdesign, sandbox-forskjeller, testdefinisjoner
 - [Systemdokumentasjon](docs/SYSTEMDOKUMENTASJON.md) — Arkitektur, handlers, parser, API-integrasjon
 - [Oppgaveoversikt](docs/01-overview.md) — NM i AI oppgavebeskrivelse
 - [Scoring](docs/03-scoring.md) — Scoring-system og poengregler
+
+## Lisens
+
+Utviklet for NM i AI 2026-konkurransen.
