@@ -314,6 +314,16 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         org_nr = fields.get("supplierOrgNumber") or fields.get("organizationNumber")
         if org_nr:
             supplier_payload["organizationNumber"] = str(org_nr)
+        bank_acct = fields.get("supplierBankAccount")
+        if bank_acct:
+            supplier_payload["bankAccounts"] = [{"number": str(bank_acct)}]
+        addr = fields.get("supplierAddress")
+        if addr and isinstance(addr, dict):
+            supplier_payload["postalAddress"] = {
+                "addressLine1": addr.get("addressLine1", ""),
+                "postalCode": addr.get("postalCode", ""),
+                "city": addr.get("city", ""),
+            }
         resp = await client.post_with_retry("/supplier", supplier_payload)
         if resp.status_code >= 400:
             logger.error(f"Failed to create supplier: {resp.text[:300]}")

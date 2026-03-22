@@ -734,7 +734,13 @@ async def create_custom_dimension(client: TripletexClient, fields: dict[str, Any
 
 
 def _parse_csv_statement(csv_text: str) -> list[dict]:
-    """Parse bank statement CSV (format: Dato;Forklaring;Inn;Ut;Saldo).
+    """Parse bank statement CSV in multiple formats.
+
+    Supported formats:
+    1. Norwegian: Dato;Forklaring;Inn;Ut;Saldo
+    2. Danske Bank: Bokført dato;Rentedato;Tekst;Beløp i NOK;Bokført saldo i NOK;Status
+    3. German: Buchungsdatum;Valutadatum;Buchungstext;Betrag;Kontostand
+    4. French: Date;Libellé;Débit;Crédit;Solde
 
     Returns list of transaction dicts with keys: date, description, amount, balance.
     Amount is positive for inn (credit) and negative for ut (debit).
@@ -742,89 +748,136 @@ def _parse_csv_statement(csv_text: str) -> list[dict]:
     import csv as _csv
     import io
 
-    transactions = []
+    def _parse_num(s: str) -> float:
+        """Parse Norwegian/international number: handles both 1.234,56 and 1234.56 formats."""
+        if not s:
+            return 0.0
+        s = s.strip()
+        if "." in s and "," in s:
+            dot_pos = s.rfind(".")
+            comma_pos = s.rfind(",")
+            if dot_pos > comma_pos:
+                s = s.replace(",", "")
+            else:
+                s = s.replace(".", "").replace(",", ".")
+        elif "," in s:
+            s = s.replace(",", ".")
+        try:
+            return float(s)
+        except ValueError:
+            return 0.0
+
+    def _normalise_date(date_str: str) -> str:
+        """Normalise date to YYYY-MM-DD. Input: DD.MM.YYYY, DD/MM/YYYY, or YYYY-MM-DD."""
+        if "/" in date_str:
+            parts = date_str.split("/")
+            if len(parts) == 3 and len(parts[2]) == 4:
+                return f"{parts[2]}-{parts[1].zfill(2)}-{parts[0].zfill(2)}"
+        elif "." in date_str and len(date_str) >= 8:
+            parts = date_str.split(".")
+            if len(parts) == 3 and len(parts[2]) == 4:
+                return f"{parts[2]}-{parts[1].zfill(2)}-{parts[0].zfill(2)}"
+        return date_str
+
+    transactions: list[dict] = []
     reader = _csv.reader(io.StringIO(csv_text), delimiter=";")
-    headers = None
+    headers: list[str] | None = None
     for row in reader:
         if not row or not any(r.strip() for r in row):
             continue
         if headers is None:
-            # Normalize header names
             headers = [h.strip().lower().replace('"', '') for h in row]
             continue
         if len(row) < 2:
             continue
         row_clean = [r.strip().replace('"', '').replace('\xa0', '').replace(' ', '') for r in row]
 
-        # Map columns by header
         def _get(col: str) -> str:
-            if col in headers:
+            if headers and col in headers:
                 idx = headers.index(col)
                 return row_clean[idx] if idx < len(row_clean) else ""
             return ""
 
-        date_str = _get("dato")
-        description = row[headers.index("forklaring")].strip() if "forklaring" in headers else ""
-        inn_str = _get("inn")
-        ut_str = _get("ut")
-        saldo_str = _get("saldo")
+        # Detect format from headers and extract fields accordingly
+        date_str = ""
+        description = ""
+        amount = 0.0
+        balance = 0.0
+
+        if "dato" in headers and "forklaring" in headers:
+            # Format 1: Norwegian (Dato;Forklaring;Inn;Ut;Saldo)
+            date_str = _get("dato")
+            description = row[headers.index("forklaring")].strip() if "forklaring" in headers else ""
+            inn_val = _parse_num(_get("inn"))
+            ut_val = _parse_num(_get("ut"))
+            balance = _parse_num(_get("saldo"))
+            if inn_val > 0:
+                amount = inn_val
+            elif ut_val != 0:
+                amount = -abs(ut_val)
+            else:
+                continue
+
+        elif "bokfort dato" in headers or "bokført dato" in headers:
+            # Format 2: Danske Bank (Bokført dato;Rentedato;Tekst;Beløp i NOK;Bokført saldo i NOK;Status)
+            date_col = "bokført dato" if "bokført dato" in headers else "bokfort dato"
+            date_str = _get(date_col)
+            # Find description column: "tekst"
+            desc_col = "tekst" if "tekst" in headers else None
+            if desc_col:
+                description = row[headers.index(desc_col)].strip()
+            # Find amount column: "beløp i nok" or "belop i nok"
+            amt_col = next((h for h in headers if "belop" in h or "beløp" in h), None)
+            if amt_col:
+                amount = _parse_num(_get(amt_col))
+            # Find balance column
+            bal_col = next((h for h in headers if "saldo" in h), None)
+            if bal_col:
+                balance = _parse_num(_get(bal_col))
+            if amount == 0.0:
+                continue
+
+        elif "buchungsdatum" in headers:
+            # Format 3: German (Buchungsdatum;Valutadatum;Buchungstext;Betrag;Kontostand)
+            date_str = _get("buchungsdatum")
+            desc_col = "buchungstext" if "buchungstext" in headers else None
+            if desc_col:
+                description = row[headers.index(desc_col)].strip()
+            amount = _parse_num(_get("betrag"))
+            balance = _parse_num(_get("kontostand"))
+            if amount == 0.0:
+                continue
+
+        elif "date" in headers and ("libellé" in headers or "libelle" in headers):
+            # Format 4: French (Date;Libellé;Débit;Crédit;Solde)
+            date_str = _get("date")
+            desc_col = "libellé" if "libellé" in headers else "libelle"
+            if desc_col in headers:
+                description = row[headers.index(desc_col)].strip()
+            debit_col = next((h for h in headers if "débit" in h or "debit" in h), None)
+            credit_col = next((h for h in headers if "crédit" in h or "credit" in h), None)
+            debit_val = _parse_num(_get(debit_col)) if debit_col else 0.0
+            credit_val = _parse_num(_get(credit_col)) if credit_col else 0.0
+            balance = _parse_num(_get("solde"))
+            if credit_val > 0:
+                amount = credit_val
+            elif debit_val > 0:
+                amount = -debit_val
+            else:
+                continue
+
+        else:
+            # Unknown format — skip
+            continue
 
         if not date_str:
             continue
 
-        def _parse_num(s: str) -> float:
-            """Parse Norwegian/international number: handles both 1.234,56 and 1234.56 formats."""
-            if not s:
-                return 0.0
-            s = s.strip()
-            # If both . and , present: determine which is thousands separator
-            if "." in s and "," in s:
-                dot_pos = s.rfind(".")
-                comma_pos = s.rfind(",")
-                if dot_pos > comma_pos:
-                    # 1,234.56 format (. is decimal)
-                    s = s.replace(",", "")
-                else:
-                    # 1.234,56 format (, is decimal)
-                    s = s.replace(".", "").replace(",", ".")
-            elif "," in s:
-                # Only comma: could be 1234,56 (decimal) or 1.234 (thousands)
-                s = s.replace(",", ".")
-            # else: only . — keep as is (standard float)
-            try:
-                return float(s)
-            except ValueError:
-                return 0.0
-
-        inn_val = _parse_num(inn_str)
-        ut_val = _parse_num(ut_str)
-        saldo_val = _parse_num(saldo_str)
-
-        # Amount: positive = inn (money in), negative = ut (money out)
-        if inn_val > 0:
-            amount = inn_val
-        elif ut_val != 0:
-            amount = -abs(ut_val)
-        else:
-            continue  # skip rows with no movement
-
-        # Normalise date to YYYY-MM-DD (API format).
-        # Input may be DD.MM.YYYY, DD/MM/YYYY, or already YYYY-MM-DD.
-        normalised_date = date_str
-        if "/" in date_str:
-            _parts = date_str.split("/")
-            if len(_parts) == 3 and len(_parts[2]) == 4:
-                normalised_date = f"{_parts[2]}-{_parts[1].zfill(2)}-{_parts[0].zfill(2)}"
-        elif "." in date_str and len(date_str) >= 8:
-            _parts = date_str.split(".")
-            if len(_parts) == 3 and len(_parts[2]) == 4:
-                normalised_date = f"{_parts[2]}-{_parts[1].zfill(2)}-{_parts[0].zfill(2)}"
-
         transactions.append({
-            "date": normalised_date,
+            "date": _normalise_date(date_str),
             "description": description,
             "amount": amount,
-            "balance": saldo_val,
+            "balance": balance,
         })
 
     return transactions
@@ -926,18 +979,39 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         if mime == "text/csv" or filename.lower().endswith(".csv"):
             try:
                 raw_bytes = base64.b64decode(f["content_base64"])
-                csv_text = raw_bytes.decode("utf-8")
+                # Try utf-8 first, then windows-1252
+                try:
+                    csv_text = raw_bytes.decode("utf-8")
+                except UnicodeDecodeError:
+                    csv_text = raw_bytes.decode("windows-1252")
                 csv_transactions = _parse_csv_statement(csv_text)
                 logger.info(f"Parsed {len(csv_transactions)} transactions from CSV {filename}")
-                if csv_transactions:
-                    dates = [t["date"] for t in csv_transactions]
-                    csv_date_from = min(dates)
-                    csv_date_to = max(dates)
-                    csv_closing_balance = csv_transactions[-1]["balance"]
-                    logger.info(f"CSV period: {csv_date_from} → {csv_date_to}, closing={csv_closing_balance}")
             except Exception as _exc:
                 logger.warning(f"Failed to parse CSV {filename}: {_exc}")
             break
+
+    # Fallback: check for inline attachmentContent field (direct_fields in E2E tests)
+    if not csv_transactions:
+        att_content = fields.get("attachmentContent")
+        att_name = fields.get("attachmentName", "")
+        if att_content and (att_name.lower().endswith(".csv") or att_content):
+            try:
+                raw_bytes = base64.b64decode(att_content)
+                try:
+                    csv_text = raw_bytes.decode("utf-8")
+                except UnicodeDecodeError:
+                    csv_text = raw_bytes.decode("windows-1252")
+                csv_transactions = _parse_csv_statement(csv_text)
+                logger.info(f"Parsed {len(csv_transactions)} transactions from attachmentContent ({att_name})")
+            except Exception as _exc:
+                logger.warning(f"Failed to parse attachmentContent: {_exc}")
+
+    if csv_transactions:
+        dates = [t["date"] for t in csv_transactions]
+        csv_date_from = min(dates)
+        csv_date_to = max(dates)
+        csv_closing_balance = csv_transactions[-1]["balance"]
+        logger.info(f"CSV period: {csv_date_from} → {csv_date_to}, closing={csv_closing_balance}")
 
     if date_from is None and csv_date_from:
         date_from = csv_date_from
@@ -1110,119 +1184,28 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                 else:
                     logger.warning(f"Failed to register payment on invoice {invoice_id}: {pay_resp.text[:200]}")
 
-        # --- Step 3: Create suppliers, supplier invoices, and register payments ---
-        # Group supplier payments by name
-        supplier_groups: dict[str, list[dict]] = {}
-        for sp in supplier_payments:
-            supplier_groups.setdefault(sp["name"], []).append(sp)
-
+        # --- Step 3: Book supplier payments as vouchers on the bank account ---
+        # Simplified: one voucher per payment (debit expense, credit bank)
+        # This avoids complex supplierInvoice creation and gets the posting on 1920.
         supplier_results: list[dict] = []
-
-        # Look up expense and payable accounts once
         expense_id = await _lookup_account(client, 4000)
-        payable_id = await _lookup_account(client, 2400)
 
-        # Get voucher type for supplier invoices
-        _check_budget()
-        vt_resp = await client.get_cached("/ledger/voucherType", params={"name": "Leverandørfaktura"})
-        vt_values = vt_resp.json().get("values", [])
-        voucher_type_ref = None
-        for vt in vt_values:
-            if vt.get("name") == "Leverandørfaktura":
-                voucher_type_ref = {"id": vt["id"]}
-                break
-        if not voucher_type_ref and vt_values:
-            voucher_type_ref = {"id": vt_values[0]["id"]}
-
-        # Get VAT type for supplier invoices (inngående 25%)
-        _check_budget()
-        vat_resp = await client.get_cached("/ledger/vatType", params={"number": "1"})
-        vat_values = vat_resp.json().get("values", [])
-        vat_type_id = vat_values[0]["id"] if vat_values else 1
-
-        for sup_name, payments in supplier_groups.items():
-            # Create supplier
+        for sp in supplier_payments:
+            pay_amount = sp["amount"]  # positive (absolute value)
             _check_budget()
-            sup_resp = await client.post("/supplier", {
-                "name": sup_name,
-                "isSupplier": True,
+            v_resp = await client.post("/ledger/voucher", {
+                "date": sp["date"],
+                "description": f"Leverandørbetaling: {sp['name']}",
+                "postings": [
+                    {"account": {"id": expense_id}, "amount": pay_amount, "amountCurrency": pay_amount, "row": 1},
+                    {"account": {"id": account_id}, "amount": -pay_amount, "amountCurrency": -pay_amount, "row": 2},
+                ],
             })
-            if sup_resp.status_code not in (200, 201):
-                logger.warning(f"Failed to create supplier {sup_name}: {sup_resp.text[:200]}")
-                continue
-            sup_id = sup_resp.json().get("value", {}).get("id")
-            if not sup_id:
-                continue
-
-            # For each payment, create supplier invoice + register payment
-            for pay in payments:
-                pay_amount = pay["amount"]  # positive (absolute value)
-                amount_excl_vat = round(pay_amount / 1.25, 2)
-
-                # Build supplier invoice with BOTH expense + AP postings
-                # Sign convention: expense=POSITIVE (debit), AP=NEGATIVE (credit)
-                # amountCurrency MUST be NEGATIVE for normal invoices
-                expense_posting = {
-                    "account": {"id": expense_id},
-                    "supplier": {"id": sup_id},
-                    "amount": amount_excl_vat,
-                    "amountCurrency": amount_excl_vat,
-                    "amountGross": pay_amount,
-                    "amountGrossCurrency": pay_amount,
-                    "row": 1,
-                    "vatType": {"id": vat_type_id},
-                }
-                ap_posting = {
-                    "account": {"id": payable_id},
-                    "supplier": {"id": sup_id},
-                    "amount": -pay_amount,
-                    "amountCurrency": -pay_amount,
-                    "amountGross": -pay_amount,
-                    "amountGrossCurrency": -pay_amount,
-                    "row": 2,
-                }
-                voucher_obj: dict[str, Any] = {
-                    "date": pay["date"],
-                    "description": f"Leverandørfaktura: {sup_name}",
-                    "postings": [expense_posting, ap_posting],
-                }
-                if voucher_type_ref:
-                    voucher_obj["voucherType"] = voucher_type_ref
-
-                sinv_payload: dict[str, Any] = {
-                    "invoiceDate": pay["date"],
-                    "supplier": {"id": sup_id},
-                    "amountCurrency": -abs(pay_amount),
-                    "currency": {"id": 1},
-                    "voucher": voucher_obj,
-                    "invoiceDueDate": pay["date"],
-                }
-
-                _check_budget()
-                sinv_resp = await client.post_with_retry("/supplierInvoice", sinv_payload)
-                sinv_id = None
-                if sinv_resp.status_code in (200, 201):
-                    sinv_id = sinv_resp.json().get("value", {}).get("id")
-                else:
-                    logger.warning(f"Failed to create supplier invoice for {sup_name}: {sinv_resp.text[:300]}")
-
-                if sinv_id:
-                    # Register payment on supplier invoice
-                    _check_budget()
-                    sinv_pay_resp = await client.put(f"/supplierInvoice/{sinv_id}/:payment", params={
-                        "paymentDate": pay["date"],
-                        "paymentTypeId": str(_payment_type_id) if _payment_type_id else "1",
-                        "paidAmount": str(pay_amount),
-                    })
-                    if sinv_pay_resp.status_code in (200, 201):
-                        supplier_results.append({
-                            "supplier": sup_name,
-                            "amount": pay_amount,
-                            "supplierInvoiceId": sinv_id,
-                        })
-                        logger.info(f"Supplier payment: {sup_name} = {pay_amount}")
-                    else:
-                        logger.warning(f"Failed supplier payment {sup_name}: {sinv_pay_resp.text[:200]}")
+            if v_resp.status_code in (200, 201):
+                supplier_results.append({"supplier": sp["name"], "amount": pay_amount})
+                logger.info(f"Supplier payment voucher: {sp['name']} = {pay_amount}")
+            else:
+                logger.warning(f"Failed supplier payment {sp['name']}: {v_resp.text[:200]}")
 
         # --- Step 4: Book miscellaneous transactions as vouchers ---
         # Map descriptions to accounts: Skattetrekk→5400, Bankgebyr→7770, Renteinntekter→8040
@@ -1370,6 +1353,8 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                 "account": {"id": account_id},
                 "type": "MANUAL",
             }
+            if closing_balance is not None:
+                rec_payload["bankAccountClosingBalanceCurrency"] = closing_balance
             if current_period_id:
                 rec_payload["accountingPeriod"] = {"id": current_period_id}
 
