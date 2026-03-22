@@ -2088,6 +2088,67 @@ def build_tier2_tests() -> list[E2ETestCase]:
         ),
 
         # -----------------------------------------------------------------------
+        # Expense Receipt — Voucher mode (department + expenseAccount)
+        # -----------------------------------------------------------------------
+        E2ETestCase(
+            name="t3_expense_receipt_voucher_norwegian",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                "Vi trenger Togbillett fra denne kvitteringen bokfort pa avdeling Utvikling. "
+                "Bruk riktig utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling."
+            ),
+            direct_fields={
+                "description": "Togbillett",
+                "amount": 11350,
+                "date": "2026-04-13",
+                "department": "Utvikling",
+                "expenseAccount": 7140,
+                "vatRate": 25,
+            },
+            verify=None,  # custom post-check: voucher created with department
+            tier=3,
+        ),
+        E2ETestCase(
+            name="t3_expense_receipt_voucher_english",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                "We need the Kontorstoler expense from this receipt posted to department Kundeservice. "
+                "Use the correct expense account and ensure correct VAT treatment."
+            ),
+            direct_fields={
+                "description": "Kontorstoler",
+                "amount": 8900,
+                "date": "2026-03-22",
+                "department": "Kundeservice",
+                "expenseAccount": 6540,
+                "vatRate": 25,
+            },
+            verify=None,
+            tier=3,
+        ),
+        E2ETestCase(
+            name="t3_expense_receipt_voucher_spanish",
+            expected_task_type="register_expense_receipt",
+            expected_fields={},
+            prompt=(
+                "Necesitamos el gasto de USB-hub de este recibo registrado en el departamento Utvikling. "
+                "Usa la cuenta de gastos correcta y asegura el tratamiento correcto del IVA."
+            ),
+            direct_fields={
+                "description": "USB-hub",
+                "amount": 590,
+                "date": "2026-03-22",
+                "department": "Utvikling",
+                "expenseAccount": 6500,
+                "vatRate": 25,
+            },
+            verify=None,
+            tier=3,
+        ),
+
+        # -----------------------------------------------------------------------
         # Project Lifecycle
         # -----------------------------------------------------------------------
         E2ETestCase(
