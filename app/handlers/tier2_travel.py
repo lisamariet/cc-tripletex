@@ -50,7 +50,7 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> int
 
 async def _get_cost_category(client: TripletexClient) -> int | None:
     """Get first available cost category ID."""
-    resp = await client.get_cached("/travelExpense/costCategory", params={"fields": "id,title"})
+    resp = await client.get_cached("/travelExpense/costCategory", params={"fields": "id,description"})
     cats = resp.json().get("values", [])
     # Prefer "Kontorrekvisita" or similar generic category
     for cat in cats:
