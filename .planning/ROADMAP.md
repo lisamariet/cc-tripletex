@@ -18,6 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2.1.1: Score-maksimering** - Fiks 8 T3-tasks med stoerst poengpotensial (INSERTED)
 - [x] **Phase 3: Effektivitet** - Eliminer 4xx + reduser kall-antall for å aktivere effektivitetsbonus (completed 2026-03-21)
 - [ ] **Phase 4: T3 Robusthet** - Timeout-sikring og stabilisering av T3-handlers
+- [ ] **Phase 5: Score-maksimering og stabilisering** - Gap-lukking, fields= audit, klassifiserings-forbedring
 
 ## Phase Details
 
@@ -120,10 +121,27 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — Timeout-guard i main.py + MAX_API_CALLS i bank_reconciliation/correct_ledger_error + E2E-verifisering
 
+### Phase 5: Score-maksimering og stabilisering
+
+**Goal:** Lukk poeng-gap mot #1 via fields= regressionsfikser, handler-forbedringer for hoyest-gap tasks (26, 15, 25), og klassifiserings-forbedring med ekte competition-prompts
+**Requirements**: TBD
+**Depends on:** Phase 4
+**Success Criteria** (what must be TRUE):
+  1. Null 400-feil fra fields= projeksjoner i alle handlers
+  2. Task 26 (create_voucher), 15 (register_supplier_invoice), 25 (overdue_invoice) scorer hoyere
+  3. Embedding-index bruker ekte competition-prompts for bedre klassifisering
+  4. Task 24 er identifisert og har handler-stotte
+**Plans:** 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Audit og fiks fields= projeksjoner i alle handlers (D-03, D-07)
+- [ ] 05-02-PLAN.md — Forbedre create_voucher, overdue_invoice, register_supplier_invoice (D-01, D-02)
+- [ ] 05-03-PLAN.md — Klassifiserings-forbedring med ekte prompts og confidence-routing (D-04, D-05, D-06)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 2.1 → 2.1.1 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 2.1 → 2.1.1 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -133,3 +151,4 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 2.1.1 → 3 → 4
 | 2.1.1 Score-maksimering | 0/3 | Not started | - |
 | 3. Effektivitet | 2/2 | Complete   | 2026-03-21 |
 | 4. T3 Robusthet | 0/1 | Not started | - |
+| 5. Score-maksimering og stabilisering | 0/3 | Not started | - |
