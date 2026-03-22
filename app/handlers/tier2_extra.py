@@ -510,13 +510,13 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         voucher_obj["voucherType"] = voucher_type_ref
 
     # 6. Build and POST the supplierInvoice payload
-    # amountCurrency is set to the positive gross amount so the SI entity has
-    # the correct monetary value. Tripletex TYPE_SUPPLIER_INVOICE_SIMPLE will
-    # auto-generate SIMPLE postings from this value; we fix them via PUT afterwards.
+    # CRITICAL: amountCurrency MUST be negative for normal supplier invoices.
+    # Tripletex sets isCreditNote=True when amountCurrency >= 0.
+    # Convention: supplier invoices are expenses (negative from company perspective).
     si_payload: dict[str, Any] = {
         "invoiceDate": invoice_date,
         "supplier": {"id": supplier_id},
-        "amountCurrency": amount_gross,
+        "amountCurrency": -abs(amount_gross),  # Negative = normal invoice (not credit note)
         "currency": {"id": 1},
         "voucher": voucher_obj,
     }
@@ -1573,16 +1573,139 @@ async def _create_single_expense_voucher(
 
 @register_handler("register_expense_receipt")
 async def register_expense_receipt(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Register an expense receipt via POST /travelExpense + /travelExpense/cost.
+    """Register an expense receipt.
 
-    Creates a travel expense for the first employee, then adds one cost line
-    per item (or a single cost line for single receipts) and uploads any PDF.
+    Mode 1 (voucher): When department + expenseAccount specified, books via
+    POST /ledger/voucher with debit on expense account (with dept + VAT) and
+    credit on 1920 (bank).
 
-    Multi-receipt support: When `costs` list is provided, creates one cost line
-    per item within a single travel expense.
+    Mode 2 (travel expense): Otherwise uses POST /travelExpense + /travelExpense/cost.
     """
     import base64
     today = date.today().isoformat()
+
+    # ---- Mode 1: Voucher mode ----
+    department_name = fields.get("department") or fields.get("departmentName") or ""
+    expense_account_nr = fields.get("expenseAccount")
+    if department_name and expense_account_nr:
+        from app.handlers.tier3 import _lookup_account
+        from app.handlers.tier1 import _resolve_vat_type_id
+
+        description = (
+            fields.get("description")
+            or fields.get("itemName")
+            or fields.get("receiptDescription")
+            or "Utgift fra kvittering"
+        )
+        voucher_date = fields.get("date") or fields.get("receiptDate") or today
+        amount_gross = abs(fields.get("amount", 0))
+        vat_rate = fields.get("vatRate", 25)
+
+        # Resolve accounts
+        expense_id = await _lookup_account(client, int(expense_account_nr))
+        bank_id = await _lookup_account(client, 1920)
+
+        # Resolve department
+        dept_id = None
+        try:
+            dept_resp = await client.get_cached("/department", params={"name": department_name, "count": 10})
+            dept_values = dept_resp.json().get("values", [])
+            for dv in dept_values:
+                if dv.get("name", "").lower() == department_name.lower():
+                    dept_id = dv["id"]
+                    break
+            if dept_id is None and dept_values:
+                dept_id = dept_values[0]["id"]
+        except Exception as e:
+            logger.warning(f"register_expense_receipt voucher: department lookup failed: {e}")
+
+        # Resolve VAT type
+        vat_type_id = None
+        if vat_rate and vat_rate > 0:
+            if vat_rate == 15:
+                vt_code = "11"
+            elif vat_rate == 12:
+                vt_code = "13"
+            else:
+                vt_code = "1"  # 25%
+            vat_type_id = await _resolve_vat_type_id(client, vt_code)
+
+        # Calculate net amount
+        net_amount = round(amount_gross / (1 + vat_rate / 100), 2) if vat_rate else amount_gross
+
+        # Build voucher postings
+        debit_posting: dict[str, Any] = {
+            "account": {"id": expense_id},
+            "amount": net_amount,
+            "amountCurrency": net_amount,
+            "amountGross": amount_gross,
+            "amountGrossCurrency": amount_gross,
+            "row": 1,
+        }
+        if vat_type_id:
+            debit_posting["vatType"] = {"id": vat_type_id}
+        if dept_id:
+            debit_posting["department"] = {"id": dept_id}
+
+        credit_posting: dict[str, Any] = {
+            "account": {"id": bank_id},
+            "amountGross": -amount_gross,
+            "amountGrossCurrency": -amount_gross,
+            "row": 2,
+        }
+
+        voucher_payload = {
+            "date": voucher_date,
+            "description": description,
+            "postings": [debit_posting, credit_posting],
+        }
+
+        v_resp = await client.post("/ledger/voucher", voucher_payload)
+        if v_resp.status_code >= 400:
+            logger.error(f"register_expense_receipt voucher: POST /ledger/voucher failed ({v_resp.status_code}): {v_resp.text[:300]}")
+            return {"status": "completed", "note": f"Voucher creation failed: {v_resp.text[:200]}"}
+
+        v_data = v_resp.json().get("value", {})
+        voucher_id = v_data.get("id")
+        logger.info(f"register_expense_receipt voucher: created voucher id={voucher_id}")
+
+        # Upload PDF attachment if provided
+        raw_files: list[dict] = fields.get("_raw_files", [])
+        pdf_uploaded = False
+        if voucher_id and raw_files:
+            for rf in raw_files:
+                mime = rf.get("mime_type", "application/pdf")
+                if "pdf" in mime.lower() or "image" in mime.lower():
+                    try:
+                        file_bytes = base64.b64decode(rf["content_base64"])
+                        filename = rf.get("filename", "receipt.pdf")
+                        att_resp = await client.post_multipart(
+                            f"/ledger/voucher/{voucher_id}/attachment",
+                            file_bytes=file_bytes,
+                            filename=filename,
+                            mime_type=mime,
+                        )
+                        if att_resp.status_code < 400:
+                            pdf_uploaded = True
+                            logger.info(f"Uploaded PDF attachment to voucher {voucher_id}: {filename}")
+                        else:
+                            logger.warning(f"PDF upload to voucher {voucher_id} failed ({att_resp.status_code}): {att_resp.text[:200]}")
+                    except Exception as e:
+                        logger.warning(f"PDF upload exception for voucher {voucher_id}: {e}")
+                    break  # Only first PDF
+
+        return {
+            "status": "completed",
+            "taskType": "register_expense_receipt",
+            "mode": "voucher",
+            "voucherId": voucher_id,
+            "pdfUploaded": pdf_uploaded,
+            "department": department_name,
+            "expenseAccount": expense_account_nr,
+            "amountGross": amount_gross,
+        }
+
+    # ---- Mode 2: Travel expense mode (existing) ----
 
     default_description = (
         fields.get("description")
