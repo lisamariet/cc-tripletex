@@ -21,20 +21,12 @@ logger = logging.getLogger(__name__)
 # These are defined by Norwegian tax authorities and are consistent across
 # all Tripletex sandboxes.  The API `number` field equals the `id` for
 # standard codes.  We fall back to an API lookup for unknown codes.
-_VAT_CODE_TO_ID: dict[str, int] = {
-    "3": 3,    # 25% standard (Utgående MVA, høy sats)
-    "31": 31,  # 15% food (middels sats)
-    "33": 32,  # 12% transport/low (lav sats) — NB: number=33 but id=32!
-    "5": 5,    # 0% exempt
-    "6": 6,    # 0% outside VAT law
-}
-
-
 async def _resolve_vat_type_id(client: TripletexClient, vat_code: str) -> int | None:
-    """Resolve a vatCode string to a vatType ID, using hardcoded map first."""
-    if vat_code in _VAT_CODE_TO_ID:
-        return _VAT_CODE_TO_ID[vat_code]
-    # Fallback: API lookup for unknown codes
+    """Resolve a vatCode string (number) to a vatType ID via API lookup.
+
+    VatType IDs are sandbox-specific and cannot be hardcoded — number 3
+    may have different IDs in different sandbox instances.
+    """
     vat_resp = await client.get_cached("/ledger/vatType", params={"number": vat_code})
     vat_types = vat_resp.json().get("values", [])
     if vat_types:
