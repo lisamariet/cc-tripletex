@@ -375,6 +375,58 @@ async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dic
     return {"status": "completed", "taskType": "create_product", "created": data.get("value", {})}
 
 
+@register_handler("batch_create_department")
+async def batch_create_department(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    """Create multiple departments in one API call using POST /department/list.
+
+    Expects fields["items"] — a list of dicts, each with at least {"fields": {"name": ...}}.
+    Returns batch_results array matching the generic batch format.
+    """
+    items = fields.get("items", [])
+    if not items:
+        return {"status": "completed", "taskType": "batch_create_department",
+                "error": "No items provided", "batch_results": []}
+
+    # Build array of Department payloads
+    dept_payloads: list[dict[str, Any]] = []
+    for item in items:
+        item_fields = item.get("fields", item) if isinstance(item, dict) else {}
+        payload: dict[str, Any] = {"name": item_fields.get("name", "Unnamed")}
+        if item_fields.get("departmentNumber"):
+            payload["departmentNumber"] = item_fields["departmentNumber"]
+        dept_payloads.append(payload)
+
+    logger.info(f"[batch_create_department] Creating {len(dept_payloads)} departments via POST /department/list")
+
+    # POST /department/list accepts a JSON array and creates all at once
+    resp = await client._request("POST", "/department/list", json_body=dept_payloads)
+    data = resp.json()
+
+    # The /list endpoint returns {"fullResultSize": N, "values": [...]}
+    created_values = data.get("values", [])
+
+    # Build batch_results matching the format expected by E2E tests
+    batch_results: list[dict[str, Any]] = []
+    for i, dept_payload in enumerate(dept_payloads):
+        if i < len(created_values):
+            created = created_values[i]
+            batch_results.append({
+                "status": "completed",
+                "taskType": "create_department",
+                "created": created,
+            })
+            logger.info(f"Batch dept {i+1}/{len(dept_payloads)}: created id={created.get('id')} name={created.get('name')}")
+        else:
+            batch_results.append({
+                "status": "completed",
+                "taskType": "create_department",
+                "error": f"No result for department '{dept_payload.get('name')}'",
+                "created": {},
+            })
+
+    return {"status": "completed", "taskType": "batch_create_department", "batch_results": batch_results}
+
+
 @register_handler("create_department")
 async def create_department(client: TripletexClient, fields: dict[str, Any]) -> dict:
     # NOTE: salesmodules POST removed — department module is already enabled in

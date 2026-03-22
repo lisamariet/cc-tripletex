@@ -25,8 +25,13 @@ def register_handler(task_type: str):
 
 async def execute_task(task_type: str, client: TripletexClient, fields: dict[str, Any], prompt: str = "") -> dict[str, Any]:
     """Look up and run the handler for task_type. Returns result dict."""
-    # Handle batch tasks: batch_create_department → run create_department for each item
+    # Handle batch tasks: check for dedicated batch handler first, then fall back to generic dispatch
     if task_type.startswith("batch_"):
+        # If a dedicated batch handler is registered (e.g. batch_create_department), use it
+        batch_handler = HANDLER_REGISTRY.get(task_type)
+        if batch_handler is not None:
+            logger.info(f"Dedicated batch handler found for {task_type}")
+            return await batch_handler(client, fields)
         base_type = task_type[6:]  # Remove "batch_" prefix
         items = fields.get("items", [])
         logger.info(f"Batch dispatch: {task_type} — {len(items)} items, base_type={base_type}")
