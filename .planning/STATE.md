@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-score-maksimering-og-stabilisering/05-01-PLAN.md
-last_updated: "2026-03-22T01:42:36.519Z"
+stopped_at: Completed 05-score-maksimering-og-stabilisering/05-02-PLAN.md
+last_updated: "2026-03-22T02:07:19.792Z"
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 19
-  completed_plans: 17
+  completed_plans: 18
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 05 (score-maksimering-og-stabilisering) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Plan: 2 of 3
 | Phase 03-effektivitet P01 | 5 | 2 tasks | 5 files |
 | Phase 04-t3-robusthet P01 | 5 | 2 tasks | 2 files |
 | Phase 05-score-maksimering-og-stabilisering P01 | 15 | 2 tasks | 1 files |
+| Phase 05 P02 | 26 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -111,6 +112,10 @@ Recent decisions affecting current work:
 - [Phase 04-t3-robusthet]: correct_ledger_error multi-error-loop capper med estimat 5 kall/error — enklere enn eksakt teller per kall
 - [Phase 05-score-maksimering-og-stabilisering]: /ledger/annualAccount fields=: remove isClosed (invalid in AnnualAccountDTO) — use id,year only
 - [Phase 05-score-maksimering-og-stabilisering]: /invoice bank_reconciliation: replace amountRemainingCurrency with amountOutstanding — amountRemainingCurrency not in InvoiceDTO
+- [Phase 05]: Tripletex amountCurrency convention: negative = normal supplier invoice, positive = credit note (isCreditNote flag)
+- [Phase 05]: Tripletex posting sign convention for SI: expense posting positive (debit), AP posting negative (credit)
+- [Phase 05]: create_voucher uses sequential row counter (not row + len) to avoid row gaps when posting has both debit/credit
+- [Phase 05]: overdue_invoice wraps each step in try/except to ensure partial failures do not block subsequent steps
 
 ### Pending Todos
 
@@ -125,6 +130,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T01:42:36.516Z
-Stopped at: Completed 05-score-maksimering-og-stabilisering/05-01-PLAN.md
+Last session: 2026-03-22T02:07:19.790Z
+Stopped at: Completed 05-score-maksimering-og-stabilisering/05-02-PLAN.md
 Resume file: None
