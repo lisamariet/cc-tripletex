@@ -251,17 +251,17 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 |-|-|-|
 | 09 | set_project_fixed_price | 2 |
 | 10 | create_invoice | 2 |
-| 11 | create_custom_dimension ? | 2 |
-| 12 | batch_create_department (batch-variant) | 2 |
+| 11 | register_supplier_invoice | 2 |
+| 12 | run_payroll | 2 |
 | 13 | create_travel_expense | 2 |
 | 14 | create_credit_note | 2 |
-| 15 | register_supplier_invoice | 2 |
+| 15 | register_supplier_invoice ? | 2 |
 | 16 | register_timesheet | 2 |
 | 17 | create_custom_dimension | 2 |
 | 18 | reverse_payment | 2 |
 |-|-|-|
 | 19 | create_employee (PDF tilbudsbrev-variant) | 3 |
-| 20 | register_supplier_invoice | 3 |
+| 20 | register_supplier_invoice  ? | 3 |
 | 21 | create_employee (PDF) | 3 |
 | 22 | register_expense_receipt | 3 |
 | 23 | bank_reconciliation | 3 |
@@ -271,7 +271,7 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 | 27 | register_payment | 3 |
 | 28 | correct_ledger_error | 3 |
 | 29 | project_lifecycle | 3 |
-| 30 | run_payroll | 3 |
+| 30 | monthly_closing | 3 |
 
 Usikker: year_end_closing, monthly_closing
 

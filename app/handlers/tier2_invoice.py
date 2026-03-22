@@ -287,12 +287,19 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
                 else:
                     order_line["vatType"] = {"number": str(line["vatCode"])}
             order_lines.append(order_line)
-    elif fields.get("amount"):
+    elif fields.get("amount") or fields.get("foreignAmount"):
         # Single line from amount + description
         description = fields.get("invoiceDescription") or fields.get("description") or "Invoice"
+        # For foreign currency invoices, compute NOK amount = foreignAmount * invoiceExchangeRate
+        foreign_amount = fields.get("foreignAmount")
+        invoice_rate = fields.get("invoiceExchangeRate")
+        if foreign_amount and invoice_rate:
+            unit_price = abs(foreign_amount) * invoice_rate
+        else:
+            unit_price = abs(fields.get("amount", 0))
         order_lines.append({
             "count": 1,
-            "unitPriceExcludingVatCurrency": abs(fields["amount"]),
+            "unitPriceExcludingVatCurrency": unit_price,
             "description": description,
         })
     else:

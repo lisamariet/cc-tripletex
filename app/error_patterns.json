@@ -143,6 +143,90 @@
       "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
       "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
       "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: AnnualAccountDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i AnnualAccountDTO",
+      "status": 400
     }
   ],
   "GET /ledger/posting": [
@@ -452,6 +536,195 @@
       "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
       "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
+    },
+    {
+      "field": "division.id",
+      "error_type": "validation_error",
+      "error_message": "Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "fix": "Valideringsfeil: Arbeidsforholdet må knyttes til en virksomhet/underenhet.",
+      "status": 422
     }
   ],
   "POST /invoice": [
@@ -474,6 +747,160 @@
       "error_type": "invalid_field",
       "error_message": "Feltet eksisterer ikke i objektet.",
       "fix": "Fjern feltet 'project' fra payload — det finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
+      "status": 422
+    },
+    {
+      "field": "orders",
+      "error_type": "business_rule",
+      "error_message": "Listen kan ikke være tom.",
+      "fix": "Forretningsregel: Listen kan ikke være tom.",
       "status": 422
     },
     {
@@ -630,6 +1057,34 @@
       "error_message": "Kunde mangler.",
       "fix": "Feltet 'postings.customer.id' mangler — legg til en gyldig verdi",
       "status": 422
+    },
+    {
+      "field": "postings.amountGross",
+      "error_type": "validation_error",
+      "error_message": "Beløp (amountGross) må være det samme som valutabeløpet (amountGrossCurrency).",
+      "fix": "Valideringsfeil: Beløp (amountGross) må være det samme som valutabeløpet (amountGrossCurrency).",
+      "status": 422
+    },
+    {
+      "field": "postings.amountGross",
+      "error_type": "validation_error",
+      "error_message": "Beløp (amountGross) må være det samme som valutabeløpet (amountGrossCurrency).",
+      "fix": "Valideringsfeil: Beløp (amountGross) må være det samme som valutabeløpet (amountGrossCurrency).",
+      "status": 422
+    },
+    {
+      "field": "postings.amountGross",
+      "error_type": "validation_error",
+      "error_message": "Beløp (amountGross) må være det samme som valutabeløpet (amountGrossCurrency).",
+      "fix": "Valideringsfeil: Beløp (amountGross) må være det samme som valutabeløpet (amountGrossCurrency).",
+      "status": 422
+    },
+    {
+      "field": "postings",
+      "error_type": "business_rule",
+      "error_message": "Et bilag kan ikke registreres uten posteringer.",
+      "fix": "Forretningsregel: Et bilag kan ikke registreres uten posteringer.",
+      "status": 422
     }
   ],
   "POST /ledger/voucher/openingBalance": [
@@ -654,6 +1109,160 @@
       "error_type": "wrong_type",
       "error_message": "Verdien er ikke av korrekt type for dette feltet.",
       "fix": "Feltet 'customer.id' må være et heltall (int), ikke None eller string",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
+      "status": 422
+    },
+    {
+      "field": "quantity",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'quantity' fra payload — finnes ikke i API-modellen",
       "status": 422
     },
     {
@@ -846,6 +1455,69 @@
       "error_message": "Produktnummeret 77777 er i bruk.",
       "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
       "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
+    },
+    {
+      "field": "number",
+      "error_type": "validation_error",
+      "error_message": "Produktnummeret 77777 er i bruk.",
+      "fix": "Valideringsfeil: Produktnummeret 77777 er i bruk.",
+      "status": 422
     }
   ],
   "POST /project": [
@@ -882,6 +1554,195 @@
       "error_type": "api_error",
       "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"894cbf7b-220c-4076-8c85-cd8732",
       "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"894cbf7b-220c-4076-8c85-cd8732",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0553197a-1249-4ee6-b09d-736042",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0553197a-1249-4ee6-b09d-736042",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"334b7e92-6fb4-4bb8-923a-56a978",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"334b7e92-6fb4-4bb8-923a-56a978",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"8c4bd223-d7d6-451e-a917-0137b8",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"8c4bd223-d7d6-451e-a917-0137b8",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"98311b2c-232d-4f0d-ab3c-62c863",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"98311b2c-232d-4f0d-ab3c-62c863",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"2cdf2a30-98e8-40ff-84ca-6be660",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"2cdf2a30-98e8-40ff-84ca-6be660",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"9737304c-3cec-4e82-958d-b71fcf",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"9737304c-3cec-4e82-958d-b71fcf",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0f4033db-0494-4a32-96e1-f75d1f",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0f4033db-0494-4a32-96e1-f75d1f",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"defb96ef-48f5-4825-9b54-25dd86",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"defb96ef-48f5-4825-9b54-25dd86",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"b0f98bb9-4660-4635-b535-b12a86",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"b0f98bb9-4660-4635-b535-b12a86",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"6aa0b9d2-4efb-4145-a996-6e9c06",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"6aa0b9d2-4efb-4145-a996-6e9c06",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"6eec677b-46b3-4333-9d57-1f573a",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"6eec677b-46b3-4333-9d57-1f573a",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"3a05aa58-fa98-405a-b63d-143926",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"3a05aa58-fa98-405a-b63d-143926",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"ca825aef-c0c6-4156-94cc-883477",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"ca825aef-c0c6-4156-94cc-883477",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0a35edc0-0fbb-411b-b972-003ada",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0a35edc0-0fbb-411b-b972-003ada",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"8d9d003b-4725-46de-923d-a22d99",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"8d9d003b-4725-46de-923d-a22d99",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"f34b9f69-e95f-4662-a98d-ecfbbc",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"f34b9f69-e95f-4662-a98d-ecfbbc",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"486ff857-a56b-4ec9-9662-255f01",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"486ff857-a56b-4ec9-9662-255f01",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0783de15-b2e1-42f3-b5a4-ee5704",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0783de15-b2e1-42f3-b5a4-ee5704",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"837cf608-b20b-434f-9ce4-03c8a9",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"837cf608-b20b-434f-9ce4-03c8a9",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"5d8b2241-9a32-4053-8d05-35f99a",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"5d8b2241-9a32-4053-8d05-35f99a",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"00fcf0cb-97c5-4f44-96b9-887fd9",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"00fcf0cb-97c5-4f44-96b9-887fd9",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"1a42fde6-4d8a-4b5d-813b-3499a5",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"1a42fde6-4d8a-4b5d-813b-3499a5",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"8479060d-b335-4b46-988b-9e5142",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"8479060d-b335-4b46-988b-9e5142",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0ea5b4f5-c2c1-4ced-831f-e54288",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"0ea5b4f5-c2c1-4ced-831f-e54288",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"1284b21a-ffcc-49a6-8e6e-5381ea",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047290&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"1284b21a-ffcc-49a6-8e6e-5381ea",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"cbb58870-4605-4077-af73-f7ffa5",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047288&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"cbb58870-4605-4077-af73-f7ffa5",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"60a70eae-bf3a-4921-a60f-024cef",
+      "fix": "API-feil: {\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"Nummeret er allerede i bruk: <a href=\\\"/execute/projectMenu?projectId=402047292&contextId=108146304\\\">Gå til prosjekt</a>\",\"path\":null,\"rootId\":null},{\"field\":\"number\",\"message\":\"Dette nummeret er i bruk på en annen ordre, tilbud eller prosjekt.\",\"path\":null,\"rootId\":null}],\"requestId\":\"60a70eae-bf3a-4921-a60f-024cef",
       "status": 422
     }
   ],
@@ -946,6 +1807,34 @@
       "error_type": "validation_error",
       "error_message": "credit posting missing",
       "fix": "Valideringsfeil på 'None': credit posting missing",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "credit posting missing",
+      "fix": "Valideringsfeil: credit posting missing",
+      "status": 422
+    },
+    {
+      "field": "voucher.postings",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "credit posting missing",
+      "fix": "Valideringsfeil: credit posting missing",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "credit posting missing",
+      "fix": "Valideringsfeil: credit posting missing",
       "status": 422
     }
   ],
@@ -1121,6 +2010,69 @@
       "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
       "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "business_rule",
+      "error_message": "Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "fix": "Forretningsregel: Hele eller deler av fakturaen er kreditert. Summen av kreditnotaene kan ikke være høyere enn fakturabeløpet.",
+      "status": 422
     }
   ],
   "PUT /invoice/{id}/:payment": [
@@ -1199,9 +2151,86 @@
       "error_message": "Can not put postings on a voucher that already have postings",
       "fix": "Valideringsfeil på 'None': Can not put postings on a voucher that already have postings",
       "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Can not put postings on a voucher that already have postings",
+      "fix": "Valideringsfeil: Can not put postings on a voucher that already have postings",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Can not put postings on a voucher that already have postings",
+      "fix": "Valideringsfeil: Can not put postings on a voucher that already have postings",
+      "status": 422
     }
   ],
   "DELETE /employee/{id}": [
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    },
     {
       "field": "",
       "error_type": "api_error",
@@ -1273,6 +2302,69 @@
       "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
       "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Prosjekter er registrert.</li>\n<li>Ordrer er registrert.</li>\n<li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på kunden.</li></ul>",
+      "status": 422
     }
   ],
   "DELETE /supplier/{id}": [
@@ -1310,9 +2402,135 @@
       "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
       "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
       "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
+    },
+    {
+      "field": "Internt felt (id)",
+      "error_type": "validation_error",
+      "error_message": "<ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "fix": "Valideringsfeil: <ul><li>Fakturaer er registrert.</li>\n<li>Posteringer er registrert på leverandøren.</li></ul>",
+      "status": 422
     }
   ],
   "POST /project/projectActivity": [
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
+    {
+      "field": "activity",
+      "error_type": "validation_error",
+      "error_message": "Finnes fra før.",
+      "fix": "Valideringsfeil: Finnes fra før.",
+      "status": 422
+    },
     {
       "field": "activity",
       "error_type": "validation_error",
@@ -1384,9 +2602,247 @@
       "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
       "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
       "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "fix": "API-feil: Det er allerede registrert timer på den ansatte på denne dagen, aktiviteten og prosjektet. Oppdater antall timer som allerede er ført.",
+      "status": 409
     }
   ],
   "GET /travelExpense/costCategory": [
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
+    {
+      "field": "title",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: title. title does not match a field in the model: TravelCostCategoryDTO",
+      "fix": "Fjern 'title' fra fields — finnes ikke i TravelCostCategoryDTO",
+      "status": 400
+    },
     {
       "field": "title",
       "error_type": "invalid_field_filter",
@@ -1532,9 +2988,513 @@
       "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
       "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
       "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
     }
   ],
   "GET /bank/reconciliation/{id}": [
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
+    {
+      "field": "accountId",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: accountId. accountId does not match a field in the model: BankReconciliationDTO",
+      "fix": "Fjern 'accountId' fra fields — finnes ikke i BankReconciliationDTO",
+      "status": 400
+    },
     {
       "field": "accountId",
       "error_type": "invalid_field_filter",
@@ -1634,6 +3594,195 @@
       "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
       "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
       "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
+    },
+    {
+      "field": "isClosed",
+      "error_type": "invalid_field_filter",
+      "error_message": "Illegal field in fields filter: isClosed. isClosed does not match a field in the model: CloseGroupDTO",
+      "fix": "Fjern 'isClosed' fra fields — finnes ikke i CloseGroupDTO",
+      "status": 400
     }
   ],
   "POST /bank/reconciliation": [
@@ -1684,6 +3833,355 @@
       "error_type": "validation_error",
       "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
       "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "fix": "Valideringsfeil: Det eksisterer allerede en bankavstemming for denne kontoen i valgte periode.",
+      "status": 422
+    }
+  ],
+  "GET /supplierInvoice": [
+    {
+      "field": "invoiceDateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateFrom",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "invoiceDateTo",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    }
+  ],
+  "POST /incomingInvoice": [
+    {
+      "field": "orderLines.externalId",
+      "error_type": "validation_error",
+      "error_message": "Kan ikke være null.",
+      "fix": "Valideringsfeil: Kan ikke være null.",
+      "status": 422
+    },
+    {
+      "field": "",
+      "error_type": "api_error",
+      "error_message": "You do not have permission to access this feature.",
+      "fix": "API-feil: You do not have permission to access this feature.",
+      "status": 403
+    }
+  ],
+  "PUT /incomingInvoice/{id}": [
+    {
+      "field": "id",
+      "error_type": "invalid_field",
+      "error_message": "Feltet eksisterer ikke i objektet.",
+      "fix": "Fjern feltet 'id' fra payload — finnes ikke i API-modellen",
       "status": 422
     }
   ]
