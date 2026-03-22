@@ -963,7 +963,7 @@ async def _ensure_division(client: TripletexClient) -> int | None:
 
     # Need a municipality for the division — use Oslo (id=262) as default,
     # but fall back to first available municipality
-    muni_resp = await client.get("/municipality", params={"count": 5, "fields": "id,name,municipalityNumber,payrollTaxZone"})
+    muni_resp = await client.get("/municipality", params={"count": 5})
     munis = muni_resp.json().get("values", [])
     # Prefer a municipality with a payrollTaxZone set
     muni_id = None
