@@ -843,12 +843,12 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                             "invoiceDateFrom": "2020-01-01",
                             "invoiceDateTo": date_to or datetime.date.today().isoformat(),
                             "count": "5",
-                            "fields": "id,invoiceNumber,amount,amountOutstanding,amountRemainingCurrency",
+                            "fields": "id,invoiceNumber,amount,amountOutstanding",
                         })
                         if inv_resp.status_code == 200:
                             invoices = inv_resp.json().get("values", [])
                             for inv in invoices:
-                                if str(inv.get("invoiceNumber", "")) == str(inv_number) and float(inv.get("amountRemainingCurrency", 1)) > 0:
+                                if str(inv.get("invoiceNumber", "")) == str(inv_number) and float(inv.get("amountOutstanding", 1)) > 0:
                                     inv_id = inv["id"]
                                     pay_params: dict[str, Any] = {
                                         "paymentDate": txn_date,
@@ -881,12 +881,12 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
                         sinv_resp = await client.get("/supplierInvoice", params={
                             "invoiceNumber": inv_number,
                             "count": "5",
-                            "fields": "id,invoiceNumber,amount,amountOutstanding,amountRemainingCurrency",
+                            "fields": "id,invoiceNumber,amount,amountOutstanding",
                         })
                         if sinv_resp.status_code == 200:
                             sinvoices = sinv_resp.json().get("values", [])
                             for sinv in sinvoices:
-                                if str(sinv.get("invoiceNumber", "")) == str(inv_number) and float(sinv.get("amountRemainingCurrency", 1)) > 0:
+                                if str(sinv.get("invoiceNumber", "")) == str(inv_number) and float(sinv.get("amountOutstanding", 1)) > 0:
                                     sinv_id = sinv["id"]
                                     # Supplier invoice payment — try PUT /:payment or pay via voucher
                                     _check_budget()
@@ -1416,7 +1416,7 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
         resp = await client.get("/ledger/annualAccount", params={
             "yearFrom": str(year),
             "yearTo": str(year + 1),
-            "fields": "id,year,isClosed",
+            "fields": "id,year",
         })
         annual_data = resp.json()
         annual_accounts = annual_data.get("values", [])
