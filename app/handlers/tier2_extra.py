@@ -340,7 +340,7 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     amount_gross = abs(fields.get("amount", 0))  # Amount INCLUDING VAT (gross)
     invoice_date = fields.get("invoiceDate") or today
     invoice_number = fields.get("invoiceNumber") or ""
-    due_date = fields.get("dueDate") or fields.get("invoiceDueDate") or ""
+    due_date = fields.get("dueDate") or fields.get("invoiceDueDate") or fields.get("paymentDueDate") or ""
 
     # Default due date: 30 days after invoice date
     if not due_date:
@@ -466,21 +466,24 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     #   - AP credit posting (konto 2400) WITH supplier reference
     # Without both postings + supplier ref on expense, POST /supplierInvoice returns 500.
     #
-    # CRITICAL: To get correct amountExcludingVat and isCreditNote=false from Tripletex,
-    # the expense posting MUST include BOTH:
-    #   - amount / amountCurrency = netto (excl. VAT) — used for amountExcludingVat
-    #   - amountGross / amountGrossCurrency = brutto (incl. VAT) — the actual amount
-    # The AP posting uses gross amount (no VAT split needed).
-    # Sign convention: expense = NEGATIVE, AP = POSITIVE.
-    # This produces 201 on POST /supplierInvoice. isCreditNote may be true
-    # but the invoice is created successfully.
+    # Sign convention for Tripletex supplierInvoice postings:
+    #   - Expense posting: NEGATIVE amounts (Tripletex internal convention)
+    #   - AP posting: POSITIVE amounts
+    # The amountCurrency on the SI payload is omitted (set to 0) so Tripletex
+    # TRIPLETEX SIGN CONVENTION for supplierInvoice voucher postings:
+    # - expense posting: POSITIVE amounts (debit = cost increases)
+    # - AP posting: NEGATIVE amounts (credit = liability increases)
+    # - SI-level amountCurrency: NEGATIVE (expense from company perspective)
+    # When expense=positive, AP=negative, SI amountCurrency=negative:
+    #   isCreditNote is set to False (normal invoice).
+    # When AP=positive (old convention): isCreditNote is set to True (credit note).
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
         "supplier": {"id": supplier_id},
-        "amount": -amount_excl_vat,
-        "amountCurrency": -amount_excl_vat,
-        "amountGross": -amount_gross,
-        "amountGrossCurrency": -amount_gross,
+        "amount": amount_excl_vat,         # POSITIVE: expense debit
+        "amountCurrency": amount_excl_vat,
+        "amountGross": amount_gross,       # POSITIVE gross: Tripletex auto-generates VAT posting
+        "amountGrossCurrency": amount_gross,
         "row": 1,
     }
     if vat_type_ref:
@@ -491,10 +494,10 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     ap_posting: dict[str, Any] = {
         "account": {"id": payable_id},
         "supplier": {"id": supplier_id},
-        "amount": amount_gross,
-        "amountCurrency": amount_gross,
-        "amountGross": amount_gross,
-        "amountGrossCurrency": amount_gross,
+        "amount": -amount_gross,            # NEGATIVE: AP credit (liability)
+        "amountCurrency": -amount_gross,
+        "amountGross": -amount_gross,
+        "amountGrossCurrency": -amount_gross,
         "row": 2,
     }
 
@@ -507,6 +510,9 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         voucher_obj["voucherType"] = voucher_type_ref
 
     # 6. Build and POST the supplierInvoice payload
+    # amountCurrency is set to the positive gross amount so the SI entity has
+    # the correct monetary value. Tripletex TYPE_SUPPLIER_INVOICE_SIMPLE will
+    # auto-generate SIMPLE postings from this value; we fix them via PUT afterwards.
     si_payload: dict[str, Any] = {
         "invoiceDate": invoice_date,
         "supplier": {"id": supplier_id},
@@ -534,13 +540,95 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
 
     created = data.get("value", {})
     si_id = created.get("id")
-    voucher_id = (created.get("voucher") or {}).get("id")
+    voucher_ref = created.get("voucher") or {}
+    voucher_id = voucher_ref.get("id") if isinstance(voucher_ref, dict) else None
     logger.info(
         f"Created supplier invoice: si_id={si_id}, voucher_id={voucher_id}, "
         f"amount_gross={amount_gross}, amount_excl_vat={amount_excl_vat}, due_date={due_date}"
     )
 
-    # 7. Upload PDF attachment to voucher if provided
+    # 7. Fix voucher postings via PUT /ledger/voucher/{id}.
+    # POST /supplierInvoice creates TYPE_SUPPLIER_INVOICE_SIMPLE which auto-generates
+    # SIMPLE postings from amountCurrency, ignoring our detailed postings.
+    # We PUT the voucher afterwards to set the correct expense account (e.g. 4000),
+    # VAT type, and proper signs (positive debit on expense, negative credit on AP).
+    if voucher_id:
+        try:
+            v_resp = await client.get(
+                f"/ledger/voucher/{voucher_id}", params={"fields": "*,postings(*)"},
+            )
+            v_data = v_resp.json().get("value", {})
+            v_version = v_data.get("version", 0)
+            old_postings = v_data.get("postings", [])
+
+            corrected: list[dict[str, Any]] = []
+            for p in old_postings:
+                p_acct = (p.get("account") or {}).get("id")
+                base: dict[str, Any] = {
+                    "id": p.get("id"),
+                    "version": p.get("version", 0),
+                    "date": invoice_date,
+                }
+                if p_acct == expense_id or p.get("type") == "INVOICE_EXPENSE":
+                    base.update({
+                        "account": {"id": expense_id},
+                        "supplier": {"id": supplier_id},
+                        "amount": amount_excl_vat,
+                        "amountCurrency": amount_excl_vat,
+                        "amountGross": amount_gross,
+                        "amountGrossCurrency": amount_gross,
+                        "row": 1,
+                    })
+                    if vat_type_ref:
+                        base["vatType"] = vat_type_ref
+                    if department_ref:
+                        base["department"] = department_ref
+                elif p_acct == payable_id:
+                    base.update({
+                        "account": {"id": payable_id},
+                        "supplier": {"id": supplier_id},
+                        "amount": -amount_gross,
+                        "amountCurrency": -amount_gross,
+                        "amountGross": -amount_gross,
+                        "amountGrossCurrency": -amount_gross,
+                        "row": 2,
+                    })
+                else:
+                    # Auto-generated posting (e.g. VAT) — keep as-is
+                    base.update({
+                        "account": p.get("account"),
+                        "amount": p.get("amount"),
+                        "amountCurrency": p.get("amountCurrency"),
+                        "amountGross": p.get("amountGross"),
+                        "amountGrossCurrency": p.get("amountGrossCurrency"),
+                        "row": p.get("row", 0),
+                    })
+                corrected.append(base)
+
+            put_payload: dict[str, Any] = {
+                "id": voucher_id,
+                "version": v_version,
+                "date": invoice_date,
+                "postings": corrected,
+            }
+            if voucher_type_ref:
+                put_payload["voucherType"] = voucher_type_ref
+
+            put_resp = await client.put(f"/ledger/voucher/{voucher_id}", put_payload)
+            if put_resp.status_code < 400:
+                logger.info(
+                    f"Fixed voucher postings: voucher_id={voucher_id}, "
+                    f"expense_acct={expense_account_nr}, amount_excl_vat={amount_excl_vat}"
+                )
+            else:
+                logger.warning(
+                    f"PUT voucher {voucher_id} failed ({put_resp.status_code}): "
+                    f"{put_resp.text[:200]}"
+                )
+        except Exception as e:
+            logger.warning(f"Could not fix voucher postings (non-fatal): {e}")
+
+    # 8. Upload PDF attachment to voucher if provided
     import base64
     raw_files: list[dict] = fields.get("_raw_files", [])
     pdf_uploaded = False
@@ -1750,14 +1838,14 @@ async def _create_single_expense_supplier_invoice(
     if not voucher_type_ref and vt_values:
         voucher_type_ref = {"id": vt_values[0]["id"]}
 
-    # Build postings — debit utgift, kredit leverandørgjeld (2400)
+    # Build postings — negative expense (Tripletex convention), positive AP
     expense_posting: dict[str, Any] = {
         "account": {"id": expense_id},
         "supplier": {"id": supplier_id},
-        "amount": amount_excl_vat,
-        "amountCurrency": amount_excl_vat,
-        "amountGross": amount_gross,
-        "amountGrossCurrency": amount_gross,
+        "amount": -amount_excl_vat,
+        "amountCurrency": -amount_excl_vat,
+        "amountGross": -amount_gross,
+        "amountGrossCurrency": -amount_gross,
         "row": 1,
     }
     if vat_type_ref:
@@ -1768,10 +1856,10 @@ async def _create_single_expense_supplier_invoice(
     ap_posting: dict[str, Any] = {
         "account": {"id": payable_id},
         "supplier": {"id": supplier_id},
-        "amount": -amount_gross,
-        "amountCurrency": -amount_gross,
-        "amountGross": -amount_gross,
-        "amountGrossCurrency": -amount_gross,
+        "amount": amount_gross,
+        "amountCurrency": amount_gross,
+        "amountGross": amount_gross,
+        "amountGrossCurrency": amount_gross,
         "row": 2,
     }
 
@@ -1812,6 +1900,80 @@ async def _create_single_expense_supplier_invoice(
         f"Created expense receipt supplier invoice: si_id={si_id}, voucher_id={v_id}, "
         f"amount_gross={amount_gross}, expense_account={expense_account_nr}"
     )
+
+    # Fix voucher postings via PUT (same pattern as register_supplier_invoice)
+    if v_id:
+        try:
+            v_resp = await client.get(
+                f"/ledger/voucher/{v_id}", params={"fields": "*,postings(*)"},
+            )
+            v_data = v_resp.json().get("value", {})
+            v_version = v_data.get("version", 0)
+            old_postings = v_data.get("postings", [])
+
+            corrected: list[dict[str, Any]] = []
+            for p in old_postings:
+                p_acct = (p.get("account") or {}).get("id")
+                base: dict[str, Any] = {
+                    "id": p.get("id"),
+                    "version": p.get("version", 0),
+                    "date": invoice_date,
+                }
+                if p_acct == expense_id or p.get("type") == "INVOICE_EXPENSE":
+                    base.update({
+                        "account": {"id": expense_id},
+                        "supplier": {"id": supplier_id},
+                        "amount": amount_excl_vat,
+                        "amountCurrency": amount_excl_vat,
+                        "amountGross": amount_gross,
+                        "amountGrossCurrency": amount_gross,
+                        "row": 1,
+                    })
+                    if vat_type_ref:
+                        base["vatType"] = vat_type_ref
+                    if department_ref:
+                        base["department"] = department_ref
+                elif p_acct == payable_id:
+                    base.update({
+                        "account": {"id": payable_id},
+                        "supplier": {"id": supplier_id},
+                        "amount": -amount_gross,
+                        "amountCurrency": -amount_gross,
+                        "amountGross": -amount_gross,
+                        "amountGrossCurrency": -amount_gross,
+                        "row": 2,
+                    })
+                else:
+                    base.update({
+                        "account": p.get("account"),
+                        "amount": p.get("amount"),
+                        "amountCurrency": p.get("amountCurrency"),
+                        "amountGross": p.get("amountGross"),
+                        "amountGrossCurrency": p.get("amountGrossCurrency"),
+                        "row": p.get("row", 0),
+                    })
+                corrected.append(base)
+
+            put_payload: dict[str, Any] = {
+                "id": v_id,
+                "version": v_version,
+                "date": invoice_date,
+                "postings": corrected,
+            }
+            if voucher_type_ref:
+                put_payload["voucherType"] = voucher_type_ref
+
+            put_resp = await client.put(f"/ledger/voucher/{v_id}", put_payload)
+            if put_resp.status_code < 400:
+                logger.info(f"Fixed expense receipt voucher postings: voucher_id={v_id}")
+            else:
+                logger.warning(
+                    f"PUT voucher {v_id} failed ({put_resp.status_code}): "
+                    f"{put_resp.text[:200]}"
+                )
+        except Exception as e:
+            logger.warning(f"Could not fix expense receipt voucher postings: {e}")
+
     return {"created": created}
 
 

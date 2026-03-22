@@ -623,6 +623,10 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 search_by_id=True,
                 checks=[
                     FieldCheck("id", 0, mode="gt"),
+                    FieldCheck("isCreditNote", False),
+                    # amountCurrency is negative for normal invoices (Tripletex convention)
+                    # outstandingAmount shows the positive amount owed
+                    FieldCheck("outstandingAmount", 0, mode="gt"),
                 ],
             ),
             tier=2,
