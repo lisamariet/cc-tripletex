@@ -1609,9 +1609,25 @@ def cmd_lb(args: argparse.Namespace) -> None:
         our_score = safe_float(our_entry.get("best_score", 0))
         top_score = safe_float(top_entry.get("best_score", 0))
         our_tries = safe_int(our_entry.get("total_attempts", 0))
+        last_attempt_at = our_entry.get("last_attempt_at", "")
 
         sum_ours += our_score
         sum_top += top_score
+
+        # Format last attempt: show time if today, otherwise date
+        last_attempt_str = "-"
+        if last_attempt_at:
+            try:
+                dt = datetime.fromisoformat(last_attempt_at.replace("Z", "+00:00")).replace(tzinfo=None)
+                today = datetime.now().date()
+                if dt.date() == today:
+                    last_attempt_str = dt.strftime("%H:%M:%S")
+                else:
+                    last_attempt_str = dt.strftime("%Y-%m-%d")
+            except (ValueError, AttributeError):
+                last_attempt_str = str(last_attempt_at)[:10]
+
+        gap = top_score - our_score
 
         rows.append({
             "task_id": task_num,
@@ -1620,14 +1636,16 @@ def cmd_lb(args: argparse.Namespace) -> None:
             "our_score": our_score,
             "top_score": top_score,
             "our_tries": our_tries,
+            "gap": gap,
+            "last_attempt": last_attempt_str,
         })
 
     # Print header
     print()
     print(f"{BOLD}Leaderboard — {our_team_name} ({our_total:.1f} poeng, rank #{our_placement}){RESET}")
     print()
-    print(f"  {'Task':<6} {'T':<2} {'Oppgavetype':<30} {'Score':>7} {'Tries':>6} {'#1 Score':>9}")
-    print(f"  {'─' * 70}")
+    print(f"  {'Task':<6} {'T':<2} {'Oppgavetype':<30} {'Score':>7} {'#1':>7} {'Gap':>7} {'Tries':>6} {'LastAttempt':>12}")
+    print(f"  {'─' * 86}")
 
     # Print rows
     for row in rows:
@@ -1635,10 +1653,27 @@ def cmd_lb(args: argparse.Namespace) -> None:
         if len(task_type) > 29:
             task_type = task_type[:26] + "..."
 
-        print(f"  {row['task_id']:<6} {row['tier']:<2} {task_type:<30} {row['our_score']:>7.2f} {row['our_tries']:>6} {row['top_score']:>9.2f}")
+        gap = row["gap"]
+        if gap <= 0:
+            gap_color = GREEN
+        elif gap < 2:
+            gap_color = YELLOW
+        else:
+            gap_color = RED
+        gap_str = f"+{gap:.1f}" if gap > 0 else f"{gap:.1f}"
+
+        tries_str = str(row["our_tries"]) if row["our_tries"] > 0 else "-"
+        top_str = f"{row['top_score']:.2f}" if row["top_score"] > 0 else "-"
+
+        print(
+            f"  {row['task_id']:<6} {row['tier']:<2} {task_type:<30} "
+            f"{row['our_score']:>7.2f} {top_str:>7} "
+            f"{gap_color}{gap_str:>7}{RESET} "
+            f"{tries_str:>6} {row['last_attempt']:>12}"
+        )
 
     # Print footer
-    print(f"  {'─' * 70}")
+    print(f"  {'─' * 86}")
     gap = sum_top - sum_ours
     print(f"  {BOLD}Totalt: {sum_ours:.1f} | #1: {sum_top:.1f} | Gap: {gap:.1f}{RESET}")
     print()
