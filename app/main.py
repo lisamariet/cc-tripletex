@@ -118,11 +118,13 @@ async def solve(request: Request):
             tracker_data = []
 
     total_ms = (time.monotonic() - t0) * 1000
+    completed_at = datetime.now(timezone.utc).isoformat()
 
     # Save result + call tracking to GCS
     save_to_gcs(
         {
             "timestamp": timestamp,
+            "completed_at": completed_at,
             "revision": REVISION,
             "prompt": prompt,
             "parsed_task": {

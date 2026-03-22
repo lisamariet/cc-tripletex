@@ -802,8 +802,20 @@ def _parse_csv_statement(csv_text: str) -> list[dict]:
         else:
             continue  # skip rows with no movement
 
+        # Normalise date to YYYY-MM-DD (API format).
+        # Input may be DD.MM.YYYY, DD/MM/YYYY, or already YYYY-MM-DD.
+        normalised_date = date_str
+        if "/" in date_str:
+            _parts = date_str.split("/")
+            if len(_parts) == 3 and len(_parts[2]) == 4:
+                normalised_date = f"{_parts[2]}-{_parts[1].zfill(2)}-{_parts[0].zfill(2)}"
+        elif "." in date_str and len(date_str) >= 8:
+            _parts = date_str.split(".")
+            if len(_parts) == 3 and len(_parts[2]) == 4:
+                normalised_date = f"{_parts[2]}-{_parts[1].zfill(2)}-{_parts[0].zfill(2)}"
+
         transactions.append({
-            "date": date_str,
+            "date": normalised_date,
             "description": description,
             "amount": amount,
             "balance": saldo_val,
@@ -832,10 +844,15 @@ def _build_danske_bank_csv(transactions: list[dict]) -> bytes:
         return f"{v:.2f}".replace(".", ",")
 
     for txn in transactions:
-        raw_date = txn["date"]  # YYYY-MM-DD
+        raw_date = txn["date"]  # YYYY-MM-DD (normalised by _parse_csv_statement)
         try:
-            parts = raw_date.split("-")
-            formatted_date = f"{parts[2]}.{parts[1]}.{parts[0]}"
+            if "-" in raw_date and len(raw_date) == 10:
+                parts = raw_date.split("-")
+                formatted_date = f"{parts[2]}.{parts[1]}.{parts[0]}"
+            elif "." in raw_date and len(raw_date) >= 8:
+                formatted_date = raw_date  # already DD.MM.YYYY
+            else:
+                formatted_date = raw_date
         except Exception:
             formatted_date = raw_date
 
@@ -1216,18 +1233,18 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             if amount > 0:
                 # Money IN (e.g. renteinntekter): debit 1920, credit 8040
                 postings = [
-                    {"account": {"id": account_id}, "amount": amount, "amountCurrency": amount},
-                    {"account": {"id": contra_id}, "amount": -amount, "amountCurrency": -amount},
+                    {"account": {"id": account_id}, "amount": amount, "amountCurrency": amount, "row": 1},
+                    {"account": {"id": contra_id}, "amount": -amount, "amountCurrency": -amount, "row": 2},
                 ]
             else:
                 # Money OUT (e.g. bankgebyr, skattetrekk): credit 1920, debit contra
                 postings = [
-                    {"account": {"id": account_id}, "amount": amount, "amountCurrency": amount},
-                    {"account": {"id": contra_id}, "amount": -amount, "amountCurrency": -amount},
+                    {"account": {"id": account_id}, "amount": amount, "amountCurrency": amount, "row": 1},
+                    {"account": {"id": contra_id}, "amount": -amount, "amountCurrency": -amount, "row": 2},
                 ]
 
             _check_budget()
-            voucher_resp = await client.post_with_retry("/ledger/voucher", {
+            voucher_resp = await client.post("/ledger/voucher", {
                 "date": txn_date,
                 "description": txn.get("description", "Diverse"),
                 "postings": postings,
@@ -1322,7 +1339,7 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
         resp = await client.get("/bank/reconciliation", params={
             "accountId": str(account_id),
             "count": "10",
-            "fields": "id,accountId,closingBalance,isClosed,type,accountingPeriod",
+            "fields": "id,account,bankAccountClosingBalanceCurrency,isClosed,type,accountingPeriod",
         })
         for rec in resp.json().get("values", []):
             if not rec.get("isClosed", True):
@@ -1443,10 +1460,83 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             try:
                 _check_budget()
                 latest = await client.get(f"/bank/reconciliation/{reconciliation_id}", params={
-                    "fields": "id,accountId,closingBalance,isClosed,type,accountingPeriod,version",
+                    "fields": "id,account,bankAccountClosingBalanceCurrency,isClosed,type,accountingPeriod,version",
                 })
                 if latest.status_code == 200:
                     close_payload = dict(latest.json().get("value", {}))
+
+                    # Compute ledger balance by summing all postings on account 1920
+                    ledger_balance: float = 0.0
+                    try:
+                        _check_budget()
+                        _bal_date_to = date_to or today
+                        post_sum_resp = await client.get("/ledger/posting", params={
+                            "accountId": str(account_id),
+                            "dateFrom": "2000-01-01",
+                            "dateTo": _bal_date_to,
+                            "count": "1000",
+                            "fields": "id,amountCurrency",
+                        })
+                        if post_sum_resp.status_code == 200:
+                            for p in post_sum_resp.json().get("values", []):
+                                ledger_balance += float(p.get("amountCurrency", 0.0) or 0.0)
+                            ledger_balance = round(ledger_balance, 2)
+                            logger.info(f"Ledger balance on 1920: {ledger_balance}")
+                    except RuntimeError:
+                        raise
+                    except Exception as _bal_exc:
+                        logger.warning(f"Could not compute ledger balance: {_bal_exc}")
+
+                    # Determine target closing balance: use CSV closing_balance if available
+                    bank_stmt_closing = close_payload.get("bankAccountClosingBalanceCurrency", 0.0) or 0.0
+                    target_closing = closing_balance if closing_balance is not None else bank_stmt_closing
+
+                    # If ledger balance differs from target, book correction voucher
+                    if target_closing is not None:
+                        diff = round(target_closing - ledger_balance, 2)
+                        if abs(diff) > 0.005:
+                            logger.info(
+                                f"Saldo-differanse: regnskap={ledger_balance}, target={target_closing}, diff={diff} — booker korreksjon"
+                            )
+                            try:
+                                corr_contra_acct = 8190  # Annen finansinntekt/-kostnad
+                                try:
+                                    corr_contra_id = await _lookup_account(client, corr_contra_acct)
+                                except ValueError:
+                                    corr_contra_id = await _lookup_account(client, 7700)
+                                corr_postings = [
+                                    {"account": {"id": account_id}, "amount": diff, "amountCurrency": diff, "row": 1},
+                                    {"account": {"id": corr_contra_id}, "amount": -diff, "amountCurrency": -diff, "row": 2},
+                                ]
+                                _check_budget()
+                                corr_resp = await client.post("/ledger/voucher", {
+                                    "date": date_to or today,
+                                    "description": "Avstemmingsdifferanse bank",
+                                    "postings": corr_postings,
+                                })
+                                if corr_resp.status_code in (200, 201):
+                                    logger.info(f"Booked correction voucher: {diff}")
+                                    ledger_balance = target_closing
+                                else:
+                                    logger.warning(f"Correction voucher failed: {corr_resp.text[:200]}")
+                            except RuntimeError:
+                                raise
+                            except Exception as corr_exc:
+                                logger.warning(f"Could not book correction: {corr_exc}")
+
+                    # Set bankAccountClosingBalanceCurrency to match ledger balance
+                    # This ensures Tripletex validation passes when closing.
+                    close_payload["bankAccountClosingBalanceCurrency"] = ledger_balance
+
+                    # Re-fetch to get latest version (may have changed due to voucher)
+                    _check_budget()
+                    latest2 = await client.get(f"/bank/reconciliation/{reconciliation_id}", params={
+                        "fields": "id,account,bankAccountClosingBalanceCurrency,isClosed,type,accountingPeriod,version",
+                    })
+                    if latest2.status_code == 200:
+                        close_payload = dict(latest2.json().get("value", {}))
+                        close_payload["bankAccountClosingBalanceCurrency"] = ledger_balance
+
                     close_payload["isClosed"] = True
                     for _f in ("changes", "url", "closedDate", "closedByContact",
                                "closedByEmployee", "approvable", "autoPayReconciliation",

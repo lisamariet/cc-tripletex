@@ -352,6 +352,12 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
         })
         logger.info(f"Unknown role '{role}', granted ALL_PRIVILEGES to employee {employee_id}")
 
+    # Check if this is a detailed task (T3 with salary/occupation) vs simple T1
+    has_detail_fields = any(
+        fields.get(k) is not None
+        for k in ("occupationCode", "employmentPercentage", "annualSalary", "monthlySalary", "role")
+    )
+
     # Create employment record with startDate if provided
     employment_id: int | None = None
     if employee_id and fields.get("startDate"):
@@ -359,28 +365,28 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
             "employee": {"id": employee_id},
             "startDate": fields["startDate"],
         }
-        # Division is required for employment in some Tripletex environments
-        try:
-            div_resp = await client.get_cached("/division", params={"count": 1})
-            divs = div_resp.json().get("values", [])
-            if divs:
-                employment_payload["division"] = {"id": divs[0]["id"]}
-            else:
-                # Sandbox is empty — create a default division
-                logger.info("[create_employee] No divisions found — creating default 'Hovedkontor'")
-                new_div_resp = await client.post("/division", {
-                    "name": "Hovedkontor",
-                    "startDate": "2026-01-01",
-                })
-                if new_div_resp.status_code < 400:
-                    new_div_id = new_div_resp.json().get("value", {}).get("id")
-                    if new_div_id:
-                        employment_payload["division"] = {"id": new_div_id}
-                        logger.info(f"[create_employee] Created division 'Hovedkontor' id={new_div_id}")
+        # Division lookup only for T3 tasks — T1 doesn't need it, extra calls hurt efficiency
+        if has_detail_fields:
+            try:
+                div_resp = await client.get_cached("/division", params={"count": 1})
+                divs = div_resp.json().get("values", [])
+                if divs:
+                    employment_payload["division"] = {"id": divs[0]["id"]}
                 else:
-                    logger.warning(f"[create_employee] Failed to create division: {new_div_resp.text[:200]}")
-        except Exception as e:
-            logger.warning(f"Failed to fetch/create division for employment: {e}")
+                    logger.info("[create_employee] No divisions found — creating default 'Hovedkontor'")
+                    new_div_resp = await client.post("/division", {
+                        "name": "Hovedkontor",
+                        "startDate": "2026-01-01",
+                    })
+                    if new_div_resp.status_code < 400:
+                        new_div_id = new_div_resp.json().get("value", {}).get("id")
+                        if new_div_id:
+                            employment_payload["division"] = {"id": new_div_id}
+                            logger.info(f"[create_employee] Created division 'Hovedkontor' id={new_div_id}")
+                    else:
+                        logger.warning(f"[create_employee] Failed to create division: {new_div_resp.text[:200]}")
+            except Exception as e:
+                logger.warning(f"Failed to fetch/create division for employment: {e}")
 
         emp_resp = await client.post("/employee/employment", employment_payload)
         if emp_resp.status_code < 400:
@@ -388,13 +394,6 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
             logger.info(f"Created employment for {employee_id} with startDate={fields['startDate']}")
         else:
             logger.warning(f"Failed to create employment: {emp_resp.text[:200]}")
-
-    # Create employment details if salary/occupationCode/percentage is provided
-    # This covers PDF-based tasks with detailed contract data
-    has_detail_fields = any(
-        fields.get(k) is not None
-        for k in ("occupationCode", "employmentPercentage", "annualSalary", "monthlySalary", "role")
-    )
     if employee_id and employment_id and has_detail_fields:
         detail_payload: dict[str, Any] = {
             "employment": {"id": employment_id},

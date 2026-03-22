@@ -112,6 +112,12 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
         r"(?:prosjekt|project|projet|proyecto|projeto|Projekt).{0,60}(?:fastpris|fixed.?price|preço fixo|precio fijo|Festpreis|prix forfait|prix fixe)",
         r"(?:fastpris|fixed.?price|preço fixo|precio fijo|Festpreis|prix forfait|prix fixe).{0,60}(?:prosjekt|project|projet|proyecto|projeto|Projekt)",
     ]),
+    ("reverse_payment", [
+        r"(?:reverser?|tilbakefør|reverse|cancel|annul|storn).{0,30}(?:betaling|payment|pago|pagamento|Zahlung|paiement)",
+        r"(?:betaling|payment|pago|pagamento|Zahlung|paiement).{0,30}(?:reverser|tilbakefør|reverse|cancel|annul|storn)",
+        r"(?:returnert|returned|retourné|devuelto|devolvido|zurückgebucht).{0,30}(?:bank|banque|banco)",
+        r"(?:annulez|annuler).{0,30}(?:le\s+)?paiement",
+    ]),
     ("run_payroll", [
         r"payroll|lønnskjøring|lønn(?:s)?kjøring|Gehaltsabrechnung|nómina|folha de pagamento|\bpaie\b|bulletin.de.paie",
         r"køyr.løn|kjør.lønn|kør.løn",
@@ -258,6 +264,20 @@ def _infer_task_type_from_keywords(prompt: str) -> str | None:
                 if task_type == "set_project_fixed_price" and _REMINDER_FEE_SIGNALS.search(prompt_lower):
                     logger.info(f"Keyword match '{pattern}' → set_project_fixed_price, but reminder fee signals present → overdue_invoice")
                     return "overdue_invoice"
+                # If we matched run_payroll but prompt is about invoices/payments/orders (not salary),
+                # skip — let more specific rules or LLM handle it.
+                # This prevents French "paie" from hijacking prompts about facture/paiement/commande.
+                if task_type == "run_payroll" and re.search(
+                    r"facture|paiement|commande|avoir|cr[eé]dit|impay[eé]|retourné"
+                    r"|invoice|payment|order|credit.?note"
+                    r"|faktura|betaling|ordre|kreditnota"
+                    r"|Rechnung|Zahlung|Auftrag|Gutschrift"
+                    r"|factura|pago|pedido|nota.?de.?cr[eé]dito"
+                    r"|fatura|pagamento|encomenda|nota.?de.?cr[eé]dito",
+                    prompt_lower,
+                ):
+                    logger.info(f"Keyword match '{pattern}' → run_payroll BLOCKED: invoice/payment/order signals present, skipping")
+                    continue
                 logger.info(f"Keyword match: '{pattern}' → {task_type}")
                 return task_type
 

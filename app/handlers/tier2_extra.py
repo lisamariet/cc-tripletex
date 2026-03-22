@@ -97,7 +97,7 @@ async def _find_employee_by_fields(client: TripletexClient, fields: dict[str, An
     if not params:
         return None
 
-    params["fields"] = "id,firstName,lastName,email,version"
+    params["fields"] = "id,firstName,lastName,email,dateOfBirth,version"
     resp = await client.get("/employee", params=params)
     values = resp.json().get("values", [])
     return values[0] if values else None
@@ -719,7 +719,7 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> dic
     # Try email first (most precise)
     email = fields.get("employeeEmail") or fields.get("email")
     if email:
-        resp = await client.get("/employee", params={"email": email, "fields": "id,firstName,lastName,email,version"})
+        resp = await client.get("/employee", params={"email": email, "fields": "id,firstName,lastName,email,dateOfBirth,version"})
         values = resp.json().get("values", [])
         if values:
             return values[0]
@@ -1061,30 +1061,50 @@ async def _ensure_division(client: TripletexClient) -> int | None:
     if divisions:
         return divisions[0]["id"]
 
-    # Need a municipality for the division — use Oslo (id=262) as default,
-    # but fall back to first available municipality
-    muni_resp = await client.get("/municipality", params={"count": 5})
-    munis = muni_resp.json().get("values", [])
-    # Prefer a municipality with a payrollTaxZone set
+    # Need a municipality for the division — fetch available municipalities
     muni_id = None
-    for m in munis:
-        if m.get("payrollTaxZone"):
-            muni_id = m["id"]
-            break
-    if not muni_id and munis:
-        muni_id = munis[0]["id"]
-    if not muni_id:
-        logger.error("No municipality found — cannot create division")
-        return None
+    try:
+        muni_resp = await client.get("/municipality", params={"count": 5})
+        if muni_resp.status_code == 200:
+            munis = muni_resp.json().get("values", [])
+            # Prefer a municipality with a payrollTaxZone set
+            for m in munis:
+                if m.get("payrollTaxZone"):
+                    muni_id = m["id"]
+                    break
+            if not muni_id and munis:
+                muni_id = munis[0]["id"]
+        else:
+            logger.warning(f"GET /municipality failed ({muni_resp.status_code}), trying without fields")
+            # Retry without any params except count — some sandbox versions are picky
+            muni_resp2 = await client.get("/municipality", params={"count": 1, "fields": "id,name"})
+            if muni_resp2.status_code == 200:
+                munis2 = muni_resp2.json().get("values", [])
+                if munis2:
+                    muni_id = munis2[0]["id"]
+    except Exception as e:
+        logger.warning(f"Municipality lookup failed: {e}")
 
-    div_payload = {
+    if not muni_id:
+        logger.warning("No municipality found — creating division without explicit municipality")
+
+    div_payload: dict[str, Any] = {
         "name": "Hovedvirksomhet",
         "startDate": "2026-01-01",
         "organizationNumber": "999999999",
-        "municipality": {"id": muni_id},
         "municipalityDate": "2026-01-01",
     }
+    if muni_id:
+        div_payload["municipality"] = {"id": muni_id}
+
     resp = await client.post("/division", div_payload)
+    if resp.status_code >= 400:
+        # If municipality caused the error, try without it
+        if muni_id and "municipality" in resp.text.lower():
+            logger.warning("Division creation failed with municipality, retrying without")
+            del div_payload["municipality"]
+            resp = await client.post("/division", div_payload)
+
     if resp.status_code >= 400:
         logger.error(f"Failed to create division: {resp.text[:300]}")
         return None
@@ -1294,11 +1314,14 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     # 5. Try salary/transaction API (creates payslip)
     transaction_id = None
     payslip_id = None
-    fastlonn_id = await _get_salary_type_id(client, "2000")  # Fastlønn
-    bonus_type_id = await _get_salary_type_id(client, "2002")  # Bonus
-    # Fallback bonus type: try "2001" (Overtid/tillegg) if "2002" doesn't exist
-    if not bonus_type_id:
-        bonus_type_id = await _get_salary_type_id(client, "2001")
+    # Fetch all salary types in one call to reduce API calls
+    fastlonn_id = None
+    bonus_type_id = None
+    sal_resp = await client.get_cached("/salary/type", params={"count": 50, "fields": "id,number,name"})
+    sal_types = sal_resp.json().get("values", []) if sal_resp.status_code == 200 else []
+    sal_type_map = {st.get("number"): st.get("id") for st in sal_types if st.get("number")}
+    fastlonn_id = sal_type_map.get("2000")
+    bonus_type_id = sal_type_map.get("2002") or sal_type_map.get("2001")
 
     if fastlonn_id:
         specifications = []

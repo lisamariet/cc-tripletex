@@ -369,44 +369,122 @@ def reset_gcs_log_claims() -> None:
 
 
 def _find_best_gcs_log(sub: dict, gcs_logs: list[dict]) -> dict | None:
-    """Find the closest UNCLAIMED GCS log for a submission within 1 min window.
+    """Find the best UNCLAIMED GCS log for a submission.
 
-    Uses 1-to-1 matching: once a GCS log is matched to a submission, it cannot
-    be reused by another submission. This prevents duplicate task types when
-    two submissions are close in time.
+    Matching strategy (multi-signal scoring):
+    1. duration_ms similarity (±5%) — most unique signal, disambiguates concurrent subs
+    2. queued_at → GCS timestamp proximity (±3 min) — queued_at + queue wait ≈ GCS timestamp
+    Both signals contribute to a composite score. Highest score wins.
+
+    NOTE: completed_at from submissions API includes scoring overhead (0-600s) and is
+    NOT usable for matching. queued_at has variable queue wait time (0-120s).
+    duration_ms is the most reliable signal since it measures the same handler execution.
+
+    Uses 1-to-1 claiming to prevent duplicate matches.
     """
-    sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
-    if not sub_ts or not gcs_logs:
+    sub_queued = sub.get("queued_at") or sub.get("created_at") or ""
+    sub_duration = safe_float(sub.get("duration_ms"))
+
+    if not sub_queued or not gcs_logs:
         return None
+
     try:
-        dt_sub = datetime.fromisoformat(sub_ts.replace("Z", "+00:00")).replace(tzinfo=None)
+        dt_sub = datetime.fromisoformat(sub_queued.replace("Z", "+00:00")).replace(tzinfo=None)
     except Exception:
         return None
 
-    best_delta = timedelta(minutes=1)
+    best_score = -1.0
     best_log = None
 
     for log in gcs_logs:
         log_ts = log.get("timestamp", "")
-        if not log_ts:
+        if not log_ts or log_ts in _claimed_gcs_logs:
             continue
-        # Skip already claimed logs
-        if log_ts in _claimed_gcs_logs:
-            continue
+
+        score = 0.0
+
+        # Signal 1 (primary): duration_ms match — most discriminating
+        # Handler durations vary widely (3s vs 60s vs 150s), so even ±5% is unique
+        log_duration = safe_float(log.get("total_duration_ms"))
+        if sub_duration and log_duration and sub_duration > 0:
+            ratio = log_duration / sub_duration
+            if 0.95 <= ratio <= 1.05:
+                score += 50.0 * (1.0 - abs(1.0 - ratio) * 20)  # 0-50 points
+            elif 0.85 <= ratio <= 1.15:
+                score += 20.0 * (1.0 - abs(1.0 - ratio) * 6.67)  # 0-20 points
+
+        # Signal 2: queued_at ↔ GCS timestamp (±3 min, accounts for queue wait)
+        # GCS timestamp = queued_at + queue_wait, so GCS is always >= queued_at
         try:
             dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
-            delta = abs(dt_log - dt_sub)
-            if delta < best_delta:
-                best_delta = delta
-                best_log = log
+            delta_s = (dt_log - dt_sub).total_seconds()  # positive = log is after queued (expected)
+            abs_delta = abs(delta_s)
+            if abs_delta <= 10.0:
+                score += 30.0 - abs_delta  # 20-30 points for very close
+            elif abs_delta <= 60.0:
+                score += 15.0 - abs_delta / 4.0  # 0-15 points
+            elif abs_delta <= 180.0:
+                score += 5.0 - abs_delta / 36.0  # 0-5 points for up to 3 min
         except Exception:
             continue
 
-    # Claim this log so no other submission can use it
-    if best_log:
-        _claimed_gcs_logs.add(best_log.get("timestamp", ""))
+        if score > best_score:
+            best_score = score
+            best_log = log
 
-    return best_log
+    if best_log and best_score > 0:
+        _claimed_gcs_logs.add(best_log.get("timestamp", ""))
+        return best_log
+
+    return None
+
+
+def _find_candidate_gcs_logs(sub: dict, gcs_logs: list[dict], max_candidates: int = 3, max_delta_s: float = 180.0) -> list[dict]:
+    """Find the N closest GCS logs by time proximity to a submission's queued_at.
+
+    Returns list of dicts with keys: task_type, duration_s, delta_s, n_4xx, log.
+    Sorted by absolute time delta (nearest first).
+    """
+    sub_queued = sub.get("queued_at") or sub.get("created_at") or ""
+    if not sub_queued or not gcs_logs:
+        return []
+
+    try:
+        dt_sub = datetime.fromisoformat(sub_queued.replace("Z", "+00:00")).replace(tzinfo=None)
+    except Exception:
+        return []
+
+    candidates = []
+    for log in gcs_logs:
+        log_ts = log.get("timestamp", "")
+        if not log_ts:
+            continue
+        try:
+            dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
+            delta_s = abs((dt_log - dt_sub).total_seconds())
+        except Exception:
+            continue
+
+        if delta_s > max_delta_s:
+            continue
+
+        parsed = log.get("parsed_task") or {}
+        task_type = parsed.get("task_type", "?")
+        duration_ms = safe_float(log.get("total_duration_ms"))
+        duration_s = duration_ms / 1000.0 if duration_ms else 0.0
+        api_calls = log.get("api_calls") or []
+        n_4xx = sum(1 for c in api_calls if 400 <= safe_int(c.get("status")) < 500)
+
+        candidates.append({
+            "task_type": task_type,
+            "duration_s": duration_s,
+            "delta_s": delta_s,
+            "n_4xx": n_4xx,
+            "log": log,
+        })
+
+    candidates.sort(key=lambda c: c["delta_s"])
+    return candidates[:max_candidates]
 
 
 def get_error_counts_for_sub(sub: dict, gcs_logs: list[dict]) -> tuple[int | None, int | None]:
@@ -512,30 +590,53 @@ def _get_prompt_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[dict
 
 
 def get_log_for_sub(sub: dict, gcs_logs: list[dict]) -> dict | None:
-    """Find the GCS log closest in time to a submission."""
-    sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
-    if not sub_ts:
-        return None
+    """Find the best GCS log for a submission using duration + queued_at matching.
+
+    Same strategy as _find_best_gcs_log but without claiming (for show command).
+    """
+    sub_queued = sub.get("queued_at") or sub.get("created_at") or ""
+    sub_duration = safe_float(sub.get("duration_ms"))
+
     try:
-        dt_sub = datetime.fromisoformat(sub_ts.replace("Z", "+00:00")).replace(tzinfo=None)
+        dt_sub = datetime.fromisoformat(sub_queued.replace("Z", "+00:00")).replace(tzinfo=None)
     except Exception:
         return None
 
     best_log = None
-    best_delta = timedelta(minutes=1)
+    best_score = -1.0
 
     for log in gcs_logs:
         log_ts = log.get("timestamp", "")
         if not log_ts:
             continue
+
+        score = 0.0
+
+        # Duration match (primary)
+        log_duration = safe_float(log.get("total_duration_ms"))
+        if sub_duration and log_duration and sub_duration > 0:
+            ratio = log_duration / sub_duration
+            if 0.95 <= ratio <= 1.05:
+                score += 50.0 * (1.0 - abs(1.0 - ratio) * 20)
+            elif 0.85 <= ratio <= 1.15:
+                score += 20.0 * (1.0 - abs(1.0 - ratio) * 6.67)
+
+        # Timestamp proximity (secondary, ±3 min for queue wait)
         try:
             dt_log = datetime.strptime(log_ts[:15], "%Y%m%d_%H%M%S")
-            delta = abs(dt_log - dt_sub)
-            if delta < best_delta:
-                best_delta = delta
-                best_log = log
+            abs_delta = abs((dt_log - dt_sub).total_seconds())
+            if abs_delta <= 10.0:
+                score += 30.0 - abs_delta
+            elif abs_delta <= 60.0:
+                score += 15.0 - abs_delta / 4.0
+            elif abs_delta <= 180.0:
+                score += 5.0 - abs_delta / 36.0
         except Exception:
             continue
+
+        if score > best_score:
+            best_score = score
+            best_log = log
 
     return best_log
 
@@ -699,9 +800,9 @@ def cmd_status(args: argparse.Namespace) -> None:
 
         print(f"  {i:>3}  {entry['ts']:<8} {task_col} {entry['total_calls']:>4} {col_4xx} {col_5xx} {entry['rev']:>5} {dur_str:>8}")
 
-    # ── Table 2: Submissions from API (score data) ──
+    # ── Table 2: Submissions + candidate GCS logs (nearest in time) ──
     print()
-    print(f"{BOLD}  Submissions (fra API){RESET}")
+    print(f"{BOLD}  Submissions (score fra API, kandidat-logger fra GCS){RESET}")
     print()
 
     display_subs = submissions[:limit] if limit is not None else submissions
@@ -709,8 +810,8 @@ def cmd_status(args: argparse.Namespace) -> None:
         print(f"  Viser {len(display_subs)} av {len(submissions)} submissions")
         print()
 
-    print(f"  {'#':>3}  {'Tid':<8} {'Score':>12} {'Varighet':>8}  {'Status'}")
-    print(f"  {'─'*50}")
+    print(f"  {'#':>3}  {'Tid':<8} {'Score':>8} {'Varighet':>8}  {'Status':<11} {'Kandidater (nærmest i tid)'}")
+    print(f"  {'─'*90}")
 
     for i, sub in enumerate(display_subs, 1):
         ts = format_ts_short(sub.get("queued_at"))
@@ -726,15 +827,31 @@ def cmd_status(args: argparse.Namespace) -> None:
             score_str = f"{color}{safe_int(raw)}/{safe_int(mx)}{RESET}"
             score_pad = f"{safe_int(raw)}/{safe_int(mx)}"
         else:
-            score_str = f"{DIM}venter...{RESET}"
-            score_pad = "venter..."
+            score_str = f"{DIM}...{RESET}"
+            score_pad = "..."
 
         dur_str = f"{duration / 1000:.1f}s" if duration else "-"
 
-        visible_pad = 12 - len(score_pad)
+        visible_pad = 8 - len(score_pad)
         score_display = " " * max(0, visible_pad) + score_str
 
-        print(f"  {i:>3}  {ts:<8} {score_display} {dur_str:>8}  {status}")
+        # Build candidates string
+        if status in ("queued", "processing"):
+            cand_str = f"{DIM}i kø...{RESET}"
+        else:
+            candidates = _find_candidate_gcs_logs(sub, gcs_logs)
+            if candidates:
+                parts = []
+                for c in candidates:
+                    tt = c["task_type"][:22]
+                    ds = c["duration_s"]
+                    dur_label = f"{ds:.0f}s" if ds else "?"
+                    parts.append(f"{tt}({dur_label})")
+                cand_str = " | ".join(parts)
+            else:
+                cand_str = f"{DIM}-{RESET}"
+
+        print(f"  {i:>3}  {ts:<8} {score_display} {dur_str:>8}  {status:<11} {cand_str}")
 
 
 # ──────────────────────────────────────────────
@@ -798,7 +915,7 @@ def cmd_show(args: argparse.Namespace) -> None:
         revision = req_log.get("revision")
 
     print(f"  Tidspunkt:  {ts}")
-    print(f"  Oppgave:    {CYAN}{task_type}{RESET}")
+    print(f"  Oppgave:    {CYAN}{task_type}{RESET} {DIM}(best guess){RESET}")
     print(f"  Revisjon:   {revision or DIM + '(ukjent)' + RESET}")
     print(f"  Status:     {status}")
     if raw is not None:
@@ -808,6 +925,19 @@ def cmd_show(args: argparse.Namespace) -> None:
     else:
         print(f"  Score:      {DIM}(ikke ferdig){RESET}")
     print(f"  Varighet:   {duration / 1000:.1f}s" if duration else "  Varighet:   -")
+
+    # ── Mulige GCS-logger (candidates by time proximity) ──
+    candidates = _find_candidate_gcs_logs(sub, gcs_logs)
+    if candidates:
+        print(f"\n  {BOLD}Mulige GCS-logger (innen 3 min):{RESET}")
+        for ci, c in enumerate(candidates, 1):
+            tt = c["task_type"]
+            ds = c["duration_s"]
+            dur_label = f"{ds:.1f}s" if ds else "?"
+            delta_label = f"{c['delta_s']:.0f}s"
+            n4 = c["n_4xx"]
+            err_label = f", {RED}{n4} 4xx{RESET}" if n4 > 0 else ""
+            print(f"    {ci}. {CYAN}{tt}{RESET}  varighet={dur_label}  delta={delta_label}{err_label}")
 
     # ── Prompt (show early for context) ──
     prompt = None
