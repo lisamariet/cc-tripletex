@@ -39,8 +39,14 @@ async def _lookup_account(client: TripletexClient, account_number: int) -> int:
 
 
 async def _lookup_vat_type(client: TripletexClient, account_number: int) -> dict[str, Any] | None:
-    """For revenue/sales accounts (3000-series), look up the default VAT type (cached)."""
-    if 3000 <= account_number < 4000:
+    """Look up the VAT type for standard sales accounts (3000-3100 range only).
+
+    Only 3000-3100 consistently use VAT code 3 (25 %).  Other 3000-series
+    accounts (e.g. 3400 — "Spesielt offentlig tilskudd") are locked to
+    VAT code 0 (no VAT), so setting code 3 causes a 422 validation error.
+    For all other accounts we return None and let Tripletex apply the default.
+    """
+    if 3000 <= account_number <= 3100:
         resp = await client.get_cached("/ledger/vatType", params={"number": "3"})  # Standard MVA 25%
         data = resp.json()
         vat_types = data.get("values", [])
@@ -1152,34 +1158,45 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
             for pay in payments:
                 pay_amount = pay["amount"]  # positive (absolute value)
                 amount_excl_vat = round(pay_amount / 1.25, 2)
-                vat_amount = round(pay_amount - amount_excl_vat, 2)
 
-                # Create supplier invoice with proper voucher postings
+                # Build supplier invoice with BOTH expense + AP postings
+                # Sign convention: expense=POSITIVE (debit), AP=NEGATIVE (credit)
+                # amountCurrency MUST be NEGATIVE for normal invoices
+                expense_posting = {
+                    "account": {"id": expense_id},
+                    "supplier": {"id": sup_id},
+                    "amount": amount_excl_vat,
+                    "amountCurrency": amount_excl_vat,
+                    "amountGross": pay_amount,
+                    "amountGrossCurrency": pay_amount,
+                    "row": 1,
+                    "vatType": {"id": vat_type_id},
+                }
+                ap_posting = {
+                    "account": {"id": payable_id},
+                    "supplier": {"id": sup_id},
+                    "amount": -pay_amount,
+                    "amountCurrency": -pay_amount,
+                    "amountGross": -pay_amount,
+                    "amountGrossCurrency": -pay_amount,
+                    "row": 2,
+                }
+                voucher_obj: dict[str, Any] = {
+                    "date": pay["date"],
+                    "description": f"Leverandørfaktura: {sup_name}",
+                    "postings": [expense_posting, ap_posting],
+                }
+                if voucher_type_ref:
+                    voucher_obj["voucherType"] = voucher_type_ref
+
                 sinv_payload: dict[str, Any] = {
                     "invoiceDate": pay["date"],
                     "supplier": {"id": sup_id},
-                    "amountCurrency": pay_amount,
+                    "amountCurrency": -abs(pay_amount),
                     "currency": {"id": 1},
-                    "voucher": {
-                        "date": pay["date"],
-                        "description": f"Leverandørfaktura: {sup_name}",
-                        "postings": [
-                            {
-                                "account": {"id": expense_id},
-                                "supplier": {"id": sup_id},
-                                "amount": amount_excl_vat,
-                                "amountCurrency": amount_excl_vat,
-                                "amountGross": pay_amount,
-                                "amountGrossCurrency": pay_amount,
-                                "row": 1,
-                                "vatType": {"id": vat_type_id},
-                            },
-                        ],
-                    },
+                    "voucher": voucher_obj,
                     "invoiceDueDate": pay["date"],
                 }
-                if voucher_type_ref:
-                    sinv_payload["voucher"]["voucherType"] = voucher_type_ref
 
                 _check_budget()
                 sinv_resp = await client.post_with_retry("/supplierInvoice", sinv_payload)

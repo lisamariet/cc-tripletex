@@ -3247,6 +3247,20 @@
       "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
       "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
       "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
+    },
+    {
+      "field": "isClosed",
+      "error_type": "business_rule",
+      "error_message": "Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "fix": "Forretningsregel: Utgående saldo på kontoutskrift er forskjellig fra utgående saldo som er registrert i regnskapet. Kontoen kan ikke godkjennes som avstemt før disse tallene er identiske.",
+      "status": 422
     }
   ],
   "PUT /invoice/{id}/:createCreditNote": [
@@ -7633,6 +7647,176 @@
       "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
       "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
       "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    },
+    {
+      "field": null,
+      "error_type": "validation_error",
+      "error_message": "Summen av posteringer og transaksjoner er ikke lik null.",
+      "fix": "Valideringsfeil: Summen av posteringer og transaksjoner er ikke lik null.",
+      "status": 422
+    },
+    {
+      "field": "transactions",
+      "error_type": "validation_error",
+      "error_message": "Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "fix": "Valideringsfeil: Banktransaksjoner er ikke en del av bankavstemmingen.",
+      "status": 422
+    }
+  ],
+  "PUT /supplierInvoice/{id}/:payment": [
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    },
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    },
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
+    },
+    {
+      "field": "",
+      "error_type": "not_found",
+      "error_message": "Object not found",
+      "fix": "Objektet finnes ikke — sjekk at IDen er gyldig",
+      "status": 404
     }
   ]
 }
