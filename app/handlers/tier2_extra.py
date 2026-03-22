@@ -1100,10 +1100,8 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     Strategy:
     1. Find or CREATE employee (fresh sandboxes are empty)
     2. Ensure division + employment
-    3. POST /salary/transaction (creates payslip draft)
-    4. ALSO create a manual voucher with salary postings
-       (salary/transaction only creates a draft that is invisible to
-        GET /salary/payslip search and salary/compilation)
+    3. POST /salary/transaction with generateTaxDeduction=true
+       (handles all accounting entries including tax, AGA, vacation pay)
     """
     today = date.today()
     month = fields.get("month") or today.month
@@ -1267,177 +1265,6 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
                     f"Salary transaction API failed ({resp.status_code}): {error_msg} — {validation}"
                 )
 
-    # 6. ALSO create a manual voucher with full Norwegian payroll postings.
-    #    This provides a secondary verification path via ledger/posting.
-    #    Norwegian payroll requires: salary, tax deduction, AGA, net bank payment.
-    #    Fetch all required accounts in one batch call to minimize API calls.
-    accounts_resp = await client.get_cached(
-        "/ledger/account",
-        params={"number": "1920,2600,2770,2940,5000,5020,5400", "fields": "id,number", "count": 10},
-    )
-    account_map: dict[int, int] = {}  # account_number -> account_id
-    for acc in accounts_resp.json().get("values", []):
-        account_map[acc["number"]] = acc["id"]
-
-    salary_account_id = account_map.get(5000)    # Lønn til ansatte
-    bank_account_id = account_map.get(1920)      # Bankinnskudd
-    tax_account_id = account_map.get(2600)        # Forskuddstrekk
-    aga_expense_id = account_map.get(5400)        # Arbeidsgiveravgift
-    aga_payable_id = account_map.get(2770)        # Skyldig arbeidsgiveravgift
-    vacation_payable_id = account_map.get(2940)   # Skyldig feriepenger
-    vacation_expense_id = account_map.get(5020)   # Feriepenger
-
-    # Look up "Lønnsbilag" voucher type for proper categorization
-    vt_resp = await client.get_cached("/ledger/voucherType", params={"name": "Lønnsbilag"})
-    salary_voucher_type_ref = None
-    for vt in vt_resp.json().get("values", []):
-        if "lønn" in vt.get("name", "").lower():
-            salary_voucher_type_ref = {"id": vt["id"]}
-            break
-
-    voucher_id = None
-    if salary_account_id and bank_account_id:
-        voucher_date = f"{year}-{month:02d}-28"
-        description = f"Lønn {emp_name} {month:02d}/{year}"
-        if bonus:
-            description += f" (grunnlønn {base_salary} + bonus {bonus})"
-
-        # Norwegian payroll calculations
-        gross = total_amount
-        tax_rate = 0.30  # Standard tabelltrekk ~30%
-        tax_deduction = round(gross * tax_rate / 100) * 100  # Rounded to nearest 100
-        net_pay = gross - tax_deduction
-        aga_rate = 0.141  # Standard AGA sone 1 (14.1%)
-        aga_amount = round(gross * aga_rate, 2)
-        vacation_rate = 0.12  # Standard feriepenger 12%
-        vacation_amount = round(gross * vacation_rate, 2)
-
-        postings = []
-        row = 1
-
-        # DEBIT: Salary expense (konto 5000)
-        if base_salary:
-            postings.append({
-                "account": {"id": salary_account_id},
-                "employee": {"id": employee_id},
-                "amountGross": base_salary,
-                "amountGrossCurrency": base_salary,
-                "row": row,
-            })
-            row += 1
-
-        if bonus:
-            postings.append({
-                "account": {"id": salary_account_id},
-                "employee": {"id": employee_id},
-                "amountGross": bonus,
-                "amountGrossCurrency": bonus,
-                "row": row,
-            })
-            row += 1
-
-        # CREDIT: Tax deduction (konto 2600 Forskuddstrekk)
-        if tax_account_id and tax_deduction > 0:
-            postings.append({
-                "account": {"id": tax_account_id},
-                "amountGross": -tax_deduction,
-                "amountGrossCurrency": -tax_deduction,
-                "row": row,
-            })
-            row += 1
-
-        # CREDIT: Net pay to bank (konto 1920)
-        postings.append({
-            "account": {"id": bank_account_id},
-            "amountGross": -net_pay,
-            "amountGrossCurrency": -net_pay,
-            "row": row,
-        })
-        row += 1
-
-        # DEBIT: AGA expense (konto 5400)
-        if aga_expense_id and aga_amount > 0:
-            postings.append({
-                "account": {"id": aga_expense_id},
-                "amountGross": aga_amount,
-                "amountGrossCurrency": aga_amount,
-                "row": row,
-            })
-            row += 1
-
-        # CREDIT: AGA payable (konto 2770)
-        if aga_payable_id and aga_amount > 0:
-            postings.append({
-                "account": {"id": aga_payable_id},
-                "amountGross": -aga_amount,
-                "amountGrossCurrency": -aga_amount,
-                "row": row,
-            })
-            row += 1
-
-        # DEBIT: Vacation pay expense (konto 5020)
-        # CREDIT: Vacation pay payable (konto 2940)
-        if vacation_expense_id and vacation_payable_id and vacation_amount > 0:
-            postings.append({
-                "account": {"id": vacation_expense_id},
-                "amountGross": vacation_amount,
-                "amountGrossCurrency": vacation_amount,
-                "row": row,
-            })
-            row += 1
-            postings.append({
-                "account": {"id": vacation_payable_id},
-                "amountGross": -vacation_amount,
-                "amountGrossCurrency": -vacation_amount,
-                "row": row,
-            })
-            row += 1
-
-        voucher_payload: dict[str, Any] = {
-            "date": voucher_date,
-            "description": description,
-            "postings": postings,
-        }
-        if salary_voucher_type_ref:
-            voucher_payload["voucherType"] = salary_voucher_type_ref
-
-        resp = await client.post("/ledger/voucher", voucher_payload)
-        if resp.status_code < 400:
-            voucher_id = resp.json().get("value", {}).get("id")
-            logger.info(
-                f"Created payroll voucher {voucher_id} for employee {employee_id}: "
-                f"gross={gross}, tax={tax_deduction}, net={net_pay}, aga={aga_amount}"
-            )
-        else:
-            logger.warning(f"Payroll voucher creation failed: {resp.text[:300]}")
-            # Fallback: simple voucher without tax/AGA if full posting fails
-            simple_postings = [
-                {
-                    "account": {"id": salary_account_id},
-                    "employee": {"id": employee_id},
-                    "amountGross": total_amount,
-                    "amountGrossCurrency": total_amount,
-                    "row": 1,
-                },
-                {
-                    "account": {"id": bank_account_id},
-                    "amountGross": -total_amount,
-                    "amountGrossCurrency": -total_amount,
-                    "row": 2,
-                },
-            ]
-            simple_payload = {
-                "date": voucher_date,
-                "description": description,
-                "postings": simple_postings,
-            }
-            resp = await client.post("/ledger/voucher", simple_payload)
-            if resp.status_code < 400:
-                voucher_id = resp.json().get("value", {}).get("id")
-                logger.info(f"Created simple payroll voucher {voucher_id} (fallback)")
-            else:
-                logger.warning(f"Simple payroll voucher also failed: {resp.text[:300]}")
-
     # Build payslips array with URL (for maximum compatibility with scorer)
     # Old code format: [{"id": ..., "url": "..."}]
     payslips_list = []
@@ -1479,10 +1306,9 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
     result: dict = {
         "status": "completed",
         "taskType": "run_payroll",
-        "transactionId": transaction_id or voucher_id,
+        "transactionId": transaction_id,
         "payslipId": payslip_id,
         "payslips": payslips_list,
-        "voucherId": voucher_id,
         "employeeId": employee_id,
         "baseSalary": base_salary,
         "bonus": bonus,
