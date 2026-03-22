@@ -108,17 +108,17 @@ Plans:
 - [x] 03-02-PLAN.md — Fields= projeksjon + asyncio.gather() + post_with_retry i T3-handlers
 
 ### Phase 4: T3 Robusthet
-**Goal**: T3-handlers fullfører innen 90 sekunder uten timeout eller MAX_API_CALLS-feil uansett prompt-variant
+**Goal**: T3-handlers fullforer innen 90 sekunder uten timeout eller MAX_API_CALLS-feil uansett prompt-variant
 **Depends on**: Phase 3
 **Requirements**: (ingen egne v1-krav — robusthet-gevinst fra T3-01 til T3-06 + EFF-05)
 **Success Criteria** (what must be TRUE):
   1. Year_end_closing trigger ikke RuntimeError fra MAX_API_CALLS-grense i noen E2E-variant
-  2. Bank_reconciliation fullfører innen 90s på alle sandboxkjøringer
-  3. T3-handlers E2E-suite er 100% grønn etter alle timeout-/robusthet-fikser
-**Plans**: TBD
+  2. Bank_reconciliation fullforer innen 90s pa alle sandboxkjoringer
+  3. T3-handlers E2E-suite er 100% gronn etter alle timeout-/robusthet-fikser
+**Plans:** 1 plan
 
 Plans:
-- [ ] 04-01: Profiler T3 E2E execution time + fiks timeout-risiko i year_end_closing og bank_reconciliation
+- [ ] 04-01-PLAN.md — Timeout-guard i main.py + MAX_API_CALLS i bank_reconciliation/correct_ledger_error + E2E-verifisering
 
 ## Progress
 

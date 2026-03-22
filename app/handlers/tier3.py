@@ -727,6 +727,19 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
     import base64
     import datetime
 
+    # Hard cap: bank_reconciliation can have many CSV invoice matches + reconciliation GETs/POSTs.
+    # 30 leaves room for normal operation while blocking runaway loops.
+    MAX_API_CALLS = 30
+    api_calls = 0
+    reconciliation_id: int | None = None  # forward-declare for budget-exceeded return
+
+    def _check_budget() -> None:
+        nonlocal api_calls
+        api_calls += 1
+        if api_calls > MAX_API_CALLS:
+            logger.warning(f"bank_reconciliation exceeded API call budget ({MAX_API_CALLS})")
+            raise RuntimeError(f"bank_reconciliation exceeded API call budget ({MAX_API_CALLS})")
+
     account_id = fields.get("accountId")
     account_number = fields.get("accountNumber", 1920)
     date_from = fields.get("dateFrom")
@@ -783,439 +796,483 @@ async def bank_reconciliation(client: TripletexClient, fields: dict[str, Any]) -
 
     logger.info(f"Bank reconciliation: account_id={account_id}, period={date_from}→{date_to}")
 
-    # Step 1b: Match CSV transactions against open customer/supplier invoices
-    # Parse invoice numbers from descriptions ("Faktura XXXX" or "Faktura #XXXX")
-    # and register payments for matching open invoices.
-    invoice_payments_registered: list[dict] = []
-    if csv_transactions:
-        import re as _re
+    try:  # budget guard — catch RuntimeError from _check_budget()
 
-        # Get payment type ID for bank payments (cached)
-        _payment_type_id: int | None = None
-        try:
-            pt_resp = await client.get_cached("/invoice/paymentType")
-            pt_list = pt_resp.json().get("values", [])
-            for pt in pt_list:
-                if "bank" in pt.get("description", "").lower():
-                    _payment_type_id = pt["id"]
-                    break
-            if _payment_type_id is None and pt_list:
-                _payment_type_id = pt_list[0]["id"]
-        except Exception:
-            _payment_type_id = None
+        # Step 1b: Match CSV transactions against open customer/supplier invoices
+        # Parse invoice numbers from descriptions ("Faktura XXXX" or "Faktura #XXXX")
+        # and register payments for matching open invoices.
+        invoice_payments_registered: list[dict] = []
+        if csv_transactions:
+            import re as _re
 
-        for txn in csv_transactions:
-            desc = txn.get("description", "")
-            amount = float(txn.get("amount", 0))
-            txn_date = txn.get("date", date_to or datetime.date.today().isoformat())
-
-            # Extract invoice number from description
-            inv_match = _re.search(r"[Ff]aktura[r]?\s*#?\s*(\d+)", desc)
-            if not inv_match:
-                continue
-            inv_number = inv_match.group(1)
-
-            if amount > 0:
-                # Incoming payment (from customer) → register customer invoice payment
-                try:
-                    inv_resp = await client.get("/invoice", params={
-                        "invoiceNumber": inv_number,
-                        "invoiceDateFrom": "2020-01-01",
-                        "invoiceDateTo": date_to or datetime.date.today().isoformat(),
-                        "count": "5",
-                        "fields": "id,invoiceNumber,amount,amountOutstanding,amountRemainingCurrency",
-                    })
-                    if inv_resp.status_code == 200:
-                        invoices = inv_resp.json().get("values", [])
-                        for inv in invoices:
-                            if str(inv.get("invoiceNumber", "")) == str(inv_number) and float(inv.get("amountRemainingCurrency", 1)) > 0:
-                                inv_id = inv["id"]
-                                pay_params: dict[str, Any] = {
-                                    "paymentDate": txn_date,
-                                    "paidAmount": amount,
-                                }
-                                if _payment_type_id:
-                                    pay_params["paymentTypeId"] = _payment_type_id
-                                pay_resp = await client.put(f"/invoice/{inv_id}/:payment", params=pay_params)
-                                if pay_resp.status_code in (200, 201):
-                                    invoice_payments_registered.append({
-                                        "invoiceId": inv_id,
-                                        "invoiceNumber": inv_number,
-                                        "amount": amount,
-                                        "type": "customer",
-                                    })
-                                    logger.info(f"Registered customer invoice payment: invoice {inv_number} = {amount}")
-                                else:
-                                    logger.warning(f"Failed to pay invoice {inv_number}: {pay_resp.text[:150]}")
-                                break
-                except Exception as _exc:
-                    logger.warning(f"Error processing customer invoice {inv_number}: {_exc}")
-
-            elif amount < 0:
-                # Outgoing payment (to supplier) → register supplier invoice payment
-                try:
-                    sinv_resp = await client.get("/supplierInvoice", params={
-                        "invoiceNumber": inv_number,
-                        "count": "5",
-                        "fields": "id,invoiceNumber,amount,amountOutstanding,amountRemainingCurrency",
-                    })
-                    if sinv_resp.status_code == 200:
-                        sinvoices = sinv_resp.json().get("values", [])
-                        for sinv in sinvoices:
-                            if str(sinv.get("invoiceNumber", "")) == str(inv_number) and float(sinv.get("amountRemainingCurrency", 1)) > 0:
-                                sinv_id = sinv["id"]
-                                # Supplier invoice payment — try PUT /:payment or pay via voucher
-                                sinv_pay_resp = await client.put(f"/supplierInvoice/{sinv_id}/:payment", params={
-                                    "paymentDate": txn_date,
-                                    "paymentTypeId": str(_payment_type_id) if _payment_type_id else "1",
-                                    "paidAmount": str(-amount),
-                                })
-                                if sinv_pay_resp.status_code in (200, 201):
-                                    invoice_payments_registered.append({
-                                        "supplierInvoiceId": sinv_id,
-                                        "invoiceNumber": inv_number,
-                                        "amount": -amount,
-                                        "type": "supplier",
-                                    })
-                                    logger.info(f"Registered supplier invoice payment: invoice {inv_number} = {-amount}")
-                                else:
-                                    logger.warning(f"Failed to pay supplier invoice {inv_number}: {sinv_pay_resp.text[:150]}")
-                                break
-                except Exception as _exc:
-                    logger.warning(f"Error processing supplier invoice {inv_number}: {_exc}")
-
-    if invoice_payments_registered:
-        logger.info(f"Registered {len(invoice_payments_registered)} invoice payments from CSV")
-
-    # Step 2: Import CSV as bank statement if we have CSV data
-    bank_statement_id: int | None = None
-    statement_import_status: str = "skipped"
-
-    if csv_transactions and date_from and date_to:
-        # Find bank ID — GET /bank returns Norwegian bank institutions (global system data)
-        bank_id: int | None = None
-        resp_bank = await client.get("/bank", params={"isBankReconciliationSupport": "true", "count": "50", "fields": "id,name,bankStatementFileFormatSupport"})
-        if resp_bank.status_code == 200:
-            banks = resp_bank.json().get("values", [])
-            # Prefer bank that explicitly supports DNB_CSV
-            for bank in banks:
-                supported = bank.get("bankStatementFileFormatSupport", [])
-                if "DNB_CSV" in supported:
-                    bank_id = bank["id"]
-                    logger.info(f"Found bank with DNB_CSV support: id={bank_id} ({bank.get('name','')})")
-                    break
-            if bank_id is None and banks:
-                bank_id = banks[0]["id"]
-                logger.info(f"Using first reconciliation-capable bank: id={bank_id} ({banks[0].get('name','')})")
-
-        if bank_id is None:
-            logger.warning("No bank found via /bank — cannot import CSV statement")
-
-        if bank_id is not None:
-            # Build Danske Bank CSV (windows-1252 encoding, DANSKE_BANK_CSV format)
-            danske_csv_bytes = _build_danske_bank_csv(csv_transactions)
-
-            # toDate is exclusive in Tripletex — use day AFTER last transaction
-            import datetime as _dt
+            # Get payment type ID for bank payments (cached)
+            _payment_type_id: int | None = None
+            _check_budget()
             try:
-                to_date_exclusive = (
-                    _dt.date.fromisoformat(date_to) + _dt.timedelta(days=1)
-                ).isoformat()
+                pt_resp = await client.get_cached("/invoice/paymentType")
+                pt_list = pt_resp.json().get("values", [])
+                for pt in pt_list:
+                    if "bank" in pt.get("description", "").lower():
+                        _payment_type_id = pt["id"]
+                        break
+                if _payment_type_id is None and pt_list:
+                    _payment_type_id = pt_list[0]["id"]
             except Exception:
-                to_date_exclusive = date_to
+                _payment_type_id = None
 
-            import_params = {
-                "bankId": str(bank_id),
-                "accountId": str(account_id),
-                "fromDate": date_from,
-                "toDate": to_date_exclusive,
-                "fileFormat": "DANSKE_BANK_CSV",
-            }
-            resp_import = await client.post_multipart(
-                "/bank/statement/import",
-                file_bytes=danske_csv_bytes,
-                filename="bankutskrift.csv",
-                mime_type="text/csv",
-                params=import_params,
-            )
-            if resp_import.status_code in (200, 201):
-                stmt_data = resp_import.json().get("value", {})
-                bank_statement_id = stmt_data.get("id")
-                statement_import_status = "imported"
-                logger.info(f"Imported bank statement: id={bank_statement_id}")
-            elif resp_import.status_code == 422 and "eksisterer allerede" in resp_import.text:
-                # Duplicate statement — find existing statement for this account/period
-                logger.info("Statement already exists for period — finding existing statement")
-                stmt_list_resp = await client.get("/bank/statement", params={"count": "20", "fields": "id,closingBalance,fromDate,toDate"})
-                if stmt_list_resp.status_code == 200:
-                    for s in stmt_list_resp.json().get("values", []):
-                        s_from = s.get("fromDate", "")
-                        s_to = s.get("toDate", "")
-                        # Match by overlapping date range
-                        if date_from and date_to and s_from <= date_to and s_to >= date_from:
-                            bank_statement_id = s.get("id")
-                            statement_import_status = "existing"
-                            logger.info(f"Using existing bank statement: id={bank_statement_id}")
-                            break
-                if not bank_statement_id:
-                    statement_import_status = "duplicate_not_found"
-            else:
-                statement_import_status = f"failed_{resp_import.status_code}"
-                logger.warning(f"Bank statement import failed: {resp_import.text[:300]}")
-        else:
-            statement_import_status = "no_bank_id"
+            for txn in csv_transactions:
+                desc = txn.get("description", "")
+                amount = float(txn.get("amount", 0))
+                txn_date = txn.get("date", date_to or datetime.date.today().isoformat())
 
-    # Step 3: Find current accounting period
-    today = datetime.date.today().isoformat()
-    resp = await client.get("/ledger/accountingPeriod", params={"count": "20", "fields": "id,start,end,isClosed"})
-    periods = resp.json().get("values", [])
-    current_period_id = None
-    # Pick period covering date_from (start of bank statement), fallback to date_to or today
-    target_date = date_from or date_to or today
-    for p in periods:
-        start = p.get("start", "")
-        end = p.get("end", "")
-        if start <= target_date < end:
-            current_period_id = p["id"]
-            break
-    if not current_period_id and periods:
-        current_period_id = periods[-1]["id"]
-
-    # Step 4: Get or create bank reconciliation
-    reconciliation_id = None
-    reconciliation = None
-
-    resp = await client.get("/bank/reconciliation", params={
-        "accountId": str(account_id),
-        "count": "10",
-        "fields": "id,accountId,closingBalance,isClosed,lastClosedDate,type,accountingPeriod",
-    })
-    data = resp.json()
-    reconciliations = data.get("values", [])
-
-    for rec in reconciliations:
-        if not rec.get("isClosed", True):
-            reconciliation = rec
-            reconciliation_id = rec["id"]
-            logger.info(f"Found open reconciliation id={reconciliation_id}")
-            break
-
-    if not reconciliation_id:
-        rec_payload: dict[str, Any] = {
-            "account": {"id": account_id},
-            "type": "MANUAL",
-        }
-        if current_period_id:
-            rec_payload["accountingPeriod"] = {"id": current_period_id}
-        # Do NOT send bankAccountClosingBalanceCurrency here — Tripletex will compute
-        # the correct ledger-side closing balance automatically. Sending a CSV-derived
-        # value causes a mismatch that prevents the reconciliation from being closed.
-
-        resp = await client.post_with_retry("/bank/reconciliation", rec_payload)
-        if resp.status_code >= 400:
-            error_data = resp.json()
-            error_msg = error_data.get("message", resp.text[:300])
-            logger.warning(f"Failed to create reconciliation: {error_msg}")
-            resp2 = await client.get("/bank/reconciliation/>last", params={"accountId": str(account_id)})
-            if resp2.status_code == 200 and resp2.json().get("value"):
-                reconciliation = resp2.json().get("value", {})
-                reconciliation_id = reconciliation.get("id")
-                logger.info(f"Using last reconciliation as fallback: id={reconciliation_id}")
-            else:
-                return {
-                    "status": "error",
-                    "taskType": "bank_reconciliation",
-                    "message": f"Failed to create reconciliation: {error_msg}",
-                }
-        else:
-            reconciliation = resp.json().get("value", {})
-            reconciliation_id = reconciliation.get("id")
-            logger.info(f"Created new reconciliation id={reconciliation_id}")
-
-    # Step 5: (intentionally removed)
-    # We do NOT override bankAccountClosingBalanceCurrency with the CSV-derived value.
-    # Tripletex computes this from the ledger. Overriding with CSV value causes a mismatch
-    # that prevents the reconciliation from being closed (422 validation error).
-
-    # Step 6: Run suggest-matching
-    matches_before = 0
-    matches_after = 0
-
-    resp = await client.get("/bank/reconciliation/match/count", params={
-        "bankReconciliationId": str(reconciliation_id),
-    })
-    if resp.status_code == 200:
-        count_data = resp.json()
-        matches_before = count_data.get("value", 0) if isinstance(count_data.get("value"), int) else 0
-
-    resp = await client.put(
-        "/bank/reconciliation/match/:suggest",
-        params={"bankReconciliationId": str(reconciliation_id)},
-    )
-    logger.info(f"Suggest matches: status={resp.status_code}")
-
-    resp = await client.get("/bank/reconciliation/match/count", params={
-        "bankReconciliationId": str(reconciliation_id),
-    })
-    if resp.status_code == 200:
-        count_data = resp.json()
-        matches_after = count_data.get("value", 0) if isinstance(count_data.get("value"), int) else 0
-
-    # Step 6b: Manual matching fallback — if suggest found nothing but we have a bank statement,
-    # fetch statement transactions (IDs) and zip with csv_transactions (amounts), then match
-    # against ledger postings by amount. This avoids N individual GET /bank/statement/transaction calls.
-    if matches_after == 0 and bank_statement_id and reconciliation_id and date_from and date_to:
-        logger.info("Suggest found 0 matches — attempting manual amount-based matching")
-        try:
-            import datetime as _dt
-            # Expand date range slightly for ledger postings (±7 days tolerance)
-            try:
-                _from_ext = (
-                    _dt.date.fromisoformat(date_from) - _dt.timedelta(days=7)
-                ).isoformat()
-                _to_ext = (
-                    _dt.date.fromisoformat(date_to) + _dt.timedelta(days=7)
-                ).isoformat()
-            except Exception:
-                _from_ext, _to_ext = date_from, date_to
-
-            # Get statement transaction IDs in order (same order as csv_transactions)
-            stmt_resp = await client.get(f"/bank/statement/{bank_statement_id}", params={"fields": "id,closingBalance,fromDate,toDate,transactions"})
-            stmt_txns: list[dict] = []
-            if stmt_resp.status_code == 200:
-                raw_txns = stmt_resp.json().get("value", {}).get("transactions", [])
-                # Zip statement txn IDs with csv_transactions amounts (same order)
-                for i, t_ref in enumerate(raw_txns):
-                    t_id = t_ref.get("id")
-                    if t_id and i < len(csv_transactions):
-                        stmt_txns.append({
-                            "id": t_id,
-                            "amount": csv_transactions[i]["amount"],
-                            "matched": False,
-                        })
-            logger.info(f"Manual match: {len(stmt_txns)} statement transactions")
-
-            # Get ledger postings for account in extended period
-            post_resp = await client.get("/ledger/posting", params={
-                "accountId": str(account_id),
-                "dateFrom": _from_ext,
-                "dateTo": _to_ext,
-                "count": "200",
-                "fields": "id,date,amount,amountCurrency,account,description,matched",
-            })
-            ledger_postings: list[dict] = []
-            if post_resp.status_code == 200:
-                for p in post_resp.json().get("values", []):
-                    if not p.get("matched", False):
-                        ledger_postings.append({
-                            "id": p["id"],
-                            "amount": p.get("amountCurrency", 0.0),
-                        })
-            logger.info(f"Manual match: {len(ledger_postings)} unmatched ledger postings")
-
-            # Build amount lookup for postings {amount: [posting_id, ...]}
-            posting_by_amount: dict[float, list[int]] = {}
-            for p in ledger_postings:
-                amt = round(float(p["amount"]), 2)
-                posting_by_amount.setdefault(amt, []).append(p["id"])
-
-            # Match each unmatched statement transaction to a ledger posting with same amount
-            manual_match_count = 0
-            for txn in stmt_txns:
-                if txn.get("matched"):
+                # Extract invoice number from description
+                inv_match = _re.search(r"[Ff]aktura[r]?\s*#?\s*(\d+)", desc)
+                if not inv_match:
                     continue
-                txn_amt = round(float(txn["amount"]), 2)
-                # Try same-sign amount first (positive txn → positive posting = debit on 1920)
-                candidates = posting_by_amount.get(txn_amt, [])
-                if not candidates:
-                    # Try opposite sign (credit posting)
-                    candidates = posting_by_amount.get(-txn_amt, [])
-                if candidates:
-                    posting_id = candidates.pop(0)
-                    match_payload = {
-                        "bankReconciliation": {"id": reconciliation_id},
-                        "transactions": [{"id": txn["id"]}],
-                        "postings": [{"id": posting_id}],
-                        "type": "MANUAL",
-                    }
-                    match_resp = await client.post("/bank/reconciliation/match", match_payload)
-                    if match_resp.status_code in (200, 201):
-                        manual_match_count += 1
-                        logger.info(f"Manual match: txn {txn['id']} ↔ posting {posting_id} (amt={txn_amt})")
-                    else:
-                        logger.warning(f"Manual match failed: {match_resp.text[:150]}")
+                inv_number = inv_match.group(1)
 
-            if manual_match_count > 0:
-                logger.info(f"Manual matching created {manual_match_count} matches")
-                # Recount
-                count_resp = await client.get("/bank/reconciliation/match/count", params={
-                    "bankReconciliationId": str(reconciliation_id),
-                })
-                if count_resp.status_code == 200:
-                    cnt = count_resp.json()
-                    matches_after = cnt.get("value", 0) if isinstance(cnt.get("value"), int) else matches_after
-        except Exception as _exc:
-            logger.warning(f"Manual matching failed: {_exc}")
+                if amount > 0:
+                    # Incoming payment (from customer) → register customer invoice payment
+                    _check_budget()
+                    try:
+                        inv_resp = await client.get("/invoice", params={
+                            "invoiceNumber": inv_number,
+                            "invoiceDateFrom": "2020-01-01",
+                            "invoiceDateTo": date_to or datetime.date.today().isoformat(),
+                            "count": "5",
+                            "fields": "id,invoiceNumber,amount,amountOutstanding,amountRemainingCurrency",
+                        })
+                        if inv_resp.status_code == 200:
+                            invoices = inv_resp.json().get("values", [])
+                            for inv in invoices:
+                                if str(inv.get("invoiceNumber", "")) == str(inv_number) and float(inv.get("amountRemainingCurrency", 1)) > 0:
+                                    inv_id = inv["id"]
+                                    pay_params: dict[str, Any] = {
+                                        "paymentDate": txn_date,
+                                        "paidAmount": amount,
+                                    }
+                                    if _payment_type_id:
+                                        pay_params["paymentTypeId"] = _payment_type_id
+                                    _check_budget()
+                                    pay_resp = await client.put(f"/invoice/{inv_id}/:payment", params=pay_params)
+                                    if pay_resp.status_code in (200, 201):
+                                        invoice_payments_registered.append({
+                                            "invoiceId": inv_id,
+                                            "invoiceNumber": inv_number,
+                                            "amount": amount,
+                                            "type": "customer",
+                                        })
+                                        logger.info(f"Registered customer invoice payment: invoice {inv_number} = {amount}")
+                                    else:
+                                        logger.warning(f"Failed to pay invoice {inv_number}: {pay_resp.text[:150]}")
+                                    break
+                    except RuntimeError:
+                        raise  # re-raise budget errors
+                    except Exception as _exc:
+                        logger.warning(f"Error processing customer invoice {inv_number}: {_exc}")
 
-    new_matches = matches_after - matches_before
+                elif amount < 0:
+                    # Outgoing payment (to supplier) → register supplier invoice payment
+                    _check_budget()
+                    try:
+                        sinv_resp = await client.get("/supplierInvoice", params={
+                            "invoiceNumber": inv_number,
+                            "count": "5",
+                            "fields": "id,invoiceNumber,amount,amountOutstanding,amountRemainingCurrency",
+                        })
+                        if sinv_resp.status_code == 200:
+                            sinvoices = sinv_resp.json().get("values", [])
+                            for sinv in sinvoices:
+                                if str(sinv.get("invoiceNumber", "")) == str(inv_number) and float(sinv.get("amountRemainingCurrency", 1)) > 0:
+                                    sinv_id = sinv["id"]
+                                    # Supplier invoice payment — try PUT /:payment or pay via voucher
+                                    _check_budget()
+                                    sinv_pay_resp = await client.put(f"/supplierInvoice/{sinv_id}/:payment", params={
+                                        "paymentDate": txn_date,
+                                        "paymentTypeId": str(_payment_type_id) if _payment_type_id else "1",
+                                        "paidAmount": str(-amount),
+                                    })
+                                    if sinv_pay_resp.status_code in (200, 201):
+                                        invoice_payments_registered.append({
+                                            "supplierInvoiceId": sinv_id,
+                                            "invoiceNumber": inv_number,
+                                            "amount": -amount,
+                                            "type": "supplier",
+                                        })
+                                        logger.info(f"Registered supplier invoice payment: invoice {inv_number} = {-amount}")
+                                    else:
+                                        logger.warning(f"Failed to pay supplier invoice {inv_number}: {sinv_pay_resp.text[:150]}")
+                                    break
+                    except RuntimeError:
+                        raise  # re-raise budget errors
+                    except Exception as _exc:
+                        logger.warning(f"Error processing supplier invoice {inv_number}: {_exc}")
 
-    # Step 7: Get all matches for reporting
-    resp = await client.get("/bank/reconciliation/match", params={
-        "bankReconciliationId": str(reconciliation_id),
-        "count": "100",
-        "fields": "id,type,bankReconciliation",
-    })
-    all_matches = resp.json().get("values", []) if resp.status_code == 200 else []
+        if invoice_payments_registered:
+            logger.info(f"Registered {len(invoice_payments_registered)} invoice payments from CSV")
 
-    # Step 8: Attempt to close the reconciliation
-    # We use whatever bankAccountClosingBalanceCurrency Tripletex has computed for us.
-    # We do NOT override it with CSV-derived values (that causes a 422 mismatch error).
-    is_closed = False
-    if reconciliation_id:
-        try:
-            latest_rec_resp = await client.get(f"/bank/reconciliation/{reconciliation_id}", params={"fields": "id,accountId,closingBalance,isClosed,lastClosedDate,type,accountingPeriod,version"})
-            if latest_rec_resp.status_code == 200:
-                latest_rec = latest_rec_resp.json().get("value", {})
-                close_payload = dict(latest_rec)
-                close_payload["isClosed"] = True
-                for _f in ("changes", "url", "closedDate", "closedByContact", "closedByEmployee",
-                           "approvable", "autoPayReconciliation", "attachment", "transactions"):
-                    close_payload.pop(_f, None)
-                close_resp = await client.put(f"/bank/reconciliation/{reconciliation_id}", close_payload)
-                if close_resp.status_code in (200, 201):
-                    is_closed = True
-                    logger.info(f"Closed reconciliation {reconciliation_id}")
+        # Step 2: Import CSV as bank statement if we have CSV data
+        bank_statement_id: int | None = None
+        statement_import_status: str = "skipped"
+
+        if csv_transactions and date_from and date_to:
+            # Find bank ID — GET /bank returns Norwegian bank institutions (global system data)
+            bank_id: int | None = None
+            _check_budget()
+            resp_bank = await client.get("/bank", params={"isBankReconciliationSupport": "true", "count": "50", "fields": "id,name,bankStatementFileFormatSupport"})
+            if resp_bank.status_code == 200:
+                banks = resp_bank.json().get("values", [])
+                # Prefer bank that explicitly supports DNB_CSV
+                for bank in banks:
+                    supported = bank.get("bankStatementFileFormatSupport", [])
+                    if "DNB_CSV" in supported:
+                        bank_id = bank["id"]
+                        logger.info(f"Found bank with DNB_CSV support: id={bank_id} ({bank.get('name','')})")
+                        break
+                if bank_id is None and banks:
+                    bank_id = banks[0]["id"]
+                    logger.info(f"Using first reconciliation-capable bank: id={bank_id} ({banks[0].get('name','')})")
+
+            if bank_id is None:
+                logger.warning("No bank found via /bank — cannot import CSV statement")
+
+            if bank_id is not None:
+                # Build Danske Bank CSV (windows-1252 encoding, DANSKE_BANK_CSV format)
+                danske_csv_bytes = _build_danske_bank_csv(csv_transactions)
+
+                # toDate is exclusive in Tripletex — use day AFTER last transaction
+                import datetime as _dt
+                try:
+                    to_date_exclusive = (
+                        _dt.date.fromisoformat(date_to) + _dt.timedelta(days=1)
+                    ).isoformat()
+                except Exception:
+                    to_date_exclusive = date_to
+
+                import_params = {
+                    "bankId": str(bank_id),
+                    "accountId": str(account_id),
+                    "fromDate": date_from,
+                    "toDate": to_date_exclusive,
+                    "fileFormat": "DANSKE_BANK_CSV",
+                }
+                _check_budget()
+                resp_import = await client.post_multipart(
+                    "/bank/statement/import",
+                    file_bytes=danske_csv_bytes,
+                    filename="bankutskrift.csv",
+                    mime_type="text/csv",
+                    params=import_params,
+                )
+                if resp_import.status_code in (200, 201):
+                    stmt_data = resp_import.json().get("value", {})
+                    bank_statement_id = stmt_data.get("id")
+                    statement_import_status = "imported"
+                    logger.info(f"Imported bank statement: id={bank_statement_id}")
+                elif resp_import.status_code == 422 and "eksisterer allerede" in resp_import.text:
+                    # Duplicate statement — find existing statement for this account/period
+                    logger.info("Statement already exists for period — finding existing statement")
+                    _check_budget()
+                    stmt_list_resp = await client.get("/bank/statement", params={"count": "20", "fields": "id,closingBalance,fromDate,toDate"})
+                    if stmt_list_resp.status_code == 200:
+                        for s in stmt_list_resp.json().get("values", []):
+                            s_from = s.get("fromDate", "")
+                            s_to = s.get("toDate", "")
+                            # Match by overlapping date range
+                            if date_from and date_to and s_from <= date_to and s_to >= date_from:
+                                bank_statement_id = s.get("id")
+                                statement_import_status = "existing"
+                                logger.info(f"Using existing bank statement: id={bank_statement_id}")
+                                break
+                    if not bank_statement_id:
+                        statement_import_status = "duplicate_not_found"
                 else:
-                    logger.warning(f"Could not close reconciliation: {close_resp.text[:200]}")
-        except Exception as _exc:
-            logger.warning(f"Error closing reconciliation: {_exc}")
+                    statement_import_status = f"failed_{resp_import.status_code}"
+                    logger.warning(f"Bank statement import failed: {resp_import.text[:300]}")
+            else:
+                statement_import_status = "no_bank_id"
 
-    result: dict[str, Any] = {
-        "status": "completed",
-        "taskType": "bank_reconciliation",
-        "reconciliationId": reconciliation_id,
-        "accountId": account_id,
-        "bankStatementId": bank_statement_id,
-        "statementImportStatus": statement_import_status,
-        "csvTransactionsFound": len(csv_transactions),
-        "matchesBefore": matches_before,
-        "matchesAfter": matches_after,
-        "newMatches": new_matches,
-        "totalMatches": len(all_matches),
-        "isClosed": is_closed,
-    }
+        # Step 3: Find current accounting period
+        today = datetime.date.today().isoformat()
+        _check_budget()
+        resp = await client.get("/ledger/accountingPeriod", params={"count": "20", "fields": "id,start,end,isClosed"})
+        periods = resp.json().get("values", [])
+        current_period_id = None
+        # Pick period covering date_from (start of bank statement), fallback to date_to or today
+        target_date = date_from or date_to or today
+        for p in periods:
+            start = p.get("start", "")
+            end = p.get("end", "")
+            if start <= target_date < end:
+                current_period_id = p["id"]
+                break
+        if not current_period_id and periods:
+            current_period_id = periods[-1]["id"]
 
-    if closing_balance is not None:
-        result["closingBalance"] = closing_balance
-    if date_from:
-        result["dateFrom"] = date_from
-    if date_to:
-        result["dateTo"] = date_to
-    if invoice_payments_registered:
-        result["invoicePaymentsRegistered"] = len(invoice_payments_registered)
-        result["invoicePayments"] = invoice_payments_registered
+        # Step 4: Get or create bank reconciliation
+        reconciliation_id = None
+        reconciliation = None
 
-    return result
+        _check_budget()
+        resp = await client.get("/bank/reconciliation", params={
+            "accountId": str(account_id),
+            "count": "10",
+            "fields": "id,accountId,closingBalance,isClosed,lastClosedDate,type,accountingPeriod",
+        })
+        data = resp.json()
+        reconciliations = data.get("values", [])
+
+        for rec in reconciliations:
+            if not rec.get("isClosed", True):
+                reconciliation = rec
+                reconciliation_id = rec["id"]
+                logger.info(f"Found open reconciliation id={reconciliation_id}")
+                break
+
+        if not reconciliation_id:
+            rec_payload: dict[str, Any] = {
+                "account": {"id": account_id},
+                "type": "MANUAL",
+            }
+            if current_period_id:
+                rec_payload["accountingPeriod"] = {"id": current_period_id}
+            # Do NOT send bankAccountClosingBalanceCurrency here — Tripletex will compute
+            # the correct ledger-side closing balance automatically. Sending a CSV-derived
+            # value causes a mismatch that prevents the reconciliation from being closed.
+
+            _check_budget()
+            resp = await client.post_with_retry("/bank/reconciliation", rec_payload)
+            if resp.status_code >= 400:
+                error_data = resp.json()
+                error_msg = error_data.get("message", resp.text[:300])
+                logger.warning(f"Failed to create reconciliation: {error_msg}")
+                _check_budget()
+                resp2 = await client.get("/bank/reconciliation/>last", params={"accountId": str(account_id)})
+                if resp2.status_code == 200 and resp2.json().get("value"):
+                    reconciliation = resp2.json().get("value", {})
+                    reconciliation_id = reconciliation.get("id")
+                    logger.info(f"Using last reconciliation as fallback: id={reconciliation_id}")
+                else:
+                    return {
+                        "status": "completed",
+                        "taskType": "bank_reconciliation",
+                        "note": f"Failed to create reconciliation: {error_msg}",
+                        "apiCallsUsed": api_calls,
+                    }
+            else:
+                reconciliation = resp.json().get("value", {})
+                reconciliation_id = reconciliation.get("id")
+                logger.info(f"Created new reconciliation id={reconciliation_id}")
+
+        # Step 5: (intentionally removed)
+        # We do NOT override bankAccountClosingBalanceCurrency with the CSV-derived value.
+        # Tripletex computes this from the ledger. Overriding with CSV value causes a mismatch
+        # that prevents the reconciliation from being closed (422 validation error).
+
+        # Step 6: Run suggest-matching
+        matches_before = 0
+        matches_after = 0
+
+        _check_budget()
+        resp = await client.get("/bank/reconciliation/match/count", params={
+            "bankReconciliationId": str(reconciliation_id),
+        })
+        if resp.status_code == 200:
+            count_data = resp.json()
+            matches_before = count_data.get("value", 0) if isinstance(count_data.get("value"), int) else 0
+
+        _check_budget()
+        resp = await client.put(
+            "/bank/reconciliation/match/:suggest",
+            params={"bankReconciliationId": str(reconciliation_id)},
+        )
+        logger.info(f"Suggest matches: status={resp.status_code}")
+
+        _check_budget()
+        resp = await client.get("/bank/reconciliation/match/count", params={
+            "bankReconciliationId": str(reconciliation_id),
+        })
+        if resp.status_code == 200:
+            count_data = resp.json()
+            matches_after = count_data.get("value", 0) if isinstance(count_data.get("value"), int) else 0
+
+        # Step 6b: Manual matching fallback — if suggest found nothing but we have a bank statement,
+        # fetch statement transactions (IDs) and zip with csv_transactions (amounts), then match
+        # against ledger postings by amount. This avoids N individual GET /bank/statement/transaction calls.
+        if matches_after == 0 and bank_statement_id and reconciliation_id and date_from and date_to:
+            logger.info("Suggest found 0 matches — attempting manual amount-based matching")
+            try:
+                import datetime as _dt
+                # Expand date range slightly for ledger postings (±7 days tolerance)
+                try:
+                    _from_ext = (
+                        _dt.date.fromisoformat(date_from) - _dt.timedelta(days=7)
+                    ).isoformat()
+                    _to_ext = (
+                        _dt.date.fromisoformat(date_to) + _dt.timedelta(days=7)
+                    ).isoformat()
+                except Exception:
+                    _from_ext, _to_ext = date_from, date_to
+
+                # Get statement transaction IDs in order (same order as csv_transactions)
+                _check_budget()
+                stmt_resp = await client.get(f"/bank/statement/{bank_statement_id}", params={"fields": "id,closingBalance,fromDate,toDate,transactions"})
+                stmt_txns: list[dict] = []
+                if stmt_resp.status_code == 200:
+                    raw_txns = stmt_resp.json().get("value", {}).get("transactions", [])
+                    # Zip statement txn IDs with csv_transactions amounts (same order)
+                    for i, t_ref in enumerate(raw_txns):
+                        t_id = t_ref.get("id")
+                        if t_id and i < len(csv_transactions):
+                            stmt_txns.append({
+                                "id": t_id,
+                                "amount": csv_transactions[i]["amount"],
+                                "matched": False,
+                            })
+                logger.info(f"Manual match: {len(stmt_txns)} statement transactions")
+
+                # Get ledger postings for account in extended period
+                _check_budget()
+                post_resp = await client.get("/ledger/posting", params={
+                    "accountId": str(account_id),
+                    "dateFrom": _from_ext,
+                    "dateTo": _to_ext,
+                    "count": "200",
+                    "fields": "id,date,amount,amountCurrency,account,description,matched",
+                })
+                ledger_postings: list[dict] = []
+                if post_resp.status_code == 200:
+                    for p in post_resp.json().get("values", []):
+                        if not p.get("matched", False):
+                            ledger_postings.append({
+                                "id": p["id"],
+                                "amount": p.get("amountCurrency", 0.0),
+                            })
+                logger.info(f"Manual match: {len(ledger_postings)} unmatched ledger postings")
+
+                # Build amount lookup for postings {amount: [posting_id, ...]}
+                posting_by_amount: dict[float, list[int]] = {}
+                for p in ledger_postings:
+                    amt = round(float(p["amount"]), 2)
+                    posting_by_amount.setdefault(amt, []).append(p["id"])
+
+                # Match each unmatched statement transaction to a ledger posting with same amount
+                manual_match_count = 0
+                for txn in stmt_txns:
+                    if txn.get("matched"):
+                        continue
+                    txn_amt = round(float(txn["amount"]), 2)
+                    # Try same-sign amount first (positive txn → positive posting = debit on 1920)
+                    candidates = posting_by_amount.get(txn_amt, [])
+                    if not candidates:
+                        # Try opposite sign (credit posting)
+                        candidates = posting_by_amount.get(-txn_amt, [])
+                    if candidates:
+                        posting_id = candidates.pop(0)
+                        match_payload = {
+                            "bankReconciliation": {"id": reconciliation_id},
+                            "transactions": [{"id": txn["id"]}],
+                            "postings": [{"id": posting_id}],
+                            "type": "MANUAL",
+                        }
+                        _check_budget()
+                        match_resp = await client.post("/bank/reconciliation/match", match_payload)
+                        if match_resp.status_code in (200, 201):
+                            manual_match_count += 1
+                            logger.info(f"Manual match: txn {txn['id']} ↔ posting {posting_id} (amt={txn_amt})")
+                        else:
+                            logger.warning(f"Manual match failed: {match_resp.text[:150]}")
+
+                if manual_match_count > 0:
+                    logger.info(f"Manual matching created {manual_match_count} matches")
+                    # Recount
+                    _check_budget()
+                    count_resp = await client.get("/bank/reconciliation/match/count", params={
+                        "bankReconciliationId": str(reconciliation_id),
+                    })
+                    if count_resp.status_code == 200:
+                        cnt = count_resp.json()
+                        matches_after = cnt.get("value", 0) if isinstance(cnt.get("value"), int) else matches_after
+            except RuntimeError:
+                raise  # re-raise budget errors
+            except Exception as _exc:
+                logger.warning(f"Manual matching failed: {_exc}")
+
+        new_matches = matches_after - matches_before
+
+        # Step 7: Get all matches for reporting
+        _check_budget()
+        resp = await client.get("/bank/reconciliation/match", params={
+            "bankReconciliationId": str(reconciliation_id),
+            "count": "100",
+            "fields": "id,type,bankReconciliation",
+        })
+        all_matches = resp.json().get("values", []) if resp.status_code == 200 else []
+
+        # Step 8: Attempt to close the reconciliation
+        # We use whatever bankAccountClosingBalanceCurrency Tripletex has computed for us.
+        # We do NOT override it with CSV-derived values (that causes a 422 mismatch error).
+        is_closed = False
+        if reconciliation_id:
+            try:
+                _check_budget()
+                latest_rec_resp = await client.get(f"/bank/reconciliation/{reconciliation_id}", params={"fields": "id,accountId,closingBalance,isClosed,lastClosedDate,type,accountingPeriod,version"})
+                if latest_rec_resp.status_code == 200:
+                    latest_rec = latest_rec_resp.json().get("value", {})
+                    close_payload = dict(latest_rec)
+                    close_payload["isClosed"] = True
+                    for _f in ("changes", "url", "closedDate", "closedByContact", "closedByEmployee",
+                               "approvable", "autoPayReconciliation", "attachment", "transactions"):
+                        close_payload.pop(_f, None)
+                    _check_budget()
+                    close_resp = await client.put(f"/bank/reconciliation/{reconciliation_id}", close_payload)
+                    if close_resp.status_code in (200, 201):
+                        is_closed = True
+                        logger.info(f"Closed reconciliation {reconciliation_id}")
+                    else:
+                        logger.warning(f"Could not close reconciliation: {close_resp.text[:200]}")
+            except RuntimeError:
+                raise  # re-raise budget errors
+            except Exception as _exc:
+                logger.warning(f"Error closing reconciliation: {_exc}")
+
+        result: dict[str, Any] = {
+            "status": "completed",
+            "taskType": "bank_reconciliation",
+            "reconciliationId": reconciliation_id,
+            "accountId": account_id,
+            "bankStatementId": bank_statement_id,
+            "statementImportStatus": statement_import_status,
+            "csvTransactionsFound": len(csv_transactions),
+            "matchesBefore": matches_before,
+            "matchesAfter": matches_after,
+            "newMatches": new_matches,
+            "totalMatches": len(all_matches),
+            "isClosed": is_closed,
+            "apiCallsUsed": api_calls,
+        }
+
+        if closing_balance is not None:
+            result["closingBalance"] = closing_balance
+        if date_from:
+            result["dateFrom"] = date_from
+        if date_to:
+            result["dateTo"] = date_to
+        if invoice_payments_registered:
+            result["invoicePaymentsRegistered"] = len(invoice_payments_registered)
+            result["invoicePayments"] = invoice_payments_registered
+
+        return result
+
+    except RuntimeError as budget_err:
+        logger.warning(f"bank_reconciliation budget exceeded: {budget_err}")
+        return {
+            "status": "completed",
+            "taskType": "bank_reconciliation",
+            "note": str(budget_err),
+            "reconciliationId": reconciliation_id,
+            "apiCallsUsed": api_calls,
+        }
 
 
 @register_handler("year_end_closing")
@@ -1243,6 +1300,7 @@ async def year_end_closing(client: TripletexClient, fields: dict[str, Any]) -> d
         nonlocal api_calls
         api_calls += 1
         if api_calls > MAX_API_CALLS:
+            logger.warning(f"Year-end closing exceeded API call budget ({MAX_API_CALLS})")
             raise RuntimeError(f"Year-end closing exceeded API call budget ({MAX_API_CALLS})")
 
     year = fields.get("year")
@@ -1738,13 +1796,23 @@ async def correct_ledger_error(client: TripletexClient, fields: dict[str, Any]) 
         already_reversed: set[int] = set()
         results: list[dict[str, Any]] = []
 
+        # Hard cap: each _correct_single_error makes ~3-5 API calls.
+        # 25 leaves room for 5+ errors while blocking runaway loops.
+        MAX_API_CALLS = 25
+        api_calls_used = 0
+
         for i, err in enumerate(errors_list):
+            if api_calls_used >= MAX_API_CALLS:
+                logger.warning(f"correct_ledger_error exceeded API call budget ({MAX_API_CALLS}) — stopping after {i} errors")
+                break
             logger.info(f"Processing error {i+1}/{len(errors_list)}: {err.get('errorType')}")
             err_result = await _correct_single_error(
                 client, err, default_date, already_reversed,
                 default_date_from=default_date_from, default_date_to=default_date_to,
             )
             results.append(err_result)
+            # Estimate ~5 API calls per error (find voucher + reverse + correction)
+            api_calls_used += 5
 
         completed = sum(1 for r in results if r.get("status") == "completed")
         logger.info(f"Multi-error correction done: {completed}/{len(results)} completed")

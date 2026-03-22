@@ -1063,7 +1063,7 @@ def cmd_insights(args: argparse.Namespace) -> None:
 
     # ── Per-task-type table (sorted by best score descending, then alpha) ──
     print(f"\n  {BOLD}Beste score per oppgavetype (sortert etter score):{RESET}")
-    print(f"    {'Oppgavetype':<28} {'Beste':>8} {'Norm':>6} {'Forsøk':>7} {'Snitt 4xx':>10} {'Status'}")
+    print(f"    {'Oppgavetype':<28} {'Beste':>8} {'Norm':>6} {'Ant.Logs':>7} {'Snitt 4xx':>10} {'Status'}")
     print(f"    {'─'*80}")
 
     # Sort by best_norm descending, then alphabetically
@@ -1474,7 +1474,7 @@ def cmd_compare(args: argparse.Namespace) -> None:
     print(f"{BOLD}  SAMMENLIGNING MED #1 ({top_team_name} — {top_team_score:.2f} poeng){RESET}")
     print(f"  {DIM}Vi er #{our_placement} ({our_team_name} — {sum_ours:.2f} poeng){RESET}")
     print()
-    print(f"  {'Task':<6} {'Vår score':>10} {'#1 score':>10} {'Gap':>8} {'Forsøk':>10}")
+    print(f"  {'Task':<6} {'Vår score':>10} {'#1 score':>10} {'Gap':>8} {'Ant.Logs':>10}")
     print(f"  {'─' * 50}")
 
     for row in rows:
@@ -1998,7 +1998,7 @@ def cmd_tasks(args: argparse.Namespace) -> None:
         f"  {'Task':>4}  {'Tier':>4}  {'Oppgavetype':<30}  "
         f"{'Vår':>6}  {'#1':>6}  {'Gap':>6}  "
         f"{'Tried':>5}  "
-        f"{'Forsøk':>6}  {'OK':>4}  {'Fail':>4}  {'4xx avg':>7}"
+        f"{'Ant.Logs':>6}  {'OK':>4}  {'Fail':>4}  {'4xx avg':>7}"
     )
     sep = "  " + "─" * 96
     print(sep)

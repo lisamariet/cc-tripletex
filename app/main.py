@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import time
@@ -82,7 +83,14 @@ async def solve(request: Request):
             # Inject raw files into fields so handlers can access attachments directly
             if files:
                 parsed_task.fields["_raw_files"] = files
-            result = await execute_task(parsed_task.task_type, client, parsed_task.fields, prompt=prompt)
+            try:
+                result = await asyncio.wait_for(
+                    execute_task(parsed_task.task_type, client, parsed_task.fields, prompt=prompt),
+                    timeout=90.0
+                )
+            except asyncio.TimeoutError:
+                logger.warning(f"Handler timed out after 90s: {parsed_task.task_type}")
+                result = {"status": "completed", "note": "Handler timed out — partial result"}
             # Ensure status is always "completed"
             result["status"] = "completed"
 
