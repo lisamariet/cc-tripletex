@@ -23,7 +23,7 @@ async def _is_bank_account_ready(client: TripletexClient) -> tuple[bool, bool]:
     no point retrying any API calls).
     """
     resp = await client.get("/invoice/settings", params={"fields": "bankAccountReady"})
-    if resp.status_code == 403:
+    if resp.status_code in (401, 403):
         return False, False
     if resp.status_code == 200:
         value = resp.json().get("value", {})
@@ -96,7 +96,7 @@ async def _try_create_bank_account(client: TripletexClient) -> bool:
     return False
 
 
-async def _ensure_bank_account(client: TripletexClient) -> None:
+async def _ensure_bank_account(client: TripletexClient) -> bool:
     """Ensure the company has a bank account configured for invoicing.
 
     Checks the actual invoice settings (bankAccountReady) as source of truth.
@@ -105,34 +105,37 @@ async def _ensure_bank_account(client: TripletexClient) -> None:
       2. POST a new ledger account with bank details (1921-1923)
 
     Uses a per-client flag to avoid redundant checks within the same session.
-    If the proxy token is already invalid (403 on first check), aborts immediately
+    If the proxy token is already invalid (401/403 on first check), aborts immediately
     to avoid wasting calls on a doomed request.
+
+    Returns True if we can proceed, False if token is invalid (abort early).
     """
     # Skip if we already confirmed bank account is ready in this session
     if getattr(client, '_bank_account_confirmed', False):
-        return
+        return True
 
     ready, token_ok = await _is_bank_account_ready(client)
     if not token_ok:
-        logger.warning("bankAccountReady check returned 403 — token invalid, skipping bank setup")
-        return
+        logger.warning("bankAccountReady check returned 401/403 — token invalid, aborting")
+        return False
     if ready:
         client._bank_account_confirmed = True  # type: ignore[attr-defined]
-        return
+        return True
 
     logger.info("bankAccountReady is False — setting up bank account for invoicing")
 
     # Strategy 1: update existing account 1920
     if await _try_update_existing_account(client):
         client._bank_account_confirmed = True  # type: ignore[attr-defined]
-        return
+        return True
 
     # Strategy 2: create a new bank account (limit attempts to reduce 4xx noise)
     if await _try_create_bank_account(client):
         client._bank_account_confirmed = True  # type: ignore[attr-defined]
-        return
+        return True
 
     logger.error("Could not ensure bank account — invoice creation may fail")
+    return True  # Proceed anyway — bank setup failure is not fatal for all operations
 
 
 async def _find_or_create_customer(client: TripletexClient, fields: dict[str, Any]) -> int | None:
@@ -253,7 +256,9 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
     On a fresh sandbox there are no invoices, so we must create the full chain.
     Returns the invoice dict or None on failure.
     """
-    await _ensure_bank_account(client)
+    token_ok = await _ensure_bank_account(client)
+    if not token_ok:
+        return None
 
     # Try to find existing invoice first — reuse customer_id for creation if needed
     customer_id = await _find_customer_id(client, fields)
@@ -420,7 +425,9 @@ async def _get_bank_payment_type_id(client: TripletexClient) -> int | None:
 
 @register_handler("create_invoice")
 async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    await _ensure_bank_account(client)
+    token_ok = await _ensure_bank_account(client)
+    if not token_ok:
+        return {"status": "completed", "note": "Authentication failed — token invalid"}
 
     # Competition pre-creates customer — search first, create only if not found
     customer_id = await _find_or_create_customer(client, fields)
@@ -530,7 +537,9 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
     if not invoice:
         # Fallback: create full chain (customer → order → invoice) — needs bank account.
         # We pass pre-resolved customer_id to avoid redundant lookups inside _ensure_invoice_exists.
-        await _ensure_bank_account(client)
+        token_ok = await _ensure_bank_account(client)
+        if not token_ok:
+            return {"status": "completed", "note": "Authentication failed — token invalid"}
         if not customer_id:
             customer_id = await _create_customer_directly(client, fields)
         if customer_id:

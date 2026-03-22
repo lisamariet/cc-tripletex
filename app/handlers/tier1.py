@@ -574,7 +574,11 @@ async def create_product(client: TripletexClient, fields: dict[str, Any]) -> dic
 
 @register_handler("batch_create_department")
 async def batch_create_department(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    """Create multiple departments in one API call using POST /department/list.
+    """Create multiple departments using individual POST /department calls.
+
+    NOTE: POST /department/list returns 201 but departments are NOT persisted in
+    competition sandboxes (scorer finds 0 departments → 0/0 checks).
+    Individual POST /department calls work reliably and scored 2.0/2.0.
 
     Expects fields["items"] — a list of dicts, each with at least {"fields": {"name": ...}}.
     Returns batch_results array matching the generic batch format.
@@ -584,40 +588,31 @@ async def batch_create_department(client: TripletexClient, fields: dict[str, Any
         return {"status": "completed", "taskType": "batch_create_department",
                 "error": "No items provided", "batch_results": []}
 
-    # Build array of Department payloads
-    dept_payloads: list[dict[str, Any]] = []
-    for item in items:
+    logger.info(f"[batch_create_department] Creating {len(items)} departments via individual POST /department")
+
+    batch_results: list[dict[str, Any]] = []
+    for i, item in enumerate(items):
         item_fields = item.get("fields", item) if isinstance(item, dict) else {}
         payload: dict[str, Any] = {"name": item_fields.get("name", "Unnamed")}
         if item_fields.get("departmentNumber"):
             payload["departmentNumber"] = item_fields["departmentNumber"]
-        dept_payloads.append(payload)
 
-    logger.info(f"[batch_create_department] Creating {len(dept_payloads)} departments via POST /department/list")
+        resp = await client.post("/department", payload)
+        data = resp.json()
+        created = data.get("value", {})
 
-    # POST /department/list accepts a JSON array and creates all at once
-    resp = await client._request("POST", "/department/list", json_body=dept_payloads)
-    data = resp.json()
-
-    # The /list endpoint returns {"fullResultSize": N, "values": [...]}
-    created_values = data.get("values", [])
-
-    # Build batch_results matching the format expected by E2E tests
-    batch_results: list[dict[str, Any]] = []
-    for i, dept_payload in enumerate(dept_payloads):
-        if i < len(created_values):
-            created = created_values[i]
+        if created.get("id"):
             batch_results.append({
                 "status": "completed",
                 "taskType": "create_department",
                 "created": created,
             })
-            logger.info(f"Batch dept {i+1}/{len(dept_payloads)}: created id={created.get('id')} name={created.get('name')}")
+            logger.info(f"Batch dept {i+1}/{len(items)}: created id={created.get('id')} name={created.get('name')}")
         else:
             batch_results.append({
                 "status": "completed",
                 "taskType": "create_department",
-                "error": f"No result for department '{dept_payload.get('name')}'",
+                "error": f"Failed to create department '{payload.get('name')}': {resp.text[:200]}",
                 "created": {},
             })
 
