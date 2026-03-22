@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_001213_087732",
-  "prompt": "Fixez un prix forfaitaire de 328650 NOK sur le projet \"Développement e-commerce\" pour Cascade SARL (nº org. 913754689). Le chef de projet est Alice Moreau (alice.moreau@example.org). Facturez au client 25 % du prix fixe comme paiement d'étape.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "JOKJWM0ez0XwNkZ6fMgBunWQ1Z7uPozKHhxvULlPcmg"
-  }
-}

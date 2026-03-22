@@ -309,7 +309,7 @@ def match_log_to_submission(log: dict, submissions: list[dict]) -> dict | None:
         return None
 
     best_match = None
-    best_delta = timedelta(minutes=10)  # max 10 min tolerance
+    best_delta = timedelta(minutes=1)  # max 1 min tolerance
 
     for sub in submissions:
         sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
@@ -369,7 +369,7 @@ def reset_gcs_log_claims() -> None:
 
 
 def _find_best_gcs_log(sub: dict, gcs_logs: list[dict]) -> dict | None:
-    """Find the closest UNCLAIMED GCS log for a submission within 10 min window.
+    """Find the closest UNCLAIMED GCS log for a submission within 1 min window.
 
     Uses 1-to-1 matching: once a GCS log is matched to a submission, it cannot
     be reused by another submission. This prevents duplicate task types when
@@ -383,7 +383,7 @@ def _find_best_gcs_log(sub: dict, gcs_logs: list[dict]) -> dict | None:
     except Exception:
         return None
 
-    best_delta = timedelta(minutes=10)
+    best_delta = timedelta(minutes=1)
     best_log = None
 
     for log in gcs_logs:
@@ -410,7 +410,7 @@ def _find_best_gcs_log(sub: dict, gcs_logs: list[dict]) -> dict | None:
 
 
 def get_error_counts_for_sub(sub: dict, gcs_logs: list[dict]) -> tuple[int | None, int | None]:
-    """Return (n_4xx, n_5xx) for a submission by matching the closest GCS log within 10 min.
+    """Return (n_4xx, n_5xx) for a submission by matching the closest GCS log within 1 min.
 
     Returns (None, None) if no matching log is found.
     """
@@ -486,7 +486,7 @@ def _get_prompt_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[dict
         return None
 
     best_prompt = None
-    best_delta = timedelta(minutes=10)
+    best_delta = timedelta(minutes=1)
 
     # Check all log sources for a prompt
     all_logs = list(gcs_logs)
@@ -522,7 +522,7 @@ def get_log_for_sub(sub: dict, gcs_logs: list[dict]) -> dict | None:
         return None
 
     best_log = None
-    best_delta = timedelta(minutes=10)
+    best_delta = timedelta(minutes=1)
 
     for log in gcs_logs:
         log_ts = log.get("timestamp", "")
@@ -619,31 +619,98 @@ def cmd_status(args: argparse.Namespace) -> None:
     print(f"{BOLD}  Totalpoeng: {total_score:.1f} | Oppgaver med poeng: {tasks_with_score}/30 | Submissions i dag: {today_count}/300{RESET}")
     print()
 
-    # ── Filter by task type if specified ──
+    # ── Table: GCS logs (no matching — direct from our logs) ──
+    # Build log entries from GCS result logs — each log is one agent execution
+    log_entries = []
+    for log in gcs_logs:
+        log_ts_raw = log.get("timestamp", "")
+        parsed = log.get("parsed_task") or {}
+        task_type = parsed.get("task_type", "?")
+        api_calls = log.get("api_calls") or []
+        n_4xx = sum(1 for c in api_calls if 400 <= safe_int(c.get("status")) < 500)
+        n_5xx = sum(1 for c in api_calls if safe_int(c.get("status")) >= 500)
+        duration_ms = safe_float(log.get("total_duration_ms"))
+        revision = log.get("revision") or ""
+
+        # Extract rev number from e.g. "tripletex-agent-00134-q96" -> "00134"
+        rev_str = "-"
+        for part in revision.split("-"):
+            if part.isdigit() and len(part) >= 3:
+                rev_str = part
+                break
+
+        # Parse timestamp for sorting and display
+        try:
+            dt = datetime.strptime(log_ts_raw[:15], "%Y%m%d_%H%M%S")
+            ts_display = dt.strftime("%H:%M:%S")
+            sort_key = log_ts_raw
+        except Exception:
+            ts_display = log_ts_raw[:8]
+            sort_key = ""
+
+        log_entries.append({
+            "sort_key": sort_key,
+            "ts": ts_display,
+            "task_type": task_type,
+            "n_4xx": n_4xx,
+            "n_5xx": n_5xx,
+            "duration_ms": duration_ms,
+            "rev": rev_str,
+            "total_calls": len(api_calls),
+        })
+
+    # Sort by timestamp descending
+    log_entries.sort(key=lambda e: e["sort_key"], reverse=True)
+
+    # Apply filter
     filter_type = getattr(args, "task_type_filter", None)
     if filter_type:
-        filtered_subs = []
-        for s in submissions:
-            task_type = get_task_type_for_sub(s, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
-            if task_type == filter_type:
-                filtered_subs.append(s)
-        submissions = filtered_subs
-        print(f"  Filtrert på: {filter_type} ({len(submissions)} submissions)")
+        log_entries = [e for e in log_entries if e["task_type"] == filter_type]
+        print(f"  Filtrert på: {filter_type} ({len(log_entries)} logger)")
         print()
 
-    # ── Table ──
-    total_subs = len(submissions)
     limit = getattr(args, "limit", None)
+    total_logs = len(log_entries)
+    display_logs = log_entries[:limit] if limit is not None else log_entries
+    if limit is not None:
+        print(f"  Viser {len(display_logs)} av {total_logs} logger")
+        print()
+
+    print(f"  {'#':>3}  {'Tid':<8} {'Oppgavetype':<25} {'Kall':>4} {'4xx':>4} {'5xx':>4} {'Rev':>5} {'Varighet':>8}")
+    print(f"  {'─'*70}")
+
+    for i, entry in enumerate(display_logs, 1):
+        task_visible = entry["task_type"][:25]
+        task_col = task_visible + " " * max(0, 25 - len(task_visible))
+
+        dur_str = f"{entry['duration_ms'] / 1000:.1f}s" if entry["duration_ms"] else "-"
+
+        n_4xx = entry["n_4xx"]
+        n_5xx = entry["n_5xx"]
+        err_4xx_str = f"{RED}{n_4xx}{RESET}" if n_4xx > 0 else f"{DIM}{n_4xx}{RESET}"
+        err_4xx_visible = str(n_4xx)
+        err_5xx_str = f"{RED}{n_5xx}{RESET}" if n_5xx > 0 else f"{DIM}{n_5xx}{RESET}"
+        err_5xx_visible = str(n_5xx)
+
+        pad_4xx = 4 - len(err_4xx_visible)
+        pad_5xx = 4 - len(err_5xx_visible)
+        col_4xx = " " * max(0, pad_4xx) + err_4xx_str
+        col_5xx = " " * max(0, pad_5xx) + err_5xx_str
+
+        print(f"  {i:>3}  {entry['ts']:<8} {task_col} {entry['total_calls']:>4} {col_4xx} {col_5xx} {entry['rev']:>5} {dur_str:>8}")
+
+    # ── Table 2: Submissions from API (score data) ──
+    print()
+    print(f"{BOLD}  Submissions (fra API){RESET}")
+    print()
+
     display_subs = submissions[:limit] if limit is not None else submissions
     if limit is not None:
-        print(f"  Viser {len(display_subs)} av {total_subs} submissions")
+        print(f"  Viser {len(display_subs)} av {len(submissions)} submissions")
         print()
 
-    print(f"  {'#':>3}  {'Tid':<8} {'Task':>4} {'T':>1} {'Oppgavetype':<25} {'Score':>12} {'4xx':>4} {'5xx':>4} {'Rev':>5} {'Varighet':>8}  {'Status'}")
-    print(f"  {'─'*103}")
-
-    # ANSI italic
-    ITALIC = "\033[3m"
+    print(f"  {'#':>3}  {'Tid':<8} {'Score':>12} {'Varighet':>8}  {'Status'}")
+    print(f"  {'─'*50}")
 
     for i, sub in enumerate(display_subs, 1):
         ts = format_ts_short(sub.get("queued_at"))
@@ -653,26 +720,10 @@ def cmd_status(args: argparse.Namespace) -> None:
         duration = safe_int(sub.get("duration_ms"))
         status = sub.get("status", "-")
 
-        # Don't show task type for queued/processing submissions — we don't know yet
-        if status in ("queued", "processing"):
-            task_type = ""
-            task_display = f"{DIM}i kø...{RESET}"
-            task_visible = "i kø..."
-        else:
-            task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests) if (gcs_logs or gcs_requests) else "?"
-            # Format task type: dim+italic for prompt snippets
-            if task_type.startswith("["):
-                task_display = f"{DIM}{ITALIC}{task_type[:25]}{RESET}"
-                task_visible = task_type[:25]
-            else:
-                task_display = task_type[:25]
-                task_visible = task_type[:25]
-
         if raw is not None and mx is not None:
             norm_f = safe_float(norm)
             color = score_color(norm_f)
             score_str = f"{color}{safe_int(raw)}/{safe_int(mx)}{RESET}"
-            # Pad for ANSI codes
             score_pad = f"{safe_int(raw)}/{safe_int(mx)}"
         else:
             score_str = f"{DIM}venter...{RESET}"
@@ -680,43 +731,10 @@ def cmd_status(args: argparse.Namespace) -> None:
 
         dur_str = f"{duration / 1000:.1f}s" if duration else "-"
 
-        # 4xx / 5xx counts from GCS log (colored red when > 0)
-        n_4xx, n_5xx = get_error_counts_for_sub(sub, gcs_logs)
-        if n_4xx is not None and n_4xx > 0:
-            err_4xx_str = f"{RED}{n_4xx}{RESET}"
-            err_4xx_visible = str(n_4xx)
-        else:
-            err_4xx_str = f"{DIM}{n_4xx if n_4xx is not None else '-'}{RESET}"
-            err_4xx_visible = str(n_4xx) if n_4xx is not None else "-"
-        if n_5xx is not None and n_5xx > 0:
-            err_5xx_str = f"{RED}{n_5xx}{RESET}"
-            err_5xx_visible = str(n_5xx)
-        else:
-            err_5xx_str = f"{DIM}{n_5xx if n_5xx is not None else '-'}{RESET}"
-            err_5xx_visible = str(n_5xx) if n_5xx is not None else "-"
-
-        # Revision from GCS log
-        rev_str = get_revision_for_sub(sub, gcs_logs)
-
-        # Task ID not reliably known (task types rotate across IDs)
-        task_id_str = "-"
-        tier_str = "-"
-
-        # Right-align score (compensate for ANSI)
         visible_pad = 12 - len(score_pad)
         score_display = " " * max(0, visible_pad) + score_str
 
-        # Pad task_display to 25 visible chars (compensate for ANSI if present)
-        task_pad = 25 - len(task_visible)
-        task_col = task_display + " " * max(0, task_pad)
-
-        # Right-align 4xx/5xx with ANSI compensation
-        pad_4xx = 4 - len(err_4xx_visible)
-        pad_5xx = 4 - len(err_5xx_visible)
-        col_4xx = " " * max(0, pad_4xx) + err_4xx_str
-        col_5xx = " " * max(0, pad_5xx) + err_5xx_str
-
-        print(f"  {i:>3}  {ts:<8} {task_id_str:>4} {tier_str:>1} {task_col} {score_display} {col_4xx} {col_5xx} {rev_str:>5} {dur_str:>8}  {status}")
+        print(f"  {i:>3}  {ts:<8} {score_display} {dur_str:>8}  {status}")
 
 
 # ──────────────────────────────────────────────
@@ -2668,7 +2686,7 @@ def cmd_identify_tasks(args: argparse.Namespace) -> None:
             if dt_attempt:
                 # Find closest submission
                 best_sub = None
-                best_delta = timedelta(minutes=10)
+                best_delta = timedelta(minutes=1)
 
                 for sub in submissions:
                     sub_ts = sub.get("created_at") or sub.get("queued_at") or ""

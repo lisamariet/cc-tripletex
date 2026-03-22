@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_072549_303500",
-  "prompt": "Registrer 30 timar for Randi Lunde (randi.lunde@example.org) på aktiviteten \"Analyse\" i prosjektet \"Sikkerheitsrevisjon\" for Dalheim AS (org.nr 950103175). Timesats: 850 kr/t. Generer ein prosjektfaktura til kunden basert på dei registrerte timane.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "lHfthAvCCSzjIrqu2aADUiQJMU1lfq_2VbO8OzwIXXw"
-  }
-}

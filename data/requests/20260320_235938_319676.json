@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_235938_319676",
-  "prompt": "Opprett en fri regnskapsdimensjon \"Prosjekttype\" med verdiene \"Forskning\" og \"Utvikling\". Bokfør deretter et bilag på konto 6590 for 10800 kr, knyttet til dimensjonsverdien \"Forskning\".",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "CsMiZgz5W09HCsYRobbxHa82ULTsAr6ExXL-mZZBUyc"
-  }
-}

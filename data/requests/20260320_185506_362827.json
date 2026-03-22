@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_185506_362827",
-  "prompt": "Processe o salário de Lucas Martins (lucas.martins@example.org) para este mês. O salário base é de 39000 NOK. Adicione um bónus único de 10500 NOK além do salário base.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "_2yqBxSJeHInYO6IzZz3BfcJVtWwbTBy_rU7xdTscp0"
-  }
-}

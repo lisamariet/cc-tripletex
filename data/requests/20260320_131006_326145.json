@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_131006_326145",
-  "prompt": "Registe 4 horas para Maria Ferreira (maria.ferreira@example.org) na atividade \"Utvikling\" do projeto \"Desenvolvimento de app\" para Estrela Lda (org. nº 909621682). Taxa horária: 1050 NOK/h. Gere uma fatura de projeto ao cliente com base nas horas registadas.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "HjnyDR58AaGx7S13mNGzeX5ZJE5FIHjk8iFzZUEiTak"
-  }
-}

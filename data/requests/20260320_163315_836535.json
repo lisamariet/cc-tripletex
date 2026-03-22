@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_163315_836535",
-  "prompt": "Opprett og send en faktura til kunden Bergvik AS (org.nr 890733751) på 28900 kr eksklusiv MVA. Fakturaen gjelder Systemutvikling.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "f0Cpx1pEO2YWytVW7SOYYIHj13xy34Wt5hlHd1zOmpo"
-  }
-}

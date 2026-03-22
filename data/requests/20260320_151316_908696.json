@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_151316_908696",
-  "prompt": "Opprett produktet \"Konsulenttimer\" med produktnummer 9497. Prisen er 17300 kr eksklusiv MVA, og standard MVA-sats på 25 % skal brukes.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "vfpOimRgcsKvqA35Vb1nmUWKFtCqLyr10Jfa6XFqC58"
-  }
-}

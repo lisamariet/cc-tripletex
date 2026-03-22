@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_152450_055637",
-  "prompt": "Crea tres departamentos en Tripletex: \"IT\", \"Drift\" y \"Kundeservice\".",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "9ORzQEvCrJCbh3QlYagv55_Ou_SEzLn-w8_yepOMyqA"
-  }
-}

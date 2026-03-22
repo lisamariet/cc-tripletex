@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_072757_328663",
-  "prompt": "We have received invoice INV-2026-9601 from the supplier Oakwood Ltd (org no. 967247049) for 79750 NOK including VAT. The amount relates to office services (account 6540). Register the supplier invoice with the correct input VAT (25%).",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "OsGdOo-KGNN5ztJH9yOUFwpO82gly8PilWJYvuRDHZ0"
-  }
-}

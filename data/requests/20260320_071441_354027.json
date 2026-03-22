@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_071441_354027",
-  "prompt": "Créez et envoyez une facture au client Colline SARL (nº org. 944164340) de 44750 NOK hors TVA. La facture concerne Service réseau.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "b8pOMnL90yljJLsnDIGLbb8n4fBOOptD5Su7ZTdmmv8"
-  }
-}

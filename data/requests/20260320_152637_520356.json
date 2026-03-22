@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_152637_520356",
-  "prompt": "Opprett kunden Snøhetta AS med organisasjonsnummer 969719878. Adressen er Industriveien 148, 2317 Hamar. E-post: post@snhetta.no.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "kTKsir2h0nadBALZdKnoXra3RC9t2V9yeJUrPmb2F4o"
-  }
-}

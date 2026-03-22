@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_231959_745926",
-  "prompt": "Crea una factura para el cliente Río Verde SL (org. nº 863477905) con tres líneas de producto: Desarrollo de sistemas (2376) a 12000 NOK con 25 % IVA, Asesoría de datos (1496) a 13450 NOK con 15 % IVA (alimentos), y Mantenimiento (4543) a 12050 NOK con 0 % IVA (exento).",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "uYYASGpHVrak6YK2X5qdamY88ruyVuQBP5E4Rj7sJ90"
-  }
-}

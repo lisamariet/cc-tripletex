@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_235858_118153",
-  "prompt": "Run payroll for Lucy Walker (lucy.walker@example.org) for this month. The base salary is 43050 NOK. Add a one-time bonus of 6100 NOK on top of the base salary.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "n72B4988iUh4aUxQP6l-4Q3VEsHuj29HHwFGbB91Yag"
-  }
-}

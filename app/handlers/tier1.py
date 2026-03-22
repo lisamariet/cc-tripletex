@@ -188,6 +188,24 @@ _STYRK_TO_TRIPLETEX_ID: dict[str, int] = {
     "4131": 3197,   # Lagermedarbeider → LAGERMEDARBEIDER (4131111)
     "4227": 2951,   # Kundebehandler → KONTORMEDARBEIDER (fallback)
     "4321": 3197,   # Lagermedarbeider → LAGERMEDARBEIDER
+    "3323": 3065,   # Innkjøper/Purchasing agent → INNKJØPER (3323101)
+}
+
+# Fallback: STYRK 4-digit prefix → nameNO search term for API lookup
+# Used when hardcoded ID is unknown or might change across environments
+_STYRK_TO_SEARCH_TERM: dict[str, str] = {
+    "3323": "INNKJØP",
+    "1211": "PROSJEKTLEDER",
+    "2130": "SYSTEMUTVIKLER",
+    "2149": "INGENIØR",
+    "2411": "REGNSKAPSFØRER",
+    "2423": "PERSONALKONSULENT",
+    "2431": "MARKEDSANALYTIKER",
+    "3120": "BRUKERSTØTTE",
+    "3322": "SALGSREPRESENTANT",
+    "3431": "KONSULENT",
+    "4110": "KONTORMEDARBEIDER",
+    "4131": "LAGERMEDARBEIDER",
 }
 
 # Common Norwegian role descriptions → nameNO search term for Tripletex lookup
@@ -347,8 +365,22 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
             divs = div_resp.json().get("values", [])
             if divs:
                 employment_payload["division"] = {"id": divs[0]["id"]}
+            else:
+                # Sandbox is empty — create a default division
+                logger.info("[create_employee] No divisions found — creating default 'Hovedkontor'")
+                new_div_resp = await client.post("/division", {
+                    "name": "Hovedkontor",
+                    "startDate": "2026-01-01",
+                })
+                if new_div_resp.status_code < 400:
+                    new_div_id = new_div_resp.json().get("value", {}).get("id")
+                    if new_div_id:
+                        employment_payload["division"] = {"id": new_div_id}
+                        logger.info(f"[create_employee] Created division 'Hovedkontor' id={new_div_id}")
+                else:
+                    logger.warning(f"[create_employee] Failed to create division: {new_div_resp.text[:200]}")
         except Exception as e:
-            logger.warning(f"Failed to fetch division for employment: {e}")
+            logger.warning(f"Failed to fetch/create division for employment: {e}")
 
         emp_resp = await client.post("/employee/employment", employment_payload)
         if emp_resp.status_code < 400:
@@ -432,6 +464,20 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
                         detail_payload["occupationCode"] = {"id": prefix_matches[0]["id"]}
                         logger.info(f"[create_employee] API lookup STYRK '{occ_code_str}' → id={prefix_matches[0]['id']} code={prefix_matches[0].get('code','')} name={prefix_matches[0].get('nameNO','')}")
                         occ_resolved = True
+
+                # Fallback: search by nameNO using STYRK-to-search-term mapping
+                if not occ_resolved and occ_code_str in _STYRK_TO_SEARCH_TERM:
+                    search_term = _STYRK_TO_SEARCH_TERM[occ_code_str]
+                    occ_resp2 = await client.get_cached(
+                        "/employee/employment/occupationCode",
+                        params={"nameNO": search_term, "count": 5},
+                    )
+                    occ_values2 = occ_resp2.json().get("values", [])
+                    if occ_values2:
+                        detail_payload["occupationCode"] = {"id": occ_values2[0]["id"]}
+                        logger.info(f"[create_employee] nameNO fallback STYRK '{occ_code_str}' → nameNO='{search_term}' → id={occ_values2[0]['id']} name={occ_values2[0].get('nameNO','')}")
+                        occ_resolved = True
+
                 if not occ_resolved:
                     logger.warning(f"No occupationCode found for STYRK '{occ_code_str}'")
             except Exception as e:

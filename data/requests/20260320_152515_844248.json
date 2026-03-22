@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_152515_844248",
-  "prompt": "Fixez un prix forfaitaire de 354200 NOK sur le projet \"Sécurité des données\" pour Colline SARL (nº org. 862154258). Le chef de projet est Gabriel Richard (gabriel.richard@example.org). Facturez au client 33 % du prix fixe comme paiement d'étape.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "SKWdTigqCA60f7PJ42DxN6Y901n7Ja1dHGPOOYhnO-E"
-  }
-}

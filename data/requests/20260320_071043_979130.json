@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_071043_979130",
-  "prompt": "Opprett kunden Bølgekraft AS med organisasjonsnummer 988957747. Adressa er Kirkegata 23, 0182 Oslo. E-post: post@blgekraft.no.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "Vodeb9ys2VbjFfeeYjOv64G785wi-tYyZ1YEdQJvPeY"
-  }
-}

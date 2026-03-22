@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_224719_088493",
-  "prompt": "Opprett ein fri rekneskapsdimensjon \"Marked\" med verdiane \"Privat\" og \"Bedrift\". Bokfør deretter eit bilag på konto 6590 for 18700 kr, knytt til dimensjonsverdien \"Privat\".",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "YeFq3wZFgHp6wBqpwr-rq35Rfupz9uivtRUNenTyrrw"
-  }
-}

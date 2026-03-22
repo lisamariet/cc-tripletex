@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_231127_490510",
-  "prompt": "Créez le client Prairie SARL avec le numéro d'organisation 870133669. L'adresse est Solveien 88, 9008 Tromsø. E-mail : post@prairie.no.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "_ImYeF3uy3K0CbfrYxHntluYDQ_GsJoZW5dhzrQt8bk"
-  }
-}

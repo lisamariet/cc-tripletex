@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_163111_304389",
-  "prompt": "Erstellen Sie das Produkt \"Cloud-Speicher\" mit der Produktnummer 9235. Der Preis beträgt 28800 NOK ohne MwSt., mit dem Standardsatz von 25 %.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "M1nwyPThq_XwH-vf0xU5OCEg6uYJejU0o-PW8dneScs"
-  }
-}

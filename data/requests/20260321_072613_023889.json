@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_072613_023889",
-  "prompt": "Opprett tre avdelinger i Tripletex: \"Utvikling\", \"Drift\" og \"HR\".",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "bGtoc1erCPlvJfh9LQn9my7tY5DWqx6qXsrT1AQwoXg"
-  }
-}

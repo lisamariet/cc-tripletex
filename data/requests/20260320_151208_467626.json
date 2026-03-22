@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_151208_467626",
-  "prompt": "Create three departments in Tripletex: \"Produksjon\", \"Kundeservice\", and \"Økonomi\".",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "DZouueP61gy4ptCzcO3cFDqncbrPS2LvOjVRVB5rQkM"
-  }
-}

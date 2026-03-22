@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_002627_837879",
-  "prompt": "Créez une dimension comptable personnalisée \"Kostsenter\" avec les valeurs \"Økonomi\" et \"IT\". Puis comptabilisez une pièce sur le compte 6340 pour 5050 NOK, liée à la valeur de dimension \"IT\".",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "Wi-fElJbsoBfQA8nvK3sCALQuoBIbnQPb0QW205lSmc"
-  }
-}

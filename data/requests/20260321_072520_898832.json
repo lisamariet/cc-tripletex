@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_072520_898832",
-  "prompt": "El cliente Viento SL (org. nº 857019199) ha reclamado sobre la factura por \"Informe de análisis\" (27200 NOK sin IVA). Emita una nota de crédito completa que revierta toda la factura.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "sLh0-VaJ2W3nO7lNra2oPzaxDF6hjAKWIZD5zhrTd8o"
-  }
-}

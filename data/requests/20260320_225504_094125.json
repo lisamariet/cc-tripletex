@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_225504_094125",
-  "prompt": "Crea una factura para el cliente Sierra SL (org. nº 841679563) con tres líneas de producto: Horas de consultoría (8891) a 18400 NOK con 25 % IVA, Informe de análisis (3817) a 4150 NOK con 15 % IVA (alimentos), y Sesión de formación (5484) a 3250 NOK con 0 % IVA (exento).",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "UGIquUzsYTAVYRG52tui8xiQ8RvcxfLJ-AhX8GbVo7c"
-  }
-}

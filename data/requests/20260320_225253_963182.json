@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_225253_963182",
-  "prompt": "El pago de Solmar SL (org. nº 836598741) por la factura \"Licencia de software\" (8000 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "pjl4EwlMPSledJUv_8iSn4w3l_qanfCYkjJLNfqA8fU"
-  }
-}

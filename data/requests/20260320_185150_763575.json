@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_185150_763575",
-  "prompt": "We have a new employee named Henry Smith, born 2. December 1988. Please create them as an employee with email henry.smith@example.org and start date 1. November 2026.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "VgY1svCJZgjx6W10QBT4jP_O75aX3eobA_PuyACUp0E"
-  }
-}

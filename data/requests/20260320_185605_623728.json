@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_185605_623728",
-  "prompt": "Create and send an invoice to the customer Blueshore Ltd (org no. 987928921) for 40600 NOK excluding VAT. The invoice is for Maintenance.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "l_TZaBVwlltemuxMUjLr6RwCCT7C2evJBDY1Ye_GtCc"
-  }
-}

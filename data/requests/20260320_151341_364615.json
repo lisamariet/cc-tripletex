@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_151341_364615",
-  "prompt": "Die Zahlung von Silberberg GmbH (Org.-Nr. 857736672) für die Rechnung \"Systementwicklung\" (22350 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "CLqb_gNNEMb_x093R70bTJDXyvnoPLv6nRqmknkcRK8"
-  }
-}

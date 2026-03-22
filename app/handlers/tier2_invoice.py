@@ -587,12 +587,63 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
 
     payment_date = fields.get("paymentDate") or date.today().isoformat()
 
-    resp = await client.put(f"/invoice/{invoice_id}/:payment", params={
+    # Foreign currency handling: use paidAmountCurrency so Tripletex calculates
+    # the exchange rate difference (agio/disagio) automatically.
+    #
+    # paidAmount        = NOK amount (payment-type account currency)
+    # paidAmountCurrency = amount in the invoice's own currency (e.g. EUR)
+    #
+    # When the invoice is in a foreign currency, Tripletex needs both values to
+    # determine the realised exchange rate and book agio/disagio internally.
+    foreign_currency = fields.get("foreignCurrency")
+    foreign_amount = fields.get("foreignAmount")
+    invoice_rate = fields.get("invoiceExchangeRate")
+    payment_rate = fields.get("paymentExchangeRate")
+
+    payment_params: dict[str, Any] = {
         "paymentDate": payment_date,
         "paymentTypeId": payment_type_id,
-        "paidAmount": amount,
-    })
-    logger.info(f"Registered payment on invoice {invoice_id}, amount={amount}")
+    }
+
+    if foreign_currency and foreign_amount and payment_rate:
+        # Invoice is in foreign currency.
+        # paidAmountCurrency = gross amount in invoice currency (incl. VAT)
+        # paidAmount = NOK equivalent at the payment exchange rate
+        #
+        # We use the invoice's gross amount as paidAmountCurrency when available,
+        # because it already includes VAT in the invoice currency.
+        # If the invoice was stored in NOK (sandbox quirk), we derive from fields.
+        invoice_currency_id = None
+        inv_currency = invoice.get("currency") if invoice else None
+        if inv_currency:
+            invoice_currency_id = inv_currency.get("id")
+
+        if invoice_currency_id and invoice_currency_id != 1:
+            # Invoice is properly stored in foreign currency
+            paid_amount_currency = amount  # gross in invoice currency
+            paid_amount_nok = round(abs(foreign_amount) * payment_rate * 1.25, 2)
+        else:
+            # Invoice stored in NOK (sandbox creates invoices in NOK).
+            # The gross amount on the invoice is already in NOK at invoice rate.
+            # We need to tell Tripletex the NOK payment amount at payment rate
+            # and the original invoice-currency amount.
+            gross_foreign = abs(foreign_amount) * 1.25  # incl 25% VAT
+            paid_amount_currency = round(gross_foreign, 2)
+            paid_amount_nok = round(abs(foreign_amount) * payment_rate * 1.25, 2)
+
+        payment_params["paidAmount"] = paid_amount_nok
+        payment_params["paidAmountCurrency"] = paid_amount_currency
+        logger.info(
+            f"Foreign currency payment: {foreign_currency} {foreign_amount}, "
+            f"rate={payment_rate}, paidAmount(NOK)={paid_amount_nok}, "
+            f"paidAmountCurrency={paid_amount_currency}"
+        )
+    else:
+        # Standard NOK invoice — use the invoice amount directly
+        payment_params["paidAmount"] = amount
+
+    resp = await client.put(f"/invoice/{invoice_id}/:payment", params=payment_params)
+    logger.info(f"Registered payment on invoice {invoice_id}, params={payment_params}")
 
     result: dict[str, Any] = {
         "status": "completed",
@@ -600,20 +651,38 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
         "invoiceId": invoice_id,
     }
 
-    # Handle foreign currency agio/disagio if invoice was in foreign currency.
-    # Agio = currency gain when payment rate > invoice rate (NOK/EUR went up)
-    # Disagio = currency loss when payment rate < invoice rate (NOK/EUR went down)
-    #
-    # Accounting entries (Norwegian standard):
-    #   Disagio (loss):  DEBIT 8160 (valutatap)    / CREDIT 1500 (kundefordring)
-    #   Agio (gain):     DEBIT 1500 (kundefordring) / CREDIT 8060 (valutagevinst)
-    # The 1500 posting needs a customer reference for the sub-ledger (reskontro).
-    foreign_currency = fields.get("foreignCurrency")
-    foreign_amount = fields.get("foreignAmount")
-    invoice_rate = fields.get("invoiceExchangeRate")
-    payment_rate = fields.get("paymentExchangeRate")
+    # Handle foreign currency agio/disagio via manual voucher ONLY as fallback.
+    # When paidAmountCurrency is sent, Tripletex should handle agio internally.
+    # We only create a manual agio voucher if the :payment call did NOT receive
+    # paidAmountCurrency (i.e. we couldn't determine the foreign currency info)
+    # or if the invoice was stored in NOK (sandbox quirk) so Tripletex can't
+    # compute the exchange difference itself.
+    needs_manual_agio = (
+        foreign_currency
+        and foreign_amount
+        and invoice_rate
+        and payment_rate
+        and invoice_rate != payment_rate
+    )
+    # If we sent paidAmountCurrency AND the invoice is truly in foreign currency,
+    # Tripletex handles agio — skip manual voucher.
+    if needs_manual_agio and "paidAmountCurrency" in payment_params:
+        invoice_currency_id = None
+        inv_currency = invoice.get("currency") if invoice else None
+        if inv_currency:
+            invoice_currency_id = inv_currency.get("id")
+        if invoice_currency_id and invoice_currency_id != 1:
+            # Tripletex handles agio automatically for real foreign-currency invoices
+            needs_manual_agio = False
+            rate_diff = payment_rate - invoice_rate
+            agio_amount = round(abs(foreign_amount) * abs(rate_diff), 2)
+            result["agioNote"] = (
+                f"Tripletex handles agio automatically: ~{agio_amount} NOK "
+                f"({'gain' if rate_diff > 0 else 'loss'})"
+            )
+            logger.info(f"Agio handled by Tripletex via paidAmountCurrency, ~{agio_amount} NOK")
 
-    if foreign_currency and foreign_amount and invoice_rate and payment_rate:
+    if needs_manual_agio:
         rate_diff = payment_rate - invoice_rate
         agio_amount = round(abs(foreign_amount) * abs(rate_diff), 2)
 

@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_183413_464377",
-  "prompt": "Create the customer Oakwood Ltd with organization number 980094863. The address is Torggata 10, 6003 Ålesund. Email: post@oakwood.no.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "KucLU8WtfCO4rE7uj2aCkZFraz6xXsQEy_cfzMIEBFo"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_231724_794516",
-  "prompt": "Registrer leverandøren Skogheim AS med organisasjonsnummer 993130494. E-post: faktura@skogheim.no.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "C-N1fSjWW5AC4QZn00q7uSQSATZayTdyuqIO7Ls7qMk"
-  }
-}

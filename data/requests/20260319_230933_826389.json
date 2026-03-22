@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260319_230933_826389",
-  "prompt": "Me har ein ny tilsett som heiter Bjørn Neset, fødd 21. February 1996. Opprett vedkomande som tilsett med e-post bjrn.neset@example.org og startdato 16. June 2026.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "zxYmyLk8tfBALuLZrMfCRt56Ha8Fhlx-xL8R0ZmKuaI"
-  }
-}

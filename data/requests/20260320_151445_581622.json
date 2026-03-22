@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_151445_581622",
-  "prompt": "Opprett og send ein faktura til kunden Skogheim AS (org.nr 929397088) på 23250 kr eksklusiv MVA. Fakturaen gjeld Vedlikehald.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "tLMffns4z4YSJXYfaKo8iQ19Gx053OBirBtyTODTD60"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_185911_057633",
-  "prompt": "Legen Sie einen Festpreis von 305450 NOK für das Projekt \"Infrastruktur-Upgrade\" für Sonnental GmbH (Org.-Nr. 967604178) fest. Projektleiter ist Hannah Schneider (hannah.schneider@example.org). Stellen Sie dem Kunden 33 % des Festpreises als Meilensteinzahlung in Rechnung.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "Gv6aHHEKkT3PplX0rsojDeboVq2McFSdu9K0_5qBh54"
-  }
-}

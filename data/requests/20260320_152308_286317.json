@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_152308_286317",
-  "prompt": "Le client Prairie SARL (nº org. 975013723) a une facture impayée de 45100 NOK hors TVA pour \"Licence logicielle\". Enregistrez le paiement intégral de cette facture.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "JcdZsOc647VrxBNNzo-cDKoPq_kHz5ivAGGfm7D4XJU"
-  }
-}

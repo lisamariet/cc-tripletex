@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_230233_004288",
-  "prompt": "Erstellen und senden Sie eine Rechnung an den Kunden Bergwerk GmbH (Org.-Nr. 981122011) über 45150 NOK ohne MwSt. Die Rechnung betrifft Datenberatung.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "eeFdQaGxg4rQKZppBhBqtRf8eE_pDg6g3R_C0GD1so8"
-  }
-}

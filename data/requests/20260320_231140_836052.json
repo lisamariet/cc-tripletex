@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_231140_836052",
-  "prompt": "Le client Montagne SARL (nº org. 893135979) a une facture impayée de 19050 NOK hors TVA pour \"Service réseau\". Enregistrez le paiement intégral de cette facture.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "zHVYNgrRUJG9BQawhMNGPYe_XFRdC0j7eYp_JTjVVcg"
-  }
-}

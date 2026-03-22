@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260319_224215_118186",
-  "prompt": "Le client Océan SARL (nº org. 924390735) a une facture impayée de 39300 NOK hors TVA pour \"Maintenance\". Enregistrez le paiement intégral de cette facture.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "fCp5H_DU8MBZUnJJhXF4UJmpRqSZZQBvuVbDzaDLJ0c"
-  }
-}

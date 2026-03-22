@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_183539_202116",
-  "prompt": "Die Zahlung von Grünfeld GmbH (Org.-Nr. 808603152) für die Rechnung \"Netzwerkdienst\" (44300 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "6y5MaIf--PT0ms-NbwoBLYof4DxU1P7dOpvR1SBcwLg"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_124957_032338",
-  "prompt": "O cliente Floresta Lda (org. nº 916058896) tem uma fatura pendente de 30450 NOK sem IVA por \"Desenvolvimento de sistemas\". Registe o pagamento total desta fatura.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "lwLKLCz-qGvpzhdZjCGiier1mclen1W3EO7a1uBtXu0"
-  }
-}

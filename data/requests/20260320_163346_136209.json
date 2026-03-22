@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_163346_136209",
-  "prompt": "Log 12 hours for Victoria Brown (victoria.brown@example.org) on the activity \"Analyse\" in the project \"Data Migration\" for Greenfield Ltd (org no. 890874185). Hourly rate: 850 NOK/h. Generate a project invoice to the customer based on the logged hours.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "aFIO2k2cOwDoj9a5P6DXe_4quD3QSDVWT2nLvirTo4o"
-  }
-}

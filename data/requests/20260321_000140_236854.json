@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_000140_236854",
-  "prompt": "Crea el cliente Río Verde SL con número de organización 975181626. La dirección es Solveien 97, 3015 Drammen. Correo: post@rio.no.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "U9AFBfjys7TdrCLlH-hhZaPxIyOcMDbgZScJIw5QO5E"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_073738_007842",
-  "prompt": "Betalingen fra Nordhav AS (org.nr 973826018) for fakturaen \"Opplæring\" (42500 kr ekskl. MVA) ble returnert av banken. Reverser betalingen slik at fakturaen igjen viser utestående beløp.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "hLximVeT_i1m__3CgHNnqhq6R2WYTa6hTHk1RCqMILM"
-  }
-}

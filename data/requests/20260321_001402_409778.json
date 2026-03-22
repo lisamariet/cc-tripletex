@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_001402_409778",
-  "prompt": "Opprett prosjektet \"Migrasjon Elvdal\" knytt til kunden Elvdal AS (org.nr 877501906). Prosjektleiar er Liv Haugen (liv.haugen@example.org).",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "O49VsbXb0cTMVl_DFFba2RLKhRALgL8M1-Ze3xW75bA"
-  }
-}

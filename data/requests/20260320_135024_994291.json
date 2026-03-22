@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_135024_994291",
-  "prompt": "Recebemos a fatura INV-2026-4855 do fornecedor Solmar Lda (org. nº 972752843) no valor de 62600 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 6860). Registe a fatura do fornecedor com o IVA dedutível correto (25 %).",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "xS_clVKamxXHD_mL1X9b9zPOxfEFNiQvW6bqMtKFhkA"
-  }
-}

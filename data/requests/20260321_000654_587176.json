@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_000654_587176",
-  "prompt": "Ejecute la nómina de María Rodríguez (maria.rodriguez@example.org) para este mes. El salario base es de 58750 NOK. Añada una bonificación única de 10750 NOK además del salario base.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "6URF8VM9IPTKa3UhNDtwRJhKBYKJxD4Rjmh01kLTqVI"
-  }
-}

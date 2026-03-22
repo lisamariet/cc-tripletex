@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_005938_191940",
-  "prompt": "Registrer 30 timar for Gunnhild Eide (gunnhild.eide@example.org) på aktiviteten \"Rådgivning\" i prosjektet \"Nettbutikk-utvikling\" for Sjøbris AS (org.nr 801323847). Timesats: 1100 kr/t. Generer ein prosjektfaktura til kunden basert på dei registrerte timane.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "Q4lVnjNxEd13z8jMWXdtxiTIH0Di8ABJijZ-uxBHJbM"
-  }
-}

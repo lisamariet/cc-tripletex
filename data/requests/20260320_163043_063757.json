@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_163043_063757",
-  "prompt": "Cree una dimensión contable personalizada \"Kostsenter\" con los valores \"Markedsføring\" y \"Kundeservice\". Luego registre un asiento en la cuenta 7000 por 30250 NOK, vinculado al valor de dimensión \"Kundeservice\".",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "KMaPxRYfsF3qiwobs8iEEwvnpCldtXfsHrJHFDxN3h4"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_225040_304305",
-  "prompt": "Erstellen Sie das Produkt \"Softwarelizenz\" mit der Produktnummer 7986. Der Preis beträgt 24900 NOK ohne MwSt., mit dem Standardsatz von 25 %.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "F6cGZrQQNVUqEItMJdIoI2r844jma-rGIl0VRQmxbe0"
-  }
-}

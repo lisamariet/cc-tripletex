@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_151339_406464",
-  "prompt": "Die Zahlung von Nordlicht GmbH (Org.-Nr. 853417556) für die Rechnung \"Netzwerkdienst\" (38800 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "sXQVIxoSPxnpymc0dZ2KP4MCgpk2S43m0ximEweWWgc"
-  }
-}

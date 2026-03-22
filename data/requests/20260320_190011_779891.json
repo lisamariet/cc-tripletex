@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_190011_779891",
-  "prompt": "Créez une commande pour le client Colline SARL (nº org. 841589033) avec les produits Stockage cloud (2289) à 24050 NOK et Conseil en données (1470) à 5000 NOK. Convertissez la commande en facture et enregistrez le paiement intégral.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "JfntN5gccyJEd60lB_XFVaeQzNj3vVvMx_qSRLVMXis"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_003454_702511",
-  "prompt": "Crea el cliente Viento SL con número de organización 910107739. La dirección es Parkveien 93, 7010 Trondheim. Correo: post@viento.no.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "yp-QSgc_ou6ybg9lCBel4UDmqus_y0rwRQBfRwl2Yz4"
-  }
-}

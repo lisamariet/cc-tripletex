@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260321_005235_178584",
-  "prompt": "Wir haben die Rechnung INV-2026-2118 vom Lieferanten Brückentor GmbH (Org.-Nr. 981448294) über 70400 NOK einschließlich MwSt. erhalten. Der Betrag betrifft Bürodienstleistungen (Konto 6590). Erfassen Sie die Lieferantenrechnung mit der korrekten Vorsteuer (25 %).",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "pMxUGW9T-Hx7AaHRU5BilYqaGgvbabLFgEQzBIdFClk"
-  }
-}

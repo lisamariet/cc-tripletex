@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_233649_440215",
-  "prompt": "Crea el proyecto \"Actualización Dorada\" vinculado al cliente Dorada SL (org. nº 800043328). El director del proyecto es Carmen Rodríguez (carmen.rodriguez@example.org).",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "hyvSJy2Sm8dKpjWk1cQCSWXF_hhC5BVI7tmCzsQiz4I"
-  }
-}

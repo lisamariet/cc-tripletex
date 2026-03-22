@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_183440_089949",
-  "prompt": "Me har ein ny tilsett som heiter Gunnhild Eide, fødd 21. June 1997. Opprett vedkomande som tilsett med e-post gunnhild.eide@example.org og startdato 28. June 2026.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "KjmaNhrF3s-RWCo-06fYGYvbo-5k2U4IcG7nkg74DKo"
-  }
-}

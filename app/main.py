@@ -47,6 +47,12 @@ async def solve(request: Request):
     base_url = creds.get("base_url", "")
     session_token = creds.get("session_token", "")
 
+    # Capture any extra fields from the competition API (e.g. submission_id, task_id)
+    extra_fields = {k: v for k, v in body.items()
+                    if k not in ("prompt", "files", "tripletex_credentials")}
+    if extra_fields:
+        logger.info(f"Extra request fields: {list(extra_fields.keys())}")
+
     logger.info(f"Received task: {prompt[:100]}...")
     logger.info(f"Files: {len(files)}, Base URL: {base_url}")
 
@@ -55,6 +61,7 @@ async def solve(request: Request):
         {
             "timestamp": timestamp,
             "revision": REVISION,
+            **extra_fields,
             "prompt": prompt,
             "files": [
                 {"filename": f.get("filename"), "mime_type": f.get("mime_type"),

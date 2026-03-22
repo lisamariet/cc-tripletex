@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_152424_475418",
-  "prompt": "Registrer en reiseregning for Lars Johansen (lars.johansen@example.org) for \"Kundebesøk Stavanger\". Reisen varte 3 dager med diett (dagsats 800 kr). Utlegg: flybillett 3900 kr og taxi 350 kr.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "t5XBsI-XPqGOpRcg07NJSb1XybSDA5jxxfjSAgrKXls"
-  }
-}

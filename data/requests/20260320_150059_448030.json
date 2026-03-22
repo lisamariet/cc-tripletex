@@ -1,9 +1,0 @@
-{
-  "timestamp": "20260320_150059_448030",
-  "prompt": "O cliente Horizonte Lda (org. nº 880951262) reclamou sobre a fatura referente a \"Desenvolvimento de sistemas\" (35700 NOK sem IVA). Emita uma nota de crédito completa que reverta toda a fatura.",
-  "files": [],
-  "tripletex_credentials": {
-    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
-    "session_token": "1pUHsZK297e3yT9aJWZ9Mtn7IDOHoRdl5MH6ywEH1jQ"
-  }
-}
