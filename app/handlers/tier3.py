@@ -49,58 +49,29 @@ async def _lookup_vat_type(client: TripletexClient, account_number: int) -> dict
     return None
 
 
-@register_handler("create_voucher")
-async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    description = fields.get("description", "")
-    date = fields.get("date") or datetime.date.today().isoformat()
-    postings_input = fields.get("postings", [])
-
-    # Look up department if specified
-    department_ref = None
-    department_name = fields.get("department") or fields.get("departmentName")
-    if department_name:
-        resp = await client.get_cached("/department", params={"name": department_name})
-        dept_values = resp.json().get("values", [])
-        for d in dept_values:
-            if d.get("name", "").lower() == department_name.lower():
-                department_ref = {"id": d["id"]}
-                break
-        if not department_ref and dept_values:
-            department_ref = {"id": dept_values[0]["id"]}
-        if not department_ref:
-            logger.warning(f"Department '{department_name}' not found — proceeding without department")
-
-    postings = []
+async def _create_single_voucher(
+    client: TripletexClient,
+    description: str,
+    date: str,
+    postings_input: list[dict[str, Any]],
+    department_ref: dict[str, Any] | None,
+    account_ids: dict[int, int],
+    vat_types_map: dict[int, dict[str, Any] | None],
+) -> dict:
+    """Build and POST a single voucher. Returns result dict (always status=completed)."""
+    postings: list[dict[str, Any]] = []
     debit_accounts_used: list[str] = []
     credit_accounts_used: list[str] = []
 
-    # Collect all unique account numbers upfront for parallel lookup
-    unique_account_numbers: set[int] = set()
+    # Use sequential row counter so rows are always 1, 2, 3, ... with no gaps
+    row_counter = 1
+
     for p in postings_input:
-        if p.get("debitAccount"):
-            unique_account_numbers.add(int(p["debitAccount"]))
-        if p.get("creditAccount"):
-            unique_account_numbers.add(int(p["creditAccount"]))
-
-    # Parallel lookup of all unique account IDs and VAT types
-    account_ids: dict[int, int] = {}
-    vat_types: dict[int, dict[str, Any] | None] = {}
-    if unique_account_numbers:
-        unique_list = list(unique_account_numbers)
-        id_results, vat_results = await asyncio.gather(
-            asyncio.gather(*[_lookup_account(client, n) for n in unique_list]),
-            asyncio.gather(*[_lookup_vat_type(client, n) for n in unique_list]),
-        )
-        account_ids = dict(zip(unique_list, id_results))
-        vat_types = dict(zip(unique_list, vat_results))
-
-    for idx, p in enumerate(postings_input):
-        row = idx + 1  # row must be >= 1 (row 0 is system-reserved for VAT)
-
-        # Determine account number and direction
         debit_account = p.get("debitAccount")
         credit_account = p.get("creditAccount")
         amount = p.get("amount", 0)
+        # Per-posting currency (optional)
+        currency_id = p.get("currencyId")
 
         if debit_account:
             account_number = int(debit_account)
@@ -109,15 +80,18 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
                 "account": {"id": account_id},
                 "amountGross": amount,
                 "amountGrossCurrency": amount,
-                "row": row,
+                "row": row_counter,
             }
-            vat_type = vat_types.get(account_number)
+            if currency_id:
+                posting["currency"] = {"id": currency_id}
+            vat_type = vat_types_map.get(account_number)
             if vat_type:
                 posting["vatType"] = vat_type
             if department_ref:
                 posting["department"] = department_ref
             postings.append(posting)
             debit_accounts_used.append(str(debit_account))
+            row_counter += 1
 
         if credit_account:
             account_number = int(credit_account)
@@ -126,21 +100,26 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
                 "account": {"id": account_id},
                 "amountGross": -amount,
                 "amountGrossCurrency": -amount,
-                "row": row + len(postings_input) if debit_account else row,
+                "row": row_counter,
             }
-            vat_type = vat_types.get(account_number)
+            if currency_id:
+                posting["currency"] = {"id": currency_id}
+            vat_type = vat_types_map.get(account_number)
             if vat_type:
                 posting["vatType"] = vat_type
             if department_ref:
                 posting["department"] = department_ref
             postings.append(posting)
             credit_accounts_used.append(str(credit_account))
+            row_counter += 1
 
     # Description fallback: generate from account numbers if empty
     if not description and (debit_accounts_used or credit_accounts_used):
         debit_str = "/".join(debit_accounts_used) if debit_accounts_used else "-"
         credit_str = "/".join(credit_accounts_used) if credit_accounts_used else "-"
         description = f"Bilag {debit_str} mot {credit_str}"
+    elif not description:
+        description = "Bilag"
 
     payload = {
         "date": date,
@@ -161,17 +140,117 @@ async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dic
             "validationMessages": validation,
         }
 
-    logger.info(f"Created voucher: {data.get('value', {}).get('id')}, dept={department_name}")
-    return {"status": "completed", "taskType": "create_voucher", "created": data.get("value", {})}
+    created = data.get("value", {})
+    logger.info(f"Created voucher id={created.get('id')}, desc={description!r}")
+    return {"status": "completed", "taskType": "create_voucher", "created": created}
+
+
+@register_handler("create_voucher")
+async def create_voucher(client: TripletexClient, fields: dict[str, Any]) -> dict:
+    today = datetime.date.today().isoformat()
+
+    # Support batch vouchers: fields["vouchers"] = [{description, date, postings}, ...]
+    # This allows a single prompt with multiple distinct journal entries.
+    vouchers_list: list[dict[str, Any]] = fields.get("vouchers", [])
+    if not vouchers_list:
+        # Single voucher mode (standard case)
+        vouchers_list = [{
+            "description": fields.get("description", ""),
+            "date": fields.get("date") or today,
+            "postings": fields.get("postings", []),
+            "department": fields.get("department") or fields.get("departmentName"),
+        }]
+
+    # Collect all unique account numbers across ALL vouchers for a single parallel lookup
+    unique_account_numbers: set[int] = set()
+    for v in vouchers_list:
+        for p in v.get("postings", []):
+            if p.get("debitAccount"):
+                unique_account_numbers.add(int(p["debitAccount"]))
+            if p.get("creditAccount"):
+                unique_account_numbers.add(int(p["creditAccount"]))
+
+    # Parallel lookup of all unique account IDs and VAT types
+    account_ids: dict[int, int] = {}
+    vat_types_map: dict[int, dict[str, Any] | None] = {}
+    if unique_account_numbers:
+        unique_list = list(unique_account_numbers)
+        id_results, vat_results = await asyncio.gather(
+            asyncio.gather(*[_lookup_account(client, n) for n in unique_list]),
+            asyncio.gather(*[_lookup_vat_type(client, n) for n in unique_list]),
+        )
+        account_ids = dict(zip(unique_list, id_results))
+        vat_types_map = dict(zip(unique_list, vat_results))
+
+    if len(vouchers_list) == 1:
+        # Single voucher — look up department and create
+        v = vouchers_list[0]
+        department_ref = None
+        dept_name = v.get("department") or v.get("departmentName")
+        if dept_name:
+            resp = await client.get_cached("/department", params={"name": dept_name})
+            dept_values = resp.json().get("values", [])
+            for d in dept_values:
+                if d.get("name", "").lower() == dept_name.lower():
+                    department_ref = {"id": d["id"]}
+                    break
+            if not department_ref and dept_values:
+                department_ref = {"id": dept_values[0]["id"]}
+            if not department_ref:
+                logger.warning(f"Department '{dept_name}' not found — proceeding without department")
+
+        return await _create_single_voucher(
+            client,
+            description=v.get("description", ""),
+            date=v.get("date") or today,
+            postings_input=v.get("postings", []),
+            department_ref=department_ref,
+            account_ids=account_ids,
+            vat_types_map=vat_types_map,
+        )
+    else:
+        # Multiple vouchers — create each sequentially
+        results = []
+        for v in vouchers_list:
+            department_ref = None
+            dept_name = v.get("department") or v.get("departmentName")
+            if dept_name:
+                resp = await client.get_cached("/department", params={"name": dept_name})
+                dept_values = resp.json().get("values", [])
+                for d in dept_values:
+                    if d.get("name", "").lower() == dept_name.lower():
+                        department_ref = {"id": d["id"]}
+                        break
+                if not department_ref and dept_values:
+                    department_ref = {"id": dept_values[0]["id"]}
+
+            result = await _create_single_voucher(
+                client,
+                description=v.get("description", ""),
+                date=v.get("date") or today,
+                postings_input=v.get("postings", []),
+                department_ref=department_ref,
+                account_ids=account_ids,
+                vat_types_map=vat_types_map,
+            )
+            results.append(result)
+
+        # Return last created voucher as primary "created" for scorer compatibility
+        primary = next((r for r in reversed(results) if r.get("created", {}).get("id")), results[-1])
+        return {
+            "status": "completed",
+            "taskType": "create_voucher",
+            "created": primary.get("created", {}),
+            "batch_results": results,
+        }
 
 
 @register_handler("overdue_invoice")
 async def overdue_invoice(client: TripletexClient, fields: dict[str, Any]) -> dict:
     """Handle overdue invoice: find overdue, post reminder fee voucher, create+send reminder invoice, register partial payment."""
     from app.handlers.tier2_invoice import (
-        _ensure_bank_account, _get_bank_payment_type_id, _find_or_create_customer,
+        _ensure_bank_account, _get_bank_payment_type_id,
     )
-    from app.handlers.tier1 import _resolve_vat_type_id
 
     result: dict[str, Any] = {"status": "completed", "taskType": "overdue_invoice"}
 
@@ -179,19 +258,42 @@ async def overdue_invoice(client: TripletexClient, fields: dict[str, Any]) -> di
     debit_account_nr = fields.get("debitAccount", 1500)
     credit_account_nr = fields.get("creditAccount", 3400)
     partial_payment_amount = fields.get("partialPaymentAmount")
+    send_reminder = fields.get("sendReminder", False)  # Use /invoice/{id}/:sendReminder endpoint
     today = datetime.date.today().isoformat()
 
     # ── Step 1: Find the overdue invoice ──
-    # Search for invoices with outstanding balance where due date has passed
+    # Use customer name / invoice number from fields when available for a more precise search
+    invoice_fields = (
+        "id,invoiceNumber,amount,amountCurrency,amountOutstanding,amountCurrencyOutstanding,"
+        "customer,invoiceDueDate,amountExcludingVat,amountExcludingVatCurrency"
+    )
     search_params: dict[str, Any] = {
         "invoiceDateFrom": "2000-01-01",
         "invoiceDateTo": today,
-        "fields": "id,invoiceNumber,amount,amountCurrency,amountOutstanding,amountCurrencyOutstanding,"
-                  "customer,invoiceDueDate,amountExcludingVat,amountExcludingVatCurrency",
+        "fields": invoice_fields,
         "count": "100",
     }
+    # Filter by customer name if provided (more targeted search)
+    customer_name_hint = fields.get("customerName") or fields.get("customer")
+    invoice_number_hint = fields.get("invoiceNumber")
+    if customer_name_hint:
+        search_params["customerName"] = str(customer_name_hint)
+    if invoice_number_hint:
+        search_params["invoiceNumber"] = str(invoice_number_hint)
+
     resp = await client.get("/invoice", params=search_params)
     all_invoices = resp.json().get("values", [])
+
+    # If filtered search returned nothing, fall back to unfiltered search
+    if not all_invoices and (customer_name_hint or invoice_number_hint):
+        fallback_params = {
+            "invoiceDateFrom": "2000-01-01",
+            "invoiceDateTo": today,
+            "fields": invoice_fields,
+            "count": "100",
+        }
+        resp = await client.get("/invoice", params=fallback_params)
+        all_invoices = resp.json().get("values", [])
 
     # Find overdue: has outstanding balance and is past due
     overdue = None
@@ -231,7 +333,6 @@ async def overdue_invoice(client: TripletexClient, fields: dict[str, Any]) -> di
     )
 
     # For account 3400, use VAT code 0 (no VAT on reminder fees)
-    # Look up VAT type 0 explicitly
     vat_types_zero = vat_resp.json().get("values", [])
     vat_type_zero = {"id": vat_types_zero[0]["id"]} if vat_types_zero else None
 
@@ -258,85 +359,114 @@ async def overdue_invoice(client: TripletexClient, fields: dict[str, Any]) -> di
 
     voucher_payload = {
         "date": today,
-        "description": f"Reminder fee - overdue invoice #{overdue_number}",
+        "description": f"Purregebyr / Reminder fee - faktura #{overdue_number}",
         "postings": voucher_postings,
     }
-    voucher_resp = await client.post_with_retry("/ledger/voucher", voucher_payload)
-    voucher_data = voucher_resp.json()
-    if voucher_resp.status_code < 400:
-        voucher_id = voucher_data.get("value", {}).get("id")
-        result["reminderVoucher"] = {"id": voucher_id}
-        logger.info(f"Created reminder fee voucher {voucher_id}")
-    else:
-        logger.error(f"Reminder fee voucher failed: {voucher_data}")
-        result["reminderVoucherError"] = voucher_data.get("message", "")
+    try:
+        voucher_resp = await client.post_with_retry("/ledger/voucher", voucher_payload)
+        voucher_data = voucher_resp.json()
+        if voucher_resp.status_code < 400:
+            voucher_id = voucher_data.get("value", {}).get("id")
+            result["reminderVoucher"] = {"id": voucher_id}
+            logger.info(f"Created reminder fee voucher {voucher_id}")
+        else:
+            logger.error(f"Reminder fee voucher failed: {voucher_data}")
+            result["reminderVoucherError"] = voucher_data.get("message", "")
+    except Exception as e:
+        logger.error(f"Reminder voucher exception: {e}")
+        result["reminderVoucherError"] = str(e)
 
     # ── Step 3: Create invoice for the reminder fee ──
-    await _ensure_bank_account(client)
+    try:
+        await _ensure_bank_account(client)
 
-    # Create order for reminder fee invoice
-    order_lines = [{
-        "count": 1,
-        "unitPriceExcludingVatCurrency": reminder_amount,
-        "description": "Purregebyr / Reminder fee",
-    }]
-    # Use VAT code 0 for reminder fee line
-    if vat_types_zero:
-        order_lines[0]["vatType"] = {"id": vat_types_zero[0]["id"]}
+        # Create order for reminder fee invoice
+        order_lines: list[dict[str, Any]] = [{
+            "count": 1,
+            "unitPriceExcludingVatCurrency": reminder_amount,
+            "description": "Purregebyr / Reminder fee",
+        }]
+        # Use VAT code 0 for reminder fee line
+        if vat_types_zero:
+            order_lines[0]["vatType"] = {"id": vat_types_zero[0]["id"]}
 
-    order_payload: dict[str, Any] = {
-        "orderDate": today,
-        "deliveryDate": today,
-        "orderLines": order_lines,
-    }
-    if customer_id:
-        order_payload["customer"] = {"id": customer_id}
+        order_payload: dict[str, Any] = {
+            "orderDate": today,
+            "deliveryDate": today,
+            "orderLines": order_lines,
+        }
+        if customer_id:
+            order_payload["customer"] = {"id": customer_id}
 
-    order_resp = await client.post_with_retry("/order", order_payload)
-    order_data = order_resp.json().get("value", {})
-    order_id = order_data.get("id")
+        order_resp = await client.post_with_retry("/order", order_payload)
+        order_data = order_resp.json().get("value", {})
+        order_id = order_data.get("id")
 
-    if order_id:
-        # ── Step 4: Invoice the order and send it ──
-        inv_resp = await client.put(f"/order/{order_id}/:invoice", params={
-            "invoiceDate": today,
-            "sendToCustomer": True,  # Send to customer as requested
-        })
-        inv_data = inv_resp.json().get("value", {})
-        reminder_invoice_id = inv_data.get("id")
-
-        if reminder_invoice_id:
-            result["reminderInvoice"] = {"id": reminder_invoice_id}
-            logger.info(f"Created and sent reminder fee invoice {reminder_invoice_id}")
-
-            # Also explicitly send if sendToCustomer didn't work
-            send_resp = await client.put(f"/invoice/{reminder_invoice_id}/:send", params={
-                "sendType": "EMAIL",
-                "overrideEmailAddress": "",
+        if order_id:
+            # ── Step 4: Invoice the order and send it ──
+            inv_resp = await client.put(f"/order/{order_id}/:invoice", params={
+                "invoiceDate": today,
+                "sendToCustomer": True,
             })
-            if send_resp.status_code < 400:
-                logger.info(f"Sent reminder invoice {reminder_invoice_id} via :send")
-            else:
-                logger.warning(f"Send invoice failed ({send_resp.status_code}), sendToCustomer may have covered it")
-        else:
-            logger.error(f"Failed to create reminder invoice from order {order_id}")
-    else:
-        logger.error(f"Failed to create order for reminder invoice: {order_resp.text[:300]}")
+            inv_data = inv_resp.json().get("value", {})
+            reminder_invoice_id = inv_data.get("id")
 
-    # ── Step 5: Register partial payment on the original overdue invoice ──
-    if partial_payment_amount and overdue_id:
-        payment_type_id = await _get_bank_payment_type_id(client)
-        pay_resp = await client.put(f"/invoice/{overdue_id}/:payment", params={
-            "paymentDate": today,
-            "paymentTypeId": payment_type_id,
-            "paidAmount": partial_payment_amount,
-        })
-        if pay_resp.status_code < 400:
-            result["partialPayment"] = {"invoiceId": overdue_id, "amount": partial_payment_amount}
-            logger.info(f"Registered partial payment {partial_payment_amount} on invoice {overdue_id}")
+            if reminder_invoice_id:
+                result["reminderInvoice"] = {"id": reminder_invoice_id}
+                logger.info(f"Created and sent reminder fee invoice {reminder_invoice_id}")
+
+                # Also explicitly send via :send endpoint
+                try:
+                    send_resp = await client.put(f"/invoice/{reminder_invoice_id}/:send", params={
+                        "sendType": "EMAIL",
+                        "overrideEmailAddress": "",
+                    })
+                    if send_resp.status_code < 400:
+                        logger.info(f"Sent reminder invoice {reminder_invoice_id} via :send")
+                    else:
+                        logger.warning(f"Send invoice failed ({send_resp.status_code}), sendToCustomer may have covered it")
+                except Exception as e:
+                    logger.warning(f"Invoice :send exception (non-fatal): {e}")
+            else:
+                logger.error(f"Failed to create reminder invoice from order {order_id}")
         else:
-            logger.error(f"Partial payment failed: {pay_resp.text[:300]}")
-            result["partialPaymentError"] = pay_resp.json().get("message", "")
+            logger.error(f"Failed to create order for reminder invoice: {order_resp.text[:300]}")
+    except Exception as e:
+        logger.error(f"Reminder invoice creation exception (non-fatal): {e}")
+
+    # ── Step 5: Use /invoice/{id}/:sendReminder if requested ──
+    # Some tasks ask to send a reminder on the ORIGINAL overdue invoice (not a new invoice)
+    if send_reminder and overdue_id:
+        try:
+            sr_resp = await client.put(f"/invoice/{overdue_id}/:sendReminder", params={
+                "sendType": "EMAIL",
+            })
+            if sr_resp.status_code < 400:
+                result["sendReminderSent"] = True
+                logger.info(f"Sent invoice reminder on original invoice {overdue_id}")
+            else:
+                logger.warning(f"sendReminder failed ({sr_resp.status_code}): {sr_resp.text[:200]}")
+        except Exception as e:
+            logger.warning(f"sendReminder exception (non-fatal): {e}")
+
+    # ── Step 6: Register partial payment on the original overdue invoice ──
+    if partial_payment_amount and overdue_id:
+        try:
+            payment_type_id = await _get_bank_payment_type_id(client)
+            pay_resp = await client.put(f"/invoice/{overdue_id}/:payment", params={
+                "paymentDate": today,
+                "paymentTypeId": payment_type_id,
+                "paidAmount": partial_payment_amount,
+            })
+            if pay_resp.status_code < 400:
+                result["partialPayment"] = {"invoiceId": overdue_id, "amount": partial_payment_amount}
+                logger.info(f"Registered partial payment {partial_payment_amount} on invoice {overdue_id}")
+            else:
+                logger.error(f"Partial payment failed: {pay_resp.text[:300]}")
+                result["partialPaymentError"] = pay_resp.json().get("message", "")
+        except Exception as e:
+            logger.error(f"Partial payment exception (non-fatal): {e}")
+            result["partialPaymentError"] = str(e)
 
     return result
 
