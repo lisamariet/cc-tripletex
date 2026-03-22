@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2.1.1: Score-maksimering** - Fiks 8 T3-tasks med stoerst poengpotensial (INSERTED)
 - [x] **Phase 3: Effektivitet** - Eliminer 4xx + reduser kall-antall for å aktivere effektivitetsbonus (completed 2026-03-21)
 - [ ] **Phase 4: T3 Robusthet** - Timeout-sikring og stabilisering av T3-handlers
-- [ ] **Phase 5: Score-maksimering og stabilisering** - Gap-lukking, fields= audit, klassifiserings-forbedring
+- [x] **Phase 5: Score-maksimering og stabilisering** - Gap-lukking, fields= audit, klassifiserings-forbedring (completed 2026-03-22)
 
 ## Phase Details
 
@@ -131,12 +131,12 @@ Plans:
   2. Task 26 (create_voucher), 15 (register_supplier_invoice), 25 (overdue_invoice) scorer hoyere
   3. Embedding-index bruker ekte competition-prompts for bedre klassifisering
   4. Task 24 er identifisert og har handler-stotte
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 05-01-PLAN.md — Audit og fiks fields= projeksjoner i alle handlers (D-03, D-07)
 - [x] 05-02-PLAN.md — Forbedre create_voucher, overdue_invoice, register_supplier_invoice (D-01, D-02)
-- [ ] 05-03-PLAN.md — Klassifiserings-forbedring med ekte prompts og confidence-routing (D-04, D-05, D-06)
+- [x] 05-03-PLAN.md — Klassifiserings-forbedring med ekte prompts og confidence-routing (D-04, D-05, D-06)
 
 ## Progress
 
@@ -151,4 +151,4 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 2.1.1 → 3 → 4 → 5
 | 2.1.1 Score-maksimering | 0/3 | Not started | - |
 | 3. Effektivitet | 2/2 | Complete   | 2026-03-21 |
 | 4. T3 Robusthet | 0/1 | Not started | - |
-| 5. Score-maksimering og stabilisering | 2/3 | In Progress|  |
+| 5. Score-maksimering og stabilisering | 3/3 | Complete   | 2026-03-22 |
