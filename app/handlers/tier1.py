@@ -21,12 +21,22 @@ logger = logging.getLogger(__name__)
 # These are defined by Norwegian tax authorities and are consistent across
 # all Tripletex sandboxes.  The API `number` field equals the `id` for
 # standard codes.  We fall back to an API lookup for unknown codes.
+# Hardcoded vatType number→ID mapping from Tripletex sandbox.
+# Standard Norwegian VAT codes — consistent across all sandboxes.
 _VAT_CODE_TO_ID: dict[str, int] = {
-    "3": 3,    # 25% standard (Utgående MVA, høy sats)
-    "31": 31,  # 15% food (middels sats)
-    "33": 32,  # 12% transport/low (lav sats) — NB: number=33 but id=32!
-    "5": 5,    # 0% exempt
-    "6": 6,    # 0% outside VAT law
+    "0": 0,    # Ingen avgiftsbehandling
+    "1": 1,    # Fradrag inngående avgift, høy sats (25%)
+    "3": 3,    # Utgående avgift, høy sats (25%)
+    "4": 4,    # Direktepostert utgående avgift, høy sats
+    "5": 5,    # Ingen utgående avgift (innenfor mva-loven)
+    "6": 6,    # Ingen utgående avgift (utenfor mva-loven)
+    "7": 7,    # Ingen avgiftsbehandling (inntekter)
+    "11": 11,  # Fradrag inngående avgift, middels sats (15%)
+    "13": 12,  # Fradrag inngående avgift, lav sats (12%) — NB: number=13 but id=12!
+    "31": 31,  # Utgående avgift, middels sats (15%)
+    "33": 32,  # Utgående avgift, lav sats (12%) — NB: number=33 but id=32!
+    "51": 51,  # Avgiftsfri innlands omsetning med omvendt avgiftsplikt
+    "52": 52,  # Avgiftsfri utførsel av varer og tjenester
 }
 
 
