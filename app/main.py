@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import os
 import time
 from datetime import datetime, timezone
 
@@ -15,6 +16,9 @@ from app.handlers import execute_task
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Cloud Run revision — set automatically by Cloud Run (e.g. "tripletex-agent-00125-jvn")
+REVISION = os.getenv("K_REVISION", "local")
 
 app = FastAPI(title="Tripletex AI Accounting Agent")
 
@@ -50,6 +54,7 @@ async def solve(request: Request):
     save_to_gcs(
         {
             "timestamp": timestamp,
+            "revision": REVISION,
             "prompt": prompt,
             "files": [
                 {"filename": f.get("filename"), "mime_type": f.get("mime_type"),
@@ -86,7 +91,7 @@ async def solve(request: Request):
             try:
                 result = await asyncio.wait_for(
                     execute_task(parsed_task.task_type, client, parsed_task.fields, prompt=prompt),
-                    timeout=90.0
+                    timeout=240.0
                 )
             except asyncio.TimeoutError:
                 logger.warning(f"Handler timed out after 90s: {parsed_task.task_type}")
@@ -111,6 +116,7 @@ async def solve(request: Request):
     save_to_gcs(
         {
             "timestamp": timestamp,
+            "revision": REVISION,
             "prompt": prompt,
             "parsed_task": {
                 "task_type": parsed_task.task_type,
@@ -125,6 +131,9 @@ async def solve(request: Request):
         },
         f"results/{timestamp}.json",
     )
+
+    # Include revision in response for traceability
+    result["revision"] = REVISION
 
     logger.info(f"Done in {total_ms:.0f}ms: {json.dumps(result, ensure_ascii=False)[:500]}")
     return JSONResponse(result, status_code=200)

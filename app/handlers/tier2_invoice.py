@@ -338,6 +338,76 @@ async def _ensure_invoice_exists(client: TripletexClient, fields: dict[str, Any]
     return full_invoice if full_invoice else invoice_data
 
 
+async def _create_invoice_chain(client: TripletexClient, fields: dict[str, Any], customer_id: int) -> dict | None:
+    """Create order → invoice chain for a known customer. Returns invoice dict or None."""
+    today = date.today().isoformat()
+
+    # Build order lines from fields
+    order_lines = []
+    if fields.get("lines"):
+        for line in fields["lines"]:
+            order_line: dict[str, Any] = {
+                "count": line.get("quantity", 1),
+                "unitPriceExcludingVatCurrency": line.get("unitPriceExcludingVat", 0),
+            }
+            if line.get("description"):
+                order_line["description"] = line["description"]
+            if line.get("vatCode"):
+                vat_id = await _resolve_vat_type_id(client, str(line["vatCode"]))
+                if vat_id is not None:
+                    order_line["vatType"] = {"id": vat_id}
+                else:
+                    order_line["vatType"] = {"number": str(line["vatCode"])}
+            order_lines.append(order_line)
+    elif fields.get("amount") or fields.get("foreignAmount"):
+        description = fields.get("invoiceDescription") or fields.get("description") or "Invoice"
+        foreign_amount = fields.get("foreignAmount")
+        invoice_rate = fields.get("invoiceExchangeRate")
+        if foreign_amount and invoice_rate:
+            unit_price = abs(foreign_amount) * invoice_rate
+        else:
+            unit_price = abs(fields.get("amount", 0))
+        order_lines.append({
+            "count": 1,
+            "unitPriceExcludingVatCurrency": unit_price,
+            "description": description,
+        })
+    else:
+        return None
+
+    # Create order
+    order_payload = {
+        "customer": {"id": customer_id},
+        "orderDate": today,
+        "deliveryDate": today,
+        "orderLines": order_lines,
+    }
+    resp = await client.post("/order", order_payload)
+    order = resp.json().get("value", {})
+    order_id = order.get("id")
+    if not order_id:
+        logger.error("Failed to create order for invoice pipeline")
+        return None
+
+    # Invoice the order
+    resp = await client.put(f"/order/{order_id}/:invoice", params={
+        "invoiceDate": today,
+        "sendToCustomer": False,
+    })
+    invoice_data = resp.json().get("value", {})
+    invoice_id = invoice_data.get("id")
+    if not invoice_id:
+        logger.error("Failed to invoice order in pipeline")
+        return None
+
+    logger.info(f"Created invoice {invoice_id} from order {order_id} in pipeline")
+
+    # Fetch full invoice to get computed amounts (amount, amountExcludingVat, etc.)
+    detail_resp = await client.get(f"/invoice/{invoice_id}")
+    full_invoice = detail_resp.json().get("value")
+    return full_invoice if full_invoice else invoice_data
+
+
 async def _get_bank_payment_type_id(client: TripletexClient) -> int | None:
     """Get the bank payment type ID."""
     payment_type_resp = await client.get_cached("/invoice/paymentType")
@@ -424,21 +494,47 @@ async def create_invoice(client: TripletexClient, fields: dict[str, Any]) -> dic
     # Invoice the order — :invoice uses query params, not JSON body
     invoice_params: dict[str, Any] = {
         "invoiceDate": order_date,
-        "sendToCustomer": False,
+        "sendToCustomer": True,
     }
     if fields.get("dueDate"):
         invoice_params["invoiceDueDate"] = fields["dueDate"]
 
     resp = await client.put(f"/order/{order_id}/:invoice", params=invoice_params)
     invoice_data = resp.json()
-    logger.info(f"Created invoice from order {order_id}")
-    return {"status": "completed", "taskType": "create_invoice", "created": invoice_data.get("value", {})}
+    invoice_value = invoice_data.get("value", {})
+    invoice_id = invoice_value.get("id")
+    logger.info(f"Created invoice {invoice_id} from order {order_id}")
+
+    # Send invoice to customer (backup — sendToCustomer should handle it, but explicit :send ensures it)
+    if invoice_id:
+        try:
+            send_resp = await client.put(f"/invoice/{invoice_id}/:send", params={"sendType": "EMAIL"})
+            if send_resp.status_code < 400:
+                logger.info(f"Sent invoice {invoice_id} via :send")
+            else:
+                logger.warning(f"Send invoice {invoice_id} failed ({send_resp.status_code}) — sendToCustomer may have covered it")
+        except Exception as e:
+            logger.warning(f"Invoice :send exception (non-fatal): {e}")
+
+    return {"status": "completed", "taskType": "create_invoice", "created": invoice_value}
 
 
 @register_handler("register_payment")
 async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> dict:
-    # Ensure invoice exists (create customer → order → invoice if needed)
-    invoice = await _ensure_invoice_exists(client, fields)
+    # Optimised path: try to find existing invoice WITHOUT bank-account setup
+    # (bank setup is only needed when CREATING a new invoice).
+    # This saves 1-2 API calls when the invoice already exists in the sandbox.
+    customer_id = await _find_customer_id(client, fields)
+    invoice = await _find_invoice(client, fields, customer_id) if customer_id else None
+
+    if not invoice:
+        # Fallback: create full chain (customer → order → invoice) — needs bank account.
+        # We pass pre-resolved customer_id to avoid redundant lookups inside _ensure_invoice_exists.
+        await _ensure_bank_account(client)
+        if not customer_id:
+            customer_id = await _create_customer_directly(client, fields)
+        if customer_id:
+            invoice = await _create_invoice_chain(client, fields, customer_id)
 
     if not invoice:
         logger.error("No invoice found or created for payment")
@@ -446,11 +542,12 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
 
     invoice_id = invoice.get("id")
 
-    # Always fetch full invoice details to get amountCurrencyOutstanding reliably.
-    # The search result from _find_invoice only includes a subset of fields and
-    # may return a stale/incorrect amountOutstanding value from the Tripletex API.
-    detail_resp = await client.get(f"/invoice/{invoice_id}")
-    invoice = detail_resp.json().get("value", invoice)
+    # Use amount fields from the search result directly to avoid an extra GET.
+    # _find_invoice already requests amountCurrency, amountOutstanding, etc.
+    # Only fetch full details if the search result is missing amountCurrency.
+    if not invoice.get("amountCurrency") and not invoice.get("amount"):
+        detail_resp = await client.get(f"/invoice/{invoice_id}")
+        invoice = detail_resp.json().get("value", invoice)
 
     # Get payment type (bank)
     payment_type_id = await _get_bank_payment_type_id(client)
@@ -504,8 +601,13 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
     }
 
     # Handle foreign currency agio/disagio if invoice was in foreign currency.
-    # Agio = currency gain when payment rate > invoice rate (e.g. EUR is stronger)
-    # Post a corrective voucher to account 8060 (agio) or 8160 (disagio).
+    # Agio = currency gain when payment rate > invoice rate (NOK/EUR went up)
+    # Disagio = currency loss when payment rate < invoice rate (NOK/EUR went down)
+    #
+    # Accounting entries (Norwegian standard):
+    #   Disagio (loss):  DEBIT 8160 (valutatap)    / CREDIT 1500 (kundefordring)
+    #   Agio (gain):     DEBIT 1500 (kundefordring) / CREDIT 8060 (valutagevinst)
+    # The 1500 posting needs a customer reference for the sub-ledger (reskontro).
     foreign_currency = fields.get("foreignCurrency")
     foreign_amount = fields.get("foreignAmount")
     invoice_rate = fields.get("invoiceExchangeRate")
@@ -516,34 +618,54 @@ async def register_payment(client: TripletexClient, fields: dict[str, Any]) -> d
         agio_amount = round(abs(foreign_amount) * abs(rate_diff), 2)
 
         if agio_amount > 0.01:
-            is_gain = rate_diff > 0  # gain when payment rate > invoice rate (NOK value went up)
+            is_gain = rate_diff > 0  # gain when payment rate > invoice rate
             # Account 8060 = agio (currency gain), 8160 = disagio (currency loss)
             default_agio_account = 8060 if is_gain else 8160
             agio_account_nr = fields.get("agioAccount") or default_agio_account
-            # Bank account for the other side
-            bank_account_nr = 1920
+            # Accounts receivable (kundefordring) for the counterpart posting
+            receivable_account_nr = 1500
 
             from app.handlers.tier3 import _lookup_account as _la
-            bank_id = await _la(client, bank_account_nr)
+            receivable_id = await _la(client, receivable_account_nr)
             agio_id = await _la(client, int(agio_account_nr))
 
-            if bank_id and agio_id:
-                # Agio gain: DEBIT bank 1920, CREDIT agio income 8060
-                # Disagio loss: DEBIT disagio expense 8160, CREDIT bank 1920
+            if receivable_id and agio_id:
+                # Build customer reference for the 1500 posting (reskontro)
+                customer_ref: dict[str, Any] | None = None
+                if customer_id:
+                    customer_ref = {"id": customer_id}
+                elif invoice:
+                    cust = invoice.get("customer")
+                    if cust and cust.get("id"):
+                        customer_ref = {"id": cust["id"]}
+
+                # Disagio loss: DEBIT 8160 (expense), CREDIT 1500 (receivable decreases)
+                # Agio gain:    DEBIT 1500 (receivable increases), CREDIT 8060 (income)
                 if is_gain:
-                    postings = [
-                        {"account": {"id": bank_id}, "amountGross": agio_amount,
-                         "amountGrossCurrency": agio_amount, "row": 1},
-                        {"account": {"id": agio_id}, "amountGross": -agio_amount,
-                         "amountGrossCurrency": -agio_amount, "row": 2},
-                    ]
+                    receivable_posting: dict[str, Any] = {
+                        "account": {"id": receivable_id}, "amountGross": agio_amount,
+                        "amountGrossCurrency": agio_amount, "row": 1,
+                    }
+                    if customer_ref:
+                        receivable_posting["customer"] = customer_ref
+                    agio_posting: dict[str, Any] = {
+                        "account": {"id": agio_id}, "amountGross": -agio_amount,
+                        "amountGrossCurrency": -agio_amount, "row": 2,
+                    }
+                    postings = [receivable_posting, agio_posting]
                 else:
-                    postings = [
-                        {"account": {"id": agio_id}, "amountGross": agio_amount,
-                         "amountGrossCurrency": agio_amount, "row": 1},
-                        {"account": {"id": bank_id}, "amountGross": -agio_amount,
-                         "amountGrossCurrency": -agio_amount, "row": 2},
-                    ]
+                    agio_posting = {
+                        "account": {"id": agio_id}, "amountGross": agio_amount,
+                        "amountGrossCurrency": agio_amount, "row": 1,
+                    }
+                    receivable_posting = {
+                        "account": {"id": receivable_id}, "amountGross": -agio_amount,
+                        "amountGrossCurrency": -agio_amount, "row": 2,
+                    }
+                    if customer_ref:
+                        receivable_posting["customer"] = customer_ref
+                    postings = [agio_posting, receivable_posting]
+
                 agio_voucher = {
                     "date": payment_date,
                     "description": f"Valutadifferanse ({foreign_currency} {foreign_amount:.0f}): "

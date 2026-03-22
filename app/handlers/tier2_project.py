@@ -279,21 +279,30 @@ async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any
     project_id = project.get("id")
     logger.info(f"Created fixed-price project: {project_id}")
 
-    # 4. If the fixedprice wasn't set on create (some API versions require PUT), update it
-    if project_id and project.get("fixedprice", 0) != fixed_price:
-        logger.info(f"Updating fixedprice to {fixed_price} via PUT")
-        # Fetch full project to get all required fields for PUT
-        get_resp = await client.get(f"/project/{project_id}")
-        full_project = get_resp.json().get("value", {})
-        if full_project:
-            full_project["isFixedPrice"] = True
-            full_project["fixedprice"] = fixed_price
-            put_resp = await client.put(f"/project/{project_id}", full_project)
-            if put_resp.status_code < 400:
-                project = put_resp.json().get("value", project)
-                logger.info(f"Updated project {project_id} with fixedprice={fixed_price}")
-            else:
-                logger.warning(f"PUT update failed: {put_resp.status_code} {put_resp.text[:300]}")
+    # 4. Always PUT to ensure fixedprice is persisted (POST may silently ignore it)
+    if project_id and fixed_price:
+        logger.info(f"Ensuring fixedprice={fixed_price} via PUT /project/{project_id}")
+        try:
+            get_resp = await client.get(f"/project/{project_id}")
+            full_project = get_resp.json().get("value", {})
+            if full_project:
+                full_project["isFixedPrice"] = True
+                full_project["fixedprice"] = fixed_price
+                # Remove read-only and problematic fields that cause 422 on PUT
+                for rm_key in ("projectHourlyRates", "projectActivities",
+                               "orderLines", "participants", "changes",
+                               "url", "displayName", "contributionMarginPercent",
+                               "numberOfSubProjects", "numberOfProjectParticipants",
+                               "discountPercentage"):
+                    full_project.pop(rm_key, None)
+                put_resp = await client.put_with_retry(f"/project/{project_id}", full_project)
+                if put_resp.status_code < 400:
+                    project = put_resp.json().get("value", project)
+                    logger.info(f"Updated project {project_id} with fixedprice={fixed_price}")
+                else:
+                    logger.warning(f"PUT fixedprice failed: {put_resp.status_code} {put_resp.text[:300]}")
+        except Exception as e:
+            logger.warning(f"PUT fixedprice exception (non-fatal): {e}")
 
     # 5. If invoicePercentage is provided, create a partial invoice
     invoice_percentage = fields.get("invoicePercentage")
@@ -333,11 +342,22 @@ async def set_project_fixed_price(client: TripletexClient, fields: dict[str, Any
                 # Invoice the order
                 inv_resp = await client.put(f"/order/{order_id}/:invoice", params={
                     "invoiceDate": today,
-                    "sendToCustomer": False,
+                    "sendToCustomer": True,
                 })
                 invoice_data = inv_resp.json().get("value", {})
                 invoice_id = invoice_data.get("id")
                 logger.info(f"Created partial invoice {invoice_id} for {percentage}% of fixed price ({partial_amount} NOK)")
+
+                # Send invoice explicitly (backup — ensures delivery even if sendToCustomer didn't work)
+                if invoice_id:
+                    try:
+                        send_resp = await client.put(f"/invoice/{invoice_id}/:send", params={"sendType": "EMAIL"})
+                        if send_resp.status_code < 400:
+                            logger.info(f"Sent invoice {invoice_id} via :send")
+                        else:
+                            logger.warning(f"Send invoice {invoice_id} failed ({send_resp.status_code}) — sendToCustomer may have covered it")
+                    except Exception as e:
+                        logger.warning(f"Invoice :send exception (non-fatal): {e}")
             else:
                 logger.warning("Failed to create order for partial invoice")
         except Exception as e:

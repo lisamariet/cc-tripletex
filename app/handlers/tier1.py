@@ -164,6 +164,71 @@ _EMPLOYEE_KEYS = {
     "hoursPerDay", "workHoursPerDay",
 }
 
+# Hardcoded STYRK 4-digit → Tripletex occupationCode ID mapping.
+# The Tripletex API uses 7-digit codes that DON'T match STYRK 4-digit codes directly.
+# The `code` search param is substring-based (useless for prefix matching).
+# This mapping was built by looking up nameNO in sandbox and picking the best match.
+_STYRK_TO_TRIPLETEX_ID: dict[str, int] = {
+    "1211": 2615,   # Prosjektleder → IT-PROSJEKTLEDER (3491138)
+    "1221": 4925,   # Salgssjef → SALGSREPRESENTANT
+    "2130": 5935,   # Systemutvikler
+    "2149": 2487,   # Ingeniør → INGENIØR (generell)
+    "2411": 4672,   # Regnskapsfører → REGNSKAPSFØRER (3432101)
+    "2423": 4165,   # Personalrådgiver → PERSONALKONSULENT (2512111)
+    "2431": 3528,   # Markedsfører → MARKEDSANALYTIKER
+    "2511": 5935,   # Systemutvikler → SYSTEMUTVIKLER (2130109)
+    "2512": 4165,   # Personalrådgiver → PERSONALKONSULENT
+    "3120": 752,    # IKT-brukerstøtte → BRUKERSTØTTE IKT (3120130)
+    "3322": 4925,   # Salgsrepresentant → SALGSREPRESENTANT (3415124)
+    "3431": 2920,   # Konsulent → KONSULENT (KONTORARBEID) (3431133)
+    "3432": 4672,   # Regnskapsfører
+    "3512": 752,    # IKT-brukerstøtte → BRUKERSTØTTE IKT (3120130)
+    "4110": 2951,   # Kontormedarbeider → KONTORMEDARBEIDER (4114105)
+    "4114": 2951,   # Kontormedarbeider
+    "4131": 3197,   # Lagermedarbeider → LAGERMEDARBEIDER (4131111)
+    "4227": 2951,   # Kundebehandler → KONTORMEDARBEIDER (fallback)
+    "4321": 3197,   # Lagermedarbeider → LAGERMEDARBEIDER
+}
+
+# Common Norwegian role descriptions → nameNO search term for Tripletex lookup
+# Used for tilbudsbrev (offer letters) where STYRK code is not explicit
+_ROLE_TO_SEARCH: dict[str, tuple[str, int | None]] = {
+    # (nameNO search term, direct Tripletex ID if known)
+    "it-konsulent": ("SYSTEMUTVIKLER", 5935),
+    "it-radgiver": ("SYSTEMUTVIKLER", 5935),
+    "it-rådgiver": ("SYSTEMUTVIKLER", 5935),
+    "systemutvikler": ("SYSTEMUTVIKLER", 5935),
+    "utvikler": ("SYSTEMUTVIKLER", 5935),
+    "programmerer": ("SYSTEMUTVIKLER", 5935),
+    "prosjektleder": ("PROSJEKTLEDER", 2615),
+    "hr-radgiver": ("PERSONALKONSULENT", 4165),
+    "hr-rådgiver": ("PERSONALKONSULENT", 4165),
+    "personalradgiver": ("PERSONALKONSULENT", 4165),
+    "personalrådgiver": ("PERSONALKONSULENT", 4165),
+    "hr-konsulent": ("PERSONALKONSULENT", 4165),
+    "regnskapsforer": ("REGNSKAPSFØRER", 4672),
+    "regnskapsfører": ("REGNSKAPSFØRER", 4672),
+    "revisor": ("REVISOR", None),
+    "okonom": ("REGNSKAPSFØRER", 4672),
+    "økonom": ("REGNSKAPSFØRER", 4672),
+    "controller": ("REGNSKAPSFØRER", 4672),
+    "kontormedarbeider": ("KONTORMEDARBEIDER", 2951),
+    "sekretaer": ("KONTORMEDARBEIDER", 2951),
+    "sekretær": ("KONTORMEDARBEIDER", 2951),
+    "logistikkmedarbeider": ("LAGERMEDARBEIDER", 3197),
+    "lagermedarbeider": ("LAGERMEDARBEIDER", 3197),
+    "selger": ("SALGSREPRESENTANT", 4925),
+    "salgssjef": ("SALGSREPRESENTANT", 4925),
+    "markedsforer": ("MARKEDSANALYTIKER", None),
+    "markedsfører": ("MARKEDSANALYTIKER", None),
+    "kundebehandler": ("KONTORMEDARBEIDER", 2951),
+    "ingeniør": ("INGENIØR", None),
+    "ingenior": ("INGENIØR", None),
+    "konsulent": ("KONSULENT", None),
+    "radgiver": ("KONSULENT", None),
+    "rådgiver": ("KONSULENT", None),
+}
+
 
 @register_handler("create_employee")
 async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> dict:
@@ -172,6 +237,24 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
     payload.update(_pick(fields, "email", "phoneNumberMobile", "dateOfBirth",
                          "employeeNumber", "nationalIdentityNumber",
                          "bankAccountNumber", "iban"))
+
+    # Ensure nationalIdentityNumber is a zero-padded 11-digit string
+    if "nationalIdentityNumber" in payload:
+        nin = str(payload["nationalIdentityNumber"]).strip()
+        nin = nin.zfill(11)  # pad with leading zeros to 11 digits
+        payload["nationalIdentityNumber"] = nin
+        logger.info(f"[create_employee] nationalIdentityNumber: {nin}")
+
+    # Ensure bankAccountNumber is a zero-padded 11-digit string
+    if "bankAccountNumber" in payload:
+        ban = str(payload["bankAccountNumber"]).strip()
+        ban = ban.zfill(11)  # pad with leading zeros to 11 digits
+        payload["bankAccountNumber"] = ban
+        logger.info(f"[create_employee] bankAccountNumber: {ban}")
+
+    # Ensure employeeNumber is a string
+    if "employeeNumber" in payload:
+        payload["employeeNumber"] = str(payload["employeeNumber"]).strip()
 
     # Email fallback: if no email in original fields, generate one from name
     _email_provided = bool(fields.get("email"))
@@ -254,10 +337,19 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
     # Create employment record with startDate if provided
     employment_id: int | None = None
     if employee_id and fields.get("startDate"):
-        employment_payload = {
+        employment_payload: dict[str, Any] = {
             "employee": {"id": employee_id},
             "startDate": fields["startDate"],
         }
+        # Division is required for employment in some Tripletex environments
+        try:
+            div_resp = await client.get_cached("/division", params={"count": 1})
+            divs = div_resp.json().get("values", [])
+            if divs:
+                employment_payload["division"] = {"id": divs[0]["id"]}
+        except Exception as e:
+            logger.warning(f"Failed to fetch division for employment: {e}")
+
         emp_resp = await client.post("/employee/employment", employment_payload)
         if emp_resp.status_code < 400:
             employment_id = emp_resp.json().get("value", {}).get("id")
@@ -269,7 +361,7 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
     # This covers PDF-based tasks with detailed contract data
     has_detail_fields = any(
         fields.get(k) is not None
-        for k in ("occupationCode", "employmentPercentage", "annualSalary", "monthlySalary")
+        for k in ("occupationCode", "employmentPercentage", "annualSalary", "monthlySalary", "role")
     )
     if employee_id and employment_id and has_detail_fields:
         detail_payload: dict[str, Any] = {
@@ -283,28 +375,75 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
         }
 
         # Resolve occupation code to Tripletex ID
+        # STYRK 4-digit codes from PDFs DON'T map directly to Tripletex 7-digit codes.
+        # The API `code` search param is substring-based (unreliable for prefix matching).
+        # Strategy: use hardcoded mappings first, then API lookup as fallback.
         occ_code = fields.get("occupationCode")
+        role_text = fields.get("role", "")
+        occ_resolved = False
+
+        # Strategy 1: Hardcoded STYRK → Tripletex ID (most reliable, 0 API calls)
         if occ_code:
+            occ_code_str = str(occ_code).strip()
+            if occ_code_str in _STYRK_TO_TRIPLETEX_ID:
+                tid = _STYRK_TO_TRIPLETEX_ID[occ_code_str]
+                detail_payload["occupationCode"] = {"id": tid}
+                logger.info(f"[create_employee] Hardcoded STYRK '{occ_code_str}' → Tripletex id={tid}")
+                occ_resolved = True
+
+        # Strategy 2: Role text → direct Tripletex ID or nameNO search
+        if not occ_resolved and role_text:
+            role_key = role_text.lower().strip()
+            if role_key in _ROLE_TO_SEARCH:
+                search_term, direct_id = _ROLE_TO_SEARCH[role_key]
+                if direct_id:
+                    detail_payload["occupationCode"] = {"id": direct_id}
+                    logger.info(f"[create_employee] Mapped role '{role_text}' → Tripletex id={direct_id}")
+                    occ_resolved = True
+                else:
+                    # Fallback: search by nameNO
+                    try:
+                        occ_resp = await client.get_cached(
+                            "/employee/employment/occupationCode",
+                            params={"nameNO": search_term, "count": 1},
+                        )
+                        occ_values = occ_resp.json().get("values", [])
+                        if occ_values:
+                            detail_payload["occupationCode"] = {"id": occ_values[0]["id"]}
+                            logger.info(f"[create_employee] Role '{role_text}' → nameNO='{search_term}' → id={occ_values[0]['id']}")
+                            occ_resolved = True
+                    except Exception as e:
+                        logger.warning(f"Failed to search occupationCode by nameNO '{search_term}': {e}")
+
+        # Strategy 3: API lookup as last resort (for unknown STYRK codes)
+        if not occ_resolved and occ_code:
+            occ_code_str = str(occ_code).strip()
             try:
-                occ_resp = await client.get_cached(
-                    "/employee/employment/occupationCode",
-                    params={"nameAndCode": str(occ_code), "count": 1},
-                )
-                occ_values = occ_resp.json().get("values", [])
-                if occ_values:
-                    detail_payload["occupationCode"] = {"id": occ_values[0]["id"]}
-                    logger.info(f"Resolved occupationCode {occ_code} → id={occ_values[0]['id']}")
+                if occ_code_str.isdigit():
+                    # Try code search and filter by prefix
+                    occ_resp = await client.get_cached(
+                        "/employee/employment/occupationCode",
+                        params={"code": occ_code_str, "count": 20},
+                    )
+                    occ_values = occ_resp.json().get("values", [])
+                    # Filter to codes that START with our STYRK prefix
+                    prefix_matches = [v for v in occ_values if str(v.get("code", "")).startswith(occ_code_str)]
+                    if prefix_matches:
+                        detail_payload["occupationCode"] = {"id": prefix_matches[0]["id"]}
+                        logger.info(f"[create_employee] API lookup STYRK '{occ_code_str}' → id={prefix_matches[0]['id']} code={prefix_matches[0].get('code','')} name={prefix_matches[0].get('nameNO','')}")
+                        occ_resolved = True
+                if not occ_resolved:
+                    logger.warning(f"No occupationCode found for STYRK '{occ_code_str}'")
             except Exception as e:
-                logger.warning(f"Failed to resolve occupationCode {occ_code}: {e}")
+                logger.warning(f"Failed to resolve occupationCode '{occ_code_str}': {e}")
 
         # Set salary: prefer annual, derive monthly, or use monthly directly
+        # NOTE: monthlySalary is readOnly in Tripletex API — only send annualSalary
         annual = fields.get("annualSalary")
         monthly = fields.get("monthlySalary")
         if annual:
             detail_payload["annualSalary"] = annual
-            detail_payload["monthlySalary"] = round(annual / 12, 2)
         elif monthly:
-            detail_payload["monthlySalary"] = monthly
             detail_payload["annualSalary"] = round(monthly * 12, 2)
 
         det_resp = await client.post("/employee/employment/details", detail_payload)
@@ -314,30 +453,42 @@ async def create_employee(client: TripletexClient, fields: dict[str, Any]) -> di
             logger.warning(f"Failed to create employment details: {det_resp.text[:300]}")
 
     # Standard working hours — POST /employee/standardTime
+    # Always set for T3 tasks (has employment details) or when explicitly provided
     hours_per_day = fields.get("hoursPerDay") or fields.get("workHoursPerDay")
-    if employee_id and hours_per_day:
+    resolved_hours: float | None = None
+    if hours_per_day:
+        resolved_hours = float(hours_per_day)
+    elif fields.get("employmentPercentage"):
+        # Scale hours by employment percentage: 80% → 6.0h, 100% → 7.5h
+        pct = float(fields["employmentPercentage"]) / 100.0
+        resolved_hours = round(7.5 * pct, 1)
+    elif employment_id and has_detail_fields:
+        # T3 task with employment details but no explicit hours — default to 7.5
+        resolved_hours = 7.5
+
+    if employee_id and resolved_hours is not None:
         start = fields.get("startDate") or "2026-01-01"
         st_payload: dict[str, Any] = {
             "employee": {"id": employee_id},
             "fromDate": start,
-            "hoursPerDay": float(hours_per_day),
+            "hoursPerDay": resolved_hours,
         }
         st_resp = await client.post("/employee/standardTime", st_payload)
         if st_resp.status_code < 400:
-            logger.info(f"Set standard working hours: {hours_per_day}h/day for employee {employee_id}")
+            logger.info(f"Set standard working hours: {resolved_hours}h/day for employee {employee_id}")
         else:
             logger.warning(f"Failed to set standardTime: {st_resp.text[:300]}")
-    elif employee_id and fields.get("employmentPercentage"):
-        # Default 7.5 hours/day (Norwegian standard) when percentage is set but hoursPerDay not
-        start = fields.get("startDate") or "2026-01-01"
-        st_payload = {
-            "employee": {"id": employee_id},
-            "fromDate": start,
-            "hoursPerDay": 7.5,
-        }
-        st_resp = await client.post("/employee/standardTime", st_payload)
-        if st_resp.status_code < 400:
-            logger.info(f"Set default standard working hours: 7.5h/day for employee {employee_id}")
+
+    # Grant entitlements for complete onboarding (T3 tasks with employment details)
+    # This ensures holiday/vacation entitlements are set for the employee
+    if employee_id and employment_id and has_detail_fields and not role:
+        try:
+            await client.put("/employee/entitlement/:grantEntitlementsByTemplate", params={
+                "employeeId": employee_id, "template": "ALL_PRIVILEGES",
+            })
+            logger.info(f"Granted ALL_PRIVILEGES entitlements for T3 onboarding of employee {employee_id}")
+        except Exception as e:
+            logger.warning(f"Failed to grant entitlements: {e}")
 
     return {"status": "completed", "taskType": "create_employee", "created": data.get("value", {})}
 

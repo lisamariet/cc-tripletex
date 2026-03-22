@@ -350,13 +350,18 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
         except ValueError:
             due_date = ""
 
-    # Use parser-provided amountExcludingVat if available, otherwise calculate
+    # Use parser-provided amountExcludingVat if available, otherwise calculate.
+    # CRITICAL: When both netto and brutto come from PDF, they can be inconsistent
+    # (e.g. netto=64850, brutto=81062, but 64850*1.25=81062.50).
+    # Tripletex calculates netto = brutto / (1+rate) internally, so if we send
+    # brutto=81062 the expense posting gets netto=64849.60, which fails check 5.
+    # Fix: Use netto (amountExcludingVat) as master; derive consistent brutto.
     vat_rate = fields.get("vatRate", 25)
     if fields.get("amountExcludingVat"):
         amount_excl_vat = abs(float(fields["amountExcludingVat"]))
-        # If we have excl. VAT but not gross, derive gross
-        if not amount_gross and amount_excl_vat:
-            amount_gross = round(amount_excl_vat * (1 + vat_rate / 100), 2)
+        # ALWAYS derive gross from netto to ensure Tripletex consistency
+        # (netto is the authoritative value from the PDF)
+        amount_gross = round(amount_excl_vat * (1 + vat_rate / 100), 2)
     elif vat_rate and vat_rate > 0:
         amount_excl_vat = round(amount_gross / (1 + vat_rate / 100), 2)
     else:
@@ -491,6 +496,11 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
     if department_ref:
         expense_posting["department"] = department_ref
 
+    # Link expense posting to project if projectId is provided
+    project_id_ref = fields.get("projectId")
+    if project_id_ref:
+        expense_posting["project"] = {"id": project_id_ref}
+
     ap_posting: dict[str, Any] = {
         "account": {"id": payable_id},
         "supplier": {"id": supplier_id},
@@ -583,6 +593,8 @@ async def register_supplier_invoice(client: TripletexClient, fields: dict[str, A
                         base["vatType"] = vat_type_ref
                     if department_ref:
                         base["department"] = department_ref
+                    if project_id_ref:
+                        base["project"] = {"id": project_id_ref}
                 elif p_acct == payable_id:
                     base.update({
                         "account": {"id": payable_id},
@@ -1422,6 +1434,17 @@ async def run_payroll(client: TripletexClient, fields: dict[str, Any]) -> dict:
 # ---------------------------------------------------------------------------
 
 _EXPENSE_CATEGORY_MAP: dict[str, int] = {
+    # Representasjon / business entertainment
+    "forretningslunsj": 7350,
+    "business lunch": 7350,
+    "geschäftsessen": 7350,
+    "geschaeftsessen": 7350,
+    "déjeuner d'affaires": 7350,
+    "almuerzo de negocios": 7350,
+    "pranzo di lavoro": 7350,
+    "representasjon": 7350,
+    "kundemøte": 7350,
+    "kundemiddag": 7350,
     # Mat / food
     "mat": 6810,
     "food": 6810,
@@ -1587,19 +1610,36 @@ async def register_expense_receipt(client: TripletexClient, fields: dict[str, An
     # ---- Mode 1: Voucher mode ----
     department_name = fields.get("department") or fields.get("departmentName") or ""
     expense_account_nr = fields.get("expenseAccount")
+
+    # Infer expense account from description if not provided by parser
+    description = (
+        fields.get("description")
+        or fields.get("itemName")
+        or fields.get("receiptDescription")
+        or "Utgift fra kvittering"
+    )
+    if not expense_account_nr and department_name:
+        expense_account_nr = _infer_expense_account(description)
+        logger.info(f"Inferred expense account {expense_account_nr} from description '{description}'")
+
+    # Override: if parser picked wrong account, use keyword-based inference as correction
+    if expense_account_nr:
+        inferred = _infer_expense_account(description, default=0)
+        if inferred and inferred != int(expense_account_nr):
+            logger.info(f"Overriding expense account {expense_account_nr} → {inferred} based on description '{description}'")
+            expense_account_nr = inferred
+
     if department_name and expense_account_nr:
         from app.handlers.tier3 import _lookup_account
         from app.handlers.tier1 import _resolve_vat_type_id
-
-        description = (
-            fields.get("description")
-            or fields.get("itemName")
-            or fields.get("receiptDescription")
-            or "Utgift fra kvittering"
-        )
         voucher_date = fields.get("date") or fields.get("receiptDate") or today
         amount_gross = abs(fields.get("amount", 0))
         vat_rate = fields.get("vatRate", 25)
+
+        # Representasjon/mat → 15% MVA (middels sats), not 25%
+        if int(expense_account_nr) in (7350, 6810) and vat_rate == 25:
+            vat_rate = 15
+            logger.info(f"MVA override: account {expense_account_nr} (mat/representasjon) → 15%")
 
         # Resolve accounts
         expense_id = await _lookup_account(client, int(expense_account_nr))
@@ -2244,6 +2284,7 @@ async def project_lifecycle(client: TripletexClient, fields: dict[str, Any]) -> 
             "description": f"Project cost: {project_name}",
             "expenseAccount": fields.get("supplierExpenseAccount", 4000),
             "vatRate": 25,
+            "projectId": project_id,
         }
         si_result = await register_supplier_invoice(client, si_fields)
         result["supplierInvoice"] = si_result

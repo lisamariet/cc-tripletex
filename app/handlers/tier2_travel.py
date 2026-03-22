@@ -48,15 +48,53 @@ async def _find_employee(client: TripletexClient, fields: dict[str, Any]) -> int
     return None
 
 
-async def _get_cost_category(client: TripletexClient) -> int | None:
-    """Get first available cost category ID."""
-    resp = await client.get_cached("/travelExpense/costCategory", params={"fields": "id,description"})
-    cats = resp.json().get("values", [])
-    # Prefer "Kontorrekvisita" or similar generic category
-    for cat in cats:
-        if "kontor" in cat.get("title", "").lower():
-            return cat["id"]
-    return cats[0]["id"] if cats else None
+async def _get_cost_categories(client: TripletexClient) -> list[dict[str, Any]]:
+    """Get all available cost categories."""
+    resp = await client.get_cached("/travelExpense/costCategory", params={"fields": "id,description", "count": 100})
+    return resp.json().get("values", [])
+
+
+# Mapping from cost description keywords to Tripletex costCategory descriptions.
+# Keys are lowercase substrings to search for in cost description,
+# values are lowercase substrings to match against category description.
+_COST_CATEGORY_KEYWORDS: list[tuple[list[str], str]] = [
+    # flybuss/flytog BEFORE fly to avoid false positive
+    (["flybuss", "airport bus"], "flybuss"),
+    (["flytog", "airport train", "flytoget"], "flytog"),
+    (["fly", "flight", "flug", "vuelo", "voo", "vol", "avion", "avião"], "fly"),
+    (["taxi", "cab", "drosje", "táxi"], "taxi"),
+    (["hotell", "hotel", "hôtel", "overnatting", "accommodation", "unterkunft", "alojamiento", "hébergement"], "hotell"),
+    (["tog", "train", "tren", "zug", "trem"], "tog"),
+    (["buss", "bus", "autobus", "ônibus"], "buss"),
+    (["parkering", "parking", "parken"], "parkering"),
+    (["drivstoff", "fuel", "bensin", "diesel", "kraftstoff", "combustible", "carburant"], "drivstoff"),
+    (["ferge", "ferry", "fähre", "transbordador"], "ferge"),
+    (["mat", "food", "essen", "comida", "nourriture", "måltid", "meal"], "mat"),
+    (["representasjon", "representation", "entertainment"], "representasjon"),
+    (["bom", "toll", "maut", "peaje", "péage"], "bom"),
+    (["t-bane", "metro", "subway", "u-bahn"], "metro"),
+    (["trikk", "tram", "straßenbahn", "tranvía", "tramway"], "trikk"),
+    (["leie", "rental", "hire", "miet"], "leiebil"),
+    (["kontor", "office", "büro", "oficina"], "kontorrekvisita"),
+]
+
+
+def _match_cost_category(description: str, categories: list[dict[str, Any]]) -> int | None:
+    """Match a cost description to the best costCategory.
+
+    Returns category ID or None if no match found.
+    """
+    desc_lower = description.lower()
+
+    for keywords, cat_keyword in _COST_CATEGORY_KEYWORDS:
+        if any(kw in desc_lower for kw in keywords):
+            # Find the category whose description contains cat_keyword
+            for cat in categories:
+                cat_desc = cat.get("description", "").lower()
+                if cat_keyword in cat_desc:
+                    return cat["id"]
+
+    return None
 
 
 async def _get_payment_type_private(client: TripletexClient) -> int | None:
@@ -314,7 +352,7 @@ async def _create_per_diem_compensation(
             "travelExpense": {"id": te_id},
             "count": days,
             "location": location,
-            "overnightAccommodation": "NONE",
+            "overnightAccommodation": "HOTEL" if not is_day_trip else "NONE",
             "isDeductionForBreakfast": False,
             "isDeductionForLunch": False,
             "isDeductionForDinner": False,
@@ -457,7 +495,9 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
         )
 
     # Get required IDs for cost lines
-    cost_category_id = await _get_cost_category(client)
+    all_categories = await _get_cost_categories(client)
+    # Fallback: first category if no match found
+    fallback_category_id = all_categories[0]["id"] if all_categories else None
     payment_type_id = await _get_payment_type_private(client)
 
     per_diem_count = 0
@@ -478,7 +518,11 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
             # Fallback: add as regular cost line if per diem endpoint fails
             logger.info("Per diem endpoint failed, falling back to cost line")
 
-        # Regular cost line
+        # Regular cost line — match costCategory to description
+        cost_desc = cost.get("description", "")
+        matched_cat_id = _match_cost_category(cost_desc, all_categories)
+        category_id = matched_cat_id or fallback_category_id
+
         cost_date = cost.get("date", dep_date.strftime("%Y-%m-%d"))
         cost_payload: dict[str, Any] = {
             "travelExpense": {"id": te_id},
@@ -486,8 +530,8 @@ async def create_travel_expense(client: TripletexClient, fields: dict[str, Any])
             "amountCurrencyIncVat": cost.get("amount", 0),
         }
         # Note: "description" does NOT exist on travelExpense/cost -- don't send it
-        if cost_category_id:
-            cost_payload["costCategory"] = {"id": cost_category_id}
+        if category_id:
+            cost_payload["costCategory"] = {"id": category_id}
         if payment_type_id:
             cost_payload["paymentType"] = {"id": payment_type_id}
 

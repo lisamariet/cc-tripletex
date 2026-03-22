@@ -763,6 +763,32 @@ def build_tier2_tests() -> list[E2ETestCase]:
                 checks=[
                     FieldCheck("name", f"E2E Fastpris {ts}"),
                     FieldCheck("isFixedPrice", True),
+                    FieldCheck("fixedprice", 150000),
+                ],
+            ),
+            tier=2,
+        ),
+
+        # T2-16b: set_project_fixed_price with invoice percentage
+        E2ETestCase(
+            name="t2_set_project_fixed_price_invoice",
+            expected_task_type="set_project_fixed_price",
+            expected_fields={},
+            prompt=f'Sett fastpris 200000 kr på prosjektet "E2E FP Inv {ts}" for kunden "E2E FPIKunde {ts}". Fakturer kunden for 75% av fastprisen som en delbetaling.',
+            direct_fields={
+                "projectName": f"E2E FP Inv {ts}",
+                "fixedPrice": 200000,
+                "customerName": f"E2E FPIKunde {ts}",
+                "startDate": "2026-03-20",
+                "invoicePercentage": 75,
+            },
+            verify=VerifySpec(
+                endpoint="/project",
+                search_by_id=True,
+                checks=[
+                    FieldCheck("name", f"E2E FP Inv {ts}"),
+                    FieldCheck("isFixedPrice", True),
+                    FieldCheck("fixedprice", 200000),
                 ],
             ),
             tier=2,
@@ -3023,14 +3049,26 @@ async def run_one_test(
                     passed=False, detail=f"expected 2 values, got {len(vals)}",
                 ))
 
-        # For monthly_closing, check vouchersCreated in result.
-        # The expected count depends on which input lists are non-empty in the
-        # test fields (accruals, depreciations, provisions).  Not all variants
-        # include all three types — only require the types that were requested.
+        # For monthly_closing, check compound voucher was created with correct posting types.
+        # The handler creates ONE compound voucher with all postings (accrual + depreciation + provision).
         if tc.expected_task_type == "monthly_closing":
             vouchers_created = handler_result.get("vouchersCreated", 0)
-            vouchers = handler_result.get("vouchers", [])
-            # Determine which types were requested for this specific test
+            postings = handler_result.get("postings", [])
+            voucher_id = handler_result.get("voucherId")
+            # Check at least 1 compound voucher was created
+            if vouchers_created >= 1 and voucher_id:
+                verify_results.append(CheckResult(
+                    field="vouchersCreated", expected=">=1",
+                    actual=vouchers_created,
+                    passed=True, detail=f"compound voucher {voucher_id} created",
+                ))
+            else:
+                verify_results.append(CheckResult(
+                    field="vouchersCreated", expected=">=1",
+                    actual=vouchers_created,
+                    passed=False, detail=f"expected compound voucher, got {vouchers_created}",
+                ))
+            # Check posting types present
             test_fields_used = tc.direct_fields or {}
             requested_types: list[str] = []
             if test_fields_used.get("accruals"):
@@ -3039,33 +3077,19 @@ async def run_one_test(
                 requested_types.append("depreciation")
             if test_fields_used.get("provisions"):
                 requested_types.append("provision")
-            expected_count = len(requested_types) if requested_types else 3
-            if vouchers_created >= expected_count:
-                verify_results.append(CheckResult(
-                    field="vouchersCreated", expected=expected_count,
-                    actual=vouchers_created,
-                    passed=True, detail=f"all {vouchers_created} vouchers created",
-                ))
-            else:
-                verify_results.append(CheckResult(
-                    field="vouchersCreated", expected=expected_count,
-                    actual=vouchers_created,
-                    passed=False, detail=f"expected {expected_count} vouchers, got {vouchers_created}",
-                ))
-            # Verify each requested voucher type is present
-            voucher_types = {v.get("type") for v in vouchers}
-            for vtype in requested_types or ("accrual", "depreciation", "provision"):
-                if vtype in voucher_types:
+            posting_types = {p.get("type") for p in postings}
+            for ptype in requested_types or ("accrual", "depreciation", "provision"):
+                if ptype in posting_types:
                     verify_results.append(CheckResult(
-                        field=f"voucher_type_{vtype}", expected="exists",
-                        actual=vtype,
-                        passed=True, detail=f"{vtype} voucher created",
+                        field=f"posting_type_{ptype}", expected="exists",
+                        actual=ptype,
+                        passed=True, detail=f"{ptype} posting in compound voucher",
                     ))
                 else:
                     verify_results.append(CheckResult(
-                        field=f"voucher_type_{vtype}", expected="exists",
+                        field=f"posting_type_{ptype}", expected="exists",
                         actual=None,
-                        passed=False, detail=f"{vtype} voucher missing",
+                        passed=False, detail=f"{ptype} posting missing",
                     ))
 
         # For batch_create_department, check all 3 items succeeded

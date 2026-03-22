@@ -54,7 +54,7 @@ TASK_ID_MAP: dict[str, dict] = {
     "21": {"type": "create_employee", "tier": 3},          # identified from submissions — PDF variant
     "22": {"type": "register_expense_receipt", "tier": 3}, # identified from submissions
     "23": {"type": "bank_reconciliation", "tier": 3},      # identified from submissions
-    "24": {"type": "unknown", "tier": 3},                  # identified from submissions
+    "24": {"type": "bank_reconciliation", "tier": 3},       # bank reconciliation with CSV — was unknown
     "25": {"type": "overdue_invoice", "tier": 3},          # identified from submissions
     "26": {"type": "create_voucher", "tier": 3},           # identified from submissions
     "27": {"type": "register_payment", "tier": 3},         # identified from submissions
@@ -359,18 +359,15 @@ def _infer_task_type_from_prompt(prompt: str) -> str | None:
     return None
 
 
-def get_error_counts_for_sub(sub: dict, gcs_logs: list[dict]) -> tuple[int | None, int | None]:
-    """Return (n_4xx, n_5xx) for a submission by matching the closest GCS log within 10 min.
-
-    Returns (None, None) if no matching log is found.
-    """
+def _find_best_gcs_log(sub: dict, gcs_logs: list[dict]) -> dict | None:
+    """Find the closest GCS log for a submission within 10 min window."""
     sub_ts = sub.get("queued_at") or sub.get("created_at") or ""
     if not sub_ts or not gcs_logs:
-        return None, None
+        return None
     try:
         dt_sub = datetime.fromisoformat(sub_ts.replace("Z", "+00:00")).replace(tzinfo=None)
     except Exception:
-        return None, None
+        return None
 
     best_delta = timedelta(minutes=10)
     best_log = None
@@ -388,6 +385,15 @@ def get_error_counts_for_sub(sub: dict, gcs_logs: list[dict]) -> tuple[int | Non
         except Exception:
             continue
 
+    return best_log
+
+
+def get_error_counts_for_sub(sub: dict, gcs_logs: list[dict]) -> tuple[int | None, int | None]:
+    """Return (n_4xx, n_5xx) for a submission by matching the closest GCS log within 10 min.
+
+    Returns (None, None) if no matching log is found.
+    """
+    best_log = _find_best_gcs_log(sub, gcs_logs)
     if best_log is None:
         return None, None
 
@@ -395,6 +401,28 @@ def get_error_counts_for_sub(sub: dict, gcs_logs: list[dict]) -> tuple[int | Non
     n_4xx = sum(1 for c in api_calls if 400 <= safe_int(c.get("status")) < 500)
     n_5xx = sum(1 for c in api_calls if safe_int(c.get("status")) >= 500)
     return n_4xx, n_5xx
+
+
+def get_revision_for_sub(sub: dict, gcs_logs: list[dict]) -> str:
+    """Return the Cloud Run revision number (e.g. '00125') for a submission.
+
+    Extracts from the 'revision' field in GCS log, e.g. 'tripletex-agent-00125-jvn' -> '00125'.
+    Returns '-' if not available.
+    """
+    best_log = _find_best_gcs_log(sub, gcs_logs)
+    if best_log is None:
+        return "-"
+
+    revision = best_log.get("revision") or ""
+    if not revision:
+        return "-"
+
+    # Extract revision number: 'tripletex-agent-00125-jvn' -> '00125'
+    parts = revision.split("-")
+    for part in parts:
+        if part.isdigit() and len(part) >= 3:
+            return part
+    return revision
 
 
 def get_task_type_for_sub(sub: dict, gcs_logs: list[dict], request_logs: list[dict] | None = None) -> str:
@@ -553,9 +581,6 @@ def cmd_status(args: argparse.Namespace) -> None:
     today_count = 0
     today_str = datetime.now().strftime("%Y-%m-%d")
 
-    # task_id -> total_attempts from leaderboard detail
-    lb_attempts_by_task_id: dict[str, int] = {}
-
     # Fetch authoritative total from leaderboard
     try:
         with make_client() as lb_client:
@@ -571,21 +596,6 @@ def cmd_status(args: argparse.Namespace) -> None:
                     break
     except Exception:
         pass  # Fall back to local calculation below
-
-    # Fetch per-task attempts from leaderboard detail endpoint
-    try:
-        with make_client() as lb_client:
-            resp_detail = lb_client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
-            resp_detail.raise_for_status()
-            our_tasks = resp_detail.json()
-        if isinstance(our_tasks, list):
-            for t in our_tasks:
-                task_id = t.get("tx_task_id", "")
-                attempts = safe_int(t.get("total_attempts", 0))
-                if task_id:
-                    lb_attempts_by_task_id[task_id] = attempts
-    except Exception:
-        pass  # attempts will show "-" if unavailable
 
     # If leaderboard failed, calculate locally
     if total_score == 0.0:
@@ -628,7 +638,7 @@ def cmd_status(args: argparse.Namespace) -> None:
         print(f"  Viser {len(display_subs)} av {total_subs} submissions")
         print()
 
-    print(f"  {'#':>3}  {'Tid':<8} {'Task':>4} {'T':>1} {'Oppgavetype':<25} {'Score':>12} {'4xx':>4} {'5xx':>4} {'Tries':>5} {'Varighet':>8}  {'Status'}")
+    print(f"  {'#':>3}  {'Tid':<8} {'Task':>4} {'T':>1} {'Oppgavetype':<25} {'Score':>12} {'4xx':>4} {'5xx':>4} {'Rev':>5} {'Varighet':>8}  {'Status'}")
     print(f"  {'─'*103}")
 
     # ANSI italic
@@ -654,27 +664,38 @@ def cmd_status(args: argparse.Namespace) -> None:
         if raw is not None and mx is not None:
             norm_f = safe_float(norm)
             color = score_color(norm_f)
-            score_str = f"{color}{safe_int(raw)}/{safe_int(mx)} ({norm_f:.0%}){RESET}"
-            # Pad for ANSI codes: actual visible length is ~12, ANSI adds ~10 chars
-            score_pad = f"{safe_int(raw)}/{safe_int(mx)} ({norm_f:.0%})"
+            score_str = f"{color}{safe_int(raw)}/{safe_int(mx)}{RESET}"
+            # Pad for ANSI codes
+            score_pad = f"{safe_int(raw)}/{safe_int(mx)}"
         else:
             score_str = f"{DIM}venter...{RESET}"
             score_pad = "venter..."
 
         dur_str = f"{duration / 1000:.1f}s" if duration else "-"
 
-        # 4xx / 5xx counts from GCS log
+        # 4xx / 5xx counts from GCS log (colored red when > 0)
         n_4xx, n_5xx = get_error_counts_for_sub(sub, gcs_logs)
-        err_4xx_str = str(n_4xx) if n_4xx is not None else "-"
-        err_5xx_str = str(n_5xx) if n_5xx is not None else "-"
+        if n_4xx is not None and n_4xx > 0:
+            err_4xx_str = f"{RED}{n_4xx}{RESET}"
+            err_4xx_visible = str(n_4xx)
+        else:
+            err_4xx_str = f"{DIM}{n_4xx if n_4xx is not None else '-'}{RESET}"
+            err_4xx_visible = str(n_4xx) if n_4xx is not None else "-"
+        if n_5xx is not None and n_5xx > 0:
+            err_5xx_str = f"{RED}{n_5xx}{RESET}"
+            err_5xx_visible = str(n_5xx)
+        else:
+            err_5xx_str = f"{DIM}{n_5xx if n_5xx is not None else '-'}{RESET}"
+            err_5xx_visible = str(n_5xx) if n_5xx is not None else "-"
 
-        # Task ID, tier, and tries columns
+        # Revision from GCS log
+        rev_str = get_revision_for_sub(sub, gcs_logs)
+
+        # Task ID, tier columns
         clean_type = task_type if not task_type.startswith("[") else ""
         task_id_str = get_task_id_for_type(clean_type) if clean_type else "-"
         tier_val = get_task_tier(task_id_str) if task_id_str != "-" else 0
         tier_str = str(tier_val) if tier_val else "-"
-        tries_val = lb_attempts_by_task_id.get(task_id_str) if task_id_str != "-" else None
-        tries_str = str(tries_val) if tries_val is not None else "-"
 
         # Right-align score (compensate for ANSI)
         visible_pad = 12 - len(score_pad)
@@ -684,7 +705,13 @@ def cmd_status(args: argparse.Namespace) -> None:
         task_pad = 25 - len(task_visible)
         task_col = task_display + " " * max(0, task_pad)
 
-        print(f"  {i:>3}  {ts:<8} {task_id_str:>4} {tier_str:>1} {task_col} {score_display} {err_4xx_str:>4} {err_5xx_str:>4} {tries_str:>5} {dur_str:>8}  {status}")
+        # Right-align 4xx/5xx with ANSI compensation
+        pad_4xx = 4 - len(err_4xx_visible)
+        pad_5xx = 4 - len(err_5xx_visible)
+        col_4xx = " " * max(0, pad_4xx) + err_4xx_str
+        col_5xx = " " * max(0, pad_5xx) + err_5xx_str
+
+        print(f"  {i:>3}  {ts:<8} {task_id_str:>4} {tier_str:>1} {task_col} {score_display} {col_4xx} {col_5xx} {rev_str:>5} {dur_str:>8}  {status}")
 
 
 # ──────────────────────────────────────────────
@@ -740,13 +767,21 @@ def cmd_show(args: argparse.Namespace) -> None:
     # Task type from GCS log
     task_type = get_task_type_for_sub(sub, gcs_logs, gcs_requests)
 
+    # Revision from GCS log
+    revision = None
+    if log:
+        revision = log.get("revision")
+    if not revision and req_log:
+        revision = req_log.get("revision")
+
     print(f"  Tidspunkt:  {ts}")
     print(f"  Oppgave:    {CYAN}{task_type}{RESET}")
+    print(f"  Revisjon:   {revision or DIM + '(ukjent)' + RESET}")
     print(f"  Status:     {status}")
     if raw is not None:
         norm_f = safe_float(norm)
         color = score_color(norm_f)
-        print(f"  Score:      {color}{safe_int(raw)}/{safe_int(mx)} ({norm_f:.0%}){RESET}")
+        print(f"  Score:      {color}{safe_int(raw)}/{safe_int(mx)}{RESET}")
     else:
         print(f"  Score:      {DIM}(ikke ferdig){RESET}")
     print(f"  Varighet:   {duration / 1000:.1f}s" if duration else "  Varighet:   -")
@@ -875,7 +910,7 @@ def cmd_show(args: argparse.Namespace) -> None:
             print(f"    Totalt kall:    {n_calls}")
             print(f"    4xx-feil:       {n_4xx}")
             print(f"    Feilrate:       {err_rate:.0%}")
-            if raw is not None and safe_float(norm) >= 1.0:
+            if raw is not None and mx is not None and safe_float(raw) >= safe_float(mx) > 0:
                 print(f"    {GREEN}Perfekt score → effektivitetsbonus aktiv{RESET}")
             elif raw is not None:
                 print(f"    {YELLOW}Ikke perfekt → ingen effektivitetsbonus{RESET}")
@@ -2305,6 +2340,89 @@ def _fetch_leaderboard_attempts(client: httpx.Client) -> dict[str, int]:
 
 
 
+def _write_task_mappings_report(
+    local_map: dict[str, dict],
+    new_mappings: list[tuple[str, str, str]],
+) -> None:
+    """Skriv task-ID mappinger og scores til data/task_mappings.md."""
+    data_dir = PROJECT_ROOT / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    out_path = data_dir / "task_mappings.md"
+
+    # Hent score-data fra leaderboard
+    our_map: dict[str, dict] = {}
+    try:
+        with make_client() as client:
+            resp = client.get(f"{API_BASE}/tripletex/leaderboard/{OUR_TEAM_ID}")
+            resp.raise_for_status()
+            task_list = _extract_task_list(resp.json())
+            for t in task_list:
+                tid = t.get("tx_task_id", "")
+                if tid:
+                    our_map[tid] = t
+    except Exception as e:
+        print(f"  {YELLOW}Advarsel: Kunne ikke hente leaderboard for rapport: {e}{RESET}")
+
+    # Tier -> maks score
+    tier_max = {1: 2.0, 2: 4.0, 3: 6.0}
+
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    lines: list[str] = []
+    lines.append("# Task ID Mappings")
+    lines.append(f"Oppdatert: {now}\n")
+    lines.append("| Task | Tier | Type | Beste Score | Maks | % | Mulig feil? |")
+    lines.append("|------|------|------|-------------|------|---|-------------|")
+
+    warnings: list[str] = []
+
+    for task_num in sorted(local_map.keys(), key=lambda x: int(x)):
+        info = local_map[task_num]
+        task_type = info["type"]
+        tier = info.get("tier", 0)
+        max_score = tier_max.get(tier, 0.0)
+
+        our_entry = our_map.get(task_num) or {}
+        best_score = safe_float(our_entry.get("best_score", 0))
+
+        pct = best_score / max_score if max_score > 0 else 0.0
+        pct_str = f"{pct:.0%}"
+
+        warn = ""
+        if max_score > 0 and pct < 0.5:
+            warn = "\u26a0"
+            warnings.append(f"- Task {task_num}: {task_type} (T{tier}) \u2014 score {best_score}/{max_score} ({pct_str})")
+
+        tier_str = f"T{tier}" if tier else "T?"
+        score_str = f"{best_score}" if best_score > 0 else "-"
+        max_str = f"{max_score}" if max_score > 0 else "-"
+
+        lines.append(f"| {task_num} | {tier_str} | {task_type} | {score_str} | {max_str} | {pct_str} | {warn} |")
+
+    # Mulige feilmappinger
+    lines.append("")
+    lines.append("## Mulige feilmappinger")
+    lines.append("Tasks med score under 50% kan ha feil task_type mapping:")
+    if warnings:
+        for w in warnings:
+            lines.append(w)
+    else:
+        lines.append("- Ingen mistenkelige mappinger.")
+
+    # Mapping-historikk
+    lines.append("")
+    lines.append("## Mapping-historikk denne kj\u00f8ringen")
+    if new_mappings:
+        for (tid, old, new) in new_mappings:
+            lines.append(f'- Task {tid}: "{old}" \u2192 "{new}"')
+    else:
+        lines.append("- Ingen endringer.")
+
+    lines.append("")
+
+    out_path.write_text("\n".join(lines), encoding="utf-8")
+    print(f"  {CYAN}Mapping-rapport skrevet til {out_path}{RESET}")
+
+
 def cmd_submit_track(args: argparse.Namespace) -> None:
     """Submit én om gangen med task-ID tracking via leaderboard-delta."""
     count = args.count
@@ -2470,6 +2588,12 @@ def cmd_submit_track(args: argparse.Namespace) -> None:
                     print(f"  Task {task_num}: {GREEN}{info['type']}{RESET} (T{info['tier']})")
     else:
         print(f"  Ingen nye mappings oppdaget.")
+
+    # ── Skriv mapping-rapport til data/task_mappings.md ──
+    try:
+        _write_task_mappings_report(local_map, new_mappings)
+    except Exception as e:
+        print(f"  {YELLOW}Advarsel: Kunne ikke skrive mapping-rapport: {e}{RESET}")
 
     print()
 

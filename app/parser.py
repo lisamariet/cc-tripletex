@@ -55,10 +55,18 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ]),
     ("bank_reconciliation", [
         r"bankavstemming|bankavstemjing|bank.?reconcili|conciliación.?banc|rapprochement.?banc|Bankabstimmung|conciliação.?banc",
-        r"(?:avstem|reconcil|concili|rapproch).{0,30}(?:bank|konto|account|cuenta|compte|Konto|conta)",
+        r"(?:avstem|reconcil|concili|rapproch|gleich).{0,30}(?:bank|banc|konto|account|cuenta|compte|Konto|conta|auszug)",
         r"bank.?statement.?match|banktransaksjon.{0,20}match|bankutskrift",
         r"reconcili.{0,30}extrato.?banc",
         r"extrato.?banc.{0,30}(?:CSV|fatura|reconcili)",
+        # French: "Rapprochez le relevé bancaire" — verb form without -ment suffix
+        r"rapproch.{0,30}banc",
+        # Spanish: "Concilia el extracto bancario"
+        r"concili.{0,30}banc",
+        # German: "Gleichen Sie den Kontoauszug ab" / "Kontoauszug abgleichen"
+        r"Kontoauszug|kontoauszug",
+        # Generic: CSV + bank statement in any language
+        r"(?:relev[eé]|extracto|extrato|statement|utskrift|auszug).{0,20}banc",
     ]),
     ("monthly_closing", [
         r"månedsavslutning|monthly.?clos|cierre.?mensual|clôture.?mensuel|Monatsabschluss|encerramento.?mensal",
@@ -273,7 +281,7 @@ Supported task types and their fields:
    Fields: name*, organizationNumber, email (IMPORTANT: if prompt says "email" or "e-post" without specifying type, put it in BOTH email AND invoiceEmail), invoiceEmail, phoneNumber, phoneNumberMobile, isPrivateIndividual (bool), description, isSupplier (bool), website, address (object with addressLine1, addressLine2, postalCode, city)
 
 3. "create_employee" — Register a new employee
-   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber, nationalIdentityNumber (11-digit Norwegian fødselsnummer/personnummer), bankAccountNumber (11-digit Norwegian bank account), address (object with addressLine1, postalCode, city), role (string — extract if the prompt mentions a role like "administrator", "kontoadministrator", "accountant", "regnskapsfører", "faktureringsansvarlig", "avdelingsleder", etc.), occupationCode (string — the STYRK/occupation code if mentioned, e.g. "3313"), employmentPercentage (number 0–100 — employment percentage / stillingsprosent, e.g. 80 for 80%), annualSalary (number — annual salary in NOK if mentioned, e.g. 640000), monthlySalary (number — monthly salary in NOK if mentioned), department (string — department name if mentioned, e.g. "Drift", "Kundeservice", "IT"), hoursPerDay (number — standard work hours per day, e.g. 7.5)
+   Fields: firstName*, lastName*, email, phoneNumberMobile, dateOfBirth (YYYY-MM-DD), startDate (YYYY-MM-DD), employeeNumber (string — the employee/personnel number, also called "personalnummer"/"Personalnummer"/"ansattnummer"/"número de personal"/"numéro d'employé"), nationalIdentityNumber (string, exactly 11 digits — Norwegian fødselsnummer/personnummer/Sozialversicherungsnummer, MUST preserve leading zeros e.g. "04078184804"), bankAccountNumber (string, exactly 11 digits — Norwegian bank account/kontonummer/Bankverbindung/Kontonummer, MUST preserve leading zeros), address (object with addressLine1, postalCode, city), role (string — extract if the prompt mentions a role like "administrator", "kontoadministrator", "accountant", "regnskapsfører", "faktureringsansvarlig", "avdelingsleder", etc.), occupationCode (string — the STYRK/occupation code if mentioned, e.g. "3313"), employmentPercentage (number 0–100 — employment percentage / stillingsprosent, e.g. 80 for 80%), annualSalary (number — annual salary in NOK if mentioned, e.g. 640000), monthlySalary (number — monthly salary in NOK if mentioned), department (string — department name if mentioned, e.g. "Drift", "Kundeservice", "IT"), hoursPerDay (number — standard work hours per day, e.g. 7.5)
 
 4. "create_product" — Register a new product
    Fields: name*, number, priceExcludingVat (number), priceIncludingVat (number), costExcludingVat (number), description, vatCode (string — Tripletex codes: "3" = 25% standard, "31" = 15% food/middels, "33" = 12% low/transport, "5" = 0% exempt, "6" = 0% outside VAT law), isInactive (bool)
@@ -382,8 +390,8 @@ Supported task types and their fields:
 
 34. "register_expense_receipt" — Register an expense from a receipt/kvittering (utgift fra kvittering / dépense du reçu / Ausgabe aus Quittung / gasto del recibo / despesa do recibo). Creates a voucher with debit on expense account and credit on bank (1920). Apply correct input VAT (inngående mva) if applicable. Link to department if specified.
     IMPORTANT: If the prompt mentions "kvittering", "Quittung", "receipt", "reçu", "recibo", "ricevuta" — this is ALWAYS register_expense_receipt, NEVER register_supplier_invoice. A receipt (kvittering) and a supplier invoice (leverandørfaktura) are different things.
-    Fields: description* (item name / what was purchased, e.g. "Skrivebordlampe", "Kontorstoler"), amount* (number — gross amount including VAT), date (YYYY-MM-DD — receipt date, default today), department (string — department name if mentioned, e.g. "Kvalitetskontroll", "Drift"), expenseAccount (integer — choose the most appropriate Norwegian expense account based on the item: 6500=kontorrekvisita/office supplies/desk lamp, 6540=kontormøbler/furniture/office chairs, 6300=leie lokaler, 7140=reise, 4000=varekjøp — default 6500), creditAccount (integer — default 1920 for bank), vatRate (integer percent — 25 for standard goods/services, 15 for food, 0 for exempt — default 25)
-    IMPORTANT: Infer expenseAccount from the item name: "Skrivebordlampe" / "lampe" / "lampa" → 6500; "Kontorstoler" / "stol" / "chair" / "chaise" / "Stuhl" / "silla" → 6540; "kontorrekvisita" / "papir" / "penn" → 6500. Default to 6500 if uncertain.
+    Fields: description* (item name / what was purchased, e.g. "Skrivebordlampe", "Kontorstoler"), amount* (number — gross amount including VAT), date (YYYY-MM-DD — receipt date, default today), department (string — department name if mentioned, e.g. "Kvalitetskontroll", "Drift"), expenseAccount (integer — choose the most appropriate Norwegian expense account based on the item: 7350=representasjon/forretningslunsj/business lunch/Geschäftsessen/déjeuner d'affaires/almuerzo de negocios/pranzo di lavoro, 6500=kontorrekvisita/office supplies/desk lamp, 6540=kontormøbler/furniture/office chairs, 6300=leie lokaler, 7140=reise/travel, 6810=mat/bespisning/catering, 4000=varekjøp — default 6500), creditAccount (integer — default 1920 for bank), vatRate (integer percent — 25 for standard goods/services, 15 for food/mat/representasjon/Forretningslunsj, 0 for exempt — default 25)
+    IMPORTANT: Infer expenseAccount from the item name: "Forretningslunsj" / "business lunch" / "Geschäftsessen" / "déjeuner d'affaires" / "almuerzo de negocios" / "representasjon" → 7350 (AND vatRate=15); "Skrivebordlampe" / "lampe" / "lampa" → 6500; "Kontorstoler" / "stol" / "chair" / "chaise" / "Stuhl" / "silla" → 6540; "kontorrekvisita" / "papir" / "penn" → 6500. Default to 6500 if uncertain.
 
 35. "overdue_invoice" — Handle overdue invoice: find the overdue invoice, post a reminder fee voucher, create and send a reminder fee invoice to the customer, and optionally register a partial payment on the overdue invoice. This is a COMPOSITE task — do NOT classify as "create_voucher" if the prompt also asks to create an invoice and/or register a payment.
     IMPORTANT: If the prompt mentions "overdue", "reminder fee", "purregebyr", "frais de rappel", "taxa de lembrete", "Mahngebühr", "rappelgebühr", "forfalt faktura", "facture en retard", "fatura vencida", "überfällige Rechnung" AND also mentions creating an invoice or registering a payment, this is "overdue_invoice", NOT "create_voucher".
@@ -549,6 +557,9 @@ Output: {"taskType": "create_travel_expense", "fields": {"employeeName": "Charle
 IMPORTANT:
 - Extract ALL fields mentioned in the prompt
 - Organization numbers should be strings (preserve leading zeros)
+- nationalIdentityNumber (fødselsnummer/personnummer) MUST be a string with exactly 11 digits (preserve leading zeros, e.g. "04078184804")
+- bankAccountNumber MUST be a string with exactly 11 digits (preserve leading zeros, e.g. "08234510252")
+- employeeNumber (personalnummer/Personalnummer) MUST be a string (e.g. "1234")
 - Amounts should be numbers (not strings)
 - Dates should be YYYY-MM-DD format
 - For names in prompts, map to the correct field (e.g. "fornavn" → firstName, "etternavn" → lastName, "Nom" → name)
@@ -640,6 +651,10 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
                 from app.parser_gemini import parse_task_gemini
                 result = parse_task_gemini(augmented_prompt, files)
                 if result.task_type != "unknown":
+                    # Apply keyword override if keywords disagree with embedding/Gemini
+                    if keyword_type and result.task_type != keyword_type:
+                        logger.info(f"[auto] Keyword override: {result.task_type} → {keyword_type}")
+                        result.task_type = keyword_type
                     return result
         except Exception as e:
             logger.warning(f"[auto] Embedding step failed: {e}")
@@ -661,6 +676,9 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
                 result = parse_task_gemini(hint_prompt, files)
                 if result.task_type != "unknown":
                     logger.info(f"[auto] Gemini with hint resolved: {result.task_type}")
+                    if keyword_type and result.task_type != keyword_type:
+                        logger.info(f"[auto] Keyword override: {result.task_type} → {keyword_type}")
+                        result.task_type = keyword_type
                     return result
             except Exception as e:
                 logger.warning(f"[auto] Medium-confidence hint step failed: {e}")
@@ -671,6 +689,9 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
             result = parse_task_gemini(prompt, files)
             if result.task_type != "unknown" and result.confidence >= 0.85:
                 logger.info(f"[auto] Gemini resolved: {result.task_type} (conf={result.confidence})")
+                if keyword_type and result.task_type != keyword_type:
+                    logger.info(f"[auto] Keyword override: {result.task_type} → {keyword_type}")
+                    result.task_type = keyword_type
                 return result
             # Accept lower-confidence Gemini results if task_type is valid
             if result.task_type != "unknown" and result.task_type in VALID_TASK_TYPES:
@@ -844,6 +865,12 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
         logger.warning(f"LLM returned unrecognized task type: {task.task_type}")
         task.task_type = "unknown"
 
+    # Keyword override: deterministic keywords always win over LLM classification
+    # This prevents misclassification when LLM picks a wrong type with high confidence
+    if keyword_type and task.task_type != keyword_type and task.task_type != "unknown":
+        logger.info(f"Keyword override (haiku): {task.task_type} → {keyword_type}")
+        task.task_type = keyword_type
+
     # Sonnet fallback: re-parse if confidence is low OR task_type is "unknown"
     needs_fallback = (task.confidence < 0.90 or task.task_type == "unknown") and message.model != LLM_FALLBACK_MODEL
     if needs_fallback:
@@ -868,9 +895,15 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
                 # Accept fallback if it improved confidence or resolved unknown
                 if fallback_task.task_type != "unknown" and fallback_task.task_type in VALID_TASK_TYPES:
                     logger.info(f"Fallback resolved: {task.task_type} → {fallback_task.task_type} (confidence {fallback_task.confidence})")
+                    if keyword_type and fallback_task.task_type != keyword_type:
+                        logger.info(f"Keyword override (fallback): {fallback_task.task_type} → {keyword_type}")
+                        fallback_task.task_type = keyword_type
                     return fallback_task
                 if fallback_task.confidence > task.confidence and fallback_task.task_type != "unknown":
                     logger.info(f"Fallback improved confidence: {task.confidence} → {fallback_task.confidence}")
+                    if keyword_type and fallback_task.task_type != keyword_type:
+                        logger.info(f"Keyword override (fallback): {fallback_task.task_type} → {keyword_type}")
+                        fallback_task.task_type = keyword_type
                     return fallback_task
         except Exception as e:
             logger.warning(f"Fallback re-parse failed: {e}")

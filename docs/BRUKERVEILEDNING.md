@@ -265,7 +265,7 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 | 21 | create_employee (PDF) | 3 |
 | 22 | register_expense_receipt | 3 |
 | 23 | bank_reconciliation | 3 |
-| 24 | unknown | 3 |
+| 24 | create_invoice | 3 |
 | 25 | overdue_invoice | 3 |
 | 26 | create_voucher | 3 |
 | 27 | register_payment | 3 |
@@ -273,7 +273,7 @@ Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-v
 | 29 | project_lifecycle | 3 |
 | 30 | monthly_closing | 3 |
 
-Usikker: year_end_closing, monthly_closing
+Usikker: year_end_closing
 
 
 Scoring: T1 = ×1 (maks 2), T2 = ×2 (maks 4), T3 = ×3 (maks 6)
