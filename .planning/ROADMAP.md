@@ -118,7 +118,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 04-01-PLAN.md — Timeout-guard i main.py + MAX_API_CALLS i bank_reconciliation/correct_ledger_error + E2E-verifisering
+- [x] 04-01-PLAN.md — Timeout-guard i main.py + MAX_API_CALLS i bank_reconciliation/correct_ledger_error + E2E-verifisering
 
 ## Progress
 

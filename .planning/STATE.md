@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-effektivitet/03-01-PLAN.md
-last_updated: "2026-03-21T23:58:27.507Z"
+stopped_at: Completed 04-t3-robusthet/04-01-PLAN.md
+last_updated: "2026-03-22T00:05:16.585Z"
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 16
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -60,6 +60,7 @@ Plan: 1 of 1
 | Phase 02.1.1-score-maksimering P02 | 15 | 2 tasks | 4 files |
 | Phase 03-effektivitet P02 | 25 | 2 tasks | 1 files |
 | Phase 03-effektivitet P01 | 5 | 2 tasks | 5 files |
+| Phase 04-t3-robusthet P01 | 5 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,9 @@ Recent decisions affecting current work:
 - [Phase 03-effektivitet]: fields= projeksjon pa alle T1/T2 handler GET-kall reduserer dataoverfoering og API-responstid
 - [Phase 03-effektivitet]: version-felt inkludert i _find_supplier/_find_customer projeksjon for PUT-kompatibilitet
 - [Phase 03-effektivitet]: GET-before-PUT (VAT unlock) bruker get_cached — account-data er stabil referansedata
+- [Phase 04-t3-robusthet]: asyncio.wait_for(90s) i main.py — sentralisert T3 timeout-enforcement, alle handlers beskyttes uten kode i handler
+- [Phase 04-t3-robusthet]: bank_reconciliation MAX_API_CALLS=30 med graceful partial return ved budsjett-overskridelse
+- [Phase 04-t3-robusthet]: correct_ledger_error multi-error-loop capper med estimat 5 kall/error — enklere enn eksakt teller per kall
 
 ### Pending Todos
 
@@ -118,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T23:38:45.378Z
-Stopped at: Completed 03-effektivitet/03-01-PLAN.md
+Last session: 2026-03-22T00:05:16.582Z
+Stopped at: Completed 04-t3-robusthet/04-01-PLAN.md
 Resume file: None
