@@ -83,10 +83,16 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ("register_supplier_invoice", [
         r"leverand[oø]rfaktura|leverand[oø]r.{0,20}faktura",
         r"leverandorfaktura.*(?:PDF|vedlagt|attached)|(?:PDF|vedlagt|attached).*leverandorfaktura",
-        r"supplier.?invoice|facture.{0,20}fournisseur|Lieferantenrechnung",
+        r"supplier.?invoice|facture.{0,20}fournisseur|Lieferantenrechnung|Lieferanten.{0,10}rechnung",
         r"fatura.{0,30}fornecedor|factura.{0,30}proveedor",
         r"(?:registr|registe|enregistr).{0,30}(?:fatura|factura|invoice|faktura).{0,30}(?:fornecedor|proveedor|supplier|fournisseur|Lieferant)",
         r"(?:recebemos|received|reçu|erhalten|recibimos).{0,40}(?:fatura|factura|invoice|faktura).{0,40}(?:fornecedor|proveedor|supplier|fournisseur|Lieferant)",
+        # Nynorsk variants: innkjøpsfaktura, leverandørrekning, faktura frå leverandør
+        r"innkj[øo]psfaktura|leverand[oø]rrekning|faktura\s+fr[åa]\s+leverand[oø]r",
+        # German: Eingangsrechnung (incoming invoice = supplier invoice)
+        r"Eingangsrechnung|Eingangs.{0,10}rechnung",
+        # French additional: "nous avons reçu la facture" without explicit "fournisseur"
+        r"(?:nous\s+avons\s+reçu|avons\s+reçu).{0,60}(?:facture|invoice)",
     ]),
     ("create_custom_dimension", [
         r"dimensjon|dimension|dimensão|dimensión|Dimension",
@@ -152,7 +158,9 @@ _KEYWORD_RULES: list[tuple[str, list[str]]] = [
     ]),
     ("register_supplier_invoice", [
         r"(?:leverand[oø]r|supplier|innkj[øo]ps).{0,30}faktura|supplier.invoice|factura.{0,30}proveedor|fatura.{0,30}fornecedor",
-        r"leverand[oø]rfaktura",
+        r"leverand[oø]rfaktura|innkj[øo]psfaktura|leverand[oø]rrekning",
+        r"Eingangsrechnung|Lieferanten.{0,10}rechnung",
+        r"(?:nous\s+avons\s+reçu|avons\s+reçu).{0,60}facture",
     ]),
     ("create_credit_note", [
         r"kreditnota|credit.?note|nota de crédito|Gutschrift|note de crédit|avoir",
@@ -336,7 +344,7 @@ Supported task types and their fields:
     Fields: customerName*, customerOrgNumber, orderDate (YYYY-MM-DD), deliveryDate (YYYY-MM-DD), lines (array of {description, productNumber (if given in parentheses), quantity, unitPriceExcludingVat, vatCode}), convertToInvoice (bool — true if prompt asks to convert/invoice), registerPayment (bool — true if prompt asks to register payment)
 
 25. "register_supplier_invoice" — Register a supplier invoice (innkjøpsfaktura/leverandørfaktura)
-    Fields: supplierName, supplierOrgNumber, organizationNumber, amount (gross total including VAT — extract from attached receipt/PDF if present), amountExcludingVat (number — net amount excl. VAT, extract from receipt if present), description, productName (name of the product/service purchased — extract from receipt/PDF), invoiceDate (YYYY-MM-DD), invoiceNumber (the supplier's invoice reference, e.g. "INV-2026-4855"), vatRate (integer percent, e.g. 25 for 25%, default 25), vatCode (Tripletex VAT code for INPUT VAT: "11" = 25% standard input, "13" = 15% food/middels input, "14" = 12% low/transport input, "0" = no VAT — default "11" for standard purchases), expenseAccount (account number — map based on purchase type: 6010=office supplies/kontorrekvisita, 6540=IT equipment/datautstyr, 6000=office furniture/kontormøbler, 5000=materials/materialer, 7140=travel/reise, 4000=general purchases; default "6010" if office supplies, "6540" if electronics/IT, "6000" if furniture/møbler), department (department name — extract from prompt, e.g. "Drift", "IT", "Salg")
+    Fields: supplierName, supplierOrgNumber, organizationNumber, amount (gross total including VAT — extract from attached receipt/PDF if present), amountExcludingVat (number — net amount excl. VAT, extract from receipt if present), description, productName (name of the product/service purchased — extract from receipt/PDF), invoiceDate (YYYY-MM-DD), invoiceNumber (the supplier's invoice reference, e.g. "INV-2026-4855"), dueDate (YYYY-MM-DD — due date / forfallsdato / Fälligkeitsdatum / date d'échéance / fecha de vencimiento — extract if mentioned), vatRate (integer percent, e.g. 25 for 25%, default 25), vatCode (Tripletex VAT code for INPUT VAT: "11" = 25% standard input, "13" = 15% food/middels input, "14" = 12% low/transport input, "0" = no VAT — default "11" for standard purchases), expenseAccount (account number — map based on purchase type: 4000=goods/varekjøp/merchandise, 6010=office supplies/kontorrekvisita/Bürobedarf/fournitures de bureau, 6300=rent/leie lokale/Miete/loyer, 6340=electricity/strøm/power/utilities, 6540=IT equipment/datautstyr/inventar/Inventar/furniture/Möbel/mobilier, 6590=consulting/professional services/tjenester, 6700=advertising/marketing, 6800=office costs/kontorkostnader, 7100=transport/frakt/shipping, 7140=travel/reise; default "4000" for goods, "6010" for office supplies, "6540" for electronics/IT/furniture, "6300" for rent/leie), department (department name — extract from prompt, e.g. "Drift", "IT", "Salg")
     RECEIPT/PDF EXTRACTION: If a receipt or invoice PDF/image is attached, extract ALL of the following from it: supplierName, supplierOrgNumber, amount (total inkl. MVA), amountExcludingVat (total ekskl. MVA), vatRate, invoiceDate, invoiceNumber, and productName (the main product/service). Do NOT leave amount as 0 if a receipt is attached — read it from the document.
 
 26. "register_timesheet" — Register hours/timesheet entry for one or more employees on a project/activity, AND optionally generate a project invoice to the customer based on the registered hours (registrere timer, Stunden erfassen, registar horas, enregistrer heures, prosjektfaktura, project invoice)
@@ -379,7 +387,7 @@ Supported task types and their fields:
 
 35. "overdue_invoice" — Handle overdue invoice: find the overdue invoice, post a reminder fee voucher, create and send a reminder fee invoice to the customer, and optionally register a partial payment on the overdue invoice. This is a COMPOSITE task — do NOT classify as "create_voucher" if the prompt also asks to create an invoice and/or register a payment.
     IMPORTANT: If the prompt mentions "overdue", "reminder fee", "purregebyr", "frais de rappel", "taxa de lembrete", "Mahngebühr", "rappelgebühr", "forfalt faktura", "facture en retard", "fatura vencida", "überfällige Rechnung" AND also mentions creating an invoice or registering a payment, this is "overdue_invoice", NOT "create_voucher".
-    Fields: reminderFeeAmount* (number — the reminder fee amount in NOK), debitAccount (integer, default 1500 — accounts receivable), creditAccount (integer, default 3400 — reminder fee income), partialPaymentAmount (number — amount of partial payment on overdue invoice, if mentioned)
+    Fields: reminderFeeAmount* (number — the reminder fee amount in NOK), debitAccount (integer, default 1500 — accounts receivable), creditAccount (integer, default 3400 — reminder fee income), partialPaymentAmount (number — amount of partial payment on overdue invoice, if mentioned), customerName (string — customer name if mentioned, to help find the right invoice), invoiceNumber (integer — overdue invoice number if mentioned), sendReminder (bool — true only if the prompt explicitly asks to send a reminder/purring notification on the ORIGINAL overdue invoice, not the new reminder fee invoice)
 
 36. "unknown" — ONLY if you truly cannot determine the task type from ANY of the above categories
 
@@ -587,9 +595,19 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
     logger.info(f"parse_task called with backend={backend}")
     gemini_result = None  # Track Gemini result for auto-mode fallback
 
+    # ALWAYS run keyword classification first — keywords are deterministic and
+    # prevent misclassification (e.g. project_lifecycle misclassified as register_timesheet).
+    keyword_type = _infer_task_type_from_keywords(prompt)
+    if keyword_type:
+        logger.info(f"Keyword pre-classification: {keyword_type} (overrides {backend} backend)")
+
     if backend == "gemini":
         from app.parser_gemini import parse_task_gemini
-        return parse_task_gemini(prompt, files)
+        task = parse_task_gemini(prompt, files)
+        if keyword_type and task.task_type != keyword_type:
+            logger.info(f"Keyword override: {task.task_type} → {keyword_type}")
+            task.task_type = keyword_type
+        return task
 
     if backend == "auto":
         # Try embedding first
