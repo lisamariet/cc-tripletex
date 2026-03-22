@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-t3-robusthet/04-01-PLAN.md
-last_updated: "2026-03-22T00:05:16.585Z"
+stopped_at: Completed 05-score-maksimering-og-stabilisering/05-01-PLAN.md
+last_updated: "2026-03-22T01:42:36.519Z"
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 6
-  total_plans: 16
-  completed_plans: 16
+  total_plans: 19
+  completed_plans: 17
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** Maks poengscore på alle 30 oppgavetyper — perfekt korrekthet + effektivitetsbonus
-**Current focus:** Phase 04 — t3-robusthet
+**Current focus:** Phase 05 — score-maksimering-og-stabilisering
 
 ## Current Position
 
-Phase: 04 (t3-robusthet) — EXECUTING
-Plan: 1 of 1
+Phase: 05 (score-maksimering-og-stabilisering) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Plan: 1 of 1
 | Phase 03-effektivitet P02 | 25 | 2 tasks | 1 files |
 | Phase 03-effektivitet P01 | 5 | 2 tasks | 5 files |
 | Phase 04-t3-robusthet P01 | 5 | 2 tasks | 2 files |
+| Phase 05-score-maksimering-og-stabilisering P01 | 15 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,8 @@ Recent decisions affecting current work:
 - [Phase 04-t3-robusthet]: asyncio.wait_for(90s) i main.py — sentralisert T3 timeout-enforcement, alle handlers beskyttes uten kode i handler
 - [Phase 04-t3-robusthet]: bank_reconciliation MAX_API_CALLS=30 med graceful partial return ved budsjett-overskridelse
 - [Phase 04-t3-robusthet]: correct_ledger_error multi-error-loop capper med estimat 5 kall/error — enklere enn eksakt teller per kall
+- [Phase 05-score-maksimering-og-stabilisering]: /ledger/annualAccount fields=: remove isClosed (invalid in AnnualAccountDTO) — use id,year only
+- [Phase 05-score-maksimering-og-stabilisering]: /invoice bank_reconciliation: replace amountRemainingCurrency with amountOutstanding — amountRemainingCurrency not in InvoiceDTO
 
 ### Pending Todos
 
@@ -122,6 +125,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T00:05:16.582Z
-Stopped at: Completed 04-t3-robusthet/04-01-PLAN.md
+Last session: 2026-03-22T01:42:36.516Z
+Stopped at: Completed 05-score-maksimering-og-stabilisering/05-01-PLAN.md
 Resume file: None
