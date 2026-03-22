@@ -173,10 +173,15 @@ def _load_index() -> None:
 
 
 def classify_prompt(text: str) -> tuple[str, float]:
-    """Classify a prompt using embedding similarity.
+    """Classify a prompt using embedding similarity with 3-tier confidence routing.
 
     Returns (task_type, confidence) where confidence is the cosine similarity
     to the nearest neighbor in the index.
+
+    Confidence tiers:
+    - >= 0.85: High confidence — use embedding result directly (skip LLM)
+    - 0.70–0.85: Medium confidence — use as hint for LLM (top-3 matches)
+    - < 0.70: Low confidence — fall back to pure LLM classification
 
     If the index is empty or embedding fails, returns ("unknown", 0.0).
     """
@@ -210,13 +215,68 @@ def classify_prompt(text: str) -> tuple[str, float]:
     best_similarity = float(similarities[best_idx])
     best_type = _index_types[best_idx]
 
+    # Find top-3 for logging and hint context
+    top_k = min(3, len(similarities))
+    top_indices = np.argsort(similarities)[-top_k:][::-1]
+    top_matches = [
+        (float(similarities[i]), _index_types[i], _index[i]["prompt"][:60])
+        for i in top_indices
+    ]
+
+    # Determine routing tier
+    if best_similarity >= 0.85:
+        routing = "HIGH_CONFIDENCE_DIRECT"
+    elif best_similarity >= 0.70:
+        routing = "MEDIUM_CONFIDENCE_HINT"
+    else:
+        routing = "LOW_CONFIDENCE_FALLBACK"
+
     logger.info(
         f"Embedding classification: type={best_type}, "
         f"similarity={best_similarity:.4f}, "
-        f"prompt='{_index[best_idx]['prompt'][:80]}...'"
+        f"routing={routing}, "
+        f"top3={[(f'{s:.3f}', t) for s, t, _ in top_matches]}"
     )
 
     return (best_type, best_similarity)
+
+
+def get_top_matches(text: str, top_k: int = 3) -> list[dict[str, Any]]:
+    """Get top-k embedding matches with similarity scores.
+
+    Returns list of {task_type, similarity, prompt} dicts for use as LLM hints
+    in the medium-confidence tier (0.70-0.85).
+    """
+    global _index, _index_matrix, _index_types
+
+    if _index is None:
+        _load_index()
+
+    if not _index or _index_matrix is None or _index_matrix.size == 0:
+        return []
+
+    try:
+        query_embedding = np.array(embed_text(text), dtype=np.float32)
+    except Exception:
+        return []
+
+    query_norm = np.linalg.norm(query_embedding)
+    if query_norm == 0:
+        return []
+    query_normalized = query_embedding / query_norm
+
+    similarities = _index_matrix @ query_normalized
+    k = min(top_k, len(similarities))
+    top_indices = np.argsort(similarities)[-k:][::-1]
+
+    return [
+        {
+            "task_type": _index_types[i],
+            "similarity": float(similarities[i]),
+            "prompt": _index[i]["prompt"][:200],
+        }
+        for i in top_indices
+    ]
 
 
 def get_similar_examples(prompt: str, task_type: str, top_k: int = 3) -> list[dict]:

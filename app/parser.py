@@ -614,8 +614,8 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
         try:
             from app.embeddings import classify_prompt
             emb_type, emb_conf = classify_prompt(prompt)
-            if emb_type and emb_type != "unknown" and emb_conf > 0.90:
-                logger.info(f"[auto] Embedding resolved: {emb_type} (conf={emb_conf:.4f}), using Gemini for fields")
+            if emb_type and emb_type != "unknown" and emb_conf >= 0.85:
+                logger.info(f"[auto] Embedding HIGH_CONFIDENCE: {emb_type} (conf={emb_conf:.4f}), using Gemini for fields")
                 # Add few-shot examples to prompt for better field extraction
                 augmented_prompt = prompt
                 try:
@@ -643,6 +643,27 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
                     return result
         except Exception as e:
             logger.warning(f"[auto] Embedding step failed: {e}")
+            emb_type, emb_conf = None, 0.0
+
+        # Medium confidence (0.70-0.85): use embedding as hint for Gemini
+        if emb_type and emb_type != "unknown" and 0.70 <= emb_conf < 0.85:
+            try:
+                from app.embeddings import get_top_matches
+                top_matches = get_top_matches(prompt, top_k=3)
+                hint_types = [m["task_type"] for m in top_matches]
+                logger.info(f"[auto] Embedding MEDIUM_CONFIDENCE: {emb_type} (conf={emb_conf:.4f}), hint types={hint_types}")
+                hint_prompt = (
+                    f'Based on similar tasks, this is likely one of: {", ".join(hint_types)}. '
+                    f'Most likely: "{emb_type}". Extract the fields.\n\n'
+                    f"Original prompt: {prompt}"
+                )
+                from app.parser_gemini import parse_task_gemini
+                result = parse_task_gemini(hint_prompt, files)
+                if result.task_type != "unknown":
+                    logger.info(f"[auto] Gemini with hint resolved: {result.task_type}")
+                    return result
+            except Exception as e:
+                logger.warning(f"[auto] Medium-confidence hint step failed: {e}")
 
         # Then try Gemini standalone
         try:
@@ -680,9 +701,12 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, timeout=30.0)
     user_content = _build_user_content(prompt, files or [])
 
-    # If embedding gave high confidence, add type hint + few-shot examples to the LLM prompt
-    if embedding_type and embedding_type != "unknown" and embedding_confidence > 0.85:
-        logger.info(f"Using embedding hint: {embedding_type} (confidence={embedding_confidence:.4f})")
+    # 3-tier confidence routing for embedding results
+    # HIGH (>= 0.85): Direct type hint + few-shot examples to LLM
+    # MEDIUM (0.70-0.85): Top-3 type hints to LLM
+    # LOW (< 0.70): Pure LLM classification
+    if embedding_type and embedding_type != "unknown" and embedding_confidence >= 0.85:
+        logger.info(f"Embedding HIGH_CONFIDENCE hint: {embedding_type} (conf={embedding_confidence:.4f})")
 
         # Try to retrieve few-shot examples for better field extraction
         few_shot_text = ""
@@ -715,7 +739,28 @@ def parse_task(prompt: str, files: list[dict[str, Any]] | None = None) -> Parsed
         if files:
             hint_content.extend(process_files(files))
         llm_content = hint_content
+    elif embedding_type and embedding_type != "unknown" and embedding_confidence >= 0.70:
+        logger.info(f"Embedding MEDIUM_CONFIDENCE hint: {embedding_type} (conf={embedding_confidence:.4f})")
+        # Provide top-3 matches as candidates to help LLM narrow down
+        try:
+            from app.embeddings import get_top_matches
+            top_matches = get_top_matches(prompt, top_k=3)
+            hint_types = [m["task_type"] for m in top_matches]
+            hint_text = (
+                f'Based on similar tasks, this is likely one of: {", ".join(hint_types)}. '
+                f'Most likely: "{embedding_type}". Extract the fields.\n\n'
+                f"Original prompt: {prompt}"
+            )
+            hint_content = [{"type": "text", "text": hint_text}]
+            if files:
+                hint_content.extend(process_files(files))
+            llm_content = hint_content
+        except Exception as e:
+            logger.warning(f"Medium-confidence hint failed (using raw prompt): {e}")
+            llm_content = user_content
     else:
+        if embedding_type and embedding_confidence > 0:
+            logger.info(f"Embedding LOW_CONFIDENCE: {embedding_type} (conf={embedding_confidence:.4f}) — falling back to pure LLM")
         llm_content = user_content
 
     try:
