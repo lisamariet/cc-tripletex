@@ -1,6 +1,6 @@
 # Systemdokumentasjon — Tripletex AI Accounting Agent
 
-Sist oppdatert: 2026-03-20 (rev 2)
+Sist oppdatert: 2026-03-22 (rev 3)
 
 ---
 
@@ -369,22 +369,29 @@ Handlers for oppdatering og sletting av leverandorer, produkter, kunder, ordreop
 
 - `set_project_fixed_price` (`tier2_project.py`) — Sett fastpris pa prosjekt, stotter delfakturering
 - `run_payroll` (`tier2_extra.py`) — Loennskjoering med grunnloenn og bonus
-- `create_custom_dimension` (`tier2_extra.py`) — Opprett regnskapsdimensjon med verdier
-- `create_invoice_from_pdf` (`tier2_extra.py`) — Opprett faktura fra PDF-vedlegg
+- `register_expense_receipt` (`tier2_extra.py`) — Registrer utgiftskvittering
+- `project_lifecycle` (`tier2_extra.py`) — Prosjektlivsyklus-operasjoner
+- `create_custom_dimension` (`tier3.py`) — Opprett regnskapsdimensjon med verdier
+- `overdue_invoice` (`tier3.py`) — Handter forfalte fakturaer
+- `bank_reconciliation` (`tier3.py`) — Bankavstemminger
+- `year_end_closing` (`tier3.py`) — Arsavslutning
+- `correct_ledger_error` (`tier3.py`) — Korriger regnskapsfeil
+- `monthly_closing` (`tier3.py`) — Manedlig avslutning
+- `create_invoice_from_pdf` (`tier2_invoice.py`) — Opprett faktura fra PDF-vedlegg
 - `unknown` (`fallback.py`) — LLM-basert fallback for ukjente oppgavetyper
 
 ### Fullstendig handleroversikt
 
-Totalt **30 registrerte handlers** (inkl. `unknown`-fallback) for **29 oppgavetyper** + 1 fallback:
+Totalt **35 registrerte handlers** (inkl. `unknown`-fallback) for **34 oppgavetyper** + 1 fallback:
 
 | Handler-modul | Handlers |
 |---------------|----------|
-| `tier1.py` | create_supplier, create_customer, create_employee, create_product, create_department |
-| `tier2_invoice.py` | create_invoice, register_payment, reverse_payment, create_credit_note, update_customer |
+| `tier1.py` | create_supplier, create_customer, create_employee, create_product, create_department, batch_create_department |
+| `tier2_invoice.py` | create_invoice, register_payment, reverse_payment, create_credit_note, create_invoice_from_pdf, update_customer |
 | `tier2_travel.py` | create_travel_expense, delete_travel_expense, update_employee |
 | `tier2_project.py` | create_project, set_project_fixed_price |
-| `tier2_extra.py` | update_supplier, update_product, delete_employee, delete_customer, delete_supplier, create_order, register_supplier_invoice, register_timesheet, create_invoice_from_pdf, run_payroll, create_custom_dimension |
-| `tier3.py` | create_voucher, reverse_voucher, delete_voucher |
+| `tier2_extra.py` | update_supplier, update_product, delete_employee, delete_customer, delete_supplier, create_order, register_supplier_invoice, register_timesheet, run_payroll, register_expense_receipt, project_lifecycle |
+| `tier3.py` | create_voucher, reverse_voucher, delete_voucher, create_custom_dimension, overdue_invoice, bank_reconciliation, year_end_closing, correct_ledger_error, monthly_closing |
 | `fallback.py` | unknown (LLM-basert fallback) |
 
 ---
@@ -399,7 +406,7 @@ Parseren bruker en detaljert systemprompt (`SYSTEM_PROMPT` i `app/parser.py`) me
 2. Ekstrahere `taskType` og relevante `fields`
 3. Returnere strukturert JSON
 
-### Stottede oppgavetyper (29 stk.)
+### Stottede oppgavetyper (35 stk.)
 
 | # | taskType | Beskrivelse |
 |---|----------|-------------|
@@ -408,32 +415,40 @@ Parseren bruker en detaljert systemprompt (`SYSTEM_PROMPT` i `app/parser.py`) me
 | 3 | `create_employee` | Opprett ansatt |
 | 4 | `create_product` | Opprett produkt |
 | 5 | `create_department` | Opprett avdeling |
-| 6 | `create_invoice` | Opprett faktura |
-| 7 | `register_payment` | Registrer betaling pa faktura |
-| 8 | `reverse_payment` | Reverser betaling |
-| 9 | `create_credit_note` | Opprett kreditnota |
-| 10 | `create_travel_expense` | Registrer reiseregning |
-| 11 | `delete_travel_expense` | Slett reiseregning |
-| 12 | `create_project` | Opprett prosjekt |
-| 13 | `set_project_fixed_price` | Sett fastpris pa prosjekt |
-| 14 | `update_employee` | Oppdater ansatt |
-| 15 | `update_customer` | Oppdater kunde |
-| 16 | `update_supplier` | Oppdater leverandor |
-| 17 | `update_product` | Oppdater produkt |
-| 18 | `delete_employee` | Slett ansatt |
-| 19 | `delete_customer` | Slett kunde |
-| 20 | `delete_supplier` | Slett leverandor |
-| 21 | `create_voucher` | Opprett bilag/bilagsfoering |
-| 22 | `reverse_voucher` | Reverser bilag |
-| 23 | `delete_voucher` | Slett bilag |
-| 24 | `create_order` | Opprett ordre |
-| 25 | `register_supplier_invoice` | Registrer leverandorfaktura |
-| 26 | `register_timesheet` | Registrer timer |
-| 27 | `create_invoice_from_pdf` | Opprett faktura fra PDF |
-| 28 | `run_payroll` | Kjor lonnsavregning |
-| 29 | `create_custom_dimension` | Opprett regnskapsdimensjon |
+| 6 | `batch_create_department` | Opprett flere avdelinger |
+| 7 | `create_invoice` | Opprett faktura |
+| 8 | `register_payment` | Registrer betaling pa faktura |
+| 9 | `reverse_payment` | Reverser betaling |
+| 10 | `create_credit_note` | Opprett kreditnota |
+| 11 | `create_invoice_from_pdf` | Opprett faktura fra PDF |
+| 12 | `create_travel_expense` | Registrer reiseregning |
+| 13 | `delete_travel_expense` | Slett reiseregning |
+| 14 | `create_project` | Opprett prosjekt |
+| 15 | `set_project_fixed_price` | Sett fastpris pa prosjekt |
+| 16 | `update_employee` | Oppdater ansatt |
+| 17 | `update_customer` | Oppdater kunde |
+| 18 | `update_supplier` | Oppdater leverandor |
+| 19 | `update_product` | Oppdater produkt |
+| 20 | `delete_employee` | Slett ansatt |
+| 21 | `delete_customer` | Slett kunde |
+| 22 | `delete_supplier` | Slett leverandor |
+| 23 | `create_voucher` | Opprett bilag/bilagsfoering |
+| 24 | `reverse_voucher` | Reverser bilag |
+| 25 | `delete_voucher` | Slett bilag |
+| 26 | `create_order` | Opprett ordre |
+| 27 | `register_supplier_invoice` | Registrer leverandorfaktura |
+| 28 | `register_timesheet` | Registrer timer |
+| 29 | `run_payroll` | Kjor lonnsavregning |
+| 30 | `create_custom_dimension` | Opprett regnskapsdimensjon |
+| 31 | `register_expense_receipt` | Registrer utgiftskvittering |
+| 32 | `project_lifecycle` | Prosjektlivsyklus-operasjoner |
+| 33 | `overdue_invoice` | Handter forfalte fakturaer |
+| 34 | `bank_reconciliation` | Bankavstemminger |
+| 35 | `year_end_closing` | Arsavslutning |
+| 36 | `correct_ledger_error` | Korriger regnskapsfeil |
+| 37 | `monthly_closing` | Manedlig avslutning |
 
-Alle 29 oppgavetyper har tilhorende handler. I tillegg finnes en `unknown`-fallback (LLM-basert) for oppgaver som ikke klassifiseres.
+Alle oppgavetyper har tilhorende handler. I tillegg finnes en `unknown`-fallback (LLM-basert) for oppgaver som ikke klassifiseres.
 
 ### Parsing-prosess (multi-stage)
 

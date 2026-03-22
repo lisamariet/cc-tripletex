@@ -119,6 +119,16 @@ Vi gjor **felt-for-felt-sjekk** som matcher konkurransens scoring:
 | `reverse_voucher` | Sjekk at reverserings-voucher finnes | |
 | `delete_voucher` | `GET /ledger/voucher/{id}` | 404 |
 | `register_supplier_invoice` | `GET /ledger/voucher/{id}` | description, postings, amount |
+| `register_expense_receipt` | `GET /travelExpense/{id}` | title, costs |
+| `project_lifecycle` | `GET /project/{id}` | status, isClosed |
+| `overdue_invoice` | `GET /invoice/{id}` | overdue status |
+| `bank_reconciliation` | `GET /bank/reconciliation/{id}` | status, entries |
+| `year_end_closing` | `GET /ledger/voucher` | arsavslutningsbilag |
+| `correct_ledger_error` | `GET /ledger/voucher/{id}` | korrigert postering |
+| `monthly_closing` | `GET /ledger/voucher` | avslutningsbilag |
+| `run_payroll` | `GET /salary/payslip` | lonnsavregning opprettet |
+| `register_timesheet` | `GET /timesheet/entry` | timer registrert |
+| `batch_create_department` | `GET /department` | alle avdelinger opprettet |
 
 ---
 
@@ -346,6 +356,13 @@ Basert på data/requests/ har vi sett:
 - delete_voucher
 - create_credit_note
 - register_supplier_invoice
+- register_expense_receipt
+- project_lifecycle
+- overdue_invoice
+- bank_reconciliation
+- year_end_closing
+- correct_ledger_error
+- monthly_closing
 
 For disse genererer vi syntetiske test-prompts:
 

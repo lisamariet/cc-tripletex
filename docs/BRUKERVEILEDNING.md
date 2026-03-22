@@ -222,61 +222,17 @@ Satt som `API_KEY` env var på Cloud Run. Endepunktet `/solve` krever `Authoriza
 | GET | `/health` | Helsesjekk |
 | POST | `/solve` | Mottar oppgave, parser med LLM, kjører handler, returnerer resultat |
 
-## Registrerte handlers (30 stk.)
+## Registrerte handlers (35 stk.)
 
 Handlers registreres via `@register_handler` i `app/handlers/`:
 
-- **tier1.py**: `create_supplier`, `create_customer`, `create_employee`, `create_product`, `create_department`
-- **tier2_invoice.py**: `create_invoice`, `register_payment`, `reverse_payment`, `create_credit_note`, `update_customer`
+- **tier1.py**: `create_supplier`, `create_customer`, `create_employee`, `create_product`, `create_department`, `batch_create_department`
+- **tier2_invoice.py**: `create_invoice`, `register_payment`, `reverse_payment`, `create_credit_note`, `create_invoice_from_pdf`, `update_customer`
 - **tier2_travel.py**: `create_travel_expense`, `delete_travel_expense`, `update_employee`
 - **tier2_project.py**: `create_project`, `set_project_fixed_price`
-- **tier2_extra.py**: `update_supplier`, `update_product`, `delete_employee`, `delete_customer`, `delete_supplier`, `create_order`, `register_supplier_invoice`, `register_timesheet`, `create_invoice_from_pdf`, `run_payroll`, `create_custom_dimension`
-- **tier3.py**: `create_voucher`, `reverse_voucher`, `delete_voucher`
+- **tier2_extra.py**: `update_supplier`, `update_product`, `delete_employee`, `delete_customer`, `delete_supplier`, `create_order`, `register_supplier_invoice`, `register_timesheet`, `run_payroll`, `register_expense_receipt`, `project_lifecycle`
+- **tier3.py**: `create_voucher`, `reverse_voucher`, `delete_voucher`, `create_custom_dimension`, `overdue_invoice`, `bank_reconciliation`, `year_end_closing`, `correct_ledger_error`, `monthly_closing`
 - **fallback.py**: `unknown` (LLM-basert fallback for ukjente oppgavetyper)
-
-## TASK_ID_MAP — oppgavenummer til type og tier
-
-Definert i `scripts/compete.py`. Brukes av `tasks`-kommandoen og andre analyse-verktøy for å mappe oppgavenummer (01–30) til `task_type` og tier.
-
-| ID | task_type | Tier |
-|---|---|---|
-| 01 | create_employee | 1 |
-| 02 | create_customer | 1 |
-| 03 | create_product | 1 |
-| 04 | create_supplier | 1 |
-| 05 | batch_create_department | 1 |
-| 06 | create_invoice / create_department | 1 |
-| 07 | create_employee (variant med rolle/rettigheter) | 1 |
-| 08 | create_customer (variant med adresse) | 1 |
-|-|-|-|
-| 09 | set_project_fixed_price | 2 |
-| 10 | create_invoice | 2 |
-| 11 | register_supplier_invoice | 2 |
-| 12 | run_payroll | 2 |
-| 13 | create_travel_expense | 2 |
-| 14 | create_credit_note | 2 |
-| 15 | register_supplier_invoice ? | 2 |
-| 16 | register_timesheet | 2 |
-| 17 | create_custom_dimension | 2 |
-| 18 | reverse_payment | 2 |
-|-|-|-|
-| 19 | create_employee (PDF tilbudsbrev-variant) | 3 |
-| 20 | register_supplier_invoice  ? | 3 |
-| 21 | create_employee (PDF) | 3 |
-| 22 | register_expense_receipt | 3 |
-| 23 | bank_reconciliation | 3 |
-| 24 | create_invoice | 3 |
-| 25 | overdue_invoice | 3 |
-| 26 | create_voucher | 3 |
-| 27 | register_payment | 3 |
-| 28 | correct_ledger_error | 3 |
-| 29 | project_lifecycle | 3 |
-| 30 | monthly_closing | 3 |
-
-Usikker: year_end_closing
-
-
-Scoring: T1 = ×1 (maks 2), T2 = ×2 (maks 4), T3 = ×3 (maks 6)
 
 ## Viktige konkurranse-regler
 
