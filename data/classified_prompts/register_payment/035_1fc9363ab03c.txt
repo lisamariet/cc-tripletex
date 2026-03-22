@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+The customer Windmill Ltd (org no. 914408326) has an outstanding invoice for 26400 NOK excluding VAT for "Network Service". Register full payment on this invoice.

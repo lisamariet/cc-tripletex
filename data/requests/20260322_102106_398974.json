@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_102106_398974",
+  "revision": "tripletex-agent-00126-9hz",
+  "prompt": "Vi har en ny ansatt som heter Lars Bakken, født 1. October 1983. Opprett vedkommende som ansatt med e-post lars.bakken@example.org og startdato 4. August 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Tenemos un nuevo empleado llamado Lucía Hernández, nacido el 14. March 1986. Créelo como empleado con el correo lucia.hernandez@example.org y fecha de inicio 17. January 2026.

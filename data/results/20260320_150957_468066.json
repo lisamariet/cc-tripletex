@@ -1,0 +1,93 @@
+{
+  "timestamp": "20260320_150957_468066",
+  "prompt": "Erfassen Sie eine Reisekostenabrechnung für Paul Hoffmann (paul.hoffmann@example.org) für \"Kundenbesuch Trondheim\". Die Reise dauerte 5 Tage mit Tagegeld (Tagessatz 800 NOK). Auslagen: Flugticket 2450 NOK und Taxi 300 NOK.",
+  "parsed_task": {
+    "task_type": "create_travel_expense",
+    "fields": {
+      "employeeName": "Paul Hoffmann",
+      "employeeFirstName": "Paul",
+      "employeeLastName": "Hoffmann",
+      "title": "Kundenbesuch Trondheim",
+      "costs": [
+        {
+          "description": "Tagegeld (5 Tage à 800 NOK)",
+          "amount": 4000,
+          "vatCode": "5",
+          "currency": "NOK"
+        },
+        {
+          "description": "Flugticket",
+          "amount": 2450,
+          "vatCode": "5",
+          "currency": "NOK"
+        },
+        {
+          "description": "Taxi",
+          "amount": 300,
+          "vatCode": "5",
+          "currency": "NOK"
+        }
+      ]
+    },
+    "confidence": 0.94
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1320.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense",
+      "status": 201,
+      "duration_ms": 1361.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/travelExpense/costCategory",
+      "status": 200,
+      "duration_ms": 1446.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/travelExpense/paymentType",
+      "status": 200,
+      "duration_ms": 1070.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense/cost",
+      "status": 201,
+      "duration_ms": 1431.0,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense/cost",
+      "status": 201,
+      "duration_ms": 1307.4,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/travelExpense/cost",
+      "status": 201,
+      "duration_ms": 1465.0,
+      "error": null
+    }
+  ],
+  "total_calls": 7,
+  "error_count_4xx": 0,
+  "total_duration_ms": 12589.0,
+  "result": {
+    "status": "completed",
+    "taskType": "create_travel_expense",
+    "travelExpenseId": 11143799
+  }
+}

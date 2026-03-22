@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_210441_087084",
+  "prompt": "Créez le projet \"Intégration Montagne\" lié au client Montagne SARL (nº org. 975615766). Le chef de projet est Jules Robert (jules.robert@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

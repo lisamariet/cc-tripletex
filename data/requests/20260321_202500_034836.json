@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_202500_034836",
+  "prompt": "Kunden Havbris AS (org.nr 831357983) har en utestående faktura på 5900 kr eksklusiv MVA for \"Konsulenttimer\". Registrer full betaling på denne fakturaen.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

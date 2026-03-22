@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Fixez un prix forfaitaire de 354200 NOK sur le projet "Sécurité des données" pour Colline SARL (nº org. 862154258). Le chef de projet est Gabriel Richard (gabriel.richard@example.org). Facturez au cli

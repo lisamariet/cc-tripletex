@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Opprett prosjektet "Analyse Fjordkraft" knyttet til kunden Fjordkraft AS (org.nr 944845712). Prosjektleder er Hilde Johansen (hilde.johansen@example.org).

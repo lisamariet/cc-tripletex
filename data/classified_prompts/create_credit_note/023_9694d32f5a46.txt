@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+O cliente Luz do Sol Lda (org. nº 821149517) reclamou sobre a fatura referente a "Horas de consultoria" (16650 NOK sem IVA). Emita uma nota de crédito completa que reverta toda a fatura.

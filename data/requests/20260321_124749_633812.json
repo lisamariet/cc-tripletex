@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_124749_633812",
+  "prompt": "Me sende ein faktura på 8387 EUR til Dalheim AS (org.nr 847589930) då kursen var 11.99 NOK/EUR. Kunden har no betalt, men kursen er 12.84 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (agio) på rett konto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

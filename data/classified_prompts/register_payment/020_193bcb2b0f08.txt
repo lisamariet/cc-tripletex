@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Nous avons envoyé une facture de 6224 EUR à Rivière SARL (nº org. 886727127) lorsque le taux de change était de 10.90 NOK/EUR. Le client a maintenant payé, mais le taux est de 10.33 NOK/EUR. Enregistr

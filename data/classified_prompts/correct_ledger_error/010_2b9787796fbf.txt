@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+We have discovered errors in the general ledger for January and February 2026. Review all vouchers and find the 4 errors: a posting to the wrong account (account 7300 used instead of 7000, amount 1650

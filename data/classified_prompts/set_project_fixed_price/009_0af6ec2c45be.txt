@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Set a fixed price of 498050 NOK on the project "CRM Integration" for Ridgepoint Ltd (org no. 844419856). The project manager is George Walker (george.walker@example.org). Invoice the customer for 50% 

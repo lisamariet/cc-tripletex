@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Reconcile the bank statement (attached CSV) against open invoices in Tripletex. Match incoming payments to customer invoices and outgoing payments to supplier invoices. Handle partial payments correct

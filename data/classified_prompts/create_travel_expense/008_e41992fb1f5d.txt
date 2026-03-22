@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Register a travel expense for Charlotte Smith (charlotte.smith@example.org) for "Conference Tromsø". The trip lasted 2 days with per diem (daily rate 800 NOK). Expenses: flight ticket 6400 NOK and tax

@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Defina um preço fixo de 114250 NOK no projeto "Implementação ERP" para Luz do Sol Lda (org. nº 898537447). O gestor de projeto é Catarina Costa (catarina.costa@example.org). Fature ao cliente 50 % do 

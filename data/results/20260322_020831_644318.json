@@ -1,0 +1,123 @@
+{
+  "timestamp": "20260322_020831_644318",
+  "prompt": "Vi treng Overnatting fra denne kvitteringa bokfort pa avdeling Utvikling. Bruk rett utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling.",
+  "parsed_task": {
+    "task_type": "register_expense_receipt",
+    "fields": {
+      "description": "Overnatting",
+      "amount": 8562.5,
+      "date": "2026-01-08",
+      "department": "Utvikling",
+      "expenseAccount": 7140,
+      "vatRate": 25,
+      "_raw_files": [
+        {
+          "filename": "files/kvittering_nn_01.pdf",
+          "content_base64": "JVBERi0xLjMKJenr8b8KMSAwIG9iago8PAovQ291bnQgMQovS2lkcyBbMyAwIFJdCi9NZWRpYUJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMiAwIG9iago8PAovT3BlbkFjdGlvbiBbMyAwIFIgL0ZpdEggbnVsbF0KL1BhZ2VMYXlvdXQgL09uZUNvbHVtbgovUGFnZXMgMSAwIFIKL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDQgMCBSCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyA3IDAgUgovVHlwZSAvUGFnZQo+PgplbmRvYmoKNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDQxMgo+PgpzdHJlYW0KeJx1kk9PGzEQxe98irlUKhIdPP7v3IgEBSraqqxyt1gTFpLdymuFr4+zmxAnIcex3vt55s1wuD9jqAy8n00ruLwhIImMQfUM19X6iUuDUoNxCslAVcP3xyff1s0T3HYpLPpzqF430ssbDm7fLAitAmMEOjeYb/2qDXOfPBBjF2AYZXns2volNMuCxZVDa8AovXX+iXNs4wScNcS0FGLv5+O+xzprkcQA+DW7q6rrf3e/f8IPYBYZIWdcH2LYDsMtCgVaCxQESxAys/S2XsAjZE+ekCxow5CP38x8DFvmvmMJSudxxAFBSZUbKRF/Y3OYa9nW7lfFUGzSWYXY+pSadl44Fel1/oVOWzWQ3mIh29BEPgQ5qB6auvZziOF/DH1ok+9fu7bkco6SSgfJk9jcumHj8oOv+5C+AO00XByAxiUoZ5GKCDd1jvBzcfRFQspIdOPZVl3yizTZS4ehdaXGcH48xsn4lconRoMR4CVEv4KH2VU+3W+T4x0UYrJMnQhrnYcdj2Aa1v3CMtQTmIY6Ns+pf+viZ3ofRk7fegplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZAovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iago3IDAgb2JqCjw8Ci9Gb250IDw8L0YxIDUgMCBSCi9GMiA2IDAgUj4+Ci9Qcm9jU2V0IFsvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJXQo+PgplbmRvYmoKOCAwIG9iago8PAovQ3JlYXRpb25EYXRlIChEOjIwMjYwMzE4MDk0MDUwWikKPj4KZW5kb2JqCnhyZWYKMCA5CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMTAyIDAwMDAwIG4gCjAwMDAwMDAyMDUgMDAwMDAgbiAKMDAwMDAwMDI4NSAwMDAwMCBuIAowMDAwMDAwNzY5IDAwMDAwIG4gCjAwMDAwMDA4NzEgMDAwMDAgbiAKMDAwMDAwMDk2OCAwMDAwMCBuIAowMDAwMDAxMDY1IDAwMDAwIG4gCnRyYWlsZXIKPDwKL1NpemUgOQovUm9vdCAyIDAgUgovSW5mbyA4IDAgUgovSUQgWzw2MjMyNUE3MEZDQzk2QkFDREMwMUQxOTA0NTg2OTA2RD48NjIzMjVBNzBGQ0M5NkJBQ0RDMDFEMTkwNDU4NjkwNkQ+XQo+PgpzdGFydHhyZWYKMTEyMAolJUVPRgo=",
+          "mime_type": "application/pdf"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1486.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "7140"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":484730390,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/484730390\",\"number\":7140,\"numberPretty\":\"7140\",\"name\":\"Reisekostnad, ikke oppgavepliktig\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"71\",\"groupingCode\":\"7165\",\"displayName\":\"7140 Reisekostnad, ikke oppgavepliktig\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1311.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1920"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":484730087,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/484730087\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 710.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "name": "Utvikling",
+        "count": 10
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":987256,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/987256\",\"name\":\"Utvikling\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Utvikling\",\"isInactive\":false,\"businessActivityTypeId\":0}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 1591.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2026-01-08",
+        "description": "Overnatting",
+        "postings": [
+          {
+            "account": {
+              "id": 484730390
+            },
+            "amount": 6850.0,
+            "amountCurrency": 6850.0,
+            "amountGross": 8562.5,
+            "amountGrossCurrency": 8562.5,
+            "row": 1,
+            "vatType": {
+              "id": 1
+            },
+            "department": {
+              "id": 987256
+            }
+          },
+          {
+            "account": {
+              "id": 484730087
+            },
+            "amountGross": -8562.5,
+            "amountGrossCurrency": -8562.5,
+            "row": 2
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":609273272,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609273272\",\"date\":\"2026-01-08\",\"number\":1,\"tempNumber\":0,\"year\":2026,\"description\":\"Overnatting\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3846127606,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846127606\",\"voucher\":{\"id\":609273272,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609273272\"},\"date\":\"2026-01-08\",\"description\":\"Overnatting\",\"account\":{\"id\":484730390,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/484730390\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":{\"id\":987256,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/987256\"},\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"amount\":6850.00,\"amountCurrency\":6850.00,\"amountGross\":8562.5,\"amountGrossCurrency\":8562.5,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":false,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3846127607,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846127607\",\"voucher\":{\"id\":609273272,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609273272\"},\"date\":\"2026-01-08\",\"description\":\"Overnatting\",\"account\":{\"id\":484730087,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/484730087\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"depa"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher/609273272/attachment",
+      "status": 201,
+      "duration_ms": 951.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher/609273272/attachment",
+      "response_body": "{\"value\":{\"id\":609273272,\"version\":6,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609273272\",\"date\":\"2026-01-08\",\"number\":1,\"tempNumber\":0,\"year\":2026,\"description\":\"Overnatting\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3846127606,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846127606\"},{\"id\":3846127607,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846127607\"},{\"id\":3846127613,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846127613\"}],\"document\":null,\"attachment\":{\"id\":1024331160,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/document/1024331160\"},\"externalVoucherNumber\":\"\",\"ediDocument\":null,\"supplierVoucherType\":null,\"wasAutoMatched\":false,\"vendorInvoiceNumber\":null,\"numberAsString\":\"1-2026\"}}"
+    }
+  ],
+  "total_calls": 5,
+  "error_count_4xx": 0,
+  "total_duration_ms": 14837.4,
+  "result": {
+    "status": "completed",
+    "taskType": "register_expense_receipt",
+    "mode": "voucher",
+    "voucherId": 609273272,
+    "pdfUploaded": true,
+    "department": "Utvikling",
+    "expenseAccount": 7140,
+    "amountGross": 8562.5
+  }
+}

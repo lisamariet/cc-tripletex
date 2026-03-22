@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez une commande pour le client Océan SARL (nº org. 859049788) avec les produits Session de formation (3206) à 4950 NOK et Conseil en données (9191) à 7700 NOK. Convertissez la commande en facture e

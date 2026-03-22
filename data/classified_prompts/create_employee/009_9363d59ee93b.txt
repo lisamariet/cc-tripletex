@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Tenemos un nuevo empleado llamado Miguel Sánchez, nacido el 20. April 1991. Créelo como empleado con el correo miguel.sanchez@example.org y fecha de inicio 12. August 2026.

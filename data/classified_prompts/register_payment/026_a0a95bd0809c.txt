@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crie um pedido para o cliente Montanha Lda (org. nº 864062245) com os produtos Licença de software (6749) a 4950 NOK e Armazenamento na nuvem (3048) a 7700 NOK. Converta o pedido em fatura e registe o

@@ -1,0 +1,150 @@
+{
+  "timestamp": "20260321_222202_574968",
+  "prompt": "Erstellen Sie den Kunden Bergwerk GmbH mit der Organisationsnummer 946768693. Die Adresse ist Solveien 5, 3015 Drammen. E-Mail: post@bergwerk.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Bergwerk GmbH",
+      "organizationNumber": "946768693",
+      "email": "post@bergwerk.no",
+      "invoiceEmail": "post@bergwerk.no",
+      "address": {
+        "addressLine1": "Solveien 5",
+        "postalCode": "3015",
+        "city": "Drammen"
+      },
+      "overdueNoticeEmail": "post@bergwerk.no"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 3563.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "request_body": {
+        "name": "Bergwerk GmbH",
+        "isCustomer": true,
+        "organizationNumber": "946768693",
+        "email": "post@bergwerk.no",
+        "invoiceEmail": "post@bergwerk.no",
+        "overdueNoticeEmail": "post@bergwerk.no",
+        "postalAddress": {
+          "addressLine1": "Solveien 5",
+          "postalCode": "3015",
+          "city": "Drammen"
+        },
+        "physicalAddress": {
+          "addressLine1": "Solveien 5",
+          "postalCode": "3015",
+          "city": "Drammen"
+        }
+      },
+      "response_body": "{\"value\":{\"id\":108440837,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108440837\",\"name\":\"Bergwerk GmbH\",\"organizationNumber\":\"946768693\",\"globalLocationNumber\":0,\"supplierNumber\":0,\"customerNumber\":10001,\"isSupplier\":false,\"isCustomer\":true,\"isInactive\":false,\"accountManager\":null,\"department\":null,\"email\":\"post@bergwerk.no\",\"invoiceEmail\":\"post@bergwerk.no\",\"overdueNoticeEmail\":\"post@bergwerk.no\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"language\":\"NO\",\"displayName\":\"Bergwerk GmbH (10001)\",\"isPrivateIndividual\":false,\"singleCustomerInvoice\":false,\"invoiceSendMethod\":\"EMAIL\",\"emailAttachmentType\":\"ATTACHMENT\",\"postalAddress\":{\"id\":405729358,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405729358\",\"addressLine1\":\"Solveien 5\",\"addressLine2\":\"\",\"postalCode\":\"3015\",\"city\":\"Drammen\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Bergwerk GmbH, Solveien 5, 3015 Drammen, Norge\",\"addressAsString\":\"Solveien 5, 3015 Drammen, Norge\",\"displayNameInklMatrikkel\":\"Bergwerk GmbH, Solveien 5, 3015 Drammen, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"physicalAddress\":{\"id\":405729357,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405729357\",\"addressLine1\":\"Solveien 5\",\"addressLine2\":\"\",\"postalCode\":\"3015\",\"city\":\"Drammen\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Bergwerk GmbH, Solveien 5, 3015 Drammen, Norge\",\"addressAsString\":\"Solveien 5, 3015 Drammen, Norge\",\"displayNameInklMatrikkel\":\"Bergwerk GmbH, Solveien 5, 3015 Drammen, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"bankAccountPresentation\":[],\"ledgerAccount\":{\"id\":376713939,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/376713939\"},\"isFactoring\":false,"
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 5131.0,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108440837,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108440837",
+      "name": "Bergwerk GmbH",
+      "organizationNumber": "946768693",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@bergwerk.no",
+      "invoiceEmail": "post@bergwerk.no",
+      "overdueNoticeEmail": "post@bergwerk.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Bergwerk GmbH (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405729358,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405729358",
+        "addressLine1": "Solveien 5",
+        "addressLine2": "",
+        "postalCode": "3015",
+        "city": "Drammen",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Bergwerk GmbH, Solveien 5, 3015 Drammen, Norge",
+        "addressAsString": "Solveien 5, 3015 Drammen, Norge",
+        "displayNameInklMatrikkel": "Bergwerk GmbH, Solveien 5, 3015 Drammen, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "physicalAddress": {
+        "id": 405729357,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405729357",
+        "addressLine1": "Solveien 5",
+        "addressLine2": "",
+        "postalCode": "3015",
+        "city": "Drammen",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Bergwerk GmbH, Solveien 5, 3015 Drammen, Norge",
+        "addressAsString": "Solveien 5, 3015 Drammen, Norge",
+        "displayNameInklMatrikkel": "Bergwerk GmbH, Solveien 5, 3015 Drammen, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 376713939,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/376713939"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}

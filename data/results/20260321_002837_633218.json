@@ -1,0 +1,240 @@
+{
+  "timestamp": "20260321_002837_633218",
+  "prompt": "Opprett ein ordre for kunden Vestfjord AS (org.nr 970769994) med produkta Nettverksteneste (3237) til 13450 kr og Analyserapport (4609) til 14200 kr. Konverter ordren til faktura og registrer full betaling.",
+  "parsed_task": {
+    "task_type": "create_order",
+    "fields": {
+      "customerName": "Vestfjord AS",
+      "customerOrgNumber": "970769994",
+      "lines": [
+        {
+          "description": "Nettverksteneste",
+          "productNumber": "3237",
+          "quantity": 1,
+          "unitPriceExcludingVat": 13450,
+          "vatCode": "3"
+        },
+        {
+          "description": "Analyserapport",
+          "productNumber": "4609",
+          "quantity": 1,
+          "unitPriceExcludingVat": 14200,
+          "vatCode": "3"
+        }
+      ],
+      "convertToInvoice": true,
+      "registerPayment": true
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 4431.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 4804.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 4127.1,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 3983.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 3654.4,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401981016/:invoice",
+      "status": 200,
+      "duration_ms": 4356.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/2147559043",
+      "status": 200,
+      "duration_ms": 3237.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/paymentType",
+      "status": 200,
+      "duration_ms": 2783.8,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147559043/:payment",
+      "status": 200,
+      "duration_ms": 2981.1,
+      "error": null
+    }
+  ],
+  "total_calls": 9,
+  "error_count_4xx": 0,
+  "total_duration_ms": 36735.3,
+  "result": {
+    "status": "completed",
+    "taskType": "create_order",
+    "created": {
+      "id": 401981016,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/order/401981016",
+      "customer": {
+        "id": 108303404,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108303404"
+      },
+      "contact": null,
+      "attn": null,
+      "displayName": "1 Ordre",
+      "receiverEmail": "",
+      "overdueNoticeEmail": "",
+      "number": "1",
+      "reference": "",
+      "department": null,
+      "orderDate": "2026-03-21",
+      "project": null,
+      "invoiceComment": "",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "isShowOpenPostsOnInvoices": false,
+      "isClosed": false,
+      "deliveryDate": "2026-03-21",
+      "deliveryAddress": null,
+      "deliveryComment": "",
+      "isPrioritizeAmountsIncludingVat": false,
+      "orderLineSorting": "PRODUCT",
+      "orderGroups": [],
+      "orderLines": [],
+      "isSubscription": false,
+      "subscriptionDuration": 0,
+      "subscriptionDurationType": "MONTHS",
+      "subscriptionPeriodsOnInvoice": 0,
+      "subscriptionPeriodsOnInvoiceType": "MONTHS",
+      "subscriptionInvoicingTimeInAdvanceOrArrears": "ADVANCE",
+      "subscriptionInvoicingTime": 0,
+      "subscriptionInvoicingTimeType": "MONTHS",
+      "isSubscriptionAutoInvoicing": false,
+      "preliminaryInvoice": {
+        "id": 2147559043,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147559043"
+      },
+      "attachment": [],
+      "sendMethodDescription": "Faktura må sendes manuelt.",
+      "invoiceOnAccountVatHigh": false,
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "markUpOrderLines": 0,
+      "discountPercentage": 0.0,
+      "customerName": "Vestfjord AS",
+      "projectManagerNameAndNumber": "",
+      "travelReports": [],
+      "accountingDimensionValues": []
+    },
+    "invoice": {
+      "id": 2147559043,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147559043",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-21",
+      "customer": {
+        "id": 108303404,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108303404"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-04",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401981016,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401981016"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607527191,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607527191"
+        },
+        {
+          "id": 1607527192,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607527192"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965750163,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965750163"
+        }
+      ],
+      "voucher": {
+        "id": 608880833,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608880833"
+      },
+      "deliveryDate": "2026-03-21",
+      "amount": 27650.0,
+      "amountCurrency": 27650.0,
+      "amountExcludingVat": 27650.0,
+      "amountExcludingVatCurrency": 27650.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 27650.0,
+      "amountCurrencyOutstanding": 27650.0,
+      "amountOutstandingTotal": 27650.0,
+      "amountCurrencyOutstandingTotal": 27650.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845065229,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845065229"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024183187
+    },
+    "payment": {
+      "status": "paid",
+      "amount": 27650.0
+    }
+  }
+}

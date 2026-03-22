@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Registrer en reiseregning for Lars Johansen (lars.johansen@example.org) for "Kundebesøk Stavanger". Reisen varte 3 dager med diett (dagsats 800 kr). Utlegg: flybillett 3900 kr og taxi 350 kr.

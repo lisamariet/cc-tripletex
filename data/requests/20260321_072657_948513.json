@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_072657_948513",
+  "prompt": "Registe o fornecedor Luz do Sol Lda com número de organização 894596554. E-mail: faktura@luzdosollda.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_101917_392370",
+  "revision": "tripletex-agent-00126-9hz",
+  "prompt": "Crea el producto \"Mantenimiento\" con número de producto 4508. El precio es 41500 NOK sin IVA, utilizando la tasa estándar del 25 %.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

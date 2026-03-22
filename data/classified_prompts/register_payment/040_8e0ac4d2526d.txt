@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Me sende ein faktura på 10781 EUR til Elvdal AS (org.nr 964825114) då kursen var 11.03 NOK/EUR. Kunden har no betalt, men kursen er 11.41 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (agio

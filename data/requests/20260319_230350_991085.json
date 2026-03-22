@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260319_230350_991085",
+  "prompt": "Opprett prosjektet \"Migrasjon Vestfjord\" knytt til kunden Vestfjord AS (org.nr 887727872). Prosjektleiar er Liv Stølsvik (liv.stlsvik@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

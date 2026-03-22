@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erfassen Sie eine Reisekostenabrechnung für Paul Hoffmann (paul.hoffmann@example.org) für "Kundenbesuch Trondheim". Die Reise dauerte 5 Tage mit Tagegeld (Tagessatz 800 NOK). Auslagen: Flugticket 2450

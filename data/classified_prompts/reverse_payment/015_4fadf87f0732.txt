@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Le paiement de Lumière SARL (nº org. 937075405) pour la facture "Conseil en données" (39100 NOK HT) a été retourné par la banque. Annulez le paiement afin que la facture affiche à nouveau le montant i

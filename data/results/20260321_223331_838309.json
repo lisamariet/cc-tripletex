@@ -1,0 +1,30 @@
+{
+  "timestamp": "20260321_223331_838309",
+  "prompt": "Le paiement de Lumière SARL (nº org. 937075405) pour la facture \"Conseil en données\" (39100 NOK HT) a été retourné par la banque. Annulez le paiement afin que la facture affiche à nouveau le montant impayé.",
+  "parsed_task": {
+    "task_type": "run_payroll",
+    "fields": {
+      "customerName": "Lumière SARL",
+      "customerOrgNumber": "937075405",
+      "amount": 39100,
+      "invoiceDescription": "Conseil en données",
+      "lines": [
+        {
+          "description": "Conseil en données",
+          "quantity": 1,
+          "unitPriceExcludingVat": 39100,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 1662.8,
+  "result": {
+    "status": "completed",
+    "note": "No salary amounts specified"
+  }
+}

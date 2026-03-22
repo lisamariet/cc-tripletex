@@ -1,0 +1,282 @@
+{
+  "timestamp": "20260321_204054_285177",
+  "prompt": "Registrer 30 timar for Gunnhild Eide (gunnhild.eide@example.org) på aktiviteten \"Rådgivning\" i prosjektet \"Nettbutikk-utvikling\" for Sjøbris AS (org.nr 801323847). Timesats: 1100 kr/t. Generer ein prosjektfaktura til kunden basert på dei registrerte timane.",
+  "parsed_task": {
+    "task_type": "register_timesheet",
+    "fields": {
+      "employeeName": "Gunnhild Eide",
+      "employeeEmail": "gunnhild.eide@example.org",
+      "activityName": "Rådgivning",
+      "projectName": "Nettbutikk-utvikling",
+      "hours": 30,
+      "hourlyRate": 1100,
+      "customerName": "Sjøbris AS",
+      "customerOrgNumber": "801323847"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1846.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "gunnhild.eide@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18615504,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18615504\",\"firstName\":\"Gunnhild\",\"lastName\":\"Eide\",\"displayName\":\"Gunnhild Eide\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"gunnhild.eide@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":740831,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/740831\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107919534,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 1949.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "query_params": {
+        "name": "Nettbutikk-utvikling"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":401992887,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/401992887\",\"name\":\"Nettbutikk-utvikling\",\"number\":\"2\",\"displayName\":\"2 Nettbutikk-utvikling\",\"description\":\"\",\"projectManager\":{\"id\":18615504,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18615504\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-01-01\",\"endDate\":null,\"customer\":{\"id\":108326620,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108326620\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":false,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0.0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0.0,\"markUpFeesEarned\":0.0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0.0,\"projectHourlyRates\":[{\"id\":11079066,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11079066\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15633606,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15633606\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"2 Nettbutikk-utvikling\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Sjøbris AS\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Gunnhild Eide\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":fals"
+    },
+    {
+      "method": "GET",
+      "path": "/activity",
+      "status": 200,
+      "duration_ms": 1958.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity",
+      "query_params": {
+        "name": "Rådgivning"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":5878794,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5878794\",\"name\":\"Rådgivning\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Rådgivning\",\"deletable\":true}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project/projectActivity",
+      "status": 201,
+      "duration_ms": 2172.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project/projectActivity",
+      "request_body": {
+        "project": {
+          "id": 401992887
+        },
+        "activity": {
+          "id": 5878794
+        }
+      },
+      "response_body": "{\"value\":{\"id\":19805599,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/projectActivity/19805599\",\"activity\":{\"id\":5878794,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5878794\"},\"project\":{\"id\":401992887,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/401992887\"},\"startDate\":null,\"endDate\":null,\"isClosed\":false,\"budgetHours\":0,\"budgetHourlyRateCurrency\":0,\"budgetFeeCurrency\":0}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1849.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "gunnhild.eide@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18615504,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18615504\",\"firstName\":\"Gunnhild\",\"lastName\":\"Eide\",\"displayName\":\"Gunnhild Eide\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"gunnhild.eide@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":740831,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/740831\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107919534,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 2297.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/timesheet/entry",
+      "request_body": {
+        "employee": {
+          "id": 18615504
+        },
+        "project": {
+          "id": 401992887
+        },
+        "activity": {
+          "id": 5878794
+        },
+        "date": "2026-03-21",
+        "hours": 30
+      },
+      "response_body": "{\"value\":{\"id\":175911119,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175911119\",\"project\":{\"id\":401992887,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/401992887\"},\"activity\":{\"id\":5878794,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5878794\"},\"date\":\"2026-03-21\",\"hours\":30.0,\"chargeableHours\":30.0,\"employee\":{\"id\":18615504,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18615504\"},\"timeClocks\":[],\"comment\":\"\",\"locked\":false,\"chargeable\":false,\"invoice\":null,\"hourlyRate\":0.00,\"hourlyCost\":0.00,\"hourlyCostPercentage\":0,\"projectChargeableHours\":30.0}}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2601.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"value\":{\"bankAccountReady\":true}}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 2507.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "801323847",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108326620,\"name\":\"Sjøbris AS\",\"organizationNumber\":\"801323847\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 2827.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/order",
+      "request_body": {
+        "customer": {
+          "id": 108326620
+        },
+        "project": {
+          "id": 401992887
+        },
+        "orderDate": "2026-03-21",
+        "deliveryDate": "2026-03-21",
+        "orderLines": [
+          {
+            "count": 30.0,
+            "unitPriceExcludingVatCurrency": 1100,
+            "description": "Rådgivning - Nettbutikk-utvikling (30 timer à 1100 kr/t)"
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":402035399,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402035399\",\"customer\":{\"id\":108326620,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108326620\"},\"contact\":null,\"attn\":null,\"displayName\":\"3 Ordre\",\"receiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"number\":\"3\",\"reference\":\"\",\"department\":null,\"orderDate\":\"2026-03-21\",\"project\":{\"id\":401992887,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/401992887\"},\"invoiceComment\":\"\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"isShowOpenPostsOnInvoices\":false,\"isClosed\":false,\"deliveryDate\":\"2026-03-21\",\"deliveryAddress\":null,\"deliveryComment\":\"\",\"isPrioritizeAmountsIncludingVat\":false,\"orderLineSorting\":\"PRODUCT\",\"orderGroups\":[],\"orderLines\":[],\"isSubscription\":false,\"subscriptionDuration\":0,\"subscriptionDurationType\":\"MONTHS\",\"subscriptionPeriodsOnInvoice\":0,\"subscriptionPeriodsOnInvoiceType\":\"MONTHS\",\"subscriptionInvoicingTimeInAdvanceOrArrears\":\"ADVANCE\",\"subscriptionInvoicingTime\":0,\"subscriptionInvoicingTimeType\":\"MONTHS\",\"isSubscriptionAutoInvoicing\":false,\"preliminaryInvoice\":{\"id\":2147636007,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147636007\"},\"attachment\":[],\"sendMethodDescription\":\"Faktura må sendes manuelt.\",\"invoiceOnAccountVatHigh\":false,\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceSendSMSNotification\":false,\"invoiceSMSNotificationNumber\":\"\",\"markUpOrderLines\":0,\"discountPercentage\":0.0,\"customerName\":\"Sjøbris AS\",\"projectManagerNameAndNumber\":\"\",\"travelReports\":[],\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "PUT",
+      "path": "/order/402035399/:invoice",
+      "status": 200,
+      "duration_ms": 2546.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/order/402035399/:invoice",
+      "query_params": {
+        "invoiceDate": "2026-03-21",
+        "sendToCustomer": false
+      },
+      "response_body": "{\"value\":{\"id\":2147636007,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147636007\",\"invoiceNumber\":1,\"invoiceDate\":\"2026-03-21\",\"customer\":{\"id\":108326620,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108326620\"},\"creditedInvoice\":0,\"isCredited\":false,\"invoiceDueDate\":\"2026-04-04\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":402035399,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402035399\"}],\"orderLines\":[{\"id\":1607573227,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607573227\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965793483,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965793483\"}],\"voucher\":{\"id\":609142604,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609142604\"},\"deliveryDate\":\"2026-03-21\",\"amount\":33000.00,\"amountCurrency\":33000.00,\"amountExcludingVat\":33000.00,\"amountExcludingVatCurrency\":33000.00,\"amountRoundoff\":0,\"amountRoundoffCurrency\":0,\"amountOutstanding\":33000.00,\"amountCurrencyOutstanding\":33000.00,\"amountOutstandingTotal\":33000.00,\"amountCurrencyOutstandingTotal\":33000.00,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":false,\"isCharged\":true,\"isApproved\":true,\"postings\":[{\"id\":3845781842,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845781842\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024288963}}"
+    }
+  ],
+  "total_calls": 10,
+  "error_count_4xx": 0,
+  "total_duration_ms": 24670.5,
+  "result": {
+    "status": "completed",
+    "taskType": "register_timesheet",
+    "entries": 1,
+    "totalHours": 30.0,
+    "created": {
+      "id": 175911119,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175911119",
+      "project": {
+        "id": 401992887,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/project/401992887"
+      },
+      "activity": {
+        "id": 5878794,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/activity/5878794"
+      },
+      "date": "2026-03-21",
+      "hours": 30.0,
+      "chargeableHours": 30.0,
+      "employee": {
+        "id": 18615504,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18615504"
+      },
+      "timeClocks": [],
+      "comment": "",
+      "locked": false,
+      "chargeable": false,
+      "invoice": null,
+      "hourlyRate": 0.0,
+      "hourlyCost": 0.0,
+      "hourlyCostPercentage": 0,
+      "projectChargeableHours": 30.0
+    },
+    "projectInvoice": {
+      "status": "completed",
+      "invoice": {
+        "id": 2147636007,
+        "version": 5,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147636007",
+        "invoiceNumber": 1,
+        "invoiceDate": "2026-03-21",
+        "customer": {
+          "id": 108326620,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108326620"
+        },
+        "creditedInvoice": 0,
+        "isCredited": false,
+        "invoiceDueDate": "2026-04-04",
+        "kid": "",
+        "invoiceComment": "",
+        "comment": "",
+        "orders": [
+          {
+            "id": 402035399,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/order/402035399"
+          }
+        ],
+        "orderLines": [
+          {
+            "id": 1607573227,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607573227"
+          }
+        ],
+        "travelReports": [],
+        "projectInvoiceDetails": [
+          {
+            "id": 1965793483,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965793483"
+          }
+        ],
+        "voucher": {
+          "id": 609142604,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609142604"
+        },
+        "deliveryDate": "2026-03-21",
+        "amount": 33000.0,
+        "amountCurrency": 33000.0,
+        "amountExcludingVat": 33000.0,
+        "amountExcludingVatCurrency": 33000.0,
+        "amountRoundoff": 0,
+        "amountRoundoffCurrency": 0,
+        "amountOutstanding": 33000.0,
+        "amountCurrencyOutstanding": 33000.0,
+        "amountOutstandingTotal": 33000.0,
+        "amountCurrencyOutstandingTotal": 33000.0,
+        "sumRemits": 0,
+        "currency": {
+          "id": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+        },
+        "isCreditNote": false,
+        "isCharged": true,
+        "isApproved": true,
+        "postings": [
+          {
+            "id": 3845781842,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845781842"
+          }
+        ],
+        "reminders": [],
+        "invoiceRemarks": "",
+        "invoiceRemark": null,
+        "isPeriodizationPossible": true,
+        "documentId": 1024288963
+      }
+    }
+  }
+}

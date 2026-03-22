@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Perform month-end closing for March 2026. Post accrual reversal (12400 NOK per month from account 1710 to expense). Record monthly depreciation for a fixed asset with acquisition cost 164250 NOK and u

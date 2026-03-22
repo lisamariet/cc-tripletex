@@ -1,0 +1,97 @@
+[
+  {
+    "prompt": "Processe o salário de Lucas Martins (lucas.martins@example.org) para este mês. O salário base é de 39000 NOK. Adicione um bónus único de 10500 NOK além do salário base.",
+    "timestamp": "20260320_151021_524912",
+    "hash": "ef752583dd32"
+  },
+  {
+    "prompt": "Køyr løn for Brita Berge (brita.berge@example.org) for denne månaden. Grunnløn er 36800 kr. Legg til ein eingongsbonus på 14100 kr i tillegg til grunnløna.",
+    "timestamp": "20260320_151147_739313",
+    "hash": "a40476fdc837"
+  },
+  {
+    "prompt": "Køyr løn for Sigrid Brekke (sigrid.brekke@example.org) for denne månaden. Grunnløn er 34950 kr. Legg til ein eingongsbonus på 15350 kr i tillegg til grunnløna.",
+    "timestamp": "20260320_151253_326473",
+    "hash": "9a799fa42a9a"
+  },
+  {
+    "prompt": "Kjør lønn for Jonas Hansen (jonas.hansen@example.org) for denne måneden. Grunnlønn er 40000 kr. Legg til en engangsbonus på 10600 kr i tillegg til grunnlønnen. Dersom lønns-API-et ikke fungerer, kan du bruke manuelle bilag på lønnskontoer (5000-serien) for å registrere lønnskostnaden.",
+    "timestamp": "20260320_160046_530450",
+    "hash": "51cf4c86e8ed"
+  },
+  {
+    "prompt": "Run payroll for Charles Taylor (charles.taylor@example.org) for this month. The base salary is 36450 NOK. Add a one-time bonus of 10300 NOK on top of the base salary. If the salary API is unavailable, you can use manual vouchers on salary accounts (5000-series) to record the payroll expense.",
+    "timestamp": "20260320_231351_629281",
+    "hash": "afda9aac98c7"
+  },
+  {
+    "prompt": "Ejecute la nómina de Marta López (marta.lopez@example.org) para este mes. El salario base es de 31300 NOK. Añada una bonificación única de 13300 NOK además del salario base.",
+    "timestamp": "20260320_232334_915403",
+    "hash": "0d43bce59746"
+  },
+  {
+    "prompt": "Run payroll for Sarah Brown (sarah.brown@example.org) for this month. The base salary is 48300 NOK. Add a one-time bonus of 11650 NOK on top of the base salary. If the salary API is unavailable, you can use manual vouchers on salary accounts (5000-series) to record the payroll expense.",
+    "timestamp": "20260320_232958_399368",
+    "hash": "fca75f3aa11f"
+  },
+  {
+    "prompt": "Run payroll for Lucy Walker (lucy.walker@example.org) for this month. The base salary is 43050 NOK. Add a one-time bonus of 6100 NOK on top of the base salary.",
+    "timestamp": "20260320_235858_118153",
+    "hash": "54a4a1f145a7"
+  },
+  {
+    "prompt": "Ejecute la nómina de María Rodríguez (maria.rodriguez@example.org) para este mes. El salario base es de 58750 NOK. Añada una bonificación única de 10750 NOK además del salario base.",
+    "timestamp": "20260321_000654_587176",
+    "hash": "3e1ce777757b"
+  },
+  {
+    "prompt": "Processe o salário de Beatriz Pereira (beatriz.pereira@example.org) para este mês. O salário base é de 58650 NOK. Adicione um bónus único de 8850 NOK além do salário base.",
+    "timestamp": "20260321_164938_211985",
+    "hash": "e91722453dd7"
+  },
+  {
+    "prompt": "Ejecute la nómina de Fernando García (fernando.garcia@example.org) para este mes. El salario base es de 55350 NOK. Añada una bonificación única de 14600 NOK además del salario base.",
+    "timestamp": "20260321_173923_113751",
+    "hash": "018c4a0a5729"
+  },
+  {
+    "prompt": "Køyr løn for Gunnhild Aasen (gunnhild.aasen@example.org) for denne månaden. Grunnløn er 51800 kr. Legg til ein eingongsbonus på 5700 kr i tillegg til grunnløna.",
+    "timestamp": "20260321_185211_064422",
+    "hash": "e1a0f7226dcf"
+  },
+  {
+    "prompt": "Exécutez la paie de Manon Leroy (manon.leroy@example.org) pour ce mois. Le salaire de base est de 43050 NOK. Ajoutez une prime unique de 11150 NOK en plus du salaire de base.",
+    "timestamp": "20260321_203911_076701",
+    "hash": "5ef22e14a7fb"
+  },
+  {
+    "prompt": "Le client Forêt SARL (nº org. 925519685) a une facture impayée de 40750 NOK hors TVA pour \"Design web\". Enregistrez le paiement intégral de cette facture.",
+    "timestamp": "20260321_210601_956062",
+    "hash": "8e910d612ae2"
+  },
+  {
+    "prompt": "Le paiement de Lumière SARL (nº org. 937075405) pour la facture \"Conseil en données\" (39100 NOK HT) a été retourné par la banque. Annulez le paiement afin que la facture affiche à nouveau le montant impayé.",
+    "timestamp": "20260321_223331_838309",
+    "hash": "4fadf87f0732"
+  },
+  {
+    "prompt": "Créez une commande pour le client Océan SARL (nº org. 859049788) avec les produits Session de formation (3206) à 4950 NOK et Conseil en données (9191) à 7700 NOK. Convertissez la commande en facture et enregistrez le paiement intégral.",
+    "timestamp": "20260321_223957_713230",
+    "hash": "b3ebf86a7884"
+  },
+  {
+    "prompt": "Processe o salário de Maria Almeida (maria.almeida@example.org) para este mês. O salário base é de 33550 NOK. Adicione um bónus único de 14400 NOK além do salário base.",
+    "timestamp": "20260321_230118_556983",
+    "hash": "5174304ec5b2"
+  },
+  {
+    "prompt": "Nous avons envoyé une facture de 12689 EUR à Océan SARL (nº org. 863081793) lorsque le taux de change était de 11.28 NOK/EUR. Le client a maintenant payé, mais le taux est de 10.71 NOK/EUR. Enregistrez le paiement et comptabilisez l'écart de change (disagio) sur le bon compte.",
+    "timestamp": "20260322_001425_333279",
+    "hash": "830005ba59b2"
+  },
+  {
+    "prompt": "Nous avons envoyé une facture de 9273 EUR à Montagne SARL (nº org. 941382142) lorsque le taux de change était de 10.34 NOK/EUR. Le client a maintenant payé, mais le taux est de 10.83 NOK/EUR. Enregistrez le paiement et comptabilisez l'écart de change (agio) sur le bon compte.",
+    "timestamp": "20260322_105841_515615",
+    "hash": "d86f0ab16371"
+  }
+]

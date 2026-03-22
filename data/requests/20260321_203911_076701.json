@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_203911_076701",
+  "prompt": "Exécutez la paie de Manon Leroy (manon.leroy@example.org) pour ce mois. Le salaire de base est de 43050 NOK. Ajoutez une prime unique de 11150 NOK en plus du salaire de base.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

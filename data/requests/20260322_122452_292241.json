@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_122452_292241",
+  "revision": "tripletex-agent-00134-q96",
+  "prompt": "Perform month-end closing for March 2026. Post accrual reversal (9200 NOK per month from account 1720 to expense). Record monthly depreciation for a fixed asset with acquisition cost 275800 NOK and useful life 3 years (straight-line depreciation to account 6030). Verify that the trial balance is zero. Also post a salary accrual (debit salary expense account 5000, credit accrued salary account 2900).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

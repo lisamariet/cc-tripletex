@@ -1,0 +1,128 @@
+{
+  "timestamp": "20260321_231947_245261",
+  "prompt": "Crie três departamentos no Tripletex: \"Kundeservice\", \"Innkjøp\" e \"Regnskap\".",
+  "parsed_task": {
+    "task_type": "batch_create_department",
+    "fields": {
+      "items": [
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Kundeservice"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 1 of 3. Portuguese prompt to create a department named 'Kundeservice'."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Innkjøp"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 2 of 3. Portuguese prompt to create a department named 'Innkjøp'."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Regnskap"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 3 of 3. Portuguese prompt to create a department named 'Regnskap'."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 352.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Kundeservice"
+      },
+      "response_body": "{\"value\":{\"id\":970956,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/970956\",\"name\":\"Kundeservice\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Kundeservice\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1627.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Innkjøp"
+      },
+      "response_body": "{\"value\":{\"id\":970957,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/970957\",\"name\":\"Innkjøp\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Innkjøp\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 321.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Regnskap"
+      },
+      "response_body": "{\"value\":{\"id\":970961,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/970961\",\"name\":\"Regnskap\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Regnskap\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3713.8,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_create_department",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 970956,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/970956",
+          "name": "Kundeservice",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Kundeservice",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 970957,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/970957",
+          "name": "Innkjøp",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Innkjøp",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 970961,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/970961",
+          "name": "Regnskap",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Regnskap",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      }
+    ]
+  }
+}

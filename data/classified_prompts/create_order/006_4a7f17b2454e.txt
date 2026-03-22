@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create an order for the customer Ridgepoint Ltd (org no. 925103489) with the products Consulting Hours (5359) at 21150 NOK and Analysis Report (1028) at 1600 NOK. Convert the order to an invoice and r

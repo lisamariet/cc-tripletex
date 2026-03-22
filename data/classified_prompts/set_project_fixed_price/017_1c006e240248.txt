@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Establezca un precio fijo de 261700 NOK en el proyecto "Integración CRM" para Luna SL (org. nº 847950021). El director del proyecto es Andrés López (andres.lopez@example.org). Facture al cliente el 75

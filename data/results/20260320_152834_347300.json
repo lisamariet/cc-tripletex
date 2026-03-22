@@ -1,0 +1,39 @@
+{
+  "timestamp": "20260320_152834_347300",
+  "prompt": "Me har ein ny tilsett som heiter Geir Neset, fødd 24. June 1997. Opprett vedkomande som tilsett med e-post geir.neset@example.org og startdato 15. October 2026.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Geir",
+      "lastName": "Neset",
+      "dateOfBirth": "1997-06-24",
+      "email": "geir.neset@example.org",
+      "startDate": "2026-10-15"
+    },
+    "confidence": 0.96
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 403,
+      "duration_ms": 100.0,
+      "error": "{\"error\":\"Invalid or expired token\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 403,
+      "duration_ms": 51.6,
+      "error": "{\"error\":\"Invalid or expired token\"}"
+    }
+  ],
+  "total_calls": 2,
+  "error_count_4xx": 2,
+  "total_duration_ms": 1372.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {}
+  }
+}

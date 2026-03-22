@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_022002_407280",
+  "prompt": "Me sende ein faktura på 11400 EUR til Fjelltopp AS (org.nr 814814696) då kursen var 10.22 NOK/EUR. Kunden har no betalt, men kursen er 10.70 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (agio) på rett konto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

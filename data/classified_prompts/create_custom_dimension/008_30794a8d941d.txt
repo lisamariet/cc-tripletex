@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez une dimension comptable personnalisée "Produktlinje" avec les valeurs "Premium" et "Basis". Puis comptabilisez une pièce sur le compte 6860 pour 16900 NOK, liée à la valeur de dimension "Premium

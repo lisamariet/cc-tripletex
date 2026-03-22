@@ -1,0 +1,240 @@
+{
+  "timestamp": "20260320_235953_523016",
+  "prompt": "Opprett en ordre for kunden Bergvik AS (org.nr 873675926) med produktene Skylagring (2961) til 12000 kr og Analyserapport (3475) til 23100 kr. Konverter ordren til faktura og registrer full betaling.",
+  "parsed_task": {
+    "task_type": "create_order",
+    "fields": {
+      "customerName": "Bergvik AS",
+      "customerOrgNumber": "873675926",
+      "lines": [
+        {
+          "description": "Skylagring",
+          "productNumber": "2961",
+          "quantity": 1,
+          "unitPriceExcludingVat": 12000,
+          "vatCode": "3"
+        },
+        {
+          "description": "Analyserapport",
+          "productNumber": "3475",
+          "quantity": 1,
+          "unitPriceExcludingVat": 23100,
+          "vatCode": "3"
+        }
+      ],
+      "convertToInvoice": true,
+      "registerPayment": true
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 211.3,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 206.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 193.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 317.0,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 200.9,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401979395/:invoice",
+      "status": 200,
+      "duration_ms": 524.5,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/2147556985",
+      "status": 200,
+      "duration_ms": 234.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/paymentType",
+      "status": 200,
+      "duration_ms": 202.6,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147556985/:payment",
+      "status": 200,
+      "duration_ms": 408.2,
+      "error": null
+    }
+  ],
+  "total_calls": 9,
+  "error_count_4xx": 0,
+  "total_duration_ms": 5111.0,
+  "result": {
+    "status": "completed",
+    "taskType": "create_order",
+    "created": {
+      "id": 401979395,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/order/401979395",
+      "customer": {
+        "id": 108301266,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108301266"
+      },
+      "contact": null,
+      "attn": null,
+      "displayName": "1 Ordre",
+      "receiverEmail": "",
+      "overdueNoticeEmail": "",
+      "number": "1",
+      "reference": "",
+      "department": null,
+      "orderDate": "2026-03-20",
+      "project": null,
+      "invoiceComment": "",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "isShowOpenPostsOnInvoices": false,
+      "isClosed": false,
+      "deliveryDate": "2026-03-20",
+      "deliveryAddress": null,
+      "deliveryComment": "",
+      "isPrioritizeAmountsIncludingVat": false,
+      "orderLineSorting": "PRODUCT",
+      "orderGroups": [],
+      "orderLines": [],
+      "isSubscription": false,
+      "subscriptionDuration": 0,
+      "subscriptionDurationType": "MONTHS",
+      "subscriptionPeriodsOnInvoice": 0,
+      "subscriptionPeriodsOnInvoiceType": "MONTHS",
+      "subscriptionInvoicingTimeInAdvanceOrArrears": "ADVANCE",
+      "subscriptionInvoicingTime": 0,
+      "subscriptionInvoicingTimeType": "MONTHS",
+      "isSubscriptionAutoInvoicing": false,
+      "preliminaryInvoice": {
+        "id": 2147556985,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147556985"
+      },
+      "attachment": [],
+      "sendMethodDescription": "Faktura må sendes manuelt.",
+      "invoiceOnAccountVatHigh": false,
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "markUpOrderLines": 0,
+      "discountPercentage": 0.0,
+      "customerName": "Bergvik AS",
+      "projectManagerNameAndNumber": "",
+      "travelReports": [],
+      "accountingDimensionValues": []
+    },
+    "invoice": {
+      "id": 2147556985,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147556985",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-20",
+      "customer": {
+        "id": 108301266,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108301266"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-03",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401979395,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401979395"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607525948,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607525948"
+        },
+        {
+          "id": 1607525949,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607525949"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965749011,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965749011"
+        }
+      ],
+      "voucher": {
+        "id": 608879228,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879228"
+      },
+      "deliveryDate": "2026-03-20",
+      "amount": 35100.0,
+      "amountCurrency": 35100.0,
+      "amountExcludingVat": 35100.0,
+      "amountExcludingVatCurrency": 35100.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 35100.0,
+      "amountCurrencyOutstanding": 35100.0,
+      "amountOutstandingTotal": 35100.0,
+      "amountCurrencyOutstandingTotal": 35100.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845060914,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845060914"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024180124
+    },
+    "payment": {
+      "status": "paid",
+      "amount": 35100.0
+    }
+  }
+}

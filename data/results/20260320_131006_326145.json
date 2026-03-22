@@ -1,0 +1,75 @@
+{
+  "timestamp": "20260320_131006_326145",
+  "prompt": "Registe 4 horas para Maria Ferreira (maria.ferreira@example.org) na atividade \"Utvikling\" do projeto \"Desenvolvimento de app\" para Estrela Lda (org. nº 909621682). Taxa horária: 1050 NOK/h. Gere uma fatura de projeto ao cliente com base nas horas registadas.",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1484.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1202.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 1073.5,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/activity",
+      "status": 400,
+      "duration_ms": 1016.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/activity",
+      "status": 422,
+      "duration_ms": 1296.0,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/salary/transaction",
+      "status": 422,
+      "duration_ms": 996.5,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 422,
+      "duration_ms": 1180.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/invoice",
+      "status": 422,
+      "duration_ms": 1062.0,
+      "error": null
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 5,
+  "total_duration_ms": 17616.6,
+  "result": {
+    "status": "completed",
+    "fallback": true,
+    "calls_made": 8
+  }
+}

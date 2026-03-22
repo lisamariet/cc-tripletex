@@ -1,0 +1,108 @@
+{
+  "timestamp": "20260320_232334_915403",
+  "prompt": "Ejecute la nómina de Marta López (marta.lopez@example.org) para este mes. El salario base es de 31300 NOK. Añada una bonificación única de 13300 NOK además del salario base.",
+  "parsed_task": {
+    "task_type": "run_payroll",
+    "fields": {
+      "employeeName": "Marta López",
+      "employeeEmail": "marta.lopez@example.org",
+      "baseSalary": 31300,
+      "bonus": 13300
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/vatSettings",
+      "status": 200,
+      "duration_ms": 2538.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 3187.5,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/employee/18596321",
+      "status": 200,
+      "duration_ms": 3089.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/division",
+      "status": 200,
+      "duration_ms": 3018.1,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/municipality",
+      "status": 200,
+      "duration_ms": 3011.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/division",
+      "status": 201,
+      "duration_ms": 3747.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/employee/employment",
+      "status": 200,
+      "duration_ms": 3191.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 2838.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2648.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2366.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 2457.8,
+      "error": null
+    }
+  ],
+  "total_calls": 11,
+  "error_count_4xx": 0,
+  "total_duration_ms": 47900.5,
+  "result": {
+    "status": "completed",
+    "taskType": "run_payroll",
+    "transactionId": 608874204,
+    "voucherId": 608874204,
+    "employeeId": 18596321,
+    "baseSalary": 31300,
+    "bonus": 13300,
+    "month": 3,
+    "year": 2026,
+    "method": "manual_voucher"
+  }
+}

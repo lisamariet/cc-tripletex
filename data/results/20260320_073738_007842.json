@@ -1,0 +1,38 @@
+{
+  "timestamp": "20260320_073738_007842",
+  "prompt": "Betalingen fra Nordhav AS (org.nr 973826018) for fakturaen \"Opplæring\" (42500 kr ekskl. MVA) ble returnert av banken. Reverser betalingen slik at fakturaen igjen viser utestående beløp.",
+  "parsed_task": {
+    "task_type": "register_payment",
+    "fields": {
+      "customerName": "Nordhav AS",
+      "customerOrgNumber": "973826018",
+      "invoiceNumber": "Opplæring",
+      "amount": -42500,
+      "paymentType": "reversal"
+    },
+    "confidence": 0.85
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1118.5,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 967.5,
+      "error": null
+    }
+  ],
+  "total_calls": 2,
+  "error_count_4xx": 0,
+  "total_duration_ms": 4086.9,
+  "result": {
+    "status": "completed",
+    "note": "No matching invoice found"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "timestamp": "20260321_180921_947224",
+  "prompt": "Utfør forenklet årsoppgjør for 2025: 1) Beregn og bokfør årlige avskrivninger for tre eiendeler: Programvare (156100 kr, 6 år lineært, konto 1250), IT-utstyr (168250 kr, 10 år, konto 1210), Kontormaskiner (321800 kr, 6 år, konto 1200). Bruk konto 6010 for avskrivningskostnad og 1209 for akkumulerte avskrivninger. 2) Reverser forskuddsbetalte kostnader (totalt 69150 kr på konto 1700). 3) Beregn og bokfør skattekostnad (22 % av skattbart resultat) på konto 8700/2920. Bokfør hver avskrivning som et eget bilag.",
+  "parsed_task": {
+    "task_type": "batch_create_voucher",
+    "fields": {
+      "items": [
+        {
+          "taskType": "create_voucher",
+          "fields": {
+            "description": "Årlig avskrivning Programvare 2025",
+            "date": "2025-12-31",
+            "postings": [
+              {
+                "debitAccount": 6010,
+                "creditAccount": null,
+                "amount": 26016.67,
+                "description": "Avskrivningskostnad Programvare"
+              },
+              {
+                "debitAccount": null,
+                "creditAccount": 1209,
+                "amount": 26016.67,
+                "description": "Akkumulerte avskrivninger Programvare"
+              }
+            ]
+          },
+          "confidence": 0.95,
+          "reasoning": "Norwegian prompt to book annual depreciation for software as part of year-end closing. Amount calculated as 156100 / 6 years."
+        },
+        {
+          "taskType": "create_voucher",
+          "fields": {
+            "description": "Årlig avskrivning IT-utstyr 2025",
+            "date": "2025-12-31",
+            "postings": [
+              {
+                "debitAccount": 6010,
+                "creditAccount": null,
+                "amount": 16825,
+                "description": "Avskrivningskostnad IT-utstyr"
+              },
+              {
+                "debitAccount": null,
+                "creditAccount": 1209,
+                "amount": 16825,
+                "description": "Akkumulerte avskrivninger IT-utstyr"
+              }
+            ]
+          },
+          "confidence": 0.95,
+          "reasoning": "Norwegian prompt to book annual depreciation for IT equipment as part of year-end closing. Amount calculated as 168250 / 10 years."
+        },
+        {
+          "taskType": "create_voucher",
+          "fields": {
+            "description": "Årlig avskrivning Kontormaskiner 2025",
+            "date": "2025-12-31",
+            "postings": [
+              {
+                "debitAccount": 6010,
+                "creditAccount": null,
+                "amount": 53633.33,
+                "description": "Avskrivningskostnad Kontormaskiner"
+              },
+              {
+                "debitAccount": null,
+                "creditAccount": 1209,
+                "amount": 53633.33,
+                "description": "Akkumulerte avskrivninger Kontormaskiner"
+              }
+            ]
+          },
+          "confidence": 0.95,
+          "reasoning": "Norwegian prompt to book annual depreciation for office machinery as part of year-end closing. Amount calculated as 321800 / 6 years."
+        },
+        {
+          "taskType": "create_voucher",
+          "fields": {
+            "description": "Reversering forskuddsbetalte kostnader 2025",
+            "date": "2025-12-31",
+            "postings": [
+              {
+                "debitAccount": 7790,
+                "creditAccount": null,
+                "amount": 69150,
+                "description": "Reversering forskuddsbetalte kostnader"
+              },
+              {
+                "debitAccount": null,
+                "creditAccount": 1700,
+                "amount": 69150,
+                "description": "Reversering forskuddsbetalte kostnader"
+              }
+            ]
+          },
+          "confidence": 0.92,
+          "reasoning": "Norwegian prompt to reverse prepaid expenses (forskuddsbetalte kostnader) from account 1700 to a general expense account (7790) as part of year-end closing."
+        },
+        {
+          "taskType": "create_voucher",
+          "fields": {
+            "description": "Bokføring skattekostnad 2025",
+            "date": "2025-12-31",
+            "postings": [
+              {
+                "debitAccount": 8700,
+                "creditAccount": null,
+                "amount": 0,
+                "description": "Skattekostnad"
+              },
+              {
+                "debitAccount": null,
+                "creditAccount": 2920,
+                "amount": 0,
+                "description": "Betalbar skatt"
+              }
+            ]
+          },
+          "confidence": 0.8,
+          "reasoning": "Norwegian prompt to book tax expense (skattekostnad) as part of year-end closing. The amount (22% of taxable profit) cannot be calculated as 'skattbart resultat' (taxable profit) was not provided in the prompt. Amount set to 0 as a placeholder."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2995.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "6010"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":467178449,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/467178449\",\"number\":6010,\"numberPretty\":\"6010\",\"name\":\"Avskriving på transportmidler\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"60\",\"groupingCode\":\"6000\",\"displayName\":\"6010 Avskriving på transportmidler\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 275.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1209"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    }
+  ],
+  "total_calls": 2,
+  "error_count_4xx": 0,
+  "total_duration_ms": 20348.9,
+  "result": {
+    "status": "completed",
+    "error": "Account number 1209 not found in Tripletex"
+  }
+}

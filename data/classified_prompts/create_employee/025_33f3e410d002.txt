@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Tenemos un nuevo empleado llamado Lucía García, nacido el 18. March 1997. Créelo como empleado con el correo lucia.garcia@example.org y fecha de inicio 30. August 2026.

@@ -1,0 +1,150 @@
+{
+  "timestamp": "20260322_021754_324227",
+  "prompt": "Créez le client Colline SARL avec le numéro d'organisation 939137599. L'adresse est Kirkegata 77, 4611 Kristiansand. E-mail : post@colline.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Colline SARL",
+      "organizationNumber": "939137599",
+      "email": "post@colline.no",
+      "invoiceEmail": "post@colline.no",
+      "address": {
+        "addressLine1": "Kirkegata 77",
+        "postalCode": "4611",
+        "city": "Kristiansand"
+      },
+      "overdueNoticeEmail": "post@colline.no"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 5444.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "request_body": {
+        "name": "Colline SARL",
+        "isCustomer": true,
+        "organizationNumber": "939137599",
+        "email": "post@colline.no",
+        "invoiceEmail": "post@colline.no",
+        "overdueNoticeEmail": "post@colline.no",
+        "postalAddress": {
+          "addressLine1": "Kirkegata 77",
+          "postalCode": "4611",
+          "city": "Kristiansand"
+        },
+        "physicalAddress": {
+          "addressLine1": "Kirkegata 77",
+          "postalCode": "4611",
+          "city": "Kristiansand"
+        }
+      },
+      "response_body": "{\"value\":{\"id\":108503837,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108503837\",\"name\":\"Colline SARL\",\"organizationNumber\":\"939137599\",\"globalLocationNumber\":0,\"supplierNumber\":0,\"customerNumber\":10001,\"isSupplier\":false,\"isCustomer\":true,\"isInactive\":false,\"accountManager\":null,\"department\":null,\"email\":\"post@colline.no\",\"invoiceEmail\":\"post@colline.no\",\"overdueNoticeEmail\":\"post@colline.no\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"language\":\"NO\",\"displayName\":\"Colline SARL (10001)\",\"isPrivateIndividual\":false,\"singleCustomerInvoice\":false,\"invoiceSendMethod\":\"EMAIL\",\"emailAttachmentType\":\"ATTACHMENT\",\"postalAddress\":{\"id\":405854292,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405854292\",\"addressLine1\":\"Kirkegata 77\",\"addressLine2\":\"\",\"postalCode\":\"4611\",\"city\":\"Kristiansand\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Colline SARL, Kirkegata 77, 4611 Kristiansand, Norge\",\"addressAsString\":\"Kirkegata 77, 4611 Kristiansand, Norge\",\"displayNameInklMatrikkel\":\"Colline SARL, Kirkegata 77, 4611 Kristiansand, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"physicalAddress\":{\"id\":405854291,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405854291\",\"addressLine1\":\"Kirkegata 77\",\"addressLine2\":\"\",\"postalCode\":\"4611\",\"city\":\"Kristiansand\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Colline SARL, Kirkegata 77, 4611 Kristiansand, Norge\",\"addressAsString\":\"Kirkegata 77, 4611 Kristiansand, Norge\",\"displayNameInklMatrikkel\":\"Colline SARL, Kirkegata 77, 4611 Kristiansand, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"bankAccountPresentation\":[],\"ledgerAccount\":{\"id\":456351722,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/"
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 7578.1,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108503837,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108503837",
+      "name": "Colline SARL",
+      "organizationNumber": "939137599",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@colline.no",
+      "invoiceEmail": "post@colline.no",
+      "overdueNoticeEmail": "post@colline.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Colline SARL (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405854292,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405854292",
+        "addressLine1": "Kirkegata 77",
+        "addressLine2": "",
+        "postalCode": "4611",
+        "city": "Kristiansand",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Colline SARL, Kirkegata 77, 4611 Kristiansand, Norge",
+        "addressAsString": "Kirkegata 77, 4611 Kristiansand, Norge",
+        "displayNameInklMatrikkel": "Colline SARL, Kirkegata 77, 4611 Kristiansand, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "physicalAddress": {
+        "id": 405854291,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405854291",
+        "addressLine1": "Kirkegata 77",
+        "addressLine2": "",
+        "postalCode": "4611",
+        "city": "Kristiansand",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Colline SARL, Kirkegata 77, 4611 Kristiansand, Norge",
+        "addressAsString": "Kirkegata 77, 4611 Kristiansand, Norge",
+        "displayNameInklMatrikkel": "Colline SARL, Kirkegata 77, 4611 Kristiansand, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 456351722,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/456351722"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "prompt": "Registe 4 horas para Maria Ferreira (maria.ferreira@example.org) na atividade \"Utvikling\" do projeto \"Desenvolvimento de app\" para Estrela Lda (org. nº 909621682). Taxa horária: 1050 NOK/h. Gere uma f",
+    "confidence": 0.95,
+    "hash": "3c9a64c3777c"
+  },
+  {
+    "prompt": "Erfassen Sie 33 Stunden für Paul Müller (paul.muller@example.org) auf der Aktivität \"Testing\" im Projekt \"Datenmigration\" für Sonnental GmbH (Org.-Nr. 839389701). Stundensatz: 900 NOK/h. Erstellen Sie",
+    "confidence": 0.95,
+    "hash": "7b1791901c44"
+  },
+  {
+    "prompt": "Registre 11 horas para Ana Romero (ana.romero@example.org) en la actividad \"Design\" del proyecto \"Integración de plataforma\" para Costa Brava SL (org. nº 886098499). Tarifa por hora: 1850 NOK/h. Gener",
+    "confidence": 0.95,
+    "hash": "7cc960aa289d"
+  },
+  {
+    "prompt": "Log 12 hours for Victoria Brown (victoria.brown@example.org) on the activity \"Analyse\" in the project \"Data Migration\" for Greenfield Ltd (org no. 890874185). Hourly rate: 850 NOK/h. Generate a projec",
+    "confidence": 0.95,
+    "hash": "389b02dac87f"
+  },
+  {
+    "prompt": "Registre 34 horas para Carmen Pérez (carmen.perez@example.org) en la actividad \"Design\" del proyecto \"Migración de datos\" para Solmar SL (org. nº 920251684). Tarifa por hora: 1100 NOK/h. Genere una fa",
+    "confidence": 0.95,
+    "hash": "67193f5852f1"
+  },
+  {
+    "prompt": "Registrer 24 timer for Solveig Hansen (solveig.hansen@example.org) på aktiviteten \"Analyse\" i prosjektet \"Apputvikling\" for Tindra AS (org.nr 945097523). Timesats: 1850 kr/t. Generer en prosjektfaktur",
+    "confidence": 0.95,
+    "hash": "aaac3752f5ac"
+  },
+  {
+    "prompt": "Registe 11 horas para Inês Rodrigues (ines.rodrigues@example.org) na atividade \"Design\" do projeto \"Redesign do site\" para Estrela Lda (org. nº 930325325). Taxa horária: 1000 NOK/h. Gere uma fatura de",
+    "confidence": 0.95,
+    "hash": "802d35fba0ed"
+  },
+  {
+    "prompt": "Registrer 7 timer for Tor Johansen (tor.johansen@example.org) på aktiviteten \"Design\" i prosjektet \"Plattformintegrasjon\" for Tindra AS (org.nr 877235882). Timesats: 1650 kr/t. Generer en prosjektfakt",
+    "confidence": 0.95,
+    "hash": "0e14b4405cad"
+  },
+  {
+    "prompt": "Erfassen Sie 14 Stunden für Anna Wagner (anna.wagner@example.org) auf der Aktivität \"Analyse\" im Projekt \"Sicherheitsaudit\" für Waldstein GmbH (Org.-Nr. 948366207). Stundensatz: 1150 NOK/h. Erstellen ",
+    "confidence": 0.95,
+    "hash": "81572ff10aa2"
+  },
+  {
+    "prompt": "Registrer 19 timer for Thea Ødegård (thea.degard@example.org) på aktiviteten \"Design\" i prosjektet \"Datamigrering\" for Tindra AS (org.nr 812877895). Timesats: 1600 kr/t. Generer en prosjektfaktura til",
+    "confidence": 0.95,
+    "hash": "9213c348c5cc"
+  },
+  {
+    "prompt": "Registre 39 horas para Miguel Sánchez (miguel.sanchez@example.org) en la actividad \"Analyse\" del proyecto \"Migración de datos\" para Montaña SL (org. nº 802639244). Tarifa por hora: 1000 NOK/h. Genere ",
+    "confidence": 0.95,
+    "hash": "6e0ecead849a"
+  },
+  {
+    "prompt": "Registrer 30 timar for Gunnhild Eide (gunnhild.eide@example.org) på aktiviteten \"Rådgivning\" i prosjektet \"Nettbutikk-utvikling\" for Sjøbris AS (org.nr 801323847). Timesats: 1100 kr/t. Generer ein pro",
+    "confidence": 0.95,
+    "hash": "c208c9ad7d71"
+  },
+  {
+    "prompt": "Registrer 13 timar for Sigrid Neset (sigrid.neset@example.org) på aktiviteten \"Rådgivning\" i prosjektet \"Systemoppgradering\" for Nordlys AS (org.nr 836112784). Timesats: 1150 kr/t. Generer ein prosjek",
+    "confidence": 0.95,
+    "hash": "e3b8f008f11f"
+  },
+  {
+    "prompt": "Registrer 30 timar for Randi Lunde (randi.lunde@example.org) på aktiviteten \"Analyse\" i prosjektet \"Sikkerheitsrevisjon\" for Dalheim AS (org.nr 950103175). Timesats: 850 kr/t. Generer ein prosjektfakt",
+    "confidence": 0.95,
+    "hash": "84a41046a762"
+  },
+  {
+    "prompt": "Log 5 hours for Emily Johnson (emily.johnson@example.org) on the activity \"Utvikling\" in the project \"Security Audit\" for Clearwater Ltd (org no. 874828955). Hourly rate: 1600 NOK/h. Generate a projec",
+    "confidence": 0.95,
+    "hash": "29b949099136"
+  },
+  {
+    "prompt": "Registrer 15 timer for Solveig Bakken (solveig.bakken@example.org) på aktiviteten \"Testing\" i prosjektet \"Systemoppgradering\" for Stormberg AS (org.nr 963903359). Timesats: 1900 kr/t. Generer en prosj",
+    "confidence": 0.95,
+    "hash": "6e3380b6ac9d"
+  },
+  {
+    "prompt": "Erfassen Sie 18 Stunden für Sophia Schmidt (sophia.schmidt@example.org) auf der Aktivität \"Design\" im Projekt \"Sicherheitsaudit\" für Windkraft GmbH (Org.-Nr. 882984826). Stundensatz: 950 NOK/h. Erstel",
+    "confidence": 0.95,
+    "hash": "1bb070bd3c2d"
+  },
+  {
+    "prompt": "Registre 39 horas para Diego Sánchez (diego.sanchez@example.org) en la actividad \"Analyse\" del proyecto \"Desarrollo de app\" para Olivares SL (org. nº 980551709). Tarifa por hora: 1450 NOK/h. Genere un",
+    "confidence": 0.95,
+    "hash": "4c6309a109bf"
+  },
+  {
+    "prompt": "Log 15 hours for Samuel Williams (samuel.williams@example.org) on the activity \"Analyse\" in the project \"Website Redesign\" for Windmill Ltd (org no. 898523942). Hourly rate: 1950 NOK/h. Generate a pro",
+    "confidence": 0.95,
+    "hash": "385537fdeff0"
+  },
+  {
+    "prompt": "Registre 15 horas para Miguel Torres (miguel.torres@example.org) en la actividad \"Design\" del proyecto \"Rediseño web\" para Viento SL (org. nº 980164454). Tarifa por hora: 1800 NOK/h. Genere una factur",
+    "confidence": 0.95,
+    "hash": "07aa6a3d510b"
+  }
+]

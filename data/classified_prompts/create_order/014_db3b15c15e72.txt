@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create an order for the customer Brightstone Ltd (org no. 971948981) with the products Data Advisory (4083) at 4050 NOK and Training Session (7105) at 12150 NOK. Convert the order to an invoice and re

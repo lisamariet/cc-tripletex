@@ -1,0 +1,97 @@
+[
+  {
+    "prompt": "Create three departments in Tripletex: \"Utvikling\", \"Lager\", and \"Regnskap\".",
+    "confidence": 0.95,
+    "hash": "0e80375fbeca"
+  },
+  {
+    "prompt": "Crea tres departamentos en Tripletex: \"HR\", \"Regnskap\" y \"Lager\".",
+    "confidence": 0.95,
+    "hash": "8f8554f39380"
+  },
+  {
+    "prompt": "Crie três departamentos no Tripletex: \"Drift\", \"Kundeservice\" e \"HR\".",
+    "confidence": 0.95,
+    "hash": "5b6ee08f98f7"
+  },
+  {
+    "prompt": "Create three departments in Tripletex: \"Produksjon\", \"Kundeservice\", and \"Økonomi\".",
+    "confidence": 0.95,
+    "hash": "2160dcd4b4be"
+  },
+  {
+    "prompt": "Crea tres departamentos en Tripletex: \"Markedsføring\", \"Lager\" y \"Kundeservice\".",
+    "confidence": 0.95,
+    "hash": "8b538db11848"
+  },
+  {
+    "prompt": "Crea tres departamentos en Tripletex: \"IT\", \"Drift\" y \"Kundeservice\".",
+    "confidence": 0.95,
+    "hash": "59c911d9e1e7"
+  },
+  {
+    "prompt": "Crie três departamentos no Tripletex: \"IT\", \"Kvalitetskontroll\" e \"Regnskap\".",
+    "confidence": 0.95,
+    "hash": "84687957bd77"
+  },
+  {
+    "prompt": "Opprett tre avdelingar i Tripletex: \"Økonomi\", \"Administrasjon\" og \"Innkjøp\".",
+    "confidence": 0.95,
+    "hash": "9b6370340b49"
+  },
+  {
+    "prompt": "Create three departments in Tripletex: \"Markedsføring\", \"Produksjon\", and \"Innkjøp\".",
+    "confidence": 0.95,
+    "hash": "bf9900814285"
+  },
+  {
+    "prompt": "Erstellen Sie drei Abteilungen in Tripletex: \"Økonomi\", \"Regnskap\" und \"Kvalitetskontroll\".",
+    "confidence": 0.95,
+    "hash": "a955be63e33c"
+  },
+  {
+    "prompt": "Crie três departamentos no Tripletex: \"Økonomi\", \"Innkjøp\" e \"Regnskap\".",
+    "confidence": 0.95,
+    "hash": "86c4cc8a4b9d"
+  },
+  {
+    "prompt": "Opprett tre avdelinger i Tripletex: \"Utvikling\", \"Drift\" og \"HR\".",
+    "confidence": 0.95,
+    "hash": "a0a824c56309"
+  },
+  {
+    "prompt": "Crea tres departamentos en Tripletex: \"Drift\", \"Administrasjon\" y \"Lager\".",
+    "confidence": 0.95,
+    "hash": "ac9adc6fd0da"
+  },
+  {
+    "prompt": "Create three departments in Tripletex: \"Innkjøp\", \"Drift\", and \"Kundeservice\".",
+    "confidence": 0.95,
+    "hash": "fbe91c32db34"
+  },
+  {
+    "prompt": "Crie três departamentos no Tripletex: \"Kundeservice\", \"Innkjøp\" e \"Regnskap\".",
+    "confidence": 0.95,
+    "hash": "2f5406101516"
+  },
+  {
+    "prompt": "Créez trois départements dans Tripletex : \"Produksjon\", \"Salg\" et \"Innkjøp\".",
+    "confidence": 0.95,
+    "hash": "3daa6637cd1e"
+  },
+  {
+    "prompt": "Crie três departamentos no Tripletex: \"HR\", \"Lager\" e \"IT\".",
+    "confidence": 0.95,
+    "hash": "ea8f484b9ab9"
+  },
+  {
+    "prompt": "Créez trois départements dans Tripletex : \"Produksjon\", \"Salg\" et \"Logistikk\".",
+    "confidence": 0.95,
+    "hash": "ef29782ac0ba"
+  },
+  {
+    "prompt": "Create three departments in Tripletex: \"Drift\", \"Innkjøp\", and \"Salg\".",
+    "confidence": 0.95,
+    "hash": "b645bc3c33b7"
+  }
+]

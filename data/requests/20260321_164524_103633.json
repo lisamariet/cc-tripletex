@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_164524_103633",
+  "prompt": "Log 5 hours for Emily Johnson (emily.johnson@example.org) on the activity \"Utvikling\" in the project \"Security Audit\" for Clearwater Ltd (org no. 874828955). Hourly rate: 1600 NOK/h. Generate a project invoice to the customer based on the logged hours.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

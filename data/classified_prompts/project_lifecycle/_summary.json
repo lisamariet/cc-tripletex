@@ -1,0 +1,82 @@
+[
+  {
+    "prompt": "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Dorada' (Dorada SL, org. nº 888398554): 1) El proyecto tiene un presupuesto de 460950 NOK. 2) Registre horas: Carlos García (direc",
+    "confidence": 0.95,
+    "hash": "c4eb0ccb6133"
+  },
+  {
+    "prompt": "Gjennomfør hele prosjektsyklusen for 'Dataplattform Tindra' (Tindra AS, org.nr 925122025): 1) Prosjektet har budsjett 432000 kr. 2) Registrer timer: Astrid Hansen (prosjektleder, astrid.hansen@example",
+    "confidence": 0.95,
+    "hash": "3d37cac6feef"
+  },
+  {
+    "prompt": "Execute the complete project lifecycle for 'ERP Implementation Silveroak' (Silveroak Ltd, org no. 814740536): 1) The project has a budget of 364650 NOK. 2) Log time: Henry Harris (project manager, hen",
+    "confidence": 0.95,
+    "hash": "c052aaa9dda2"
+  },
+  {
+    "prompt": "Exécutez le cycle de vie complet du projet 'Migration Cloud Montagne' (Montagne SARL, nº org. 815119924) : 1) Le projet a un budget de 489850 NOK. 2) Enregistrez le temps : Louis Moreau (chef de proje",
+    "confidence": 0.95,
+    "hash": "2f06b905b57a"
+  },
+  {
+    "prompt": "Exécutez le cycle de vie complet du projet 'Mise à Niveau Système Soleil' (Soleil SARL, nº org. 869871079) : 1) Le projet a un budget de 475350 NOK. 2) Enregistrez le temps : Gabriel Richard (chef de ",
+    "confidence": 0.95,
+    "hash": "ef3fcd1a6050"
+  },
+  {
+    "prompt": "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Viento' (Viento SL, org. nº 828947818): 1) El proyecto tiene un presupuesto de 225650 NOK. 2) Registre horas: Andrés Hernández (di",
+    "confidence": 0.95,
+    "hash": "2fbbe21272e8"
+  },
+  {
+    "prompt": "Execute the complete project lifecycle for 'System Upgrade Greenfield' (Greenfield Ltd, org no. 873288949): 1) The project has a budget of 206300 NOK. 2) Log time: Oliver Wilson (project manager, oliv",
+    "confidence": 0.95,
+    "hash": "ed2b96ea7bfd"
+  },
+  {
+    "prompt": "Gjennomfør hele prosjektsyklusen for 'Dataplattform Brattli' (Brattli AS, org.nr 937190808): 1) Prosjektet har budsjett 349100 kr. 2) Registrer timer: Hilde Ødegård (prosjektleder, hilde.degard@exampl",
+    "confidence": 0.95,
+    "hash": "410253c4b66b"
+  },
+  {
+    "prompt": "Ejecute el ciclo de vida completo del proyecto 'Migración Cloud Río' (Río Verde SL, org. nº 904714364): 1) El proyecto tiene un presupuesto de 212950 NOK. 2) Registre horas: Pablo González (director d",
+    "confidence": 0.95,
+    "hash": "84a9696beeed"
+  },
+  {
+    "prompt": "Gjennomfør hele prosjektsyklusen for 'Systemoppgradering Brattli' (Brattli AS, org.nr 960456300): 1) Prosjektet har budsjett 244200 kr. 2) Registrer timer: Marte Johansen (prosjektleder, marte.johanse",
+    "confidence": 0.95,
+    "hash": "543af362805b"
+  },
+  {
+    "prompt": "Execute the complete project lifecycle for 'Cloud Migration Windmill' (Windmill Ltd, org no. 882329348): 1) The project has a budget of 470800 NOK. 2) Log time: Charlotte Williams (project manager, ch",
+    "confidence": 0.95,
+    "hash": "17093122a4b9"
+  },
+  {
+    "prompt": "Gjennomfør heile prosjektsyklusen for 'Digitalportal Strandvik' (Strandvik AS, org.nr 842328004): 1) Prosjektet har budsjett 392650 kr. 2) Registrer timar: Geir Lunde (prosjektleiar, geir.lunde@exampl",
+    "confidence": 0.95,
+    "hash": "fce8a5b0d58f"
+  },
+  {
+    "prompt": "Führen Sie den vollständigen Projektzyklus für 'Systemupgrade Brückentor' (Brückentor GmbH, Org.-Nr. 929610156) durch: 1) Das Projekt hat ein Budget von 405900 NOK. 2) Erfassen Sie Stunden: Emma Weber",
+    "confidence": 0.95,
+    "hash": "4a3726000b40"
+  },
+  {
+    "prompt": "Gjennomfør hele prosjektsyklusen for 'ERP-implementering Bergvik' (Bergvik AS, org.nr 886943407): 1) Prosjektet har budsjett 400950 kr. 2) Registrer timer: Ragnhild Strand (prosjektleder, ragnhild.str",
+    "confidence": 0.95,
+    "hash": "2524ab847f66"
+  },
+  {
+    "prompt": "Execute o ciclo de vida completo do projeto 'Portal Digital Estrela' (Estrela Lda, org. nº 977256828): 1) O projeto tem um orçamento de 268350 NOK. 2) Registe horas: Bruno Sousa (gestor de projeto, br",
+    "confidence": 0.95,
+    "hash": "99df93cce95a"
+  },
+  {
+    "prompt": "Execute the complete project lifecycle for 'Cloud Migration Northwave' (Northwave Ltd, org no. 932075482): 1) The project has a budget of 396900 NOK. 2) Log time: Samuel Brown (project manager, samuel",
+    "confidence": 0.95,
+    "hash": "12e078697544"
+  }
+]

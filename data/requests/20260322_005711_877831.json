@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_005711_877831",
+  "prompt": "Der Kunde Sonnental GmbH (Org.-Nr. 855482207) hat eine offene Rechnung über 33500 NOK ohne MwSt. für \"Wartung\". Registrieren Sie die vollständige Zahlung dieser Rechnung.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

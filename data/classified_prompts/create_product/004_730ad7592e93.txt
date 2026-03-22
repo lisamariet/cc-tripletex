@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez le produit "Design web" avec le numéro de produit 8115. Le prix est de 17200 NOK hors TVA, avec le taux standard de 25 %.

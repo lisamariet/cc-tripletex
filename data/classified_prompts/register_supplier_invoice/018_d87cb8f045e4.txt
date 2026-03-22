@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Vi har mottatt faktura INV-2026-8551 fra leverandøren Bergvik AS (org.nr 989568469) på 14850 kr inklusiv MVA. Beløpet gjelder kontortjenester (konto 6300). Registrer leverandørfakturaen med korrekt in

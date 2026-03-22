@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_201848_617914",
+  "prompt": "Create the customer Oakwood Ltd with organization number 927790629. The address is Solveien 71, 5003 Bergen. Email: post@oakwood.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

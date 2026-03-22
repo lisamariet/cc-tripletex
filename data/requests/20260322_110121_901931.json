@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_110121_901931",
+  "revision": "tripletex-agent-00130-cps",
+  "prompt": "Registrer en reiseregning for Astrid Larsen (astrid.larsen@example.org) for \"Konferanse Ålesund\". Reisen varte 4 dager med diett (dagsats 800 kr). Utlegg: flybillett 6750 kr og taxi 500 kr.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

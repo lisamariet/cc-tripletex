@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_014805_556726",
+  "prompt": "Créez le produit \"Eau minérale\" avec le numéro de produit 7027. Le prix est de 36750 NOK hors TVA, avec le taux de TVA pour les denrées alimentaires de 15 %.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

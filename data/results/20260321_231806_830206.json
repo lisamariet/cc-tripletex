@@ -1,0 +1,332 @@
+{
+  "timestamp": "20260321_231806_830206",
+  "prompt": "Erstellen Sie eine Rechnung für den Kunden Eichenhof GmbH (Org.-Nr. 936374492) mit drei Produktzeilen: Wartung (2878) zu 21850 NOK mit 25 % MwSt., Cloud-Speicher (5486) zu 4400 NOK mit 15 % MwSt. (Lebensmittel), und Systementwicklung (3795) zu 10650 NOK mit 0 % MwSt. (befreit).",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Eichenhof GmbH",
+      "customerOrgNumber": "936374492",
+      "lines": [
+        {
+          "description": "Wartung",
+          "productNumber": "2878",
+          "quantity": 1,
+          "unitPriceExcludingVat": 21850,
+          "vatCode": "3"
+        },
+        {
+          "description": "Cloud-Speicher",
+          "productNumber": "5486",
+          "quantity": 1,
+          "unitPriceExcludingVat": 4400,
+          "vatCode": "31"
+        },
+        {
+          "description": "Systementwicklung",
+          "productNumber": "3795",
+          "quantity": 1,
+          "unitPriceExcludingVat": 10650,
+          "vatCode": "5"
+        }
+      ]
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 331.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"value\":{\"bankAccountReady\":false}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 266.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1920",
+        "fields": "id,bankAccountNumber,isBankAccount,isInvoiceAccount"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":477601172,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/477601172",
+      "status": 200,
+      "duration_ms": 273.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/477601172",
+      "response_body": "{\"value\":{\"id\":477601172,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/477601172\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "PUT",
+      "path": "/ledger/account/477601172",
+      "status": 200,
+      "duration_ms": 326.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/477601172",
+      "request_body": {
+        "id": 477601172,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/477601172",
+        "number": 1920,
+        "numberPretty": "1920",
+        "name": "Bankinnskudd",
+        "description": "",
+        "type": "ASSETS",
+        "legalVatTypes": [
+          {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          }
+        ],
+        "ledgerType": "GENERAL",
+        "balanceGroup": "Ikke i en saldogruppe.",
+        "vatType": {
+          "id": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+        },
+        "vatLocked": true,
+        "currency": {
+          "id": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+        },
+        "isCloseable": false,
+        "isApplicableForSupplierInvoice": false,
+        "requireReconciliation": true,
+        "isInactive": false,
+        "isBankAccount": true,
+        "isInvoiceAccount": true,
+        "bankAccountNumber": "12345678903",
+        "bankAccountCountry": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "bankName": "",
+        "bankAccountIBAN": "",
+        "bankAccountSWIFT": "",
+        "saftCode": "19",
+        "groupingCode": "1920",
+        "displayName": "1920 Bankinnskudd",
+        "requiresDepartment": false,
+        "requiresProject": false,
+        "invoicingDepartment": null,
+        "isPostingsExist": false,
+        "quantityType1": null,
+        "quantityType2": null,
+        "department": null
+      },
+      "response_body": "{\"value\":{\"id\":477601172,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/477601172\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"12345678903\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 312.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "936374492",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108456411,\"name\":\"Eichenhof GmbH\",\"organizationNumber\":\"936374492\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 291.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/product",
+      "query_params": {
+        "number": "2878",
+        "fields": "id,number"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":84424385,\"number\":\"2878\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 305.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/product",
+      "query_params": {
+        "number": "5486",
+        "fields": "id,number"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":84424387,\"number\":\"5486\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 283.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/product",
+      "query_params": {
+        "number": "3795",
+        "fields": "id,number"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":84424389,\"number\":\"3795\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 491.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/order",
+      "request_body": {
+        "customer": {
+          "id": 108456411
+        },
+        "orderDate": "2026-03-21",
+        "deliveryDate": "2026-03-21",
+        "orderLines": [
+          {
+            "count": 1,
+            "unitPriceExcludingVatCurrency": 21850,
+            "description": "Wartung",
+            "vatType": {
+              "id": 3
+            },
+            "product": {
+              "id": 84424385
+            }
+          },
+          {
+            "count": 1,
+            "unitPriceExcludingVatCurrency": 4400,
+            "description": "Cloud-Speicher",
+            "vatType": {
+              "id": 31
+            },
+            "product": {
+              "id": 84424387
+            }
+          },
+          {
+            "count": 1,
+            "unitPriceExcludingVatCurrency": 10650,
+            "description": "Systementwicklung",
+            "vatType": {
+              "id": 5
+            },
+            "product": {
+              "id": 84424389
+            }
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":402045598,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402045598\",\"customer\":{\"id\":108456411,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108456411\"},\"contact\":null,\"attn\":null,\"displayName\":\"1 Ordre\",\"receiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"number\":\"1\",\"reference\":\"\",\"department\":null,\"orderDate\":\"2026-03-21\",\"project\":null,\"invoiceComment\":\"\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"isShowOpenPostsOnInvoices\":false,\"isClosed\":false,\"deliveryDate\":\"2026-03-21\",\"deliveryAddress\":null,\"deliveryComment\":\"\",\"isPrioritizeAmountsIncludingVat\":false,\"orderLineSorting\":\"PRODUCT\",\"orderGroups\":[],\"orderLines\":[],\"isSubscription\":false,\"subscriptionDuration\":0,\"subscriptionDurationType\":\"MONTHS\",\"subscriptionPeriodsOnInvoice\":0,\"subscriptionPeriodsOnInvoiceType\":\"MONTHS\",\"subscriptionInvoicingTimeInAdvanceOrArrears\":\"ADVANCE\",\"subscriptionInvoicingTime\":0,\"subscriptionInvoicingTimeType\":\"MONTHS\",\"isSubscriptionAutoInvoicing\":false,\"preliminaryInvoice\":{\"id\":2147650505,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147650505\"},\"attachment\":[],\"sendMethodDescription\":\"Faktura må sendes manuelt.\",\"invoiceOnAccountVatHigh\":false,\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceSendSMSNotification\":false,\"invoiceSMSNotificationNumber\":\"\",\"markUpOrderLines\":0,\"discountPercentage\":0.0,\"customerName\":\"Eichenhof GmbH\",\"projectManagerNameAndNumber\":\"\",\"travelReports\":[],\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "PUT",
+      "path": "/order/402045598/:invoice",
+      "status": 200,
+      "duration_ms": 673.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/order/402045598/:invoice",
+      "query_params": {
+        "invoiceDate": "2026-03-21",
+        "sendToCustomer": false
+      },
+      "response_body": "{\"value\":{\"id\":2147650505,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147650505\",\"invoiceNumber\":1,\"invoiceDate\":\"2026-03-21\",\"customer\":{\"id\":108456411,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108456411\"},\"creditedInvoice\":0,\"isCredited\":false,\"invoiceDueDate\":\"2026-04-04\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":402045598,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402045598\"}],\"orderLines\":[{\"id\":1607582698,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607582698\"},{\"id\":1607582700,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607582700\"},{\"id\":1607582699,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607582699\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965801700,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965801700\"}],\"voucher\":{\"id\":609209035,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609209035\"},\"deliveryDate\":\"2026-03-21\",\"amount\":43022.50,\"amountCurrency\":43022.50,\"amountExcludingVat\":36900.00,\"amountExcludingVatCurrency\":36900.00,\"amountRoundoff\":0,\"amountRoundoffCurrency\":0,\"amountOutstanding\":43022.50,\"amountCurrencyOutstanding\":43022.50,\"amountOutstandingTotal\":43022.50,\"amountCurrencyOutstandingTotal\":43022.50,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":false,\"isCharged\":true,\"isApproved\":true,\"postings\":[{\"id\":3845958533,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845958533\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024308369}}"
+    }
+  ],
+  "total_calls": 10,
+  "error_count_4xx": 0,
+  "total_duration_ms": 6176.4,
+  "result": {
+    "status": "completed",
+    "taskType": "create_invoice",
+    "created": {
+      "id": 2147650505,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147650505",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-21",
+      "customer": {
+        "id": 108456411,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108456411"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-04",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 402045598,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/402045598"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607582698,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607582698"
+        },
+        {
+          "id": 1607582700,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607582700"
+        },
+        {
+          "id": 1607582699,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607582699"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965801700,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965801700"
+        }
+      ],
+      "voucher": {
+        "id": 609209035,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609209035"
+      },
+      "deliveryDate": "2026-03-21",
+      "amount": 43022.5,
+      "amountCurrency": 43022.5,
+      "amountExcludingVat": 36900.0,
+      "amountExcludingVatCurrency": 36900.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 43022.5,
+      "amountCurrencyOutstanding": 43022.5,
+      "amountOutstandingTotal": 43022.5,
+      "amountCurrencyOutstandingTotal": 43022.5,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845958533,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845958533"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024308369
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_003541_717699",
+  "prompt": "Opprett ein faktura til kunden Strandvik AS (org.nr 900314183) med tre produktlinjer: Webdesign (9716) til 13450 kr med 25 % MVA, Skylagring (6906) til 7700 kr med 15 % MVA (næringsmiddel), og Systemutvikling (2265) til 18800 kr med 0 % MVA (avgiftsfri).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Register a travel expense for Charlotte Williams (charlotte.williams@example.org) for "Client visit Bodø". The trip lasted 3 days with per diem (daily rate 800 NOK). Expenses: flight ticket 6200 NOK a

@@ -1,0 +1,123 @@
+{
+  "timestamp": "20260322_021059_891512",
+  "prompt": "Me har ein ny tilsett som heiter Geir Neset, fødd 24. June 1997. Opprett vedkomande som tilsett med e-post geir.neset@example.org og startdato 15. October 2026.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Geir",
+      "lastName": "Neset",
+      "dateOfBirth": "1997-06-24",
+      "email": "geir.neset@example.org",
+      "startDate": "2026-10-15"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 4041.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "count": 1,
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":907917,\"name\":\"Avdeling\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 4249.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Geir",
+        "lastName": "Neset",
+        "email": "geir.neset@example.org",
+        "dateOfBirth": "1997-06-24",
+        "userType": "STANDARD",
+        "department": {
+          "id": 907917
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18723102,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18723102\",\"firstName\":\"Geir\",\"lastName\":\"Neset\",\"displayName\":\"Geir Neset\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1997-06-24\",\"email\":\"geir.neset@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":907917,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/907917\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108257556,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 5241.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18723102
+        },
+        "startDate": "2026-10-15"
+      },
+      "response_body": "{\"value\":{\"id\":2862808,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2862808\",\"employee\":{\"id\":18723102,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18723102\"},\"employmentId\":\"\",\"startDate\":\"2026-10-15\",\"endDate\":null,\"employmentEndReason\":null,\"division\":null,\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 14837.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18723102,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18723102",
+      "firstName": "Geir",
+      "lastName": "Neset",
+      "displayName": "Geir Neset",
+      "employeeNumber": "",
+      "dateOfBirth": "1997-06-24",
+      "email": "geir.neset@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 907917,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/907917"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 108257556,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "timestamp": "20260320_151021_524912",
+  "prompt": "Processe o salário de Lucas Martins (lucas.martins@example.org) para este mês. O salário base é de 39000 NOK. Adicione um bónus único de 10500 NOK além do salário base.",
+  "parsed_task": {
+    "task_type": "run_payroll",
+    "fields": {
+      "employeeName": "Lucas Martins",
+      "employeeEmail": "lucas.martins@example.org",
+      "baseSalary": 39000,
+      "bonus": 10500
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 403,
+      "duration_ms": 57.2,
+      "error": "{\"error\":\"Invalid or expired token\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/salary/transaction",
+      "status": 403,
+      "duration_ms": 48.0,
+      "error": "{\"error\":\"Invalid or expired token\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/salary/payslip",
+      "status": 403,
+      "duration_ms": 51.7,
+      "error": "{\"error\":\"Invalid or expired token\"}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 3,
+  "total_duration_ms": 4160.3,
+  "result": {
+    "status": "completed",
+    "fallback": true,
+    "calls_made": 3
+  }
+}

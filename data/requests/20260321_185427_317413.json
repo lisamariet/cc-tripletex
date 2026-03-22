@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_185427_317413",
+  "prompt": "Gjer månavslutninga for mars 2026. Periodiser forskotsbetalt kostnad (14400 kr per månad frå konto 1710 til kostnadskonto). Bokfør månadleg avskriving for eit driftsmiddel med innkjøpskost 109500 kr og levetid 10 år (lineær avskriving til konto 6030). Kontroller at saldobalansen går i null. Bokfør også ei lønnsavsetjing (debet lønnskostnad konto 5000, kredit påløpt lønn konto 2900).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

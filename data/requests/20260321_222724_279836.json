@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_222724_279836",
+  "prompt": "Enviámos uma fatura de 13986 EUR ao Porto Alegre Lda (org. nº 906918129) quando a taxa de câmbio era 10.37 NOK/EUR. O cliente pagou agora, mas a taxa é 11.31 NOK/EUR. Registe o pagamento e lance a diferença cambial (agio) na conta correta.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

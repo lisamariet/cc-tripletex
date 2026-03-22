@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_231803_929719",
+  "prompt": "Crea una factura para el cliente Solmar SL (org. nº 829487888) con tres líneas de producto: Sesión de formación (6042) a 2350 NOK con 25 % IVA, Mantenimiento (5211) a 3150 NOK con 15 % IVA (alimentos), y Licencia de software (8022) a 14300 NOK con 0 % IVA (exento).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

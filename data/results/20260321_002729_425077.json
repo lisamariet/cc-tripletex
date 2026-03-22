@@ -1,0 +1,97 @@
+{
+  "timestamp": "20260321_002729_425077",
+  "prompt": "Tenemos un nuevo empleado llamado Lucía Hernández, nacido el 14. March 1986. Créelo como empleado con el correo lucia.hernandez@example.org y fecha de inicio 17. January 2026.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Lucía",
+      "lastName": "Hernández",
+      "dateOfBirth": "1986-03-14",
+      "email": "lucia.hernandez@example.org",
+      "startDate": "2026-01-17"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 4166.1,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 3819.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 4050.1,
+      "error": null
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 13361.3,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18605450,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18605450",
+      "firstName": "Lucía",
+      "lastName": "Hernández",
+      "displayName": "Lucía Hernández",
+      "employeeNumber": "",
+      "dateOfBirth": "1986-03-14",
+      "email": "lucia.hernandez@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 721223,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/721223"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 107880313,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

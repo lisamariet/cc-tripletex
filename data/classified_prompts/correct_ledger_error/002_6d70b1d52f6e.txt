@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett ein fri rekneskapsdimensjon "Marked" med verdiane "Privat" og "Bedrift". Bokfør deretter eit bilag på konto 6590 for 18700 kr, knytt til dimensjonsverdien "Privat".

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_205342_694353",
+  "prompt": "Create an invoice for the customer Windmill Ltd (org no. 926849395) with three product lines: Software License (6309) at 5600 NOK with 25% VAT, Consulting Hours (9721) at 8350 NOK with 15% VAT (food), and Data Advisory (9844) at 6500 NOK with 0% VAT (exempt).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

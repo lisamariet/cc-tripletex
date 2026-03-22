@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez une commande pour le client Étoile SARL (nº org. 972488607) avec les produits Rapport d'analyse (2823) à 21350 NOK et Design web (2035) à 19950 NOK. Convertissez la commande en facture et enregi

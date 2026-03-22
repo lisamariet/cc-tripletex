@@ -1,0 +1,240 @@
+{
+  "timestamp": "20260321_152505_684663",
+  "prompt": "Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobilisations : Programvare (111950 NOK, 9 ans linéaire, compte 1250), Kontormaskiner (351450 NOK, 9 ans, compte 1200), Inventar (418800 NOK, 10 ans, compte 1240). Utilisez le compte 6010 pour les charges d'amortissement et 1209 pour les amortissements cumulés. 2) Extournez les charges constatées d'avance (total 79750 NOK au compte 1700). 3) Calculez et comptabilisez la provision d'impôt (22 % du bénéfice imposable) sur compte 8700/2920. Comptabilisez chaque amortissement comme une pièce comptable séparée.",
+  "parsed_task": {
+    "task_type": "monthly_closing",
+    "fields": {
+      "month": 12,
+      "year": 2025,
+      "accruals": [
+        {
+          "fromAccount": 1700,
+          "toAccount": 6300,
+          "amount": 79750,
+          "description": "Extourne charges constatées d'avance 2025"
+        }
+      ],
+      "depreciations": [
+        {
+          "account": 6010,
+          "assetAccount": 1250,
+          "acquisitionCost": 111950,
+          "usefulLifeYears": 9,
+          "description": "Amortissement Programvare 2025"
+        },
+        {
+          "account": 6010,
+          "assetAccount": 1200,
+          "acquisitionCost": 351450,
+          "usefulLifeYears": 9,
+          "description": "Amortissement Kontormaskiner 2025"
+        },
+        {
+          "account": 6010,
+          "assetAccount": 1240,
+          "acquisitionCost": 418800,
+          "usefulLifeYears": 10,
+          "description": "Amortissement Inventar 2025"
+        }
+      ],
+      "provisions": [
+        {
+          "debitAccount": 8700,
+          "creditAccount": 2920,
+          "amount": 0,
+          "description": "Provision d'impôt 2025"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 0,
+      "duration_ms": 30107.9,
+      "error": "",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "6300"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 7046.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "6010"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":464950252,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464950252\",\"number\":6010,\"numberPretty\":\"6010\",\"name\":\"Avskriving på transportmidler\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"60\",\"groupingCode\":\"6000\",\"displayName\":\"6010 Avskriving på transportmidler\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 234.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1250"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":464949918,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464949918\",\"number\":1250,\"numberPretty\":\"1250\",\"name\":\"Inventar\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Saldogruppe D: Personbiler, traktorer mv.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"12\",\"groupingCode\":\"1205\",\"displayName\":\"1250 Inventar\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 344.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2025-12-31",
+        "description": "Amortissement Programvare 2025",
+        "postings": [
+          {
+            "account": {
+              "id": 464950252
+            },
+            "amountGross": 1036.57,
+            "amountGrossCurrency": 1036.57,
+            "row": 1
+          },
+          {
+            "account": {
+              "id": 464949918
+            },
+            "amountGross": -1036.57,
+            "amountGrossCurrency": -1036.57,
+            "row": 2
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":609004966,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004966\",\"date\":\"2025-12-31\",\"number\":80,\"tempNumber\":0,\"year\":2025,\"description\":\"Amortissement Programvare 2025\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3845408615,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845408615\",\"voucher\":{\"id\":609004966,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004966\"},\"date\":\"2025-12-31\",\"description\":\"Amortissement Programvare 2025\",\"account\":{\"id\":464950252,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464950252\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"amount\":1036.57,\"amountCurrency\":1036.57,\"amountGross\":1036.57,\"amountGrossCurrency\":1036.57,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":true,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845408616,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845408616\",\"voucher\":{\"id\":609004966,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004966\"},\"date\":\"2025-12-31\",\"description\":\"Amortissement Programvare 2025\",\"account\":{\"id\":464949918,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464949918\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 225.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1200"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":464949905,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464949905\",\"number\":1200,\"numberPretty\":\"1200\",\"name\":\"Maskiner og anlegg\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Saldogruppe D: Personbiler, traktorer mv.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"12\",\"groupingCode\":\"1205\",\"displayName\":\"1200 Maskiner og anlegg\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 421.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2025-12-31",
+        "description": "Amortissement Kontormaskiner 2025",
+        "postings": [
+          {
+            "account": {
+              "id": 464950252
+            },
+            "amountGross": 3254.17,
+            "amountGrossCurrency": 3254.17,
+            "row": 1
+          },
+          {
+            "account": {
+              "id": 464949905
+            },
+            "amountGross": -3254.17,
+            "amountGrossCurrency": -3254.17,
+            "row": 2
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":609004971,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004971\",\"date\":\"2025-12-31\",\"number\":81,\"tempNumber\":0,\"year\":2025,\"description\":\"Amortissement Kontormaskiner 2025\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3845408630,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845408630\",\"voucher\":{\"id\":609004971,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004971\"},\"date\":\"2025-12-31\",\"description\":\"Amortissement Kontormaskiner 2025\",\"account\":{\"id\":464950252,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464950252\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"amount\":3254.17,\"amountCurrency\":3254.17,\"amountGross\":3254.17,\"amountGrossCurrency\":3254.17,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":true,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845408631,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845408631\",\"voucher\":{\"id\":609004971,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004971\"},\"date\":\"2025-12-31\",\"description\":\"Amortissement Kontormaskiner 2025\",\"account\":{\"id\":464949905,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464949905\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"dep"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 243.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1240"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":464949915,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464949915\",\"number\":1240,\"numberPretty\":\"1240\",\"name\":\"Traktorer\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Saldogruppe D: Personbiler, traktorer mv.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"12\",\"groupingCode\":\"1205\",\"displayName\":\"1240 Traktorer\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 385.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2025-12-31",
+        "description": "Amortissement Inventar 2025",
+        "postings": [
+          {
+            "account": {
+              "id": 464950252
+            },
+            "amountGross": 3490.0,
+            "amountGrossCurrency": 3490.0,
+            "row": 1
+          },
+          {
+            "account": {
+              "id": 464949915
+            },
+            "amountGross": -3490.0,
+            "amountGrossCurrency": -3490.0,
+            "row": 2
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":609004978,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004978\",\"date\":\"2025-12-31\",\"number\":82,\"tempNumber\":0,\"year\":2025,\"description\":\"Amortissement Inventar 2025\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3845408643,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845408643\",\"voucher\":{\"id\":609004978,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004978\"},\"date\":\"2025-12-31\",\"description\":\"Amortissement Inventar 2025\",\"account\":{\"id\":464950252,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464950252\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"amount\":3490.00,\"amountCurrency\":3490.00,\"amountGross\":3490.0,\"amountGrossCurrency\":3490.0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":true,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845408644,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845408644\",\"voucher\":{\"id\":609004978,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609004978\"},\"date\":\"2025-12-31\",\"description\":\"Amortissement Inventar 2025\",\"account\":{\"id\":464949915,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/464949915\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatTy"
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 56313.1,
+  "result": {
+    "status": "completed",
+    "taskType": "monthly_closing",
+    "month": 12,
+    "year": 2025,
+    "voucherDate": "2025-12-31",
+    "vouchersCreated": 3,
+    "vouchers": [
+      {
+        "type": "depreciation",
+        "voucherId": 609004966,
+        "description": "Amortissement Programvare 2025",
+        "amount": 1036.57
+      },
+      {
+        "type": "depreciation",
+        "voucherId": 609004971,
+        "description": "Amortissement Kontormaskiner 2025",
+        "amount": 3254.17
+      },
+      {
+        "type": "depreciation",
+        "voucherId": 609004978,
+        "description": "Amortissement Inventar 2025",
+        "amount": 3490.0
+      }
+    ],
+    "errors": [
+      "Accrual error: ",
+      "Provision missing required fields: {'debitAccount': 8700, 'creditAccount': 2920, 'amount': 0, 'description': \"Provision d'impôt 2025\"}"
+    ]
+  }
+}

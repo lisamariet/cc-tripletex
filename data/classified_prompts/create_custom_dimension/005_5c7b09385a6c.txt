@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Cree una dimensión contable personalizada "Kostsenter" con los valores "Økonomi" y "Produktutvikling". Luego registre un asiento en la cuenta 6340 por 45050 NOK, vinculado al valor de dimensión "Produ

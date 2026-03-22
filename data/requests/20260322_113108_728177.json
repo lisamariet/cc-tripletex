@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_113108_728177",
+  "revision": "tripletex-agent-00131-qsk",
+  "prompt": "Descobrimos erros no livro razão de janeiro e fevereiro de 2026. Revise todos os vouchers e encontre os 4 erros: um lançamento na conta errada (conta 6300 usada em vez de 7100, valor 3650 NOK), um voucher duplicado (conta 6300, valor 3700 NOK), uma linha de IVA em falta (conta 6300, valor sem IVA 23350 NOK falta IVA na conta 2710), e um valor incorreto (conta 6340, 23800 NOK registado em vez de 21350 NOK). Corrija todos os erros com lançamentos corretivos.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

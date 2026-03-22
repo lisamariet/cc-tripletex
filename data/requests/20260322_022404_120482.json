@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_022404_120482",
+  "prompt": "Erstellen Sie eine Rechnung für den Kunden Bergwerk GmbH (Org.-Nr. 967361690) mit drei Produktzeilen: Schulung (9995) zu 28050 NOK mit 25 % MwSt., Cloud-Speicher (8754) zu 3400 NOK mit 15 % MwSt. (Lebensmittel), und Systementwicklung (8751) zu 13300 NOK mit 0 % MwSt. (befreit).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

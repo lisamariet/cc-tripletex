@@ -1,0 +1,250 @@
+{
+  "timestamp": "20260321_001213_087732",
+  "prompt": "Fixez un prix forfaitaire de 328650 NOK sur le projet \"Développement e-commerce\" pour Cascade SARL (nº org. 913754689). Le chef de projet est Alice Moreau (alice.moreau@example.org). Facturez au client 25 % du prix fixe comme paiement d'étape.",
+  "parsed_task": {
+    "task_type": "set_project_fixed_price",
+    "fields": {
+      "projectName": "Développement e-commerce",
+      "customerName": "Cascade SARL",
+      "customerOrgNumber": "913754689",
+      "fixedPrice": 328650,
+      "projectManagerName": "Alice Moreau",
+      "invoicePercentage": 25
+    },
+    "confidence": 0.96
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 6711.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 7241.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 8186.0,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 8000.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 8053.1,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/364732674",
+      "status": 200,
+      "duration_ms": 7972.5,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/ledger/account/364732674",
+      "status": 200,
+      "duration_ms": 9257.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 7964.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 9059.9,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401980116/:invoice",
+      "status": 200,
+      "duration_ms": 8716.3,
+      "error": null
+    }
+  ],
+  "total_calls": 10,
+  "error_count_4xx": 0,
+  "total_duration_ms": 82549.9,
+  "result": {
+    "status": "completed",
+    "taskType": "set_project_fixed_price",
+    "created": {
+      "id": 401980066,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/401980066",
+      "name": "Développement e-commerce",
+      "number": "2",
+      "displayName": "2 Développement e-commerce",
+      "description": "",
+      "projectManager": {
+        "id": 18603370,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18603370"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-21",
+      "endDate": null,
+      "customer": {
+        "id": 108302448,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108302448"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": true,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 328650,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11074428,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11074428"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15628973,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15628973"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "2 Développement e-commerce",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Cascade SARL",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Alice Moreau",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 328650,
+      "accountingDimensionValues": []
+    },
+    "invoice": {
+      "id": 2147557885,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147557885",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-21",
+      "customer": {
+        "id": 108302448,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108302448"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-04",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401980116,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401980116"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607526528,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607526528"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965749539,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965749539"
+        }
+      ],
+      "voucher": {
+        "id": 608879959,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879959"
+      },
+      "deliveryDate": "2026-03-21",
+      "amount": 82162.5,
+      "amountCurrency": 82162.5,
+      "amountExcludingVat": 82162.5,
+      "amountExcludingVatCurrency": 82162.5,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 82162.5,
+      "amountCurrencyOutstanding": 82162.5,
+      "amountOutstandingTotal": 82162.5,
+      "amountCurrencyOutstandingTotal": 82162.5,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845062854,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845062854"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024181398
+    }
+  }
+}

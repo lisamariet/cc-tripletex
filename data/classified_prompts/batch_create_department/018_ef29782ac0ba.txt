@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez trois départements dans Tripletex : "Produksjon", "Salg" et "Logistikk".

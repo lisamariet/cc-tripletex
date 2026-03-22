@@ -1,0 +1,15 @@
+{
+  "timestamp": "20260321_160812_736890",
+  "prompt": "Reconcile the bank statement (attached CSV) against open invoices in Tripletex. Match incoming payments to customer invoices and outgoing payments to supplier invoices. Handle partial payments correctly.",
+  "files": [
+    {
+      "filename": "files/bankutskrift_en_05.csv",
+      "mime_type": "text/csv",
+      "content_base64": "RGF0bztGb3JrbGFyaW5nO0lubjtVdDtTYWxkbw0KMjAyNi0wMS0xNjtJbm5iZXRhbGluZyBmcmEgV2lsc29uIEx0ZCAvIEZha3R1cmEgMTAwMTsyNzc1MC4wMDs7MTI3NzUwLjAwDQoyMDI2LTAxLTE5O0lubmJldGFsaW5nIGZyYSBXaWxsaWFtcyBMdGQgLyBGYWt0dXJhIDEwMDI7MjQwNjIuNTA7OzE1MTgxMi41MA0KMjAyNi0wMS0yMDtJbm5iZXRhbGluZyBmcmEgVGF5bG9yIEx0ZCAvIEZha3R1cmEgMTAwMzs3Njc1LjAwOzsxNTk0ODcuNTANCjIwMjYtMDEtMjM7SW5uYmV0YWxpbmcgZnJhIFNtaXRoIEx0ZCAvIEZha3R1cmEgMTAwNDsxODYyNS4wMDs7MTc4MTEyLjUwDQoyMDI2LTAxLTI0O0lubmJldGFsaW5nIGZyYSBMZXdpcyBMdGQgLyBGYWt0dXJhIDEwMDU7MjY4MTIuNTA7OzIwNDkyNS4wMA0KMjAyNi0wMS0yNTtCZXRhbGluZyBTdXBwbGllciBIYXJyaXMgTHRkOzstOTQ1MC4wMDsxOTU0NzUuMDANCjIwMjYtMDEtMjY7QmV0YWxpbmcgU3VwcGxpZXIgSm9obnNvbiBMdGQ7Oy0xNzQwMC4wMDsxNzgwNzUuMDANCjIwMjYtMDEtMjc7QmV0YWxpbmcgU3VwcGxpZXIgV2lsbGlhbXMgTHRkOzstMTQ4MDAuMDA7MTYzMjc1LjAwDQoyMDI2LTAxLTI5O0JhbmtnZWJ5cjs0ODIuMjA7OzE2Mzc1Ny4yMA0KMjAyNi0wMS0zMDtSZW50ZWlubnRla3Rlcjs5MjcuNTQ7OzE2NDY4NC43NA0K"
+    }
+  ],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

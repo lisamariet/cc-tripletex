@@ -1,0 +1,67 @@
+[
+  {
+    "prompt": "Necesitamos el gasto de Skjermfilter de este recibo registrado en el departamento Innkjøp. Usa la cuenta de gastos correcta y asegura el tratamiento correcto del IVA.",
+    "timestamp": "20260321_180824_002628",
+    "hash": "96812258373c"
+  },
+  {
+    "prompt": "Precisamos da despesa de Kundemøte lunsj deste recibo registada no departamento Økonomi. Use a conta de despesas correta e garanta o tratamento correto do IVA.",
+    "timestamp": "20260321_192028_762646",
+    "hash": "e1a5271d3993"
+  },
+  {
+    "prompt": "Necesitamos el gasto de USB-hub de este recibo registrado en el departamento Utvikling. Usa la cuenta de gastos correcta y asegura el tratamiento correcto del IVA.",
+    "timestamp": "20260321_202301_205576",
+    "hash": "0edac082c69a"
+  },
+  {
+    "prompt": "We need the Kontorstoler expense from this receipt posted to department Kundeservice. Use the correct expense account and ensure proper VAT treatment.",
+    "timestamp": "20260321_203550_917431",
+    "hash": "17fbe6960d3a"
+  },
+  {
+    "prompt": "Vi trenger Whiteboard fra denne kvitteringen bokfort pa avdeling HR. Bruk riktig utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling.",
+    "timestamp": "20260321_205321_921402",
+    "hash": "637e3dcc2de3"
+  },
+  {
+    "prompt": "Vi trenger Togbillett fra denne kvitteringen bokfort pa avdeling Utvikling. Bruk riktig utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling.",
+    "timestamp": "20260322_014944_810615",
+    "hash": "bf64ec106226"
+  },
+  {
+    "prompt": "Vi treng Overnatting fra denne kvitteringa bokfort pa avdeling Utvikling. Bruk rett utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling.",
+    "timestamp": "20260322_020831_644318",
+    "hash": "49561cb028fa"
+  },
+  {
+    "prompt": "Necesitamos el gasto de Togbillett de este recibo registrado en el departamento HR. Usa la cuenta de gastos correcta y asegura el tratamiento correcto del IVA.",
+    "timestamp": "20260322_021650_870588",
+    "hash": "68e41a681257"
+  },
+  {
+    "prompt": "We need the Kontorrekvisita expense from this receipt posted to department Markedsføring. Use the correct expense account and ensure proper VAT treatment.",
+    "timestamp": "20260322_021735_558477",
+    "hash": "422e8b156c04"
+  },
+  {
+    "prompt": "Wir benotigen die Forretningslunsj-Ausgabe aus dieser Quittung in der Abteilung Salg. Verwenden Sie das richtige Aufwandskonto und stellen Sie die korrekte MwSt.-Behandlung sicher.",
+    "timestamp": "20260322_022619_690777",
+    "hash": "250b804f1a0e"
+  },
+  {
+    "prompt": "Wir benotigen die Togbillett-Ausgabe aus dieser Quittung in der Abteilung Logistikk. Verwenden Sie das richtige Aufwandskonto und stellen Sie die korrekte MwSt.-Behandlung sicher.",
+    "timestamp": "20260322_105912_492116",
+    "hash": "a808be180379"
+  },
+  {
+    "prompt": "Precisamos da despesa de Kaffemøte deste recibo registada no departamento Salg. Use a conta de despesas correta e garanta o tratamento correto do IVA.",
+    "timestamp": "20260322_110030_431029",
+    "hash": "df8c8de95869"
+  },
+  {
+    "prompt": "Wir benotigen die Tastatur-Ausgabe aus dieser Quittung in der Abteilung Markedsføring. Verwenden Sie das richtige Aufwandskonto und stellen Sie die korrekte MwSt.-Behandlung sicher.",
+    "timestamp": "20260322_124714_113614",
+    "hash": "37ae1b6b0438"
+  }
+]

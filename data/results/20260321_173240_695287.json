@@ -1,0 +1,212 @@
+{
+  "timestamp": "20260321_173240_695287",
+  "prompt": "Exécutez le cycle de vie complet du projet 'Migration Cloud Montagne' (Montagne SARL, nº org. 815119924) : 1) Le projet a un budget de 489850 NOK. 2) Enregistrez le temps : Louis Moreau (chef de projet, louis.moreau@example.org) 33 heures et Louis Dubois (consultant, louis.dubois@example.org) 108 heures. 3) Enregistrez un coût fournisseur de 48850 NOK de Soleil SARL (nº org. 981965965). 4) Créez une facture client pour le projet.",
+  "parsed_task": {
+    "task_type": "register_timesheet",
+    "fields": {
+      "projectName": "Migration Cloud Montagne",
+      "customerName": "Montagne SARL",
+      "customerOrgNumber": "815119924",
+      "projectBudget": 489850,
+      "employees": [
+        {
+          "name": "Louis Moreau",
+          "email": "louis.moreau@example.org",
+          "hours": 33
+        },
+        {
+          "name": "Louis Dubois",
+          "email": "louis.dubois@example.org",
+          "hours": 108
+        }
+      ],
+      "supplierName": "Soleil SARL",
+      "supplierOrgNumber": "981965965",
+      "supplierAmount": 48850,
+      "supplierExpenseAccount": 4000
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 346.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "louis.moreau@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18642413,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18642413\",\"firstName\":\"Louis\",\"lastName\":\"Moreau\",\"displayName\":\"Louis Moreau\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"louis.moreau@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":943520,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/943520\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108384480,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 1681.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "query_params": {
+        "name": "Migration Cloud Montagne"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":402022245,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402022245\",\"name\":\"Migration Cloud Montagne\",\"number\":\"1\",\"displayName\":\"1 Migration Cloud Montagne\",\"description\":\"\",\"projectManager\":{\"id\":18642413,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18642413\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-01-01\",\"endDate\":null,\"customer\":{\"id\":108384506,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108384506\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":true,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0.0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":489850.0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0.0,\"markUpFeesEarned\":0.0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0.0,\"projectHourlyRates\":[{\"id\":11086296,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11086296\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15640996,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15640996\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"1 Migration Cloud Montagne\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Montagne SARL\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Louis Moreau\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOn"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 555.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "louis.moreau@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18642413,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18642413\",\"firstName\":\"Louis\",\"lastName\":\"Moreau\",\"displayName\":\"Louis Moreau\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"louis.moreau@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":943520,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/943520\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108384480,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/activity/%3EforTimeSheet",
+      "status": 200,
+      "duration_ms": 486.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity/%3EforTimeSheet",
+      "query_params": {
+        "projectId": 402022245
+      },
+      "response_body": "{\"fullResultSize\":3,\"from\":0,\"count\":3,\"versionDigest\":null,\"values\":[{\"id\":5916275,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5916275\",\"name\":\"Design\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Design\",\"deletable\":true},{\"id\":5916211,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5916211\",\"name\":\"Fakturerbart arbeid\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":true,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Fakturerbart arbeid\",\"deletable\":true},{\"id\":5916209,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5916209\",\"name\":\"Prosjektadministrasjon\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Prosjektadministrasjon\",\"deletable\":true}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 370.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/timesheet/entry",
+      "request_body": {
+        "employee": {
+          "id": 18642413
+        },
+        "project": {
+          "id": 402022245
+        },
+        "activity": {
+          "id": 5916275
+        },
+        "date": "2026-03-21",
+        "hours": 33
+      },
+      "response_body": "{\"value\":{\"id\":175909354,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175909354\",\"project\":{\"id\":402022245,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402022245\"},\"activity\":{\"id\":5916275,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5916275\"},\"date\":\"2026-03-21\",\"hours\":33.0,\"chargeableHours\":33.0,\"employee\":{\"id\":18642413,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18642413\"},\"timeClocks\":[],\"comment\":\"\",\"locked\":false,\"chargeable\":false,\"invoice\":null,\"hourlyRate\":0.00,\"hourlyCost\":0.00,\"hourlyCostPercentage\":0,\"projectChargeableHours\":33.0}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 402.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "louis.dubois@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18642416,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18642416\",\"firstName\":\"Louis\",\"lastName\":\"Dubois\",\"displayName\":\"Louis Dubois\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"louis.dubois@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":943520,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/943520\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108384480,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/activity/%3EforTimeSheet",
+      "status": 200,
+      "duration_ms": 322.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity/%3EforTimeSheet",
+      "query_params": {
+        "projectId": 402022245
+      },
+      "response_body": "{\"fullResultSize\":3,\"from\":0,\"count\":3,\"versionDigest\":null,\"values\":[{\"id\":5916275,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5916275\",\"name\":\"Design\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Design\",\"deletable\":false},{\"id\":5916211,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5916211\",\"name\":\"Fakturerbart arbeid\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":true,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Fakturerbart arbeid\",\"deletable\":true},{\"id\":5916209,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5916209\",\"name\":\"Prosjektadministrasjon\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Prosjektadministrasjon\",\"deletable\":true}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 575.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/timesheet/entry",
+      "request_body": {
+        "employee": {
+          "id": 18642416
+        },
+        "project": {
+          "id": 402022245
+        },
+        "activity": {
+          "id": 5916275
+        },
+        "date": "2026-03-21",
+        "hours": 108
+      },
+      "response_body": "{\"value\":{\"id\":175909355,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175909355\",\"project\":{\"id\":402022245,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402022245\"},\"activity\":{\"id\":5916275,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5916275\"},\"date\":\"2026-03-21\",\"hours\":108.0,\"chargeableHours\":108.0,\"employee\":{\"id\":18642416,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18642416\"},\"timeClocks\":[],\"comment\":\"\",\"locked\":false,\"chargeable\":false,\"invoice\":null,\"hourlyRate\":0.00,\"hourlyCost\":0.00,\"hourlyCostPercentage\":0,\"projectChargeableHours\":108.0}}"
+    },
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 802.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "organizationNumber": "981965965"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108384528,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108384528\",\"name\":\"Soleil SARL\",\"organizationNumber\":\"981965965\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405618360,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405618360\"},\"physicalAddress\":{\"id\":405618359,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405618359\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":466682890,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466682890\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"Soleil SARL (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 352.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "4000"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":466682992,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466682992\",\"number\":4000,\"numberPretty\":\"4000\",\"name\":\"Innkjøp av råvarer og halvfabrikater\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"40\",\"groupingCode\":\"4005\",\"displayName\":\"4000 Innkjøp av råvarer og halvfabrikater\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 882.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2400"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":466682890,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466682890\",\"number\":2400,\"numberPretty\":\"2400\",\"name\":\"Leverandørgjeld\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"VENDOR\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":true,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"24\",\"groupingCode\":\"2400\",\"displayName\":\"2400 Leverandørgjeld\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/466682992",
+      "status": 200,
+      "duration_ms": 623.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/466682992",
+      "response_body": "{\"value\":{\"id\":466682992,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466682992\",\"number\":4000,\"numberPretty\":\"4000\",\"name\":\"Innkjøp av råvarer og halvfabrikater\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"40\",\"groupingCode\":\"4005\",\"displayName\":\"4000 Innkjøp av råvarer og halvfabrikater\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 500,
+      "duration_ms": 386.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucherType",
+      "query_params": {
+        "name": "Leverandørfaktura"
+      },
+      "response_body": "<!DOCTYPE html>\n<html>\n<head>\n    <link href=\"https://cdn.tripletex.no/google-fonts/rubik-405-470-550.css\" rel=\"stylesheet\" crossorigin=\"anonymous\" />\n\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=10\"/>\n    <title>Feilsituasjon - Tripletex</title>\n    <meta name=\"description\" content=\"Feilsituasjon - Tripletex\"/>\n    <link rel=\"apple-touch-icon-precomposed\" href=\"/touch-icon.png\"/>\n    <link rel=\"apple-touch-icon\" href=\"/touch-icon.png\"/>\n    <link rel=\"publisher\" href=\"https://plus.google.com/107969911410271540443\">\n    <meta name=\"viewport\" id=\"viewport\" content=\"width=device-width,minimum-scale=1.0,initial-scale=1.0\">\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n    <meta http-equiv=\"Cache-Control\" content=\"no-store, no-cache, must-revalidate, max-age=0\"/>\n    <meta http-equiv=\"Pragma\" content=\"no-cache\"/>\n    <meta http-equiv=\"Expires\" content=\"0\"/>\n    <meta name=\"google-site-verification\" content=\"ahLVYoqCCQPL5r6dw-8hse0e1kDhwIRrqO7XmcfsbXc\"/>\n    <meta name=\"google-site-verification\" content=\"psgeieanwuh8fLC3uH3aitJn4oNn0_KtBXbRirBg5ys\"/>\n    <link href=\"https://cdn.tripletex.no/google-fonts/material-icons-outlined.css\" rel=\"stylesheet\" crossorigin=\"anonymous\" />\n    <script type=\"text/javascript\">\n//<![CDATA[\n    window.CSRFToken = \"null\";\n\n    try {\n        window.localStorage.setItem('CSRFToken', window.CSRFToken);\n    } catch (e) {}\n//]]>\n</script>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/login-index.css\" media=\"screen\"/>\n    </head>\n\n\n<body>\n<div class=\"atl-flex login-root atl-color-bg\">\n    <div class=\"atl-flex atl-flex-col login-root__left\">\n        <div>\n            <a href=\"https://www.tripletex.no\"><img width=\"170\" src=\"/site/style/images/tripletex-logo-no-padding.svg\"\n                                                    alt=\"Økonomisystem\"></a>\n        </div>\n        <div class=\"innerBox atl-flex atl-flex-1 atl-justify-center atl-flex-col\">\n            <script>\nfunction tlxInitializeState() {}\n</script>\n\n<div c"
+    }
+  ],
+  "total_calls": 13,
+  "error_count_4xx": 0,
+  "total_duration_ms": 12039.2,
+  "result": {
+    "status": "completed",
+    "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+}

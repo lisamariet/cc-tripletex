@@ -1,0 +1,197 @@
+[
+  {
+    "prompt": "O cliente Luz do Sol Lda (org. nº 939210970) tem uma fatura pendente de 23900 NOK sem IVA por \"Manutenção\". Registe o pagamento total desta fatura.",
+    "timestamp": "20260319_234203_448402",
+    "hash": "f972c29f9d13"
+  },
+  {
+    "prompt": "Betalingen fra Nordhav AS (org.nr 973826018) for fakturaen \"Opplæring\" (42500 kr ekskl. MVA) ble returnert av banken. Reverser betalingen slik at fakturaen igjen viser utestående beløp.",
+    "timestamp": "20260320_073738_007842",
+    "hash": "2d386a310b54"
+  },
+  {
+    "prompt": "O cliente Floresta Lda (org. nº 916058896) tem uma fatura pendente de 30450 NOK sem IVA por \"Desenvolvimento de sistemas\". Registe o pagamento total desta fatura.",
+    "timestamp": "20260320_124957_032338",
+    "hash": "ea39eba7bd0c"
+  },
+  {
+    "prompt": "Der Kunde Windkraft GmbH (Org.-Nr. 954808483) hat eine offene Rechnung über 47600 NOK ohne MwSt. für \"Systementwicklung\". Registrieren Sie die vollständige Zahlung dieser Rechnung.",
+    "timestamp": "20260320_151424_119870",
+    "hash": "eab177731abd"
+  },
+  {
+    "prompt": "Le client Prairie SARL (nº org. 975013723) a une facture impayée de 45100 NOK hors TVA pour \"Licence logicielle\". Enregistrez le paiement intégral de cette facture.",
+    "timestamp": "20260320_152308_286317",
+    "hash": "8035b971f197"
+  },
+  {
+    "prompt": "The customer Windmill Ltd (org no. 859444598) has an outstanding invoice for 37550 NOK excluding VAT for \"Maintenance\". Register full payment on this invoice.",
+    "timestamp": "20260320_152922_526376",
+    "hash": "645f2e253d7f"
+  },
+  {
+    "prompt": "Le client Océan SARL (nº org. 924390735) a une facture impayée de 39300 NOK hors TVA pour \"Maintenance\". Enregistrez le paiement intégral de cette facture.",
+    "timestamp": "20260320_230226_141874",
+    "hash": "2dbac35417b5"
+  },
+  {
+    "prompt": "El cliente Olivares SL (org. nº 874863807) tiene una factura pendiente de 12700 NOK sin IVA por \"Servicio de red\". Registre el pago completo de esta factura.",
+    "timestamp": "20260320_230857_088047",
+    "hash": "654e9c6be707"
+  },
+  {
+    "prompt": "Le client Montagne SARL (nº org. 893135979) a une facture impayée de 19050 NOK hors TVA pour \"Service réseau\". Enregistrez le paiement intégral de cette facture.",
+    "timestamp": "20260320_231140_836052",
+    "hash": "417fe2b54a1f"
+  },
+  {
+    "prompt": "Der Kunde Sonnental GmbH (Org.-Nr. 855482207) hat eine offene Rechnung über 33500 NOK ohne MwSt. für \"Wartung\". Registrieren Sie die vollständige Zahlung dieser Rechnung.",
+    "timestamp": "20260320_233703_645842",
+    "hash": "361e110adfb2"
+  },
+  {
+    "prompt": "El cliente Solmar SL (org. nº 866440034) tiene una factura pendiente de 30000 NOK sin IVA por \"Almacenamiento en la nube\". Registre el pago completo de esta factura.",
+    "timestamp": "20260321_005516_270709",
+    "hash": "facc402e45fd"
+  },
+  {
+    "prompt": "O cliente Rio Azul Lda (org. nº 932217643) tem uma fatura pendente de 44100 NOK sem IVA por \"Sessão de formação\". Registe o pagamento total desta fatura.",
+    "timestamp": "20260321_072742_061783",
+    "hash": "a686664be551"
+  },
+  {
+    "prompt": "Me sende ein faktura på 8387 EUR til Dalheim AS (org.nr 847589930) då kursen var 11.99 NOK/EUR. Kunden har no betalt, men kursen er 12.84 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (agio) på rett konto.",
+    "timestamp": "20260321_124749_633812",
+    "hash": "ac1a142da000"
+  },
+  {
+    "prompt": "The customer Greenfield Ltd (org no. 853801941) has an outstanding invoice for 34450 NOK excluding VAT for \"Consulting Hours\". Register full payment on this invoice.",
+    "timestamp": "20260321_180518_706843",
+    "hash": "43632b51db60"
+  },
+  {
+    "prompt": "Enviámos uma fatura de 4885 EUR ao Luz do Sol Lda (org. nº 947361074) quando a taxa de câmbio era 11.81 NOK/EUR. O cliente pagou agora, mas a taxa é 10.83 NOK/EUR. Registe o pagamento e lance a diferença cambial (disagio) na conta correta.",
+    "timestamp": "20260321_181014_593960",
+    "hash": "51c1b62782c1"
+  },
+  {
+    "prompt": "Enviámos uma fatura de 8676 EUR ao Cascata Lda (org. nº 967770892) quando a taxa de câmbio era 11.62 NOK/EUR. O cliente pagou agora, mas a taxa é 10.89 NOK/EUR. Registe o pagamento e lance a diferença cambial (disagio) na conta correta.",
+    "timestamp": "20260321_181709_513073",
+    "hash": "4b7b66f1e728"
+  },
+  {
+    "prompt": "Wir haben eine Rechnung über 8077 EUR an Bergwerk GmbH (Org.-Nr. 863352010) gesendet, als der Wechselkurs 10.91 NOK/EUR betrug. Der Kunde hat nun bezahlt, aber der Kurs liegt bei 10.29 NOK/EUR. Erfassen Sie die Zahlung und buchen Sie die Wechselkursdifferenz (disagio) auf das korrekte Konto.",
+    "timestamp": "20260321_183418_622262",
+    "hash": "557a97f50b9d"
+  },
+  {
+    "prompt": "Kunden Skogheim AS (org.nr 900506902) har ein uteståande faktura på 12000 kr eksklusiv MVA for \"Systemutvikling\". Registrer full betaling på denne fakturaen.",
+    "timestamp": "20260321_183458_887011",
+    "hash": "442fbff82a95"
+  },
+  {
+    "prompt": "We sent an invoice for 19858 EUR to Northwave Ltd (org no. 923909583) when the exchange rate was 11.66 NOK/EUR. The customer has now paid, but the rate is 11.00 NOK/EUR. Register the payment and post the exchange rate difference (disagio) to the correct account.",
+    "timestamp": "20260321_185041_929132",
+    "hash": "84c7e23e16ec"
+  },
+  {
+    "prompt": "Nous avons envoyé une facture de 6224 EUR à Rivière SARL (nº org. 886727127) lorsque le taux de change était de 10.90 NOK/EUR. Le client a maintenant payé, mais le taux est de 10.33 NOK/EUR. Enregistrez le paiement et comptabilisez l'écart de change (disagio) sur le bon compte.",
+    "timestamp": "20260321_191651_009168",
+    "hash": "193bcb2b0f08"
+  },
+  {
+    "prompt": "Kunden Havbris AS (org.nr 831357983) har en utestående faktura på 5900 kr eksklusiv MVA for \"Konsulenttimer\". Registrer full betaling på denne fakturaen.",
+    "timestamp": "20260321_202500_034836",
+    "hash": "dae0f17be4fe"
+  },
+  {
+    "prompt": "Vi sendte en faktura på 18391 EUR til Lysgård AS (org.nr 909018005) da kursen var 11.50 NOK/EUR. Kunden har nå betalt, men kursen er 12.24 NOK/EUR. Registrer betalingen og bokfør valutadifferansen (agio) på korrekt konto.",
+    "timestamp": "20260321_212430_537637",
+    "hash": "1947ba98ff8e"
+  },
+  {
+    "prompt": "We sent an invoice for 13833 EUR to Brightstone Ltd (org no. 883627393) when the exchange rate was 11.86 NOK/EUR. The customer has now paid, but the rate is 12.74 NOK/EUR. Register the payment and post the exchange rate difference (agio) to the correct account.",
+    "timestamp": "20260321_221229_511512",
+    "hash": "262b9088e3c2"
+  },
+  {
+    "prompt": "O cliente Estrela Lda (org. nº 975389642) tem uma fatura pendente de 47200 NOK sem IVA por \"Serviço de rede\". Registe o pagamento total desta fatura.",
+    "timestamp": "20260321_221757_960695",
+    "hash": "f887194c3ded"
+  },
+  {
+    "prompt": "Crie um pedido para o cliente Montanha Lda (org. nº 864062245) com os produtos Licença de software (6749) a 4950 NOK e Armazenamento na nuvem (3048) a 7700 NOK. Converta o pedido em fatura e registe o pagamento total.",
+    "timestamp": "20260321_221908_906258",
+    "hash": "a0a95bd0809c"
+  },
+  {
+    "prompt": "Enviámos uma fatura de 13986 EUR ao Porto Alegre Lda (org. nº 906918129) quando a taxa de câmbio era 10.37 NOK/EUR. O cliente pagou agora, mas a taxa é 11.31 NOK/EUR. Registe o pagamento e lance a diferença cambial (agio) na conta correta.",
+    "timestamp": "20260321_222724_279836",
+    "hash": "8c49f8b8a08a"
+  },
+  {
+    "prompt": "Kunden Lysgård AS (org.nr 850823049) har en utestående faktura på 49700 kr eksklusiv MVA for \"Opplæring\". Registrer full betaling på denne fakturaen.",
+    "timestamp": "20260321_222916_547782",
+    "hash": "b5b828ce23ba"
+  },
+  {
+    "prompt": "Crie um pedido para o cliente Rio Azul Lda (org. nº 942366108) com os produtos Sessão de formação (5517) a 15250 NOK e Consultoria de dados (3392) a 19750 NOK. Converta o pedido em fatura e registe o pagamento total.",
+    "timestamp": "20260321_230152_950407",
+    "hash": "c7ea49b793c2"
+  },
+  {
+    "prompt": "Crie um pedido para o cliente Solmar Lda (org. nº 867069526) com os produtos Sessão de formação (4466) a 35600 NOK e Licença de software (3717) a 3250 NOK. Converta o pedido em fatura e registe o pagamento total.",
+    "timestamp": "20260322_001403_778604",
+    "hash": "4536cd45942b"
+  },
+  {
+    "prompt": "We sent an invoice for 14988 EUR to Northwave Ltd (org no. 972362980) when the exchange rate was 11.80 NOK/EUR. The customer has now paid, but the rate is 12.25 NOK/EUR. Register the payment and post the exchange rate difference (agio) to the correct account.",
+    "timestamp": "20260322_005635_137287",
+    "hash": "868d149bd8de"
+  },
+  {
+    "prompt": "Kunden Strandvik AS (org.nr 836530462) har ein uteståande faktura på 6700 kr eksklusiv MVA for \"Nettverksteneste\". Registrer full betaling på denne fakturaen.",
+    "timestamp": "20260322_005657_295207",
+    "hash": "15d248b91ff5"
+  },
+  {
+    "prompt": "Enviamos una factura por 7045 EUR a Sierra SL (org. nº 925302899) cuando el tipo de cambio era 11.32 NOK/EUR. El cliente ha pagado ahora, pero el tipo es 11.99 NOK/EUR. Registre el pago y contabilice la diferencia de tipo de cambio (agio) en la cuenta correcta.",
+    "timestamp": "20260322_005733_187619",
+    "hash": "20da5ed816cd"
+  },
+  {
+    "prompt": "The customer Windmill Ltd (org no. 914408326) has an outstanding invoice for 26400 NOK excluding VAT for \"Network Service\". Register full payment on this invoice.",
+    "timestamp": "20260322_021947_119252",
+    "hash": "1fc9363ab03c"
+  },
+  {
+    "prompt": "Me sende ein faktura på 11400 EUR til Fjelltopp AS (org.nr 814814696) då kursen var 10.22 NOK/EUR. Kunden har no betalt, men kursen er 10.70 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (agio) på rett konto.",
+    "timestamp": "20260322_022002_407280",
+    "hash": "573a2ca1ab66"
+  },
+  {
+    "prompt": "Kunden Brattli AS (org.nr 909268265) har en utestående faktura på 31300 kr eksklusiv MVA for \"Konsulenttimer\". Registrer full betaling på denne fakturaen.",
+    "timestamp": "20260322_083600_694653",
+    "hash": "191a7a4912c7"
+  },
+  {
+    "prompt": "Me sende ein faktura på 10143 EUR til Fjelltopp AS (org.nr 954884791) då kursen var 10.54 NOK/EUR. Kunden har no betalt, men kursen er 10.23 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (disagio) på rett konto.",
+    "timestamp": "20260322_102444_441419",
+    "hash": "bdfc3cf09512"
+  },
+  {
+    "prompt": "Me sende ein faktura på 10781 EUR til Elvdal AS (org.nr 964825114) då kursen var 11.03 NOK/EUR. Kunden har no betalt, men kursen er 11.41 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (agio) på rett konto.",
+    "timestamp": "20260322_121031_793126",
+    "hash": "8e0ac4d2526d"
+  },
+  {
+    "prompt": "We sent an invoice for 11671 EUR to Ironbridge Ltd (org no. 915238106) when the exchange rate was 11.22 NOK/EUR. The customer has now paid, but the rate is 11.71 NOK/EUR. Register the payment and post the exchange rate difference (agio) to the correct account.",
+    "timestamp": "20260322_123241_301165",
+    "hash": "d5f0c2935f80"
+  },
+  {
+    "prompt": "We sent an invoice for 2052 EUR to Northwave Ltd (org no. 883808568) when the exchange rate was 10.97 NOK/EUR. The customer has now paid, but the rate is 10.01 NOK/EUR. Register the payment and post the exchange rate difference (disagio) to the correct account.",
+    "timestamp": "20260322_131353_552713",
+    "hash": "20d6aec5b5bc"
+  }
+]

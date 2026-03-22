@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erstellen Sie eine benutzerdefinierte Buchhaltungsdimension "Kostsenter" mit den Werten "IT" und "Innkjøp". Buchen Sie dann einen Beleg auf Konto 7000 über 19450 NOK, verknüpft mit dem Dimensionswert 

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Køyr løn for Gunnhild Aasen (gunnhild.aasen@example.org) for denne månaden. Grunnløn er 51800 kr. Legg til ein eingongsbonus på 5700 kr i tillegg til grunnløna.

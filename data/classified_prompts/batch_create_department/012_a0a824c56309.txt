@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett tre avdelinger i Tripletex: "Utvikling", "Drift" og "HR".

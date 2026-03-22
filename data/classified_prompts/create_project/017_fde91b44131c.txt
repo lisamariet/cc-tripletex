@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Create the project "Upgrade Windmill" linked to the customer Windmill Ltd (org no. 978017681). The project manager is Grace Lewis (grace.lewis@example.org).

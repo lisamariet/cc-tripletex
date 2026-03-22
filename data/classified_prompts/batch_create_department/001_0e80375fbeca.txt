@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create three departments in Tripletex: "Utvikling", "Lager", and "Regnskap".

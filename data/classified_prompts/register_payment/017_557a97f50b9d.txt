@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Wir haben eine Rechnung über 8077 EUR an Bergwerk GmbH (Org.-Nr. 863352010) gesendet, als der Wechselkurs 10.91 NOK/EUR betrug. Der Kunde hat nun bezahlt, aber der Kurs liegt bei 10.29 NOK/EUR. Erfass

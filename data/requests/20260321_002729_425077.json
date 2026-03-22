@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_002729_425077",
+  "prompt": "Tenemos un nuevo empleado llamado Lucía Hernández, nacido el 14. March 1986. Créelo como empleado con el correo lucia.hernandez@example.org y fecha de inicio 17. January 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

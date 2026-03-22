@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Establezca un precio fijo de 152400 NOK en el proyecto "Mejora de infraestructura" para Estrella SL (org. nº 808166283). El director del proyecto es Rafael García (rafael.garcia@example.org). Facture 

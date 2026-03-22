@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_164740_606949",
+  "prompt": "Execute the complete project lifecycle for 'ERP Implementation Silveroak' (Silveroak Ltd, org no. 814740536): 1) The project has a budget of 364650 NOK. 2) Log time: Henry Harris (project manager, henry.harris@example.org) 61 hours and Sarah Smith (consultant, sarah.smith@example.org) 108 hours. 3) Register supplier cost of 34850 NOK from Northwave Ltd (org no. 938190984). 4) Create a customer invoice for the project.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

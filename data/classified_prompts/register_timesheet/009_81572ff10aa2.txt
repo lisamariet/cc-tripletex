@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erfassen Sie 14 Stunden für Anna Wagner (anna.wagner@example.org) auf der Aktivität "Analyse" im Projekt "Sicherheitsaudit" für Waldstein GmbH (Org.-Nr. 948366207). Stundensatz: 1150 NOK/h. Erstellen 

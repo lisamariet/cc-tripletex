@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett tre avdelingar i Tripletex: "Økonomi", "Administrasjon" og "Innkjøp".

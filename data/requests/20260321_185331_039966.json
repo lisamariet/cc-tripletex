@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_185331_039966",
+  "prompt": "Registrer 15 timer for Solveig Bakken (solveig.bakken@example.org) på aktiviteten \"Testing\" i prosjektet \"Systemoppgradering\" for Stormberg AS (org.nr 963903359). Timesats: 1900 kr/t. Generer en prosjektfaktura til kunden basert på de registrerte timene.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

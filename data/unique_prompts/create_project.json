@@ -1,0 +1,127 @@
+[
+  {
+    "prompt": "Create the project \"Integration Northwave\" linked to the customer Northwave Ltd (org no. 950072652). The project manager is James Johnson (james.johnson@example.org).",
+    "timestamp": "20260319_233306_546665",
+    "hash": "828c0662acf1"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Analyse Fjordkraft\" knyttet til kunden Fjordkraft AS (org.nr 944845712). Prosjektleder er Hilde Johansen (hilde.johansen@example.org).",
+    "timestamp": "20260320_134922_448324",
+    "hash": "9dbd60b8904c"
+  },
+  {
+    "prompt": "Erstellen Sie das Projekt \"Integration Windkraft\" verknüpft mit dem Kunden Windkraft GmbH (Org.-Nr. 964854629). Projektleiter ist Sophia Meyer (sophia.meyer@example.org).",
+    "timestamp": "20260320_151230_528974",
+    "hash": "65dec0e6d949"
+  },
+  {
+    "prompt": "Créez le projet \"Intégration Montagne\" lié au client Montagne SARL (nº org. 975615766). Le chef de projet est Jules Robert (jules.robert@example.org).",
+    "timestamp": "20260320_210441_087084",
+    "hash": "77ec4c83a5e9"
+  },
+  {
+    "prompt": "Erstellen Sie das Projekt \"Integration Windkraft\" verknüpft mit dem Kunden Windkraft GmbH (Org.-Nr. 804172807). Projektleiter ist Hannah Weber (hannah.weber@example.org).",
+    "timestamp": "20260320_225437_426456",
+    "hash": "6e9bd9260af6"
+  },
+  {
+    "prompt": "Create the project \"Upgrade Greenfield\" linked to the customer Greenfield Ltd (org no. 918986197). The project manager is Emily Walker (emily.walker@example.org).",
+    "timestamp": "20260320_230039_733293",
+    "hash": "33d857ae6d71"
+  },
+  {
+    "prompt": "Create the project \"Analysis Oakwood\" linked to the customer Oakwood Ltd (org no. 849612913). The project manager is Lucy Taylor (lucy.taylor@example.org).",
+    "timestamp": "20260320_233058_646792",
+    "hash": "1484085a8015"
+  },
+  {
+    "prompt": "Crea el proyecto \"Actualización Dorada\" vinculado al cliente Dorada SL (org. nº 800043328). El director del proyecto es Carmen Rodríguez (carmen.rodriguez@example.org).",
+    "timestamp": "20260320_233649_440215",
+    "hash": "9c29bfac0884"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Analyse Sjøbris\" knytt til kunden Sjøbris AS (org.nr 883693329). Prosjektleiar er Steinar Berge (steinar.berge@example.org).",
+    "timestamp": "20260320_235853_650717",
+    "hash": "b21452cc4192"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Migrasjon Elvdal\" knytt til kunden Elvdal AS (org.nr 877501906). Prosjektleiar er Liv Haugen (liv.haugen@example.org).",
+    "timestamp": "20260321_001402_409778",
+    "hash": "c65833f3bfc8"
+  },
+  {
+    "prompt": "Totalkostnadene auka monaleg frå januar til februar 2026. Analyser hovudboka og finn dei tre kostnadskontoane med størst auke i beløp. Opprett eit internt prosjekt for kvar av dei tre kontoane med kontoens namn. Opprett også ein aktivitet for kvart prosjekt.",
+    "timestamp": "20260321_152325_657487",
+    "hash": "2493dc77924d"
+  },
+  {
+    "prompt": "Totalkostnadene økte betydelig fra januar til februar 2026. Analyser hovedboken og finn de tre kostnadskontoene med størst økning i beløp. Opprett et internt prosjekt for hver av de tre kontoene med kontoens namn. Opprett også en aktivitet for hvert prosjekt.",
+    "timestamp": "20260321_152329_674069",
+    "hash": "d7a03d1bccf9"
+  },
+  {
+    "prompt": "Totalkostnadene økte betydelig fra januar til februar 2026. Analyser hovedboken og finn de tre kostnadskontoene med størst økning i beløp. Opprett et internt prosjekt for hver av de tre kontoene med kontoens navn. Opprett også en aktivitet for hvert prosjekt.",
+    "timestamp": "20260321_165027_766713",
+    "hash": "94b3e50a278e"
+  },
+  {
+    "prompt": "Crea el proyecto \"Migración Viento\" vinculado al cliente Viento SL (org. nº 857047575). El director del proyecto es Carlos Romero (carlos.romero@example.org).",
+    "timestamp": "20260321_165107_278918",
+    "hash": "e1c1a84dde6b"
+  },
+  {
+    "prompt": "Create the project \"Upgrade Windmill\" linked to the customer Windmill Ltd (org no. 978017681). The project manager is Grace Lewis (grace.lewis@example.org).",
+    "timestamp": "20260321_174037_878980",
+    "hash": "fde91b44131c"
+  },
+  {
+    "prompt": "Les coûts totaux ont augmenté de manière significative de janvier à février 2026. Analysez le grand livre et identifiez les trois comptes de charges avec la plus forte augmentation. Créez un projet interne pour chacun des trois comptes avec le nom du compte. Créez également une activité pour chaque projet.",
+    "timestamp": "20260321_180305_416627",
+    "hash": "27651763cd60"
+  },
+  {
+    "prompt": "Los costos totales aumentaron significativamente de enero a febrero de 2026. Analice el libro mayor e identifique las tres cuentas de gastos con el mayor incremento en monto. Cree un proyecto interno para cada una de las tres cuentas con el nombre de la cuenta. También cree una actividad para cada proyecto.",
+    "timestamp": "20260321_183429_392339",
+    "hash": "be679db71249"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Integrasjon Havbris\" knyttet til kunden Havbris AS (org.nr 999148387). Prosjektleder er Henrik Ødegård (henrik.degard@example.org).",
+    "timestamp": "20260321_201923_236910",
+    "hash": "022f85f8563b"
+  },
+  {
+    "prompt": "Crie o projeto \"Integração Porto\" vinculado ao cliente Porto Alegre Lda (org. nº 884811686). O gerente de projeto é Lucas Silva (lucas.silva@example.org).",
+    "timestamp": "20260321_224938_876195",
+    "hash": "589dc3257010"
+  },
+  {
+    "prompt": "Create the project \"Upgrade Silveroak\" linked to the customer Silveroak Ltd (org no. 937657250). The project manager is Alice Smith (alice.smith@example.org).",
+    "timestamp": "20260321_230041_423410",
+    "hash": "12dc394b8432"
+  },
+  {
+    "prompt": "Os custos totais aumentaram significativamente de janeiro a fevereiro de 2026. Analise o livro razão e identifique as três contas de despesa com o maior aumento em valor. Crie um projeto interno para cada uma das três contas com o nome da conta. Também crie uma atividade para cada projeto.",
+    "timestamp": "20260322_005706_704229",
+    "hash": "6bae1eea33f6"
+  },
+  {
+    "prompt": "Total costs increased significantly from January to February 2026. Analyze the general ledger and identify the three expense accounts with the largest increase in amount. Create an internal project for each of the three accounts using the account name. Also create an activity for each project.",
+    "timestamp": "20260322_011214_150584",
+    "hash": "c2ad3d51333d"
+  },
+  {
+    "prompt": "Créez le projet \"Analyse Lumière\" lié au client Lumière SARL (nº org. 929902688). Le chef de projet est Léo Dubois (leo.dubois@example.org).",
+    "timestamp": "20260322_021212_794368",
+    "hash": "46b0f4eadab2"
+  },
+  {
+    "prompt": "Crie o projeto \"Análise Porto\" vinculado ao cliente Porto Alegre Lda (org. nº 996943305). O gerente de projeto é Lucas Oliveira (lucas.oliveira@example.org).",
+    "timestamp": "20260322_080451_067980",
+    "hash": "772353b44f71"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Integrasjon Tindra\" knyttet til kunden Tindra AS (org.nr 887870462). Prosjektleder er Lars Johansen (lars.johansen@example.org).",
+    "timestamp": "20260322_091146_820577",
+    "hash": "e4673eea49fe"
+  }
+]

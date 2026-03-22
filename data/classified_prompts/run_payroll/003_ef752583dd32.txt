@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Processe o salário de Lucas Martins (lucas.martins@example.org) para este mês. O salário base é de 39000 NOK. Adicione um bónus único de 10500 NOK além do salário base.

@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_105841_515615",
+  "revision": "tripletex-agent-00130-cps",
+  "prompt": "Nous avons envoyé une facture de 9273 EUR à Montagne SARL (nº org. 941382142) lorsque le taux de change était de 10.34 NOK/EUR. Le client a maintenant payé, mais le taux est de 10.83 NOK/EUR. Enregistrez le paiement et comptabilisez l'écart de change (agio) sur le bon compte.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

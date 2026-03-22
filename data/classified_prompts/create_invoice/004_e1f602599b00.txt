@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett og send ein faktura til kunden Skogheim AS (org.nr 929397088) på 23250 kr eksklusiv MVA. Fakturaen gjeld Vedlikehald.

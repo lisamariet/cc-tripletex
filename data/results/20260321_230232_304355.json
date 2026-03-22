@@ -1,0 +1,154 @@
+{
+  "timestamp": "20260321_230232_304355",
+  "prompt": "Create the project \"Integration Northwave\" linked to the customer Northwave Ltd (org no. 950072652). The project manager is James Johnson (james.johnson@example.org).",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "name": "Integration Northwave",
+      "customerName": "Northwave Ltd",
+      "customerOrgNumber": "950072652",
+      "projectManagerName": "James Johnson"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 386.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "firstName": "James",
+        "lastName": "Johnson"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18687087,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18687087\",\"firstName\":\"James\",\"lastName\":\"Johnson\",\"displayName\":\"James Johnson\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"james.johnson@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":968854,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/968854\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108451724,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 335.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "950072652",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108451765,\"name\":\"Northwave Ltd\",\"organizationNumber\":\"950072652\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 443.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "Integration Northwave",
+        "isInternal": false,
+        "projectManager": {
+          "id": 18687087
+        },
+        "customer": {
+          "id": 108451765
+        },
+        "startDate": "2026-03-21"
+      },
+      "response_body": "{\"value\":{\"id\":402044556,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402044556\",\"name\":\"Integration Northwave\",\"number\":\"1\",\"displayName\":\"1 Integration Northwave\",\"description\":\"\",\"projectManager\":{\"id\":18687087,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18687087\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-21\",\"endDate\":null,\"customer\":{\"id\":108451765,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108451765\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":false,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11091842,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11091842\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15646751,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15646751\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"1 Integration Northwave\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Northwave Ltd\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"James Johnson\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":0,\"accountingDimensionValues\":[]}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 2499.8,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "created": {
+      "id": 402044556,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/402044556",
+      "name": "Integration Northwave",
+      "number": "1",
+      "displayName": "1 Integration Northwave",
+      "description": "",
+      "projectManager": {
+        "id": 18687087,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18687087"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-21",
+      "endDate": null,
+      "customer": {
+        "id": 108451765,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108451765"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": false,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 0,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11091842,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11091842"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15646751,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15646751"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "1 Integration Northwave",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Northwave Ltd",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "James Johnson",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 0,
+      "accountingDimensionValues": []
+    }
+  }
+}

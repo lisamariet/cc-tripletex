@@ -1,0 +1,97 @@
+{
+  "timestamp": "20260322_132307_860768",
+  "revision": "tripletex-agent-00136-rsk",
+  "prompt": "Opprett ein faktura til kunden Elvdal AS (org.nr 810713909) med tre produktlinjer: Nettverksteneste (7765) til 13150 kr med 25 % MVA, Konsulenttimar (4369) til 11800 kr med 15 % MVA (næringsmiddel), og Vedlikehald (5331) til 8700 kr med 0 % MVA (avgiftsfri).",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Elvdal AS",
+      "customerOrgNumber": "810713909",
+      "lines": [
+        {
+          "description": "Nettverksteneste",
+          "productNumber": "7765",
+          "quantity": 1,
+          "unitPriceExcludingVat": 13150,
+          "vatCode": "3"
+        },
+        {
+          "description": "Konsulenttimar",
+          "productNumber": "4369",
+          "quantity": 1,
+          "unitPriceExcludingVat": 11800,
+          "vatCode": "31"
+        },
+        {
+          "description": "Vedlikehald",
+          "productNumber": "5331",
+          "quantity": 1,
+          "unitPriceExcludingVat": 8700,
+          "vatCode": "5"
+        }
+      ]
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 403,
+      "duration_ms": 85.2,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 403,
+      "duration_ms": 54.7,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "810713909",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 403,
+      "duration_ms": 50.1,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "name": "Elvdal AS",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 403,
+      "duration_ms": 51.0,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "request_body": {
+        "name": "Elvdal AS",
+        "isCustomer": true,
+        "organizationNumber": "810713909"
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 4,
+  "total_duration_ms": 3833.7,
+  "result": {
+    "status": "completed",
+    "note": "Could not find or create customer"
+  }
+}

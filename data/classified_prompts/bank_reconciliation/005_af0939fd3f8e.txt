@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Concilia el extracto bancario (CSV adjunto) con las facturas abiertas en Tripletex. Relaciona los pagos entrantes con las facturas de clientes y los pagos salientes con las facturas de proveedores. Ma

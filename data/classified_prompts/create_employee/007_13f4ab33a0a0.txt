@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Wir haben einen neuen Mitarbeiter namens Sophia Hoffmann, geboren am 7. January 1995. Bitte legen Sie ihn als Mitarbeiter mit der E-Mail sophia.hoffmann@example.org und dem Startdatum 3. June 2026 an.

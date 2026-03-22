@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Køyr løn for Sigrid Brekke (sigrid.brekke@example.org) for denne månaden. Grunnløn er 34950 kr. Legg til ein eingongsbonus på 15350 kr i tillegg til grunnløna.

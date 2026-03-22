@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_180354_645091",
+  "prompt": "Crie o cliente Porto Alegre Lda com número de organização 964528136. O endereço é Sjøgata 128, 4611 Kristiansand. E-mail: post@porto.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

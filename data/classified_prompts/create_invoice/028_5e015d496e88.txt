@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea y envía una factura al cliente Luna SL (org. nº 931597922) por 5450 NOK sin IVA. La factura es por Sesión de formación.

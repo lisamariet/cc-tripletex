@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Le client Montagne SARL (nº org. 893135979) a une facture impayée de 19050 NOK hors TVA pour "Service réseau". Enregistrez le paiement intégral de cette facture.

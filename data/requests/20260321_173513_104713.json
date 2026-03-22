@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_173513_104713",
+  "prompt": "Exécutez le cycle de vie complet du projet 'Mise à Niveau Système Soleil' (Soleil SARL, nº org. 869871079) : 1) Le projet a un budget de 475350 NOK. 2) Enregistrez le temps : Gabriel Richard (chef de projet, gabriel.richard@example.org) 25 heures et Chloé Richard (consultant, chloe.richard@example.org) 96 heures. 3) Enregistrez un coût fournisseur de 93950 NOK de Forêt SARL (nº org. 967857920). 4) Créez une facture client pour le projet.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

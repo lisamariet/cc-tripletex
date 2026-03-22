@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_021947_119252",
+  "prompt": "The customer Windmill Ltd (org no. 914408326) has an outstanding invoice for 26400 NOK excluding VAT for \"Network Service\". Register full payment on this invoice.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

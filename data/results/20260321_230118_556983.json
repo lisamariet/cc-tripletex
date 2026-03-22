@@ -1,0 +1,371 @@
+{
+  "timestamp": "20260321_230118_556983",
+  "prompt": "Processe o salário de Maria Almeida (maria.almeida@example.org) para este mês. O salário base é de 33550 NOK. Adicione um bónus único de 14400 NOK além do salário base.",
+  "parsed_task": {
+    "task_type": "run_payroll",
+    "fields": {
+      "employeeName": "Maria Almeida",
+      "employeeEmail": "maria.almeida@example.org",
+      "baseSalary": 33550,
+      "bonus": 14400
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 2163.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "maria.almeida@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18617768,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18617768\",\"firstName\":\"Maria\",\"lastName\":\"Almeida\",\"displayName\":\"Maria Almeida\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"maria.almeida@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":745753,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/745753\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107929377,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "PUT",
+      "path": "/employee/18617768",
+      "status": 200,
+      "duration_ms": 2203.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/18617768",
+      "request_body": {
+        "id": 18617768,
+        "version": 2,
+        "firstName": "Maria",
+        "lastName": "Almeida",
+        "dateOfBirth": "1990-01-01"
+      },
+      "response_body": "{\"value\":{\"id\":18617768,\"version\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18617768\",\"firstName\":\"Maria\",\"lastName\":\"Almeida\",\"displayName\":\"Maria Almeida\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1990-01-01\",\"email\":\"maria.almeida@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":745753,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/745753\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107929377,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "GET",
+      "path": "/division",
+      "status": 200,
+      "duration_ms": 3370.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/division",
+      "query_params": {
+        "count": 1
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "GET",
+      "path": "/municipality",
+      "status": 200,
+      "duration_ms": 3338.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/municipality",
+      "query_params": {
+        "count": 5
+      },
+      "response_body": "{\"fullResultSize\":6,\"from\":0,\"count\":5,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":1,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/municipality/1\",\"number\":\"5016\",\"name\":\"Agdenes\",\"county\":\"Trøndelag\",\"payrollTaxZone\":\"\",\"displayName\":\"Agdenes (5016) Inaktiv\"},{\"id\":2,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/municipality/2\",\"number\":\"1820\",\"name\":\"Alstahaug\",\"county\":\"Nordland\",\"payrollTaxZone\":\"4\",\"displayName\":\"Alstahaug (1820)\"},{\"id\":3,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/municipality/3\",\"number\":\"5601/5403\",\"name\":\"Alta\",\"county\":\"Troms og Finnmark\",\"payrollTaxZone\":\"5\",\"displayName\":\"Alta (5601/5403)\"},{\"id\":4,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/municipality/4\",\"number\":\"3428\",\"name\":\"Alvdal\",\"county\":\"Innlandet\",\"payrollTaxZone\":\"3\",\"displayName\":\"Alvdal (3428)\"},{\"id\":5,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/municipality/5\",\"number\":\"0719\",\"name\":\"Andebu\",\"county\":\"Vestfold\",\"payrollTaxZone\":\"\",\"displayName\":\"Andebu (0719) Inaktiv\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/division",
+      "status": 201,
+      "duration_ms": 1598.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/division",
+      "request_body": {
+        "name": "Hovedvirksomhet",
+        "startDate": "2026-01-01",
+        "organizationNumber": "999999999",
+        "municipality": {
+          "id": 2
+        },
+        "municipalityDate": "2026-01-01"
+      },
+      "response_body": "{\"value\":{\"id\":108451353,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/division/108451353\",\"displayName\":\"(999999999) Hovedvirksomhet\",\"name\":\"Hovedvirksomhet\",\"startDate\":\"2026-01-01\",\"endDate\":null,\"organizationNumber\":\"999999999\",\"municipalityDate\":\"2026-01-01\",\"municipality\":{\"id\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/municipality/2\"}}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee/employment",
+      "status": 200,
+      "duration_ms": 2027.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "query_params": {
+        "employeeId": 18617768
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":null,\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 2103.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18617768
+        },
+        "startDate": "2026-01-01",
+        "division": {
+          "id": 108451353
+        },
+        "isMainEmployer": true,
+        "taxDeductionCode": "loennFraHovedarbeidsgiver"
+      },
+      "response_body": "{\"value\":{\"id\":2845908,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2845908\",\"employee\":{\"id\":18617768,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18617768\"},\"employmentId\":\"\",\"startDate\":\"2026-01-01\",\"endDate\":null,\"employmentEndReason\":null,\"division\":{\"id\":108451353,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/division/108451353\"},\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee/employment/2845908",
+      "status": 200,
+      "duration_ms": 1700.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment/2845908",
+      "query_params": {
+        "fields": "id,employmentDetails(id)"
+      },
+      "response_body": "{\"value\":{\"id\":2845908,\"employmentDetails\":[]}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment/details",
+      "status": 201,
+      "duration_ms": 2058.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment/details",
+      "request_body": {
+        "employment": {
+          "id": 2845908
+        },
+        "date": "2026-01-01",
+        "employmentType": "ORDINARY",
+        "employmentForm": "PERMANENT",
+        "remunerationType": "MONTHLY_WAGE",
+        "workingHoursScheme": "NOT_SHIFT",
+        "percentageOfFullTimeEquivalent": 100.0,
+        "annualSalary": 402600,
+        "monthlySalary": 33550
+      },
+      "response_body": "{\"value\":{\"id\":3744142,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/details/3744142\",\"employment\":{\"id\":2845908,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2845908\"},\"date\":\"2026-01-01\",\"employmentType\":\"ORDINARY\",\"employmentForm\":\"PERMANENT\",\"remunerationType\":\"MONTHLY_WAGE\",\"workingHoursScheme\":\"NOT_SHIFT\",\"shiftDurationHours\":0,\"occupationCode\":null,\"percentageOfFullTimeEquivalent\":100.0,\"annualSalary\":402600,\"hourlyWage\":206,\"payrollTaxMunicipalityId\":null,\"monthlySalary\":33550.00}}"
+    },
+    {
+      "method": "GET",
+      "path": "/salary/type",
+      "status": 200,
+      "duration_ms": 2467.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/salary/type",
+      "query_params": {
+        "number": "2000"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":null,\"values\":[{\"id\":55459519,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/type/55459519\",\"number\":\"2000\",\"name\":\"Fastlønn\",\"description\":\"\",\"showInTimesheet\":false,\"isSickPayable\":true,\"isVacationPayable\":true,\"isTaxable\":true,\"payStatementCodeCode\":\"111-A\",\"ameldingWageCode\":\"Trekkpliktig kontantytelse - fastlønn\",\"accountNumberDebit\":{\"id\":377868459,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/377868459\"},\"accountNumberCredit\":null,\"isPayrollTaxable\":true}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/salary/type",
+      "status": 200,
+      "duration_ms": 2446.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/salary/type",
+      "query_params": {
+        "number": "2002"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":null,\"values\":[{\"id\":55459707,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/type/55459707\",\"number\":\"2002\",\"name\":\"Bonus\",\"description\":\"\",\"showInTimesheet\":false,\"isSickPayable\":true,\"isVacationPayable\":true,\"isTaxable\":true,\"payStatementCodeCode\":\"111-A\",\"ameldingWageCode\":\"Trekkpliktig kontantytelse - bonus\",\"accountNumberDebit\":{\"id\":377868459,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/377868459\"},\"accountNumberCredit\":null,\"isPayrollTaxable\":true}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/salary/transaction",
+      "status": 201,
+      "duration_ms": 2100.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/salary/transaction",
+      "query_params": {
+        "generateTaxDeduction": "true"
+      },
+      "request_body": {
+        "year": 2026,
+        "month": 3,
+        "payslips": [
+          {
+            "employee": {
+              "id": 18617768
+            },
+            "specifications": [
+              {
+                "salaryType": {
+                  "id": 55459519
+                },
+                "rate": 33550,
+                "count": 1,
+                "amount": 33550
+              },
+              {
+                "salaryType": {
+                  "id": 55459707
+                },
+                "rate": 14400,
+                "count": 1,
+                "amount": 14400
+              }
+            ]
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":6958350,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/transaction/6958350\",\"date\":\"2026-03-22\",\"year\":2026,\"month\":3,\"isHistorical\":false,\"paySlipsAvailableDate\":\"2026-03-22\",\"payslips\":[{\"id\":32629368,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/payslip/32629368\"}]}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1761.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1920,2600,2770,2940,5000,5020,5400",
+        "fields": "id,number",
+        "count": 10
+      },
+      "response_body": "{\"fullResultSize\":7,\"from\":0,\"count\":7,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":377868273,\"number\":1920},{\"id\":377868338,\"number\":2600},{\"id\":377868360,\"number\":2770},{\"id\":377868373,\"number\":2940},{\"id\":377868459,\"number\":5000},{\"id\":377868460,\"number\":5020},{\"id\":377868483,\"number\":5400}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 1695.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucherType",
+      "query_params": {
+        "name": "Lønnsbilag"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":8256301,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/8256301\",\"name\":\"Lønnsbilag\",\"displayName\":\"Lønnsbilag\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 2046.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2026-03-28",
+        "description": "Lønn Maria Almeida 03/2026 (grunnlønn 33550 + bonus 14400)",
+        "postings": [
+          {
+            "account": {
+              "id": 377868459
+            },
+            "employee": {
+              "id": 18617768
+            },
+            "amountGross": 33550,
+            "amountGrossCurrency": 33550,
+            "row": 1
+          },
+          {
+            "account": {
+              "id": 377868459
+            },
+            "employee": {
+              "id": 18617768
+            },
+            "amountGross": 14400,
+            "amountGrossCurrency": 14400,
+            "row": 2
+          },
+          {
+            "account": {
+              "id": 377868338
+            },
+            "amountGross": -14400,
+            "amountGrossCurrency": -14400,
+            "row": 3
+          },
+          {
+            "account": {
+              "id": 377868273
+            },
+            "amountGross": -33550,
+            "amountGrossCurrency": -33550,
+            "row": 4
+          },
+          {
+            "account": {
+              "id": 377868483
+            },
+            "amountGross": 6760.95,
+            "amountGrossCurrency": 6760.95,
+            "row": 5
+          },
+          {
+            "account": {
+              "id": 377868360
+            },
+            "amountGross": -6760.95,
+            "amountGrossCurrency": -6760.95,
+            "row": 6
+          },
+          {
+            "account": {
+              "id": 377868460
+            },
+            "amountGross": 5754.0,
+            "amountGrossCurrency": 5754.0,
+            "row": 7
+          },
+          {
+            "account": {
+              "id": 377868373
+            },
+            "amountGross": -5754.0,
+            "amountGrossCurrency": -5754.0,
+            "row": 8
+          }
+        ],
+        "voucherType": {
+          "id": 8256301
+        }
+      },
+      "response_body": "{\"value\":{\"id\":609202708,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609202708\",\"date\":\"2026-03-28\",\"number\":1,\"tempNumber\":0,\"year\":2026,\"description\":\"Lønn Maria Almeida 03/2026 (grunnlønn 33550 + bonus 14400)\",\"voucherType\":{\"id\":8256301,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/8256301\"},\"reverseVoucher\":null,\"postings\":[{\"id\":3845941676,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845941676\",\"voucher\":{\"id\":609202708,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609202708\"},\"date\":\"2026-03-28\",\"description\":\"Lønn Maria Almeida 03/2026 (grunnlønn 33550 + bonus 14400)\",\"account\":{\"id\":377868459,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/377868459\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":{\"id\":18617768,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18617768\"},\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"amount\":33550.00,\"amountCurrency\":33550.00,\"amountGross\":33550,\"amountGrossCurrency\":33550,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":true,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845941677,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845941677\",\"voucher\":{\"id\":609202708,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609202708\"},\"date\":\"2026-03-28\",\"description\":\"Lønn Maria Almeida 03/2026 (grunnlønn 33550 + bonus 14400)\",\"account\":{\"id\":377868459,\"url\":\"kkpqfu"
+    },
+    {
+      "method": "GET",
+      "path": "/salary/payslip/32629368",
+      "status": 200,
+      "duration_ms": 4497.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/salary/payslip/32629368",
+      "response_body": "{\"value\":{\"id\":32629368,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/payslip/32629368\",\"transaction\":{\"id\":6958350,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/transaction/6958350\"},\"employee\":{\"id\":18617768,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18617768\"},\"date\":\"2026-03-22\",\"year\":2026,\"month\":3,\"specifications\":[{\"id\":208284022,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/specification/208284022\"},{\"id\":208284023,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/specification/208284023\"},{\"id\":208284024,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/salary/specification/208284024\"}],\"vacationAllowanceAmount\":5754.00,\"grossAmount\":47950.0,\"amount\":23975.0,\"number\":0,\"department\":{\"id\":745753,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/745753\"}}}"
+    }
+  ],
+  "total_calls": 16,
+  "error_count_4xx": 0,
+  "total_duration_ms": 38836.7,
+  "result": {
+    "status": "completed",
+    "taskType": "run_payroll",
+    "transactionId": 6958350,
+    "payslipId": 32629368,
+    "payslips": [
+      {
+        "id": 32629368,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/salary/payslip/32629368",
+        "grossAmount": 47950.0,
+        "netAmount": 23975.0,
+        "amount": 23975.0,
+        "vacationAllowanceAmount": 5754.0
+      }
+    ],
+    "voucherId": 609202708,
+    "employeeId": 18617768,
+    "baseSalary": 33550,
+    "bonus": 14400,
+    "totalAmount": 47950,
+    "grossAmount": 47950,
+    "taxAmount": 23975.0,
+    "netPay": 23975.0,
+    "netAmount": 23975.0,
+    "vacationAllowanceAmount": 5754.0,
+    "month": 3,
+    "year": 2026
+  }
+}

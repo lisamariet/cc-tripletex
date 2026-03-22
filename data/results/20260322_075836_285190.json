@@ -1,0 +1,83 @@
+{
+  "timestamp": "20260322_075836_285190",
+  "prompt": "Registrer leverandøren Tindra AS med organisasjonsnummer 888286195. E-post: faktura@tindra.no.",
+  "parsed_task": {
+    "task_type": "create_supplier",
+    "fields": {
+      "name": "Tindra AS",
+      "organizationNumber": "888286195",
+      "email": "faktura@tindra.no"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 201,
+      "duration_ms": 503.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "request_body": {
+        "name": "Tindra AS",
+        "organizationNumber": "888286195",
+        "email": "faktura@tindra.no"
+      },
+      "response_body": "{\"value\":{\"id\":108551440,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108551440\",\"name\":\"Tindra AS\",\"organizationNumber\":\"888286195\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"faktura@tindra.no\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405948730,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405948730\"},\"physicalAddress\":{\"id\":405948729,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405948729\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":493581398,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493581398\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"Tindra AS (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}}"
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 2300.2,
+  "result": {
+    "status": "completed",
+    "taskType": "create_supplier",
+    "created": {
+      "id": 108551440,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108551440",
+      "name": "Tindra AS",
+      "organizationNumber": "888286195",
+      "supplierNumber": 20001,
+      "customerNumber": 0,
+      "isSupplier": true,
+      "isCustomer": false,
+      "isInactive": false,
+      "email": "faktura@tindra.no",
+      "invoiceEmail": "",
+      "overdueNoticeEmail": "",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "isPrivateIndividual": false,
+      "showProducts": false,
+      "accountManager": null,
+      "postalAddress": {
+        "id": 405948730,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405948730"
+      },
+      "physicalAddress": {
+        "id": 405948729,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405948729"
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "bankAccountPresentation": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "ledgerAccount": {
+        "id": 493581398,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/493581398"
+      },
+      "language": "NO",
+      "isWholesaler": false,
+      "displayName": "Tindra AS (20001)",
+      "locale": "no_NO",
+      "website": ""
+    }
+  }
+}

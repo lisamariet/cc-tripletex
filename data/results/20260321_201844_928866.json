@@ -1,0 +1,30 @@
+{
+  "timestamp": "20260321_201844_928866",
+  "prompt": "Le client Montagne SARL (nº org. 893135979) a une facture impayée de 19050 NOK hors TVA pour \"Service réseau\". Enregistrez le paiement intégral de cette facture.",
+  "parsed_task": {
+    "task_type": "run_payroll",
+    "fields": {
+      "customerName": "Montagne SARL",
+      "customerOrgNumber": "893135979",
+      "amount": 19050,
+      "invoiceDescription": "Service réseau",
+      "lines": [
+        {
+          "description": "Service réseau",
+          "quantity": 1,
+          "unitPriceExcludingVat": 19050,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 1932.8,
+  "result": {
+    "status": "completed",
+    "note": "No salary amounts specified"
+  }
+}

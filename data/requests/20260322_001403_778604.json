@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_001403_778604",
+  "prompt": "Crie um pedido para o cliente Solmar Lda (org. nº 867069526) com os produtos Sessão de formação (4466) a 35600 NOK e Licença de software (3717) a 3250 NOK. Converta o pedido em fatura e registe o pagamento total.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

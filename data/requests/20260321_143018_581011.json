@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_143018_581011",
+  "prompt": "Hemos descubierto errores en el libro mayor de enero y febrero de 2026. Revise todos los comprobantes y encuentre los 4 errores: un asiento en la cuenta incorrecta (cuenta 6540 usada en lugar de 6860, importe 7600 NOK), un comprobante duplicado (cuenta 6540, importe 2350 NOK), una línea de IVA faltante (cuenta 6540, importe sin IVA 8850 NOK falta IVA en cuenta 2710), y un importe incorrecto (cuenta 7100, 12650 NOK registrado en lugar de 5800 NOK). Corrija todos los errores con asientos correctivos.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

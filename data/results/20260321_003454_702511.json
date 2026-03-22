@@ -1,0 +1,130 @@
+{
+  "timestamp": "20260321_003454_702511",
+  "prompt": "Crea el cliente Viento SL con número de organización 910107739. La dirección es Parkveien 93, 7010 Trondheim. Correo: post@viento.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Viento SL",
+      "organizationNumber": "910107739",
+      "email": "post@viento.no",
+      "invoiceEmail": "post@viento.no",
+      "address": {
+        "addressLine1": "Parkveien 93",
+        "postalCode": "7010",
+        "city": "Trondheim"
+      },
+      "overdueNoticeEmail": "post@viento.no"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 2426.2,
+      "error": null
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3944.7,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108306634,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108306634",
+      "name": "Viento SL",
+      "organizationNumber": "910107739",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@viento.no",
+      "invoiceEmail": "post@viento.no",
+      "overdueNoticeEmail": "post@viento.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Viento SL (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405463911,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405463911",
+        "addressLine1": "Parkveien 93",
+        "addressLine2": "",
+        "postalCode": "7010",
+        "city": "Trondheim",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Viento SL, Parkveien 93, 7010 Trondheim, Norge",
+        "addressAsString": "Parkveien 93, 7010 Trondheim, Norge",
+        "displayNameInklMatrikkel": "Viento SL, Parkveien 93, 7010 Trondheim, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "physicalAddress": {
+        "id": 405463910,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405463910",
+        "addressLine1": "Parkveien 93",
+        "addressLine2": "",
+        "postalCode": "7010",
+        "city": "Trondheim",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Viento SL, Parkveien 93, 7010 Trondheim, Norge",
+        "addressAsString": "Parkveien 93, 7010 Trondheim, Norge",
+        "displayNameInklMatrikkel": "Viento SL, Parkveien 93, 7010 Trondheim, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 365319279,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/365319279"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}

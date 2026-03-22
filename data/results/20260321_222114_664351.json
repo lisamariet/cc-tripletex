@@ -1,0 +1,89 @@
+{
+  "timestamp": "20260321_222114_664351",
+  "prompt": "Vous avez recu un contrat de travail (voir PDF ci-joint). Creez l'employe dans Tripletex avec tous les details du contrat : numero d'identite nationale, date de naissance, departement, code de profession, salaire, pourcentage d'emploi et date de debut.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Arthur",
+      "lastName": "Bernard",
+      "email": "arthur.bernard@example.org",
+      "phoneNumberMobile": null,
+      "dateOfBirth": "1983-01-16",
+      "startDate": "2026-04-29",
+      "employeeNumber": null,
+      "nationalIdentityNumber": "16018328880",
+      "bankAccountNumber": "14673407057",
+      "address": null,
+      "role": null,
+      "occupationCode": "3323",
+      "employmentPercentage": 80,
+      "annualSalary": 820000,
+      "monthlySalary": null,
+      "department": "Markedsføring",
+      "hoursPerDay": null,
+      "_raw_files": [
+        {
+          "filename": "files/arbeidskontrakt_fr_06.pdf",
+          "content_base64": "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",
+          "mime_type": "application/pdf"
+        }
+      ]
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 615.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "name": "Markedsføring",
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1350.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Markedsføring"
+      },
+      "response_body": "{\"value\":{\"id\":964969,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/964969\",\"name\":\"Markedsføring\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Markedsføring\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 4252.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Arthur",
+        "lastName": "Bernard",
+        "email": "arthur.bernard@example.org",
+        "dateOfBirth": "1983-01-16",
+        "nationalIdentityNumber": "16018328880",
+        "bankAccountNumber": "14673407057",
+        "userType": "STANDARD",
+        "department": {
+          "id": 964969
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18679841,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18679841\",\"firstName\":\"Arthur\",\"lastName\":\"Bernard\",\"displayName\":\"Arthur Bernard\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1983-01-16\",\"email\":\"arthur.bernard@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"16018328880\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"14673407057\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":964969,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/964969\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108440581,\"vismaConnect2FAactive\":false}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 10748.8,
+  "result": {
+    "status": "completed",
+    "error": "'NoneType' object has no attribute 'lower'"
+  }
+}

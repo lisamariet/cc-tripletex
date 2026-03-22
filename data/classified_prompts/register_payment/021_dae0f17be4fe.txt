@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Kunden Havbris AS (org.nr 831357983) har en utestående faktura på 5900 kr eksklusiv MVA for "Konsulenttimer". Registrer full betaling på denne fakturaen.

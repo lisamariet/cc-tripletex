@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+The customer Greenfield Ltd (org no. 853801941) has an outstanding invoice for 34450 NOK excluding VAT for "Consulting Hours". Register full payment on this invoice.

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Enviamos una factura por 7045 EUR a Sierra SL (org. nº 925302899) cuando el tipo de cambio era 11.32 NOK/EUR. El cliente ha pagado ahora, pero el tipo es 11.99 NOK/EUR. Registre el pago y contabilice 

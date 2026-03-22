@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crie uma dimensão contabilística personalizada "Marked" com os valores "Offentlig" e "Bedrift". Em seguida, lance um documento na conta 6540 por 44100 NOK, vinculado ao valor de dimensão "Offentlig".

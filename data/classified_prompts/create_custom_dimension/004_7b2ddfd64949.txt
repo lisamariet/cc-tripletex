@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Cree una dimensión contable personalizada "Prosjekttype" con los valores "Forskning" y "Utvikling". Luego registre un asiento en la cuenta 7000 por 14550 NOK, vinculado al valor de dimensión "Forsknin

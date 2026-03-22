@@ -1,0 +1,105 @@
+{
+  "timestamp": "20260320_185506_362827",
+  "prompt": "Processe o salário de Lucas Martins (lucas.martins@example.org) para este mês. O salário base é de 39000 NOK. Adicione um bónus único de 10500 NOK além do salário base.",
+  "parsed_task": {
+    "task_type": "run_payroll",
+    "fields": {
+      "employeeName": "Lucas Martins",
+      "employeeEmail": "lucas.martins@example.org",
+      "baseSalary": 39000,
+      "bonus": 10500
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1591.3,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/employee/18177393",
+      "status": 200,
+      "duration_ms": 1641.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/division",
+      "status": 200,
+      "duration_ms": 1380.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/municipality",
+      "status": 200,
+      "duration_ms": 1196.5,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/division",
+      "status": 201,
+      "duration_ms": 1310.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/employee/employment",
+      "status": 200,
+      "duration_ms": 1331.7,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 1663.1,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/salary/type",
+      "status": 200,
+      "duration_ms": 1955.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/salary/type",
+      "status": 200,
+      "duration_ms": 1526.7,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/salary/transaction",
+      "status": 201,
+      "duration_ms": 1156.8,
+      "error": null
+    }
+  ],
+  "total_calls": 10,
+  "error_count_4xx": 0,
+  "total_duration_ms": 15992.5,
+  "result": {
+    "status": "completed",
+    "taskType": "run_payroll",
+    "transactionId": 6956717,
+    "payslips": [
+      {
+        "id": 32627735,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/salary/payslip/32627735"
+      }
+    ],
+    "employeeId": 18177393,
+    "baseSalary": 39000,
+    "bonus": 10500,
+    "month": 3,
+    "year": 2026
+  }
+}

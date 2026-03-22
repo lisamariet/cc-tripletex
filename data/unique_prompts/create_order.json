@@ -1,0 +1,52 @@
+[
+  {
+    "prompt": "Créez une commande pour le client Océan SARL (nº org. 984524706) avec les produits Licence logicielle (7127) à 6750 NOK et Stockage cloud (8796) à 9700 NOK. Convertissez la commande en facture et enregistrez le paiement intégral.",
+    "timestamp": "20260320_235900_821377",
+    "hash": "14e9a36cc822"
+  },
+  {
+    "prompt": "Opprett en ordre for kunden Bergvik AS (org.nr 873675926) med produktene Skylagring (2961) til 12000 kr og Analyserapport (3475) til 23100 kr. Konverter ordren til faktura og registrer full betaling.",
+    "timestamp": "20260320_235953_523016",
+    "hash": "85b5ccb330e1"
+  },
+  {
+    "prompt": "Opprett ein ordre for kunden Vestfjord AS (org.nr 970769994) med produkta Nettverksteneste (3237) til 13450 kr og Analyserapport (4609) til 14200 kr. Konverter ordren til faktura og registrer full betaling.",
+    "timestamp": "20260321_002837_633218",
+    "hash": "887c5b2dbb68"
+  },
+  {
+    "prompt": "Opprett en ordre for kunden Stormberg AS (org.nr 870531559) med produktene Vedlikehold (4665) til 35200 kr og Systemutvikling (7431) til 4400 kr. Konverter ordren til faktura og registrer full betaling.",
+    "timestamp": "20260321_010215_588826",
+    "hash": "161dc17c96b0"
+  },
+  {
+    "prompt": "Créez une commande pour le client Étoile SARL (nº org. 972488607) avec les produits Rapport d'analyse (2823) à 21350 NOK et Design web (2035) à 19950 NOK. Convertissez la commande en facture et enregistrez le paiement intégral.",
+    "timestamp": "20260321_174109_580779",
+    "hash": "c83df1b0697b"
+  },
+  {
+    "prompt": "Crie um pedido para o cliente Horizonte Lda (org. nº 904130338) com os produtos Serviço de rede (6247) a 15250 NOK e Desenvolvimento de sistemas (5919) a 13250 NOK. Converta o pedido em fatura e registe o pagamento total.",
+    "timestamp": "20260321_180939_028288",
+    "hash": "fca9ce88ddbb"
+  },
+  {
+    "prompt": "Create an order for the customer Greenfield Ltd (org no. 914083478) with the products Web Design (8474) at 23450 NOK and Software License (3064) at 7800 NOK. Convert the order to an invoice and register full payment.",
+    "timestamp": "20260321_183605_085199",
+    "hash": "2b0fa28fa55a"
+  },
+  {
+    "prompt": "Create an order for the customer Brightstone Ltd (org no. 971948981) with the products Data Advisory (4083) at 4050 NOK and Training Session (7105) at 12150 NOK. Convert the order to an invoice and register full payment.",
+    "timestamp": "20260321_230002_987686",
+    "hash": "db3b15c15e72"
+  },
+  {
+    "prompt": "Opprett ein ordre for kunden Strandvik AS (org.nr 911845016) med produkta Skylagring (7865) til 38500 kr og Datarådgjeving (3949) til 18500 kr. Konverter ordren til faktura og registrer full betaling.",
+    "timestamp": "20260322_001338_086168",
+    "hash": "3a204d4d641d"
+  },
+  {
+    "prompt": "Create an order for the customer Northwave Ltd (org no. 997677889) with the products Cloud Storage (4257) at 27150 NOK and System Development (7968) at 10100 NOK. Convert the order to an invoice and register full payment.",
+    "timestamp": "20260322_001423_058996",
+    "hash": "b67ece1c4471"
+  }
+]

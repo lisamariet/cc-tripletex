@@ -1,0 +1,82 @@
+[
+  {
+    "prompt": "Erstellen Sie einen Auftrag für den Kunden Waldstein GmbH (Org.-Nr. 975687821) mit den Produkten Netzwerkdienst (4366) zu 32750 NOK und Beratungsstunden (3402) zu 17450 NOK. Wandeln Sie den Auftrag in",
+    "confidence": 0.95,
+    "hash": "a5c2a6c08d67"
+  },
+  {
+    "prompt": "Crea un pedido para el cliente Luna SL (org. nº 989093630) con los productos Almacenamiento en la nube (5981) a 29950 NOK y Diseño web (6784) a 20450 NOK. Convierte el pedido en factura y registra el ",
+    "confidence": 0.95,
+    "hash": "d66a5157115d"
+  },
+  {
+    "prompt": "Crea un pedido para el cliente Viento SL (org. nº 924480505) con los productos Sesión de formación (8488) a 5700 NOK y Horas de consultoría (3787) a 14750 NOK. Convierte el pedido en factura y registr",
+    "confidence": 0.95,
+    "hash": "c4e618248f33"
+  },
+  {
+    "prompt": "Créez une commande pour le client Cascade SARL (nº org. 804781943) avec les produits Développement système (1393) à 13950 NOK et Rapport d'analyse (5377) à 22000 NOK. Convertissez la commande en factu",
+    "confidence": 0.95,
+    "hash": "4f6cbc084ebd"
+  },
+  {
+    "prompt": "Créez une commande pour le client Colline SARL (nº org. 841589033) avec les produits Stockage cloud (2289) à 24050 NOK et Conseil en données (1470) à 5000 NOK. Convertissez la commande en facture et e",
+    "confidence": 0.95,
+    "hash": "dae4100b778d"
+  },
+  {
+    "prompt": "Create an order for the customer Ridgepoint Ltd (org no. 925103489) with the products Consulting Hours (5359) at 21150 NOK and Analysis Report (1028) at 1600 NOK. Convert the order to an invoice and r",
+    "confidence": 0.95,
+    "hash": "4a7f17b2454e"
+  },
+  {
+    "prompt": "Créez une commande pour le client Océan SARL (nº org. 984524706) avec les produits Licence logicielle (7127) à 6750 NOK et Stockage cloud (8796) à 9700 NOK. Convertissez la commande en facture et enre",
+    "confidence": 0.95,
+    "hash": "14e9a36cc822"
+  },
+  {
+    "prompt": "Opprett en ordre for kunden Bergvik AS (org.nr 873675926) med produktene Skylagring (2961) til 12000 kr og Analyserapport (3475) til 23100 kr. Konverter ordren til faktura og registrer full betaling.",
+    "confidence": 0.98,
+    "hash": "85b5ccb330e1"
+  },
+  {
+    "prompt": "Opprett ein ordre for kunden Vestfjord AS (org.nr 970769994) med produkta Nettverksteneste (3237) til 13450 kr og Analyserapport (4609) til 14200 kr. Konverter ordren til faktura og registrer full bet",
+    "confidence": 0.95,
+    "hash": "887c5b2dbb68"
+  },
+  {
+    "prompt": "Opprett en ordre for kunden Stormberg AS (org.nr 870531559) med produktene Vedlikehold (4665) til 35200 kr og Systemutvikling (7431) til 4400 kr. Konverter ordren til faktura og registrer full betalin",
+    "confidence": 0.95,
+    "hash": "161dc17c96b0"
+  },
+  {
+    "prompt": "Créez une commande pour le client Étoile SARL (nº org. 972488607) avec les produits Rapport d'analyse (2823) à 21350 NOK et Design web (2035) à 19950 NOK. Convertissez la commande en facture et enregi",
+    "confidence": 0.95,
+    "hash": "c83df1b0697b"
+  },
+  {
+    "prompt": "Create an order for the customer Greenfield Ltd (org no. 914083478) with the products Web Design (8474) at 23450 NOK and Software License (3064) at 7800 NOK. Convert the order to an invoice and regist",
+    "confidence": 0.95,
+    "hash": "2b0fa28fa55a"
+  },
+  {
+    "prompt": "Créez une commande pour le client Océan SARL (nº org. 859049788) avec les produits Session de formation (3206) à 4950 NOK et Conseil en données (9191) à 7700 NOK. Convertissez la commande en facture e",
+    "confidence": 0.95,
+    "hash": "b3ebf86a7884"
+  },
+  {
+    "prompt": "Create an order for the customer Brightstone Ltd (org no. 971948981) with the products Data Advisory (4083) at 4050 NOK and Training Session (7105) at 12150 NOK. Convert the order to an invoice and re",
+    "confidence": 0.95,
+    "hash": "db3b15c15e72"
+  },
+  {
+    "prompt": "Opprett ein ordre for kunden Strandvik AS (org.nr 911845016) med produkta Skylagring (7865) til 38500 kr og Datarådgjeving (3949) til 18500 kr. Konverter ordren til faktura og registrer full betaling.",
+    "confidence": 0.95,
+    "hash": "3a204d4d641d"
+  },
+  {
+    "prompt": "Create an order for the customer Northwave Ltd (org no. 997677889) with the products Cloud Storage (4257) at 27150 NOK and System Development (7968) at 10100 NOK. Convert the order to an invoice and r",
+    "confidence": 0.95,
+    "hash": "b67ece1c4471"
+  }
+]

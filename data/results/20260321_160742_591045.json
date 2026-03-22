@@ -1,0 +1,150 @@
+{
+  "timestamp": "20260321_160742_591045",
+  "prompt": "L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 50 NOK. Debit creances clients (1500), credit revenus de rappel (3400). Créez également une facture pour les frais de rappel au client et envoyez-la. De plus, enregistrez un paiement partiel de 5000 NOK sur la facture en retard.",
+  "parsed_task": {
+    "task_type": "set_project_fixed_price",
+    "fields": {},
+    "confidence": 0.5
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 10274.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "request_body": {
+        "name": "Unknown Customer",
+        "isCustomer": true
+      },
+      "response_body": "{\"value\":{\"id\":108372505,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108372505\",\"name\":\"Unknown Customer\",\"organizationNumber\":\"\",\"globalLocationNumber\":0,\"supplierNumber\":0,\"customerNumber\":10004,\"isSupplier\":false,\"isCustomer\":true,\"isInactive\":false,\"accountManager\":null,\"department\":null,\"email\":\"\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"language\":\"NO\",\"displayName\":\"Unknown Customer (10004)\",\"isPrivateIndividual\":false,\"singleCustomerInvoice\":false,\"invoiceSendMethod\":\"EMAIL\",\"emailAttachmentType\":\"ATTACHMENT\",\"postalAddress\":{\"id\":405594589,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405594589\"},\"physicalAddress\":{\"id\":405594588,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405594588\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"bankAccountPresentation\":[],\"ledgerAccount\":{\"id\":465545365,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465545365\"},\"isFactoring\":false,\"invoiceSendSMSNotification\":false,\"invoiceSMSNotificationNumber\":\"\",\"isAutomaticSoftReminderEnabled\":false,\"isAutomaticReminderEnabled\":false,\"isAutomaticNoticeOfDebtCollectionEnabled\":false,\"discountPercentage\":0,\"website\":\"\"}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 286.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "count": 1
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18636751,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18636751\",\"firstName\":\"Admin\",\"lastName\":\"NM\",\"displayName\":\"Admin NM\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"nmiai-validator@test.no\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":939416,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/939416\"},\"employments\":[{\"id\":2821455,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2821455\"}],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108372396,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 371.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "Unnamed Project",
+        "isInternal": false,
+        "isFixedPrice": true,
+        "fixedprice": 0,
+        "startDate": "2026-03-21",
+        "projectManager": {
+          "id": 18636751
+        },
+        "customer": {
+          "id": 108372505
+        }
+      },
+      "response_body": "{\"value\":{\"id\":402016604,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402016604\",\"name\":\"Unnamed Project\",\"number\":\"4\",\"displayName\":\"4 Unnamed Project\",\"description\":\"\",\"projectManager\":{\"id\":18636751,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18636751\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-21\",\"endDate\":null,\"customer\":{\"id\":108372505,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108372505\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":true,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11085171,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11085171\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15639829,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15639829\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"4 Unnamed Project\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Unknown Customer\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Admin NM\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":0,\"accountingDimensionValues\":[]}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 41076.9,
+  "result": {
+    "status": "completed",
+    "taskType": "set_project_fixed_price",
+    "created": {
+      "id": 402016604,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/402016604",
+      "name": "Unnamed Project",
+      "number": "4",
+      "displayName": "4 Unnamed Project",
+      "description": "",
+      "projectManager": {
+        "id": 18636751,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18636751"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-21",
+      "endDate": null,
+      "customer": {
+        "id": 108372505,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108372505"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": true,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 0,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11085171,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11085171"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15639829,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15639829"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "4 Unnamed Project",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Unknown Customer",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Admin NM",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 0,
+      "accountingDimensionValues": []
+    }
+  }
+}

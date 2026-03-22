@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create the product "Training Session" with product number 7908. The price is 26250 NOK excluding VAT, using the standard 25% VAT rate.

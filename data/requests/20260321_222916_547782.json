@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_222916_547782",
+  "prompt": "Kunden Lysgård AS (org.nr 850823049) har en utestående faktura på 49700 kr eksklusiv MVA for \"Opplæring\". Registrer full betaling på denne fakturaen.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

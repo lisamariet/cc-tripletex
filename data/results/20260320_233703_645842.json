@@ -1,0 +1,67 @@
+{
+  "timestamp": "20260320_233703_645842",
+  "prompt": "Der Kunde Sonnental GmbH (Org.-Nr. 855482207) hat eine offene Rechnung über 33500 NOK ohne MwSt. für \"Wartung\". Registrieren Sie die vollständige Zahlung dieser Rechnung.",
+  "parsed_task": {
+    "task_type": "register_payment",
+    "fields": {
+      "customerName": "Sonnental GmbH",
+      "customerOrgNumber": "855482207",
+      "amount": 33500,
+      "invoiceDescription": "Wartung",
+      "lines": [
+        {
+          "description": "Wartung",
+          "quantity": 1,
+          "unitPriceExcludingVat": 33500,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2193.1,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1830.5,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 1837.5,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/paymentType",
+      "status": 200,
+      "duration_ms": 1820.8,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147554385/:payment",
+      "status": 200,
+      "duration_ms": 1838.5,
+      "error": null
+    }
+  ],
+  "total_calls": 5,
+  "error_count_4xx": 0,
+  "total_duration_ms": 11107.0,
+  "result": {
+    "status": "completed",
+    "taskType": "register_payment",
+    "invoiceId": 2147554385
+  }
+}

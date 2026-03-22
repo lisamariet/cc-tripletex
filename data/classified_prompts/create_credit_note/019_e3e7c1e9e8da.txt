@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Kunden Bergvik AS (org.nr 878347846) har reklamert på fakturaen for "Konsulenttimer" (20300 kr ekskl. MVA). Opprett en fullstendig kreditnota som reverserer hele fakturaen.

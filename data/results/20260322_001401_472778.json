@@ -1,0 +1,128 @@
+{
+  "timestamp": "20260322_001401_472778",
+  "prompt": "Créez trois départements dans Tripletex : \"Produksjon\", \"Salg\" et \"Logistikk\".",
+  "parsed_task": {
+    "task_type": "batch_create_department",
+    "fields": {
+      "items": [
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Produksjon"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 1 of 3. French prompt to create a department named 'Produksjon'."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Salg"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 2 of 3. French prompt to create a department named 'Salg'."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Logistikk"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 3 of 3. French prompt to create a department named 'Logistikk'."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 343.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Produksjon"
+      },
+      "response_body": "{\"value\":{\"id\":978466,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/978466\",\"name\":\"Produksjon\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Produksjon\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 3224.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Salg"
+      },
+      "response_body": "{\"value\":{\"id\":978467,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/978467\",\"name\":\"Salg\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Salg\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1988.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Logistikk"
+      },
+      "response_body": "{\"value\":{\"id\":978472,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/978472\",\"name\":\"Logistikk\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Logistikk\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 7291.8,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_create_department",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 978466,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/978466",
+          "name": "Produksjon",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Produksjon",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 978467,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/978467",
+          "name": "Salg",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Salg",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 978472,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/978472",
+          "name": "Logistikk",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Logistikk",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      }
+    ]
+  }
+}

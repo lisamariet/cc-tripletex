@@ -1,0 +1,117 @@
+[
+  {
+    "prompt": "Kunden Vestfjord AS (org.nr 860678403) har reklamert på fakturaen for \"Skylagring\" (45350 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen.",
+    "confidence": 0.94,
+    "hash": "4ba3f423eea1"
+  },
+  {
+    "prompt": "O cliente Luz do Sol Lda (org. nº 961893283) reclamou sobre a fatura referente a \"Licença de software\" (11400 NOK sem IVA). Emita uma nota de crédito completa que reverta toda a fatura.",
+    "confidence": 0.95,
+    "hash": "0b44f2d9079c"
+  },
+  {
+    "prompt": "Der Kunde Sonnental GmbH (Org.-Nr. 809303829) hat die Rechnung für \"Systementwicklung\" (10400 NOK ohne MwSt.) reklamiert. Erstellen Sie eine vollständige Gutschrift, die die gesamte Rechnung storniert",
+    "confidence": 0.95,
+    "hash": "d85f6a712ba9"
+  },
+  {
+    "prompt": "O cliente Horizonte Lda (org. nº 880951262) reclamou sobre a fatura referente a \"Desenvolvimento de sistemas\" (35700 NOK sem IVA). Emita uma nota de crédito completa que reverta toda a fatura.",
+    "confidence": 0.95,
+    "hash": "b914fa0ef39d"
+  },
+  {
+    "prompt": "Le client Montagne SARL (nº org. 882988155) a réclamé concernant la facture pour \"Heures de conseil\" (40900 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.",
+    "confidence": 0.95,
+    "hash": "39c45fba09f7"
+  },
+  {
+    "prompt": "The customer Ridgepoint Ltd (org no. 989339028) has complained about the invoice for \"Maintenance\" (19650 NOK excl. VAT). Issue a full credit note that reverses the entire invoice.",
+    "confidence": 0.95,
+    "hash": "37a65c2893ba"
+  },
+  {
+    "prompt": "O cliente Cascata Lda (org. nº 967090743) reclamou sobre a fatura referente a \"Sessão de formação\" (23800 NOK sem IVA). Emita uma nota de crédito completa que reverta toda a fatura.",
+    "confidence": 0.95,
+    "hash": "c1e111cef3f7"
+  },
+  {
+    "prompt": "Kunden Fjelltopp AS (org.nr 950710241) har reklamert på fakturaen for \"Nettverksteneste\" (28100 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen.",
+    "confidence": 0.95,
+    "hash": "ffbb377e10eb"
+  },
+  {
+    "prompt": "Le client Cascade SARL (nº org. 862852745) a réclamé concernant la facture pour \"Développement système\" (15200 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.",
+    "confidence": 0.95,
+    "hash": "66f907139dca"
+  },
+  {
+    "prompt": "Kunden Nordhav AS (org.nr 996887898) har reklamert på fakturaen for \"Vedlikehold\" (19200 kr ekskl. MVA). Opprett en fullstendig kreditnota som reverserer hele fakturaen.",
+    "confidence": 0.95,
+    "hash": "041050a71d88"
+  },
+  {
+    "prompt": "Der Kunde Nordlicht GmbH (Org.-Nr. 912435113) hat die Rechnung für \"Webdesign\" (40550 NOK ohne MwSt.) reklamiert. Erstellen Sie eine vollständige Gutschrift, die die gesamte Rechnung storniert.",
+    "confidence": 0.95,
+    "hash": "7a3b61d41a61"
+  },
+  {
+    "prompt": "The customer Brightstone Ltd (org no. 846305157) has complained about the invoice for \"Data Advisory\" (38000 NOK excl. VAT). Issue a full credit note that reverses the entire invoice.",
+    "confidence": 0.95,
+    "hash": "14887e4d5697"
+  },
+  {
+    "prompt": "El cliente Viento SL (org. nº 857019199) ha reclamado sobre la factura por \"Informe de análisis\" (27200 NOK sin IVA). Emita una nota de crédito completa que revierta toda la factura.",
+    "confidence": 0.95,
+    "hash": "3e505f390ee8"
+  },
+  {
+    "prompt": "Kunden Elvdal AS (org.nr 812449982) har reklamert på fakturaen for \"Datarådgjeving\" (45300 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen.",
+    "confidence": 0.95,
+    "hash": "15fa57f0d0b5"
+  },
+  {
+    "prompt": "Der Kunde Waldstein GmbH (Org.-Nr. 908048199) hat die Rechnung für \"Webdesign\" (8750 NOK ohne MwSt.) reklamiert. Erstellen Sie eine vollständige Gutschrift, die die gesamte Rechnung storniert.",
+    "confidence": 0.95,
+    "hash": "253c6a28f44d"
+  },
+  {
+    "prompt": "Kunden Nordlys AS (org.nr 829535181) har reklamert på fakturaen for \"Nettverksteneste\" (15550 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen.",
+    "confidence": 0.95,
+    "hash": "93002d51ee31"
+  },
+  {
+    "prompt": "Kunden Havbris AS (org.nr 995581094) har reklamert på fakturaen for \"Programvarelisens\" (34650 kr ekskl. MVA). Opprett en fullstendig kreditnota som reverserer hele fakturaen.",
+    "confidence": 0.95,
+    "hash": "55141a1ad6c6"
+  },
+  {
+    "prompt": "O cliente Estrela Lda (org. nº 890872492) reclamou sobre a fatura referente a \"Consultoria de dados\" (12000 NOK sem IVA). Emita uma nota de crédito completa que reverta toda a fatura.",
+    "confidence": 0.95,
+    "hash": "8fd947f08d4e"
+  },
+  {
+    "prompt": "Kunden Bergvik AS (org.nr 878347846) har reklamert på fakturaen for \"Konsulenttimer\" (20300 kr ekskl. MVA). Opprett en fullstendig kreditnota som reverserer hele fakturaen.",
+    "confidence": 0.95,
+    "hash": "e3e7c1e9e8da"
+  },
+  {
+    "prompt": "Le client Colline SARL (nº org. 879581265) a réclamé concernant la facture pour \"Conseil en données\" (23750 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.",
+    "confidence": 0.95,
+    "hash": "df231779e248"
+  },
+  {
+    "prompt": "Kunden Nordlys AS (org.nr 902392165) har reklamert på fakturaen for \"Programvarelisens\" (47350 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen.",
+    "confidence": 0.95,
+    "hash": "9564534383e9"
+  },
+  {
+    "prompt": "Le client Colline SARL (nº org. 879532124) a réclamé concernant la facture pour \"Conseil en données\" (28600 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.",
+    "confidence": 0.95,
+    "hash": "6783ad00c255"
+  },
+  {
+    "prompt": "O cliente Luz do Sol Lda (org. nº 821149517) reclamou sobre a fatura referente a \"Horas de consultoria\" (16650 NOK sem IVA). Emita uma nota de crédito completa que reverta toda a fatura.",
+    "confidence": 0.95,
+    "hash": "9694d32f5a46"
+  }
+]

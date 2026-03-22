@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_185041_929132",
+  "prompt": "We sent an invoice for 19858 EUR to Northwave Ltd (org no. 923909583) when the exchange rate was 11.66 NOK/EUR. The customer has now paid, but the rate is 11.00 NOK/EUR. Register the payment and post the exchange rate difference (disagio) to the correct account.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

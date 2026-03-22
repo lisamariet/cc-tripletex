@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_022543_204275",
+  "prompt": "Registre el proveedor Sierra SL con número de organización 898340473. Correo electrónico: faktura@sierrasl.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

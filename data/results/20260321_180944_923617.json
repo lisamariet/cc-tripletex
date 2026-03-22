@@ -1,0 +1,181 @@
+{
+  "timestamp": "20260321_180944_923617",
+  "prompt": "Du har mottatt et tilbudsbrev (se vedlagt PDF) for en ny ansatt. Utfor komplett onboarding: opprett den ansatte, tilknytt riktig avdeling, sett opp ansettelsesforhold med stillingsprosent og arslonn, og konfigurer standard arbeidstid.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Lars",
+      "lastName": "Bakken",
+      "dateOfBirth": "1987-06-03",
+      "startDate": "2026-12-03",
+      "role": "HR-rådgiver",
+      "department": "Økonomi",
+      "employmentPercentage": 80,
+      "annualSalary": 620000,
+      "hoursPerDay": 6.0,
+      "_raw_files": [
+        {
+          "filename": "files/tilbudsbrev_nb_04.pdf",
+          "content_base64": "JVBERi0xLjMKJenr8b8KMSAwIG9iago8PAovQ291bnQgMQovS2lkcyBbMyAwIFJdCi9NZWRpYUJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMiAwIG9iago8PAovT3BlbkFjdGlvbiBbMyAwIFIgL0ZpdEggbnVsbF0KL1BhZ2VMYXlvdXQgL09uZUNvbHVtbgovUGFnZXMgMSAwIFIKL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDQgMCBSCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyA3IDAgUgovVHlwZSAvUGFnZQo+PgplbmRvYmoKNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDYwMQo+PgpzdHJlYW0KeJyNVNuO0zAQfd+vmBckkMDr3NN9o9otLHRBsIFX5MrT1I1jFzt0xZ/yOUyStmm7BSVS5dQ5c84Ze2ZC+HDFWZLB09W0gOtZAEHOOIdiCXdFuxXymAUxZJOgXQoJL4v7+fTbLXx+gEd6nd9/evcKivUOfj0LIQhOGCKKzCGLMjZJO4KPa4EOYS6ch6moKjSvjxh2cJ6yLO/g3xWshINSo0QDYgsCGqUXv0FiCZ5etTIlffG2hvdf3zghS7VFB4qwEtuP8KeyxtaKnRilVKMLRtM0YbxXvsVG6DW687BL+aVRzBLehc2s9Ki9FI29+f/RBFnIJsFxLCdLKQsmeTZKlHbzsL8VpRtHJ6Q9jhQdYkk0CFnIw3SMaJJP9qXw1nhsmlbTL62rxwkfxc+Ebw5XOEo7TVncV9HjLsxvnPVompHiA0HOGX8xSjSOWDbpE3ZeW2NGag1xacjpgWpUKSUhLcFOb4FK0gnJkZJDaMo49UlNjbChnxTlOQEfCH7CQTzOcpZ3pjmLQwI8tR2oK+Fu4PS6V1ZLbMBh+UtTP/uuNXu/tdJrq+2WutKWsEDp1LJB41sr3hqhV8LIha0YUItBuUZickBousstUrawEbAvRvhy4i+lsu3aM2JJHnf+amGwJahRAlUW5UoyLa3xSqoS7GbjVdn7dso3DO4oDXdQI2H6d46i3Qh21Axm6BRSNoOpwVIcszzrDn3ZojZI88jB0upuabe6s2DPplxEU5X3PfhA3gljNPldKTJxYShGScCiqIP/+PfzPIyWuK9Dmo/7oYhmD/wLsDOdYAplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZAovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iago3IDAgb2JqCjw8Ci9Gb250IDw8L0YxIDUgMCBSCi9GMiA2IDAgUj4+Ci9Qcm9jU2V0IFsvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJXQo+PgplbmRvYmoKOCAwIG9iago8PAovQ3JlYXRpb25EYXRlIChEOjIwMjYwMzA0MTkxODA1WikKPj4KZW5kb2JqCnhyZWYKMCA5CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMTAyIDAwMDAwIG4gCjAwMDAwMDAyMDUgMDAwMDAgbiAKMDAwMDAwMDI4NSAwMDAwMCBuIAowMDAwMDAwOTU4IDAwMDAwIG4gCjAwMDAwMDEwNjAgMDAwMDAgbiAKMDAwMDAwMTE1NyAwMDAwMCBuIAowMDAwMDAxMjU0IDAwMDAwIG4gCnRyYWlsZXIKPDwKL1NpemUgOQovUm9vdCAyIDAgUgovSW5mbyA4IDAgUgovSUQgWzwxQ0VEMTRERTQ0N0ExRTI5Njk2NjY2MDgyN0QzRkQ3NT48MUNFRDE0REU0NDdBMUUyOTY5NjY2NjA4MjdEM0ZENzU+XQo+PgpzdGFydHhyZWYKMTMwOQolJUVPRgo=",
+          "mime_type": "application/pdf"
+        }
+      ]
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 2190.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "name": "Økonomi",
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 2449.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Økonomi"
+      },
+      "response_body": "{\"value\":{\"id\":945464,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/945464\",\"name\":\"Økonomi\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Økonomi\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 2822.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Lars",
+        "lastName": "Bakken",
+        "dateOfBirth": "1987-06-03",
+        "email": "lars.bakken@company.no",
+        "userType": "NO_ACCESS",
+        "department": {
+          "id": 945464
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18645258,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18645258\",\"firstName\":\"Lars\",\"lastName\":\"Bakken\",\"displayName\":\"Lars Bakken\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1987-06-03\",\"email\":\"lars.bakken@company.no\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":945464,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/945464\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107859684,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "PUT",
+      "path": "/employee/entitlement/:grantEntitlementsByTemplate",
+      "status": 200,
+      "duration_ms": 2641.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/entitlement/:grantEntitlementsByTemplate",
+      "query_params": {
+        "employeeId": 18645258,
+        "template": "PERSONELL_MANAGER"
+      },
+      "response_body": ""
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 2424.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18645258
+        },
+        "startDate": "2026-12-03"
+      },
+      "response_body": "{\"value\":{\"id\":2825459,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2825459\",\"employee\":{\"id\":18645258,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18645258\"},\"employmentId\":\"\",\"startDate\":\"2026-12-03\",\"endDate\":null,\"employmentEndReason\":null,\"division\":null,\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment/details",
+      "status": 201,
+      "duration_ms": 2200.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment/details",
+      "request_body": {
+        "employment": {
+          "id": 2825459
+        },
+        "date": "2026-12-03",
+        "employmentType": "ORDINARY",
+        "employmentForm": "PERMANENT",
+        "remunerationType": "MONTHLY_WAGE",
+        "workingHoursScheme": "NOT_SHIFT",
+        "percentageOfFullTimeEquivalent": 80,
+        "annualSalary": 620000,
+        "monthlySalary": 51666.67
+      },
+      "response_body": "{\"value\":{\"id\":3724477,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/details/3724477\",\"employment\":{\"id\":2825459,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2825459\"},\"date\":\"2026-12-03\",\"employmentType\":\"ORDINARY\",\"employmentForm\":\"PERMANENT\",\"remunerationType\":\"MONTHLY_WAGE\",\"workingHoursScheme\":\"NOT_SHIFT\",\"shiftDurationHours\":0,\"occupationCode\":null,\"percentageOfFullTimeEquivalent\":80,\"annualSalary\":620000,\"hourlyWage\":318,\"payrollTaxMunicipalityId\":null,\"monthlySalary\":51666.67}}"
+    }
+  ],
+  "total_calls": 6,
+  "error_count_4xx": 0,
+  "total_duration_ms": 18207.4,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18645258,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18645258",
+      "firstName": "Lars",
+      "lastName": "Bakken",
+      "displayName": "Lars Bakken",
+      "employeeNumber": "",
+      "dateOfBirth": "1987-06-03",
+      "email": "lars.bakken@company.no",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 945464,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/945464"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 107859684,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_101548_117020",
+  "revision": "tripletex-agent-00126-9hz",
+  "prompt": "Enviámos uma fatura de 4885 EUR ao Luz do Sol Lda (org. nº 947361074) quando a taxa de câmbio era 11.81 NOK/EUR. O cliente pagou agora, mas a taxa é 10.83 NOK/EUR. Registe o pagamento e lance a diferença cambial (disagio) na conta correta.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

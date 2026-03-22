@@ -1,0 +1,270 @@
+{
+  "timestamp": "20260320_231753_743132",
+  "prompt": "Recebemos a fatura INV-2026-6293 do fornecedor Montanha Lda (org. nº 980979431) no valor de 12050 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 7000). Registe a fatura do fornecedor com o IVA dedutível correto (25 %).",
+  "parsed_task": {
+    "task_type": "register_supplier_invoice",
+    "fields": {
+      "supplierName": "Montanha Lda",
+      "supplierOrgNumber": "980979431",
+      "amount": 12050,
+      "description": "serviços de escritório",
+      "invoiceNumber": "INV-2026-6293",
+      "expenseAccount": 7000,
+      "vatRate": 25
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 242.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 244.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 228.5,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 209.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 226.4,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 431.0,
+      "error": null
+    }
+  ],
+  "total_calls": 6,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3180.6,
+  "result": {
+    "status": "completed",
+    "taskType": "register_supplier_invoice",
+    "created": {
+      "id": 608873204,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608873204",
+      "date": "2026-03-20",
+      "number": 1,
+      "tempNumber": 0,
+      "year": 2026,
+      "description": "Leverandørfaktura: serviços de escritório",
+      "voucherType": {
+        "id": 10900967,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/10900967"
+      },
+      "reverseVoucher": null,
+      "postings": [
+        {
+          "id": 3845044637,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845044637",
+          "voucher": {
+            "id": 608873204,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608873204"
+          },
+          "date": "2026-03-20",
+          "description": "Leverandørfaktura: serviços de escritório",
+          "account": {
+            "id": 460170899,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/460170899"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": {
+            "id": 108292633,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108292633"
+          },
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1"
+          },
+          "amount": 9640.0,
+          "amountCurrency": 9640.0,
+          "amountGross": 12050,
+          "amountGrossCurrency": 12050,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "INV-2026-6293",
+          "termOfPayment": null,
+          "row": 1,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": false,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845044638,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845044638",
+          "voucher": {
+            "id": 608873204,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608873204"
+          },
+          "date": "2026-03-20",
+          "description": "Leverandørfaktura: serviços de escritório",
+          "account": {
+            "id": 460170662,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/460170662"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": {
+            "id": 108292633,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108292633"
+          },
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": -12050.0,
+          "amountCurrency": -12050.0,
+          "amountGross": -12050.0,
+          "amountGrossCurrency": -12050.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "INV-2026-6293",
+          "termOfPayment": null,
+          "row": 2,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845044642,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845044642",
+          "voucher": {
+            "id": 608873204,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608873204"
+          },
+          "date": "2026-03-20",
+          "description": "Leverandørfaktura: serviços de escritório",
+          "account": {
+            "id": 460170684,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/460170684"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": null,
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": 2410.0,
+          "amountCurrency": 2410.0,
+          "amountGross": 2410.0,
+          "amountGrossCurrency": 2410.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 0,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": true,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        }
+      ],
+      "document": null,
+      "attachment": null,
+      "externalVoucherNumber": "INV-2026-6293",
+      "ediDocument": null,
+      "supplierVoucherType": null,
+      "wasAutoMatched": false,
+      "vendorInvoiceNumber": null,
+      "numberAsString": "1-2026"
+    }
+  }
+}

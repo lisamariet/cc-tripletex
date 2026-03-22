@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+O cliente Horizonte Lda (org. nº 880951262) reclamou sobre a fatura referente a "Desenvolvimento de sistemas" (35700 NOK sem IVA). Emita uma nota de crédito completa que reverta toda a fatura.

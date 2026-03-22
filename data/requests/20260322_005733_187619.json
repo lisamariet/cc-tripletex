@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_005733_187619",
+  "prompt": "Enviamos una factura por 7045 EUR a Sierra SL (org. nº 925302899) cuando el tipo de cambio era 11.32 NOK/EUR. El cliente ha pagado ahora, pero el tipo es 11.99 NOK/EUR. Registre el pago y contabilice la diferencia de tipo de cambio (agio) en la cuenta correcta.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

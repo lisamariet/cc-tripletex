@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett og send en faktura til kunden Havbris AS (org.nr 808525410) på 22550 kr eksklusiv MVA. Fakturaen gjelder Datarådgivning.

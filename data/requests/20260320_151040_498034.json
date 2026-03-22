@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_151040_498034",
+  "prompt": "Erstellen Sie den Kunden Flussgold GmbH mit der Organisationsnummer 952754750. Die Adresse ist Havnegata 36, 9008 Tromsø. E-Mail: post@flussgold.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

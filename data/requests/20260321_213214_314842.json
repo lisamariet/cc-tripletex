@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_213214_314842",
+  "prompt": "Execute the complete project lifecycle for 'System Upgrade Greenfield' (Greenfield Ltd, org no. 873288949): 1) The project has a budget of 206300 NOK. 2) Log time: Oliver Wilson (project manager, oliver.wilson@example.org) 36 hours and Victoria Taylor (consultant, victoria.taylor@example.org) 150 hours. 3) Register supplier cost of 41300 NOK from Ironbridge Ltd (org no. 913777255). 4) Create a customer invoice for the project.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

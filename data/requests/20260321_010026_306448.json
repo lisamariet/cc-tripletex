@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_010026_306448",
+  "prompt": "Erfassen Sie 33 Stunden für Paul Müller (paul.muller@example.org) auf der Aktivität \"Testing\" im Projekt \"Datenmigration\" für Sonnental GmbH (Org.-Nr. 839389701). Stundensatz: 900 NOK/h. Erstellen Sie eine Projektrechnung an den Kunden basierend auf den erfassten Stunden.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

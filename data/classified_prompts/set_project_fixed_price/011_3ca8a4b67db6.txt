@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Defina um preço fixo de 313650 NOK no projeto "Migração para nuvem" para Estrela Lda (org. nº 922471126). O gestor de projeto é Leonor Sousa (leonor.sousa@example.org). Fature ao cliente 50 % do preço

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Registrer ei reiserekning for Marit Vik (marit.vik@example.org) for "Konferanse Kristiansand". Reisa varte 4 dagar med diett (dagssats 800 kr). Utlegg: flybillett 7600 kr og taxi 600 kr.

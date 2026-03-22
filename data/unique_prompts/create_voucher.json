@@ -1,0 +1,17 @@
+[
+  {
+    "prompt": "En av kundene dine har en forfalt faktura. Finn den forfalte fakturaen og bokfor et purregebyr pa 50 kr. Debet kundefordringer (1500), kredit purregebyr (3400). Opprett også en faktura for purregebyret til kunden og send den. Registrer i tillegg en delbetaling på 5000 kr på den forfalte fakturaen.",
+    "timestamp": "20260321_164707_359651",
+    "hash": "a356d293708f"
+  },
+  {
+    "prompt": "L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 65 NOK. Debit creances clients (1500), credit revenus de rappel (3400). Créez également une facture pour les frais de rappel au client et envoyez-la. De plus, enregistrez un paiement partiel de 5000 NOK sur la facture en retard.",
+    "timestamp": "20260321_164905_704251",
+    "hash": "ee980219dd30"
+  },
+  {
+    "prompt": "One of your customers has an overdue invoice. Find the overdue invoice and post a reminder fee of 35 NOK. Debit accounts receivable (1500), credit reminder fees (3400). Also create an invoice for the reminder fee to the customer and send it. Additionally, register a partial payment of 5000 NOK on the overdue invoice.",
+    "timestamp": "20260321_181809_753643",
+    "hash": "99178da1b6a5"
+  }
+]

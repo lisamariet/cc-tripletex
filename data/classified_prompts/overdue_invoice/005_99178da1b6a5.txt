@@ -1,0 +1,3 @@
+Confidence: 0.96
+
+One of your customers has an overdue invoice. Find the overdue invoice and post a reminder fee of 35 NOK. Debit accounts receivable (1500), credit reminder fees (3400). Also create an invoice for the 

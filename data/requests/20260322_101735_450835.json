@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_101735_450835",
+  "revision": "tripletex-agent-00126-9hz",
+  "prompt": "Legen Sie einen Festpreis von 221600 NOK für das Projekt \"CRM-Integration\" für Brückentor GmbH (Org.-Nr. 815400542) fest. Projektleiter ist Maximilian Hoffmann (maximilian.hoffmann@example.org). Stellen Sie dem Kunden 75 % des Festpreises als Meilensteinzahlung in Rechnung.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

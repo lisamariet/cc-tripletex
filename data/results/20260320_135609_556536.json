@@ -1,0 +1,134 @@
+{
+  "timestamp": "20260320_135609_556536",
+  "prompt": "Crie três departamentos no Tripletex: \"Drift\", \"Kundeservice\" e \"HR\".",
+  "parsed_task": {
+    "task_type": "batch_create_department",
+    "fields": {
+      "items": [
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Drift"
+          },
+          "confidence": 0.95,
+          "reasoning": "Portuguese prompt to create department 1 of 3."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Kundeservice"
+          },
+          "confidence": 0.95,
+          "reasoning": "Portuguese prompt to create department 2 of 3."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "HR"
+          },
+          "confidence": 0.95,
+          "reasoning": "Portuguese prompt to create department 3 of 3."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/company/salesmodules",
+      "status": 422,
+      "duration_ms": 1523.0,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"\",\"message\":\"Verdien er ikke av korrekt type for dette feltet.\",\"path\":\"\",\"rootId\":null}],\"requestId\":\"724bc638-11ff-4e8e-8a62-38f1521b75fa\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1199.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/company/salesmodules",
+      "status": 422,
+      "duration_ms": 1251.8,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"\",\"message\":\"Verdien er ikke av korrekt type for dette feltet.\",\"path\":\"\",\"rootId\":null}],\"requestId\":\"a76c1349-3bb5-45f9-886d-79f8c4ae957f\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1073.7,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/company/salesmodules",
+      "status": 422,
+      "duration_ms": 1038.8,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"\",\"message\":\"Verdien er ikke av korrekt type for dette feltet.\",\"path\":\"\",\"rootId\":null}],\"requestId\":\"04f6c494-beb2-458a-bc1e-526e48ccea82\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1447.7,
+      "error": null
+    }
+  ],
+  "total_calls": 6,
+  "error_count_4xx": 3,
+  "total_duration_ms": 9193.3,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_create_department",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 902039,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/902039",
+          "name": "Drift",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Drift",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 902040,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/902040",
+          "name": "Kundeservice",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Kundeservice",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 902041,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/902041",
+          "name": "HR",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "HR",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      }
+    ]
+  }
+}

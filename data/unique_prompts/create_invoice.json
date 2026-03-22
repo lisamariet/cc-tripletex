@@ -1,0 +1,237 @@
+[
+  {
+    "prompt": "Créez et envoyez une facture au client Colline SARL (nº org. 944164340) de 44750 NOK hors TVA. La facture concerne Service réseau.",
+    "timestamp": "20260320_071441_354027",
+    "hash": "8edb1c7fb8df"
+  },
+  {
+    "prompt": "Opprett ein faktura til kunden Bølgekraft AS (org.nr 827304212) med tre produktlinjer: Webdesign (6744) til 27000 kr med 25 % MVA, Programvarelisens (2584) til 9300 kr med 15 % MVA (næringsmiddel), og Opplæring (3739) til 16300 kr med 0 % MVA (avgiftsfri).",
+    "timestamp": "20260320_115144_406057",
+    "hash": "60f38c61bfd2"
+  },
+  {
+    "prompt": "Opprett og send ein faktura til kunden Bølgekraft AS (org.nr 892362416) på 34150 kr eksklusiv MVA. Fakturaen gjeld Vedlikehald.",
+    "timestamp": "20260320_151018_905123",
+    "hash": "fcc062c4b556"
+  },
+  {
+    "prompt": "Opprett og send ein faktura til kunden Skogheim AS (org.nr 929397088) på 23250 kr eksklusiv MVA. Fakturaen gjeld Vedlikehald.",
+    "timestamp": "20260320_151445_581622",
+    "hash": "e1f602599b00"
+  },
+  {
+    "prompt": "Fixez un prix forfaitaire de 354200 NOK sur le projet \"Sécurité des données\" pour Colline SARL (nº org. 862154258). Le chef de projet est Gabriel Richard (gabriel.richard@example.org). Facturez au client 33 % du prix fixe comme paiement d'étape.",
+    "timestamp": "20260320_152515_844248",
+    "hash": "701a19b567af"
+  },
+  {
+    "prompt": "Opprett en faktura til kunden Havbris AS (org.nr 977448239) med tre produktlinjer: Konsulenttimer (6390) til 2850 kr med 25 % MVA, Systemutvikling (1652) til 2650 kr med 15 % MVA (næringsmiddel), og Webdesign (3273) til 7400 kr med 0 % MVA (avgiftsfri).",
+    "timestamp": "20260320_152704_904607",
+    "hash": "6b898620aa43"
+  },
+  {
+    "prompt": "Opprett en faktura til kunden Tindra AS (org.nr 967636665) med tre produktlinjer: Skylagring (2186) til 25500 kr med 25 % MVA, Datarådgivning (9108) til 11100 kr med 15 % MVA (næringsmiddel), og Opplæring (3940) til 10300 kr med 0 % MVA (avgiftsfri).",
+    "timestamp": "20260320_152732_972343",
+    "hash": "c9355a41d8f4"
+  },
+  {
+    "prompt": "Create invoice for Test AS",
+    "timestamp": "20260320_155603_747204",
+    "hash": "4c3ab17535f7"
+  },
+  {
+    "prompt": "Créez une facture pour le client Océan SARL (nº org. 974909103) avec trois lignes de produit : Développement système (9068) à 11000 NOK avec 25 % TVA, Licence logicielle (3111) à 7350 NOK avec 15 % TVA (alimentaire), et Session de formation (9564) à 13150 NOK avec 0 % TVA (exonéré).",
+    "timestamp": "20260320_163115_909599",
+    "hash": "d7332ff99e64"
+  },
+  {
+    "prompt": "Créez une facture pour le client Lumière SARL (nº org. 925760838) avec trois lignes de produit : Maintenance (3644) à 1850 NOK avec 25 % TVA, Licence logicielle (4934) à 14850 NOK avec 15 % TVA (alimentaire), et Service réseau (8806) à 17250 NOK avec 0 % TVA (exonéré).",
+    "timestamp": "20260320_163244_281860",
+    "hash": "bf4308fc5c13"
+  },
+  {
+    "prompt": "Opprett og send en faktura til kunden Bergvik AS (org.nr 890733751) på 28900 kr eksklusiv MVA. Fakturaen gjelder Systemutvikling.",
+    "timestamp": "20260320_163315_836535",
+    "hash": "caf1b2cb7d34"
+  },
+  {
+    "prompt": "Erstellen und senden Sie eine Rechnung an den Kunden Bergwerk GmbH (Org.-Nr. 981122011) über 45150 NOK ohne MwSt. Die Rechnung betrifft Datenberatung.",
+    "timestamp": "20260320_183719_041373",
+    "hash": "7483849fa43e"
+  },
+  {
+    "prompt": "Crea y envía una factura al cliente Río Verde SL (org. nº 894012358) por 29100 NOK sin IVA. La factura es por Sesión de formación.",
+    "timestamp": "20260320_183820_038961",
+    "hash": "9eface632484"
+  },
+  {
+    "prompt": "Crea una factura para el cliente Sierra SL (org. nº 909007135) con tres líneas de producto: Desarrollo de sistemas (8344) a 19250 NOK con 25 % IVA, Horas de consultoría (9563) a 10000 NOK con 15 % IVA (alimentos), y Informe de análisis (8060) a 15800 NOK con 0 % IVA (exento).",
+    "timestamp": "20260320_185536_511310",
+    "hash": "7a67a3766515"
+  },
+  {
+    "prompt": "Create and send an invoice to the customer Blueshore Ltd (org no. 987928921) for 40600 NOK excluding VAT. The invoice is for Maintenance.",
+    "timestamp": "20260320_185605_623728",
+    "hash": "277c44019d55"
+  },
+  {
+    "prompt": "Créez et envoyez une facture au client Prairie SARL (nº org. 818016662) de 7200 NOK hors TVA. La facture concerne Rapport d'analyse.",
+    "timestamp": "20260320_185755_878181",
+    "hash": "f8f8c6534d32"
+  },
+  {
+    "prompt": "Crie uma fatura para o cliente Montanha Lda (org. nº 869972401) com três linhas de produto: Sessão de formação (7733) a 22950 NOK com 25 % IVA, Licença de software (6106) a 10250 NOK com 15 % IVA (alimentos), e Manutenção (1351) a 3150 NOK com 0 % IVA (isento).",
+    "timestamp": "20260320_190039_171251",
+    "hash": "7b81fb7f590a"
+  },
+  {
+    "prompt": "Crie uma fatura para o cliente Floresta Lda (org. nº 919172657) com três linhas de produto: Sessão de formação (4783) a 24900 NOK com 25 % IVA, Armazenamento na nuvem (3343) a 14050 NOK com 15 % IVA (alimentos), e Serviço de rede (4380) a 15750 NOK com 0 % IVA (isento).",
+    "timestamp": "20260320_221710_891737",
+    "hash": "7f955798696b"
+  },
+  {
+    "prompt": "Crea una factura para el cliente Sierra SL (org. nº 841679563) con tres líneas de producto: Horas de consultoría (8891) a 18400 NOK con 25 % IVA, Informe de análisis (3817) a 4150 NOK con 15 % IVA (alimentos), y Sesión de formación (5484) a 3250 NOK con 0 % IVA (exento).",
+    "timestamp": "20260320_225504_094125",
+    "hash": "04368129dba7"
+  },
+  {
+    "prompt": "Opprett ein faktura til kunden Fossekraft AS (org.nr 913494253) med tre produktlinjer: Skylagring (4508) til 1050 kr med 25 % MVA, Datarådgjeving (5948) til 9850 kr med 15 % MVA (næringsmiddel), og Programvarelisens (8253) til 16950 kr med 0 % MVA (avgiftsfri).",
+    "timestamp": "20260320_230239_879859",
+    "hash": "36667bb1641e"
+  },
+  {
+    "prompt": "Erstellen und senden Sie eine Rechnung an den Kunden Flussgold GmbH (Org.-Nr. 965203516) über 19650 NOK ohne MwSt. Die Rechnung betrifft Cloud-Speicher.",
+    "timestamp": "20260320_230359_746450",
+    "hash": "4812d3d68947"
+  },
+  {
+    "prompt": "Crea una factura para el cliente Río Verde SL (org. nº 863477905) con tres líneas de producto: Desarrollo de sistemas (2376) a 12000 NOK con 25 % IVA, Asesoría de datos (1496) a 13450 NOK con 15 % IVA (alimentos), y Mantenimiento (4543) a 12050 NOK con 0 % IVA (exento).",
+    "timestamp": "20260320_231959_745926",
+    "hash": "5c67e67d8dc7"
+  },
+  {
+    "prompt": "Create an invoice for the customer Ridgepoint Ltd (org no. 932956233) with three product lines: Analysis Report (5566) at 24650 NOK with 25% VAT, Cloud Storage (6035) at 3350 NOK with 15% VAT (food), and Training Session (5199) at 13350 NOK with 0% VAT (exempt).",
+    "timestamp": "20260321_000008_032325",
+    "hash": "4ec795fb21fb"
+  },
+  {
+    "prompt": "Opprett og send ein faktura til kunden Sjøbris AS (org.nr 847830840) på 7350 kr eksklusiv MVA. Fakturaen gjeld Nettverksteneste.",
+    "timestamp": "20260321_003421_378704",
+    "hash": "2f01820b33d4"
+  },
+  {
+    "prompt": "Opprett ein faktura til kunden Strandvik AS (org.nr 900314183) med tre produktlinjer: Webdesign (9716) til 13450 kr med 25 % MVA, Skylagring (6906) til 7700 kr med 15 % MVA (næringsmiddel), og Systemutvikling (2265) til 18800 kr med 0 % MVA (avgiftsfri).",
+    "timestamp": "20260321_003541_717699",
+    "hash": "03462504207e"
+  },
+  {
+    "prompt": "Erstellen Sie eine Rechnung für den Kunden Eichenhof GmbH (Org.-Nr. 936374492) mit drei Produktzeilen: Wartung (2878) zu 21850 NOK mit 25 % MwSt., Cloud-Speicher (5486) zu 4400 NOK mit 15 % MwSt. (Lebensmittel), und Systementwicklung (3795) zu 10650 NOK mit 0 % MwSt. (befreit).",
+    "timestamp": "20260321_003843_034079",
+    "hash": "cadf1072e671"
+  },
+  {
+    "prompt": "Créez une facture pour le client Rivière SARL (nº org. 909579791) avec trois lignes de produit : Maintenance (6481) à 28100 NOK avec 25 % TVA, Design web (2618) à 12600 NOK avec 15 % TVA (alimentaire), et Développement système (8754) à 1800 NOK avec 0 % TVA (exonéré).",
+    "timestamp": "20260321_072627_064625",
+    "hash": "d013cb8b950b"
+  },
+  {
+    "prompt": "Create an invoice for the customer Windmill Ltd (org no. 994973150) with three product lines: System Development (6517) at 22950 NOK with 25% VAT, Maintenance (5339) at 8900 NOK with 15% VAT (food), and Consulting Hours (8246) at 10450 NOK with 0% VAT (exempt).",
+    "timestamp": "20260321_072759_235167",
+    "hash": "bbc6b0463fe7"
+  },
+  {
+    "prompt": "Crea y envía una factura al cliente Luna SL (org. nº 931597922) por 5450 NOK sin IVA. La factura es por Sesión de formación.",
+    "timestamp": "20260321_180903_309364",
+    "hash": "5e015d496e88"
+  },
+  {
+    "prompt": "Crie uma fatura para o cliente Montanha Lda (org. nº 970481389) com três linhas de produto: Horas de consultoria (8659) a 21850 NOK com 25 % IVA, Relatório de análise (2341) a 11250 NOK com 15 % IVA (alimentos), e Manutenção (1043) a 9250 NOK com 0 % IVA (isento).",
+    "timestamp": "20260321_202022_500924",
+    "hash": "67458412d284"
+  },
+  {
+    "prompt": "Erstellen und senden Sie eine Rechnung an den Kunden Waldstein GmbH (Org.-Nr. 925346519) über 25100 NOK ohne MwSt. Die Rechnung betrifft Systementwicklung.",
+    "timestamp": "20260321_202328_137842",
+    "hash": "0bb2703b8f27"
+  },
+  {
+    "prompt": "Create an invoice for the customer Windmill Ltd (org no. 926849395) with three product lines: Software License (6309) at 5600 NOK with 25% VAT, Consulting Hours (9721) at 8350 NOK with 15% VAT (food), and Data Advisory (9844) at 6500 NOK with 0% VAT (exempt).",
+    "timestamp": "20260321_205342_694353",
+    "hash": "f92384aea37e"
+  },
+  {
+    "prompt": "Execute the complete project lifecycle for 'System Upgrade Greenfield' (Greenfield Ltd, org no. 873288949): 1) The project has a budget of 206300 NOK. 2) Log time: Oliver Wilson (project manager, oliver.wilson@example.org) 36 hours and Victoria Taylor (consultant, victoria.taylor@example.org) 150 hours. 3) Register supplier cost of 41300 NOK from Ironbridge Ltd (org no. 913777255). 4) Create a customer invoice for the project.",
+    "timestamp": "20260321_213214_314842",
+    "hash": "ed2b96ea7bfd"
+  },
+  {
+    "prompt": "Crie e envie uma fatura ao cliente Rio Azul Lda (org. nº 959230277) por 27900 NOK sem IVA. A fatura refere-se a Relatório de análise.",
+    "timestamp": "20260321_215533_926706",
+    "hash": "1880b2b212be"
+  },
+  {
+    "prompt": "Crie e envie uma fatura ao cliente Porto Alegre Lda (org. nº 826870192) por 22700 NOK sem IVA. A fatura refere-se a Design web.",
+    "timestamp": "20260321_221425_629818",
+    "hash": "e0a139bceb2e"
+  },
+  {
+    "prompt": "Créez une facture pour le client Prairie SARL (nº org. 834343096) avec trois lignes de produit : Rapport d'analyse (1282) à 7500 NOK avec 25 % TVA, Maintenance (1722) à 11550 NOK avec 15 % TVA (alimentaire), et Session de formation (6929) à 10500 NOK avec 0 % TVA (exonéré).",
+    "timestamp": "20260321_231722_616144",
+    "hash": "28ad52bc17cf"
+  },
+  {
+    "prompt": "Crea y envía una factura al cliente Luna SL (org. nº 844920520) por 20200 NOK sin IVA. La factura es por Servicio de red.",
+    "timestamp": "20260321_231742_959385",
+    "hash": "a00a597f9757"
+  },
+  {
+    "prompt": "Crea una factura para el cliente Solmar SL (org. nº 829487888) con tres líneas de producto: Sesión de formación (6042) a 2350 NOK con 25 % IVA, Mantenimiento (5211) a 3150 NOK con 15 % IVA (alimentos), y Licencia de software (8022) a 14300 NOK con 0 % IVA (exento).",
+    "timestamp": "20260321_231803_929719",
+    "hash": "f13f8b8fe007"
+  },
+  {
+    "prompt": "Create and send an invoice to the customer Ridgepoint Ltd (org no. 985190631) for 32650 NOK excluding VAT. The invoice is for Analysis Report.",
+    "timestamp": "20260321_231829_028146",
+    "hash": "8bd808a68b17"
+  },
+  {
+    "prompt": "Opprett og send en faktura til kunden Havbris AS (org.nr 808525410) på 22550 kr eksklusiv MVA. Fakturaen gjelder Datarådgivning.",
+    "timestamp": "20260321_231830_632294",
+    "hash": "b9b09de96495"
+  },
+  {
+    "prompt": "Crea y envía una factura al cliente Viento SL (org. nº 844876831) por 35350 NOK sin IVA. La factura es por Licencia de software.",
+    "timestamp": "20260322_013729_122171",
+    "hash": "8d357bfb6d6f"
+  },
+  {
+    "prompt": "Crea y envía una factura al cliente Solmar SL (org. nº 893298169) por 19500 NOK sin IVA. La factura es por Mantenimiento.",
+    "timestamp": "20260322_021122_447084",
+    "hash": "b55ac13dc683"
+  },
+  {
+    "prompt": "Opprett og send ein faktura til kunden Fjelltopp AS (org.nr 927173875) på 42600 kr eksklusiv MVA. Fakturaen gjeld Nettverksteneste.",
+    "timestamp": "20260322_022336_073347",
+    "hash": "0c10a1dfae3c"
+  },
+  {
+    "prompt": "Erstellen Sie eine Rechnung für den Kunden Bergwerk GmbH (Org.-Nr. 967361690) mit drei Produktzeilen: Schulung (9995) zu 28050 NOK mit 25 % MwSt., Cloud-Speicher (8754) zu 3400 NOK mit 15 % MwSt. (Lebensmittel), und Systementwicklung (8751) zu 13300 NOK mit 0 % MwSt. (befreit).",
+    "timestamp": "20260322_022404_120482",
+    "hash": "3ef5dc30f017"
+  },
+  {
+    "prompt": "Create and send an invoice to the customer Ridgepoint Ltd (org no. 941587437) for 40400 NOK excluding VAT. The invoice is for Maintenance.",
+    "timestamp": "20260322_022553_503359",
+    "hash": "6ba60a5c0e99"
+  },
+  {
+    "prompt": "Opprett en faktura til kunden Bergvik AS (org.nr 807508474) med tre produktlinjer: Konsulenttimer (5947) til 29950 kr med 25 % MVA, Webdesign (8528) til 2900 kr med 15 % MVA (næringsmiddel), og Systemutvikling (9002) til 17350 kr med 0 % MVA (avgiftsfri).",
+    "timestamp": "20260322_083128_099619",
+    "hash": "ad1ee649a219"
+  },
+  {
+    "prompt": "Opprett ein faktura til kunden Elvdal AS (org.nr 810713909) med tre produktlinjer: Nettverksteneste (7765) til 13150 kr med 25 % MVA, Konsulenttimar (4369) til 11800 kr med 15 % MVA (næringsmiddel), og Vedlikehald (5331) til 8700 kr med 0 % MVA (avgiftsfri).",
+    "timestamp": "20260322_132307_860768",
+    "hash": "c02a52ab8e3e"
+  }
+]

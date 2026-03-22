@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_005151_069295",
+  "prompt": "Créez le produit \"Stockage cloud\" avec le numéro de produit 9433. Le prix est de 7550 NOK hors TVA, avec le taux standard de 25 %.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

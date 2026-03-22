@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Vi har en ny ansatt som heter Lars Bakken, født 1. October 1983. Opprett vedkommende som ansatt med e-post lars.bakken@example.org og startdato 4. August 2026.

@@ -1,0 +1,175 @@
+{
+  "timestamp": "20260320_185536_511310",
+  "prompt": "Crea una factura para el cliente Sierra SL (org. nº 909007135) con tres líneas de producto: Desarrollo de sistemas (8344) a 19250 NOK con 25 % IVA, Horas de consultoría (9563) a 10000 NOK con 15 % IVA (alimentos), y Informe de análisis (8060) a 15800 NOK con 0 % IVA (exento).",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Sierra SL",
+      "customerOrgNumber": "909007135",
+      "lines": [
+        {
+          "description": "Desarrollo de sistemas",
+          "quantity": 1,
+          "unitPriceExcludingVat": 19250,
+          "vatCode": "3"
+        },
+        {
+          "description": "Horas de consultoría",
+          "quantity": 1,
+          "unitPriceExcludingVat": 10000,
+          "vatCode": "31"
+        },
+        {
+          "description": "Informe de análisis",
+          "quantity": 1,
+          "unitPriceExcludingVat": 15800,
+          "vatCode": "5"
+        }
+      ]
+    },
+    "confidence": 0.96
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2834.9,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2339.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/353548556",
+      "status": 200,
+      "duration_ms": 2018.3,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/ledger/account/353548556",
+      "status": 200,
+      "duration_ms": 2023.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2454.3,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 2711.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 2770.6,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401965236/:invoice",
+      "status": 200,
+      "duration_ms": 2179.9,
+      "error": null
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 21538.2,
+  "result": {
+    "status": "completed",
+    "taskType": "create_invoice",
+    "created": {
+      "id": 2147537266,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147537266",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-20",
+      "customer": {
+        "id": 108260732,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108260732"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-03",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401965236,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401965236"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607511330,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607511330"
+        },
+        {
+          "id": 1607511331,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607511331"
+        },
+        {
+          "id": 1607511332,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607511332"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965736742,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965736742"
+        }
+      ],
+      "voucher": {
+        "id": 608833769,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608833769"
+      },
+      "deliveryDate": "2026-03-20",
+      "amount": 45050.0,
+      "amountCurrency": 45050.0,
+      "amountExcludingVat": 45050.0,
+      "amountExcludingVatCurrency": 45050.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 45050.0,
+      "amountCurrencyOutstanding": 45050.0,
+      "amountOutstandingTotal": 45050.0,
+      "amountCurrencyOutstandingTotal": 45050.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3844938888,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3844938888"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024157706
+    }
+  }
+}

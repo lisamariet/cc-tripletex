@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+We sent an invoice for 11671 EUR to Ironbridge Ltd (org no. 915238106) when the exchange rate was 11.22 NOK/EUR. The customer has now paid, but the rate is 11.71 NOK/EUR. Register the payment and post

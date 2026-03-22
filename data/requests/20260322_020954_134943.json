@@ -1,0 +1,15 @@
+{
+  "timestamp": "20260322_020954_134943",
+  "prompt": "Rapprochez le releve bancaire (CSV ci-joint) avec les factures ouvertes dans Tripletex. Associez les paiements entrants aux factures clients et les paiements sortants aux factures fournisseurs. Gerez correctement les paiements partiels.",
+  "files": [
+    {
+      "filename": "files/bankutskrift_fr_05.csv",
+      "mime_type": "text/csv",
+      "content_base64": "RGF0bztGb3JrbGFyaW5nO0lubjtVdDtTYWxkbw0KMjAyNi0wMS0xNztJbm5iZXRhbGluZyBmcmEgUGV0aXQgU0FSTCAvIEZha3R1cmEgMTAwMTsyNTQzNy41MDs7MTI1NDM3LjUwDQoyMDI2LTAxLTE4O0lubmJldGFsaW5nIGZyYSBQZXRpdCBTQVJMIC8gRmFrdHVyYSAxMDAyOzE0NTYyLjUwOzsxNDAwMDAuMDANCjIwMjYtMDEtMjE7SW5uYmV0YWxpbmcgZnJhIEJlcm5hcmQgU0FSTCAvIEZha3R1cmEgMTAwMzsxMDUwMC4wMDs7MTUwNTAwLjAwDQoyMDI2LTAxLTIyO0lubmJldGFsaW5nIGZyYSBCZXJuYXJkIFNBUkwgLyBGYWt0dXJhIDEwMDQ7ODUxMi41MDs7MTU5MDEyLjUwDQoyMDI2LTAxLTI0O0lubmJldGFsaW5nIGZyYSBSaWNoYXJkIFNBUkwgLyBGYWt0dXJhIDEwMDU7MjAwMDAuMDA7OzE3OTAxMi41MA0KMjAyNi0wMS0yNTtCZXRhbGluZyBGb3Vybmlzc2V1ciBCZXJuYXJkIFNBUkw7Oy0xMTcwMC4wMDsxNjczMTIuNTANCjIwMjYtMDEtMjg7QmV0YWxpbmcgRm91cm5pc3NldXIgUGV0aXQgU0FSTDs7LTEyNzAwLjAwOzE1NDYxMi41MA0KMjAyNi0wMS0zMTtCZXRhbGluZyBGb3Vybmlzc2V1ciBQZXRpdCBTQVJMOzstMTk2MDAuMDA7MTM1MDEyLjUwDQoyMDI2LTAyLTAyO1NrYXR0ZXRyZWtrOzstMTQyNi4zMjsxMzM1ODYuMTgNCjIwMjYtMDItMDQ7QmFua2dlYnlyOzstMTIyLjUwOzEzMzQ2My42OA0KMjAyNi0wMi0wNTtTa2F0dGV0cmVrazs2MDMuNzc7OzEzNDA2Ny40NQ0K"
+    }
+  ],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

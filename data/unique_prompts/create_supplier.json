@@ -1,0 +1,132 @@
+[
+  {
+    "prompt": "Register the supplier Northwave Ltd with organization number 949044378. Email: faktura@northwaveltd.no.",
+    "timestamp": "20260320_082409_705223",
+    "hash": "8b340c0be292"
+  },
+  {
+    "prompt": "Registe o fornecedor Floresta Lda com número de organização 981154614. E-mail: faktura@florestalda.no.",
+    "timestamp": "20260320_133812_730362",
+    "hash": "d5ef158d87df"
+  },
+  {
+    "prompt": "Registrer leverandøren Vestfjord AS med organisasjonsnummer 914908787. E-post: faktura@vestfjord.no.",
+    "timestamp": "20260320_150854_674508",
+    "hash": "bcbf47924c55"
+  },
+  {
+    "prompt": "Registrer leverandøren Sjøbris AS med organisasjonsnummer 811212717. E-post: faktura@sjbris.no.",
+    "timestamp": "20260320_151210_214726",
+    "hash": "4bbb331a15a9"
+  },
+  {
+    "prompt": "Register the supplier Silveroak Ltd with organization number 811867500. Email: faktura@silveroakltd.no.",
+    "timestamp": "20260320_185540_114447",
+    "hash": "2945b244f5ea"
+  },
+  {
+    "prompt": "Registe o fornecedor Floresta Lda com número de organização 883568885. E-mail: faktura@florestalda.no.",
+    "timestamp": "20260320_185632_374269",
+    "hash": "bbf4a8d81b27"
+  },
+  {
+    "prompt": "Register the supplier Brightstone Ltd with organization number 845031037. Email: faktura@brightstoneltd.no.",
+    "timestamp": "20260320_212638_642922",
+    "hash": "a9c8cabcadba"
+  },
+  {
+    "prompt": "Registrieren Sie den Lieferanten Waldstein GmbH mit der Organisationsnummer 874546445. E-Mail: faktura@waldsteingmbh.no.",
+    "timestamp": "20260320_215355_655657",
+    "hash": "2fc1559e72bc"
+  },
+  {
+    "prompt": "Registrer leverandøren Skogheim AS med organisasjonsnummer 993130494. E-post: faktura@skogheim.no.",
+    "timestamp": "20260320_231724_794516",
+    "hash": "3b044dfb85c1"
+  },
+  {
+    "prompt": "Register the supplier Oakwood Ltd with organization number 887507295. Email: faktura@oakwoodltd.no.",
+    "timestamp": "20260321_003930_207479",
+    "hash": "7445acdc4ba0"
+  },
+  {
+    "prompt": "Enregistrez le fournisseur Colline SARL avec le numéro d'organisation 915612865. E-mail : faktura@collinesarl.no.",
+    "timestamp": "20260321_004008_461269",
+    "hash": "ccfe80188d6e"
+  },
+  {
+    "prompt": "Registe o fornecedor Luz do Sol Lda com número de organização 894596554. E-mail: faktura@luzdosollda.no.",
+    "timestamp": "20260321_072657_948513",
+    "hash": "b7bdc5dd1cc5"
+  },
+  {
+    "prompt": "Registre el proveedor Costa Brava SL con número de organización 936616224. Correo electrónico: faktura@costabravasl.no.",
+    "timestamp": "20260321_142959_339286",
+    "hash": "8a6ce28c560b"
+  },
+  {
+    "prompt": "Registrer leverandøren Brattli AS med organisasjonsnummer 950029978. E-post: faktura@brattli.no.",
+    "timestamp": "20260321_164916_495814",
+    "hash": "83bddf3b4be0"
+  },
+  {
+    "prompt": "Registrieren Sie den Lieferanten Waldstein GmbH mit der Organisationsnummer 891505019. E-Mail: faktura@waldsteingmbh.no.",
+    "timestamp": "20260321_184802_695448",
+    "hash": "3c4d6f37339b"
+  },
+  {
+    "prompt": "Enregistrez le fournisseur Cascade SARL avec le numéro d'organisation 999591027. E-mail : faktura@cascadesarl.no.",
+    "timestamp": "20260321_210739_732260",
+    "hash": "bc3c5b63a815"
+  },
+  {
+    "prompt": "Registre el proveedor Estrella SL con número de organización 899246829. Correo electrónico: faktura@estrellasl.no.",
+    "timestamp": "20260321_215438_877391",
+    "hash": "016160e83f85"
+  },
+  {
+    "prompt": "Registre el proveedor Dorada SL con número de organización 853166553. Correo electrónico: faktura@doradasl.no.",
+    "timestamp": "20260321_221958_279774",
+    "hash": "75cc59f22251"
+  },
+  {
+    "prompt": "Vous avez recu une facture fournisseur (voir PDF ci-joint). Enregistrez la facture dans Tripletex. Creez le fournisseur s'il n'existe pas. Utilisez le bon compte de charges et la TVA deductible.",
+    "timestamp": "20260321_223754_604818",
+    "hash": "47e593c22cb3"
+  },
+  {
+    "prompt": "Recebemos a fatura INV-2026-6556 do fornecedor Solmar Lda (org. nº 974178680) no valor de 50750 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 6500). Registe a fatura do fornecedor com o IVA dedutível correto (25 %).",
+    "timestamp": "20260321_223955_671761",
+    "hash": "0ac1a47ba8ff"
+  },
+  {
+    "prompt": "Registre el proveedor Dorada SL con número de organización 855328062. Correo electrónico: faktura@doradasl.no.",
+    "timestamp": "20260322_001239_909717",
+    "hash": "94fbbbcab41c"
+  },
+  {
+    "prompt": "Enregistrez le fournisseur Océan SARL avec le numéro d'organisation 975630749. E-mail : faktura@ocansarl.no.",
+    "timestamp": "20260322_020850_827539",
+    "hash": "f54c5d8923bd"
+  },
+  {
+    "prompt": "Registre el proveedor Sierra SL con número de organización 898340473. Correo electrónico: faktura@sierrasl.no.",
+    "timestamp": "20260322_022543_204275",
+    "hash": "c7d684d0aa51"
+  },
+  {
+    "prompt": "Registrer leverandøren Tindra AS med organisasjonsnummer 888286195. E-post: faktura@tindra.no.",
+    "timestamp": "20260322_075836_285190",
+    "hash": "ce50d15af953"
+  },
+  {
+    "prompt": "Registe o fornecedor Luz do Sol Lda com número de organização 962006930. E-mail: faktura@luzdosollda.no.",
+    "timestamp": "20260322_080050_937229",
+    "hash": "dbecf2292964"
+  },
+  {
+    "prompt": "Registrieren Sie den Lieferanten Brückentor GmbH mit der Organisationsnummer 978195806. E-Mail: faktura@brckentorgmbh.no.",
+    "timestamp": "20260322_121851_599301",
+    "hash": "7d215acdd9b8"
+  }
+]

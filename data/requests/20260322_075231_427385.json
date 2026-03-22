@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_075231_427385",
+  "prompt": "Kunden Nordlys AS (org.nr 902392165) har reklamert på fakturaen for \"Programvarelisens\" (47350 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

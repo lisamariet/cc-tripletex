@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+El pago de Dorada SL (org. nº 849807021) por la factura "Mantenimiento" (8900 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.

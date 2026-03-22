@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Total costs increased significantly from January to February 2026. Analyze the general ledger and identify the three expense accounts with the largest increase in amount. Create an internal project fo

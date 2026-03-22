@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea el producto "Mantenimiento" con número de producto 7266. El precio es 650 NOK sin IVA, utilizando la tasa estándar del 25 %.

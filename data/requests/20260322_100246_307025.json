@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_100246_307025",
+  "prompt": "Registre 15 horas para Miguel Torres (miguel.torres@example.org) en la actividad \"Design\" del proyecto \"Rediseño web\" para Viento SL (org. nº 980164454). Tarifa por hora: 1800 NOK/h. Genere una factura de proyecto al cliente basada en las horas registradas.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

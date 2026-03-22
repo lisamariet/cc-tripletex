@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_083754_392817",
+  "prompt": "Sett fastpris 352200 kr på prosjektet \"Automatiseringsprosjekt\" for Nordhav AS (org.nr 940514584). Prosjektleder er Thea Nilsen (thea.nilsen@example.org). Fakturer kunden for 75 % av fastprisen som en delbetaling.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

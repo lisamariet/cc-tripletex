@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+You received a supplier invoice (see attached PDF). Register the invoice in Tripletex. Create the supplier if it does not exist. Use the correct expense account and input VAT.

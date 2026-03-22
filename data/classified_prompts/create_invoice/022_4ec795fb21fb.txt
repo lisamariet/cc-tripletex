@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Create an invoice for the customer Ridgepoint Ltd (org no. 932956233) with three product lines: Analysis Report (5566) at 24650 NOK with 25% VAT, Cloud Storage (6035) at 3350 NOK with 15% VAT (food), 

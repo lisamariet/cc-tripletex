@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_020740_129758",
+  "prompt": "Gjennomfør heile prosjektsyklusen for 'Digitalportal Strandvik' (Strandvik AS, org.nr 842328004): 1) Prosjektet har budsjett 392650 kr. 2) Registrer timar: Geir Lunde (prosjektleiar, geir.lunde@example.org) 35 timar og Gunnhild Kvamme (konsulent, gunnhild.kvamme@example.org) 88 timar. 3) Registrer leverandørkostnad 69950 kr frå Skogheim AS (org.nr 955829190). 4) Opprett kundefaktura for prosjektet.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Créez le projet "Analyse Lumière" lié au client Lumière SARL (nº org. 929902688). Le chef de projet est Léo Dubois (leo.dubois@example.org).

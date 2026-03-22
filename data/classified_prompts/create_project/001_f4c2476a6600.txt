@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Opprett prosjektet "Migrasjon Vestfjord" knytt til kunden Vestfjord AS (org.nr 887727872). Prosjektleiar er Liv Stølsvik (liv.stlsvik@example.org).

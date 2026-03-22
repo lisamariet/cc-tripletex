@@ -1,0 +1,150 @@
+{
+  "timestamp": "20260322_090829_749072",
+  "prompt": "Erstellen Sie den Kunden Sonnental GmbH mit der Organisationsnummer 929940016. Die Adresse ist Solveien 21, 9008 Tromsø. E-Mail: post@sonnental.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Sonnental GmbH",
+      "organizationNumber": "929940016",
+      "email": "post@sonnental.no",
+      "invoiceEmail": "post@sonnental.no",
+      "address": {
+        "addressLine1": "Solveien 21",
+        "postalCode": "9008",
+        "city": "Tromsø"
+      },
+      "overdueNoticeEmail": "post@sonnental.no"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 487.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "request_body": {
+        "name": "Sonnental GmbH",
+        "isCustomer": true,
+        "organizationNumber": "929940016",
+        "email": "post@sonnental.no",
+        "invoiceEmail": "post@sonnental.no",
+        "overdueNoticeEmail": "post@sonnental.no",
+        "postalAddress": {
+          "addressLine1": "Solveien 21",
+          "postalCode": "9008",
+          "city": "Tromsø"
+        },
+        "physicalAddress": {
+          "addressLine1": "Solveien 21",
+          "postalCode": "9008",
+          "city": "Tromsø"
+        }
+      },
+      "response_body": "{\"value\":{\"id\":108566026,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108566026\",\"name\":\"Sonnental GmbH\",\"organizationNumber\":\"929940016\",\"globalLocationNumber\":0,\"supplierNumber\":0,\"customerNumber\":10001,\"isSupplier\":false,\"isCustomer\":true,\"isInactive\":false,\"accountManager\":null,\"department\":null,\"email\":\"post@sonnental.no\",\"invoiceEmail\":\"post@sonnental.no\",\"overdueNoticeEmail\":\"post@sonnental.no\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"language\":\"NO\",\"displayName\":\"Sonnental GmbH (10001)\",\"isPrivateIndividual\":false,\"singleCustomerInvoice\":false,\"invoiceSendMethod\":\"EMAIL\",\"emailAttachmentType\":\"ATTACHMENT\",\"postalAddress\":{\"id\":405977706,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405977706\",\"addressLine1\":\"Solveien 21\",\"addressLine2\":\"\",\"postalCode\":\"9008\",\"city\":\"Tromsø\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Sonnental GmbH, Solveien 21, 9008 Tromsø, Norge\",\"addressAsString\":\"Solveien 21, 9008 Tromsø, Norge\",\"displayNameInklMatrikkel\":\"Sonnental GmbH, Solveien 21, 9008 Tromsø, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"physicalAddress\":{\"id\":405977705,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405977705\",\"addressLine1\":\"Solveien 21\",\"addressLine2\":\"\",\"postalCode\":\"9008\",\"city\":\"Tromsø\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Sonnental GmbH, Solveien 21, 9008 Tromsø, Norge\",\"addressAsString\":\"Solveien 21, 9008 Tromsø, Norge\",\"displayNameInklMatrikkel\":\"Sonnental GmbH, Solveien 21, 9008 Tromsø, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"bankAccountPresentation\":[],\"ledgerAccount\":{\"id\":496380433,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/496380433\"},\"isFactorin"
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 2307.0,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108566026,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108566026",
+      "name": "Sonnental GmbH",
+      "organizationNumber": "929940016",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@sonnental.no",
+      "invoiceEmail": "post@sonnental.no",
+      "overdueNoticeEmail": "post@sonnental.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Sonnental GmbH (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405977706,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405977706",
+        "addressLine1": "Solveien 21",
+        "addressLine2": "",
+        "postalCode": "9008",
+        "city": "Tromsø",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Sonnental GmbH, Solveien 21, 9008 Tromsø, Norge",
+        "addressAsString": "Solveien 21, 9008 Tromsø, Norge",
+        "displayNameInklMatrikkel": "Sonnental GmbH, Solveien 21, 9008 Tromsø, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "physicalAddress": {
+        "id": 405977705,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405977705",
+        "addressLine1": "Solveien 21",
+        "addressLine2": "",
+        "postalCode": "9008",
+        "city": "Tromsø",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Sonnental GmbH, Solveien 21, 9008 Tromsø, Norge",
+        "addressAsString": "Solveien 21, 9008 Tromsø, Norge",
+        "displayNameInklMatrikkel": "Sonnental GmbH, Solveien 21, 9008 Tromsø, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 496380433,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/496380433"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}

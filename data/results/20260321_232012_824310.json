@@ -1,0 +1,128 @@
+{
+  "timestamp": "20260321_232012_824310",
+  "prompt": "Opprett tre avdelinger i Tripletex: \"Utvikling\", \"Drift\" og \"HR\".",
+  "parsed_task": {
+    "task_type": "batch_create_department",
+    "fields": {
+      "items": [
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Utvikling"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 1 of 3."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Drift"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 2 of 3."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "HR"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 3 of 3."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 367.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Utvikling"
+      },
+      "response_body": "{\"value\":{\"id\":971010,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/971010\",\"name\":\"Utvikling\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Utvikling\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 418.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Drift"
+      },
+      "response_body": "{\"value\":{\"id\":971017,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/971017\",\"name\":\"Drift\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Drift\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 389.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "HR"
+      },
+      "response_body": "{\"value\":{\"id\":971022,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/971022\",\"name\":\"HR\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"HR\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 2700.3,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_create_department",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 971010,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/971010",
+          "name": "Utvikling",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Utvikling",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 971017,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/971017",
+          "name": "Drift",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Drift",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 971022,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/971022",
+          "name": "HR",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "HR",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      }
+    ]
+  }
+}

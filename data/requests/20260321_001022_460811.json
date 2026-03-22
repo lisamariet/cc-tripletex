@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_001022_460811",
+  "prompt": "Registrer en reiseregning for Sigurd Hansen (sigurd.hansen@example.org) for \"Kundebesøk Trondheim\". Reisen varte 4 dager med diett (dagsats 800 kr). Utlegg: flybillett 6150 kr og taxi 500 kr.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "timestamp": "20260322_021742_530211",
+  "prompt": "We have a new employee named Charles Taylor, born 21. October 1994. Please create them as an employee with email charles.taylor@example.org and start date 3. June 2026.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Charles",
+      "lastName": "Taylor",
+      "email": "charles.taylor@example.org",
+      "dateOfBirth": "1994-10-21",
+      "startDate": "2026-06-03"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 4849.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "count": 1,
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":907932,\"name\":\"Avdeling\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 7646.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Charles",
+        "lastName": "Taylor",
+        "email": "charles.taylor@example.org",
+        "dateOfBirth": "1994-10-21",
+        "userType": "STANDARD",
+        "department": {
+          "id": 907932
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18723978,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18723978\",\"firstName\":\"Charles\",\"lastName\":\"Taylor\",\"displayName\":\"Charles Taylor\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1994-10-21\",\"email\":\"charles.taylor@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":907932,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/907932\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108257599,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 4847.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18723978
+        },
+        "startDate": "2026-06-03"
+      },
+      "response_body": "{\"value\":{\"id\":2863158,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2863158\",\"employee\":{\"id\":18723978,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18723978\"},\"employmentId\":\"\",\"startDate\":\"2026-06-03\",\"endDate\":null,\"employmentEndReason\":null,\"division\":null,\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 18778.3,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18723978,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18723978",
+      "firstName": "Charles",
+      "lastName": "Taylor",
+      "displayName": "Charles Taylor",
+      "employeeNumber": "",
+      "dateOfBirth": "1994-10-21",
+      "email": "charles.taylor@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 907932,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/907932"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 108257599,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

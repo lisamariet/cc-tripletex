@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_110417_211291",
+  "revision": "tripletex-agent-00130-cps",
+  "prompt": "The payment from Blueshore Ltd (org no. 989902121) for the invoice \"Software License\" (39700 NOK excl. VAT) was returned by the bank. Reverse the payment so the invoice shows the outstanding amount again.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez et envoyez une facture au client Prairie SARL (nº org. 818016662) de 7200 NOK hors TVA. La facture concerne Rapport d'analyse.

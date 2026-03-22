@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_000026_135163",
+  "prompt": "Opprett prosjektet \"Analyse Sjøbris\" knytt til kunden Sjøbris AS (org.nr 883693329). Prosjektleiar er Steinar Berge (steinar.berge@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

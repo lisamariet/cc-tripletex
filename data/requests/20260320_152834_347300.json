@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_152834_347300",
+  "prompt": "Me har ein ny tilsett som heiter Geir Neset, fødd 24. June 1997. Opprett vedkomande som tilsett med e-post geir.neset@example.org og startdato 15. October 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

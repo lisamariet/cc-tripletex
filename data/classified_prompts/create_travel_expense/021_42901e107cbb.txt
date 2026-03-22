@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Register a travel expense for Alice Clark (alice.clark@example.org) for "Client visit Oslo". The trip lasted 3 days with per diem (daily rate 800 NOK). Expenses: flight ticket 2800 NOK and taxi 450 NO

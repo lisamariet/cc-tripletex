@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Crea el cliente Viento SL con número de organización 910107739. La dirección es Parkveien 93, 7010 Trondheim. Correo: post@viento.no.

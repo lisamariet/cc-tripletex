@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Tenemos un nuevo empleado llamado Lucía Rodríguez, nacido el 30. April 1996. Créelo como empleado con el correo lucia.rodriguez@example.org y fecha de inicio 22. April 2026.

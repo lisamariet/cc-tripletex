@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Los costos totales aumentaron significativamente de enero a febrero de 2026. Analice el libro mayor e identifique las tres cuentas de gastos con el mayor incremento en monto. Cree un proyecto interno 

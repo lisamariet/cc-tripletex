@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Créez une facture pour le client Prairie SARL (nº org. 834343096) avec trois lignes de produit : Rapport d'analyse (1282) à 7500 NOK avec 25 % TVA, Maintenance (1722) à 11550 NOK avec 15 % TVA (alimen

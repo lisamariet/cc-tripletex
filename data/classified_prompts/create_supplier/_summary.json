@@ -1,0 +1,122 @@
+[
+  {
+    "prompt": "Registre el proveedor Dorada SL con número de organización 853166553. Correo electrónico: faktura@doradasl.no.",
+    "confidence": 0.95,
+    "hash": "75cc59f22251"
+  },
+  {
+    "prompt": "Register the supplier Northwave Ltd with organization number 949044378. Email: faktura@northwaveltd.no.",
+    "confidence": 0.98,
+    "hash": "8b340c0be292"
+  },
+  {
+    "prompt": "Registe o fornecedor Floresta Lda com número de organização 981154614. E-mail: faktura@florestalda.no.",
+    "confidence": 0.95,
+    "hash": "d5ef158d87df"
+  },
+  {
+    "prompt": "Registrer leverandøren Vestfjord AS med organisasjonsnummer 914908787. E-post: faktura@vestfjord.no.",
+    "confidence": 0.98,
+    "hash": "bcbf47924c55"
+  },
+  {
+    "prompt": "Registrer leverandøren Sjøbris AS med organisasjonsnummer 811212717. E-post: faktura@sjbris.no.",
+    "confidence": 0.98,
+    "hash": "4bbb331a15a9"
+  },
+  {
+    "prompt": "Register the supplier Silveroak Ltd with organization number 811867500. Email: faktura@silveroakltd.no.",
+    "confidence": 0.98,
+    "hash": "2945b244f5ea"
+  },
+  {
+    "prompt": "Registe o fornecedor Floresta Lda com número de organização 883568885. E-mail: faktura@florestalda.no.",
+    "confidence": 0.95,
+    "hash": "bbf4a8d81b27"
+  },
+  {
+    "prompt": "Register the supplier Brightstone Ltd with organization number 845031037. Email: faktura@brightstoneltd.no.",
+    "confidence": 0.98,
+    "hash": "a9c8cabcadba"
+  },
+  {
+    "prompt": "Registrieren Sie den Lieferanten Waldstein GmbH mit der Organisationsnummer 874546445. E-Mail: faktura@waldsteingmbh.no.",
+    "confidence": 0.98,
+    "hash": "2fc1559e72bc"
+  },
+  {
+    "prompt": "Registrer leverandøren Skogheim AS med organisasjonsnummer 993130494. E-post: faktura@skogheim.no.",
+    "confidence": 0.98,
+    "hash": "3b044dfb85c1"
+  },
+  {
+    "prompt": "Register the supplier Oakwood Ltd with organization number 887507295. Email: faktura@oakwoodltd.no.",
+    "confidence": 0.98,
+    "hash": "7445acdc4ba0"
+  },
+  {
+    "prompt": "Enregistrez le fournisseur Colline SARL avec le numéro d'organisation 915612865. E-mail : faktura@collinesarl.no.",
+    "confidence": 0.95,
+    "hash": "ccfe80188d6e"
+  },
+  {
+    "prompt": "Registe o fornecedor Luz do Sol Lda com número de organização 894596554. E-mail: faktura@luzdosollda.no.",
+    "confidence": 0.95,
+    "hash": "b7bdc5dd1cc5"
+  },
+  {
+    "prompt": "Registre el proveedor Costa Brava SL con número de organización 936616224. Correo electrónico: faktura@costabravasl.no.",
+    "confidence": 0.95,
+    "hash": "8a6ce28c560b"
+  },
+  {
+    "prompt": "Registrer leverandøren Brattli AS med organisasjonsnummer 950029978. E-post: faktura@brattli.no.",
+    "confidence": 0.98,
+    "hash": "83bddf3b4be0"
+  },
+  {
+    "prompt": "Registrieren Sie den Lieferanten Waldstein GmbH mit der Organisationsnummer 891505019. E-Mail: faktura@waldsteingmbh.no.",
+    "confidence": 0.98,
+    "hash": "3c4d6f37339b"
+  },
+  {
+    "prompt": "Enregistrez le fournisseur Cascade SARL avec le numéro d'organisation 999591027. E-mail : faktura@cascadesarl.no.",
+    "confidence": 0.95,
+    "hash": "bc3c5b63a815"
+  },
+  {
+    "prompt": "Registre el proveedor Estrella SL con número de organización 899246829. Correo electrónico: faktura@estrellasl.no.",
+    "confidence": 0.95,
+    "hash": "016160e83f85"
+  },
+  {
+    "prompt": "Registre el proveedor Dorada SL con número de organización 855328062. Correo electrónico: faktura@doradasl.no.",
+    "confidence": 0.95,
+    "hash": "94fbbbcab41c"
+  },
+  {
+    "prompt": "Enregistrez le fournisseur Océan SARL avec le numéro d'organisation 975630749. E-mail : faktura@ocansarl.no.",
+    "confidence": 0.95,
+    "hash": "f54c5d8923bd"
+  },
+  {
+    "prompt": "Registre el proveedor Sierra SL con número de organización 898340473. Correo electrónico: faktura@sierrasl.no.",
+    "confidence": 0.95,
+    "hash": "c7d684d0aa51"
+  },
+  {
+    "prompt": "Registrer leverandøren Tindra AS med organisasjonsnummer 888286195. E-post: faktura@tindra.no.",
+    "confidence": 0.98,
+    "hash": "ce50d15af953"
+  },
+  {
+    "prompt": "Registe o fornecedor Luz do Sol Lda com número de organização 962006930. E-mail: faktura@luzdosollda.no.",
+    "confidence": 0.98,
+    "hash": "dbecf2292964"
+  },
+  {
+    "prompt": "Registrieren Sie den Lieferanten Brückentor GmbH mit der Organisationsnummer 978195806. E-Mail: faktura@brckentorgmbh.no.",
+    "confidence": 0.98,
+    "hash": "7d215acdd9b8"
+  }
+]

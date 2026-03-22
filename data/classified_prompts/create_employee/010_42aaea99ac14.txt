@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Vi har en ny ansatt som heter Solveig Johansen, født 15. May 1993. Opprett vedkommende som ansatt med e-post solveig.johansen@example.org og startdato 18. January 2026.

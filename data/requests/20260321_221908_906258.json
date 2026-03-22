@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_221908_906258",
+  "prompt": "Crie um pedido para o cliente Montanha Lda (org. nº 864062245) com os produtos Licença de software (6749) a 4950 NOK e Armazenamento na nuvem (3048) a 7700 NOK. Converta o pedido em fatura e registe o pagamento total.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

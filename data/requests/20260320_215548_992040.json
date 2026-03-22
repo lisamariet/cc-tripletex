@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_215548_992040",
+  "prompt": "Vi har en ny ansatt som heter Solveig Johansen, født 15. May 1993. Opprett vedkommende som ansatt med e-post solveig.johansen@example.org og startdato 18. January 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

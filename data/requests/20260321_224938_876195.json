@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_224938_876195",
+  "prompt": "Crie o projeto \"Integração Porto\" vinculado ao cliente Porto Alegre Lda (org. nº 884811686). O gerente de projeto é Lucas Silva (lucas.silva@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

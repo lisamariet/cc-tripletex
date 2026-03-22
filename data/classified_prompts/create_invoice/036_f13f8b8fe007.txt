@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Crea una factura para el cliente Solmar SL (org. nº 829487888) con tres líneas de producto: Sesión de formación (6042) a 2350 NOK con 25 % IVA, Mantenimiento (5211) a 3150 NOK con 15 % IVA (alimentos)

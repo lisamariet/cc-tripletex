@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_203726_163256",
+  "prompt": "Tenemos un nuevo empleado llamado Diego Rodríguez, nacido el 28. August 1996. Créelo como empleado con el correo diego.rodriguez@example.org y fecha de inicio 29. June 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_221649_054649",
+  "prompt": "El pago de Olivares SL (org. nº 921296819) por la factura \"Almacenamiento en la nube\" (46300 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_093612_275530",
+  "prompt": "Kunden Skogheim AS (org.nr 900506902) har ein uteståande faktura på 12000 kr eksklusiv MVA for \"Systemutvikling\". Registrer full betaling på denne fakturaen.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

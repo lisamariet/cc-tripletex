@@ -1,0 +1,17 @@
+{
+  "timestamp": "20260321_103715_223934",
+  "prompt": "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 6500 utilisé au lieu de 6540, montant 6800 NOK), une pièce en double (compte 7000, montant 1300 NOK), une ligne de TVA manquante (compte 4300, montant HT 17300 NOK, TVA manquante sur compte 2710), et un montant incorrect (compte 6300, 10150 NOK comptabilisé au lieu de 7450 NOK). Corrigez toutes les erreurs avec des écritures correctives.",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 9069.7,
+  "result": {
+    "status": "completed",
+    "note": "Fallback LLM error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZG5ZdYuLL5NNRFmscY5z'}"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Run payroll for Lucy Walker (lucy.walker@example.org) for this month. The base salary is 43050 NOK. Add a one-time bonus of 6100 NOK on top of the base salary.

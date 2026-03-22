@@ -1,0 +1,3 @@
+Confidence: 0.96
+
+L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 65 NOK. Debit creances clients (1500), credit revenus de rappel (3400). Créez également 

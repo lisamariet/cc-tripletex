@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_000008_032325",
+  "prompt": "Create an invoice for the customer Ridgepoint Ltd (org no. 932956233) with three product lines: Analysis Report (5566) at 24650 NOK with 25% VAT, Cloud Storage (6035) at 3350 NOK with 15% VAT (food), and Training Session (5199) at 13350 NOK with 0% VAT (exempt).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

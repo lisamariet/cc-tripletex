@@ -1,0 +1,67 @@
+{
+  "timestamp": "20260320_230219_207919",
+  "prompt": "Le client Prairie SARL (nº org. 975013723) a une facture impayée de 45100 NOK hors TVA pour \"Licence logicielle\". Enregistrez le paiement intégral de cette facture.",
+  "parsed_task": {
+    "task_type": "register_payment",
+    "fields": {
+      "customerName": "Prairie SARL",
+      "customerOrgNumber": "975013723",
+      "amount": 45100,
+      "invoiceDescription": "Licence logicielle",
+      "lines": [
+        {
+          "description": "Licence logicielle",
+          "quantity": 1,
+          "unitPriceExcludingVat": 45100,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 24481.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 2015.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 1903.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/paymentType",
+      "status": 200,
+      "duration_ms": 1882.1,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147545584/:payment",
+      "status": 200,
+      "duration_ms": 1976.7,
+      "error": null
+    }
+  ],
+  "total_calls": 5,
+  "error_count_4xx": 0,
+  "total_duration_ms": 39192.3,
+  "result": {
+    "status": "completed",
+    "taskType": "register_payment",
+    "invoiceId": 2147545584
+  }
+}

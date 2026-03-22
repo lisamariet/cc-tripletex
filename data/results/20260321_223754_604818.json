@@ -1,0 +1,36 @@
+{
+  "timestamp": "20260321_223754_604818",
+  "prompt": "Vous avez recu une facture fournisseur (voir PDF ci-joint). Enregistrez la facture dans Tripletex. Creez le fournisseur s'il n'existe pas. Utilisez le bon compte de charges et la TVA deductible.",
+  "parsed_task": {
+    "task_type": "create_supplier",
+    "fields": {
+      "supplierName": "Rivière SARL",
+      "supplierOrgNumber": "838532624",
+      "amount": 25000,
+      "amountExcludingVat": 20000,
+      "description": "Programvarelisens",
+      "productName": "Programvarelisens",
+      "invoiceDate": "2026-01-03",
+      "invoiceNumber": "INV-2026-2554",
+      "vatRate": 25,
+      "vatCode": "11",
+      "expenseAccount": 6340,
+      "_raw_files": [
+        {
+          "filename": "files/leverandorfaktura_fr_06.pdf",
+          "content_base64": "JVBERi0xLjMKJenr8b8KMSAwIG9iago8PAovQ291bnQgMQovS2lkcyBbMyAwIFJdCi9NZWRpYUJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMiAwIG9iago8PAovT3BlbkFjdGlvbiBbMyAwIFIgL0ZpdEggbnVsbF0KL1BhZ2VMYXlvdXQgL09uZUNvbHVtbgovUGFnZXMgMSAwIFIKL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDQgMCBSCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyA3IDAgUgovVHlwZSAvUGFnZQo+PgplbmRvYmoKNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDQ0MAo+PgpzdHJlYW0KeJyVk8tu2zAQRff5itkUaIBmQg6f0s5GY6BNH4GtZE/AsqHqVVCK+8v9hC5Lm3YtOUGgCtqImHMv52qG4PMVQ2Xg19U8g9sFB66RMcg2cJftjwRHbsEkcl+UreH9stgVv30Oq9nyyzVkP451twsCzl5DjUCdHNDvfouNT8EKqwRpkgP+WKz0qXjVt37rehcEPoBlTMO8Xf8ZOXKgsSPJBAWBThK04qCymN1nj8vZBcb5KxfVyiCPPS5c2T971zzXde7Tyy7HMFcWjRzSn7493RAjfUNKyUnOIqTLhs5r17cTfc8sE8g47p0nmYZTS9G09RtXVd1/uJ5hRhjeqa7KGLTxullRpfCx6HvYFL52J5osCgWKJEoOdcCCEz99V7CCs5YglOqgNc+70he7vOryk84YrEFpjYm4EFJCoJJjpar9+XYGR3eWoIk//MG3W+/qnfN5VXR50w14RRwFG1YTCw+U/u3lkZahESBDXjJyX59mQOpdGrRe8iFuGvMm7LEBqRRqHvNue1f1adCY4h+blEGV7AG/b5swHft5Yy/WViQhv7hwc9eUZSwlxpkNjSfy32j8BQTVCbAKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iago2IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKNyAwIG9iago8PAovRm9udCA8PC9GMSA1IDAgUgovRjIgNiAwIFI+PgovUHJvY1NldCBbL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSV0KPj4KZW5kb2JqCjggMCBvYmoKPDwKL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDMwNDE5MTgwNVopCj4+CmVuZG9iagp4cmVmCjAgOQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDEwMiAwMDAwMCBuIAowMDAwMDAwMjA1IDAwMDAwIG4gCjAwMDAwMDAyODUgMDAwMDAgbiAKMDAwMDAwMDc5NyAwMDAwMCBuIAowMDAwMDAwODk5IDAwMDAwIG4gCjAwMDAwMDA5OTYgMDAwMDAgbiAKMDAwMDAwMTA5MyAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDkKL1Jvb3QgMiAwIFIKL0luZm8gOCAwIFIKL0lEIFs8NDcyRTAxOEZGNkRCRDgyOUI5RjAwMTEyNTdGRUFGQzU+PDQ3MkUwMThGRjZEQkQ4MjlCOUYwMDExMjU3RkVBRkM1Pl0KPj4Kc3RhcnR4cmVmCjExNDgKJSVFT0YK",
+          "mime_type": "application/pdf"
+        }
+      ]
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 5115.6,
+  "result": {
+    "status": "completed",
+    "error": "'name'"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create the project "Integration Northwave" linked to the customer Northwave Ltd (org no. 950072652). The project manager is James Johnson (james.johnson@example.org).

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_021701_858432",
+  "prompt": "Führen Sie den vollständigen Projektzyklus für 'Systemupgrade Brückentor' (Brückentor GmbH, Org.-Nr. 929610156) durch: 1) Das Projekt hat ein Budget von 405900 NOK. 2) Erfassen Sie Stunden: Emma Weber (Projektleiter, emma.weber@example.org) 73 Stunden und Anna Becker (Berater, anna.becker@example.org) 134 Stunden. 3) Erfassen Sie Lieferantenkosten von 55650 NOK von Silberberg GmbH (Org.-Nr. 818922248). 4) Erstellen Sie eine Kundenrechnung für das Projekt.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

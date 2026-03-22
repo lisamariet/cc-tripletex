@@ -1,0 +1,22 @@
+[
+  {
+    "prompt": "Reconcile the bank statement (attached CSV) against open invoices in Tripletex. Match incoming payments to customer invoices and outgoing payments to supplier invoices. Handle partial payments correctly.",
+    "timestamp": "20260321_142942_186581",
+    "hash": "16c1450c01cc"
+  },
+  {
+    "prompt": "Avstem bankutskriften (vedlagt CSV) mot apne fakturaer i Tripletex. Match innbetalinger til kundefakturaer og utbetalinger til leverandorfakturaer. Handter delbetalinger korrekt.",
+    "timestamp": "20260321_143140_080415",
+    "hash": "be39269a12f8"
+  },
+  {
+    "prompt": "Reconcilie o extrato bancario (CSV anexo) com as faturas em aberto no Tripletex. Relacione os pagamentos recebidos com as faturas de clientes e os pagamentos efetuados com as faturas de fornecedores. Trate os pagamentos parciais corretamente.",
+    "timestamp": "20260321_164808_089401",
+    "hash": "0a1d5bc39ad5"
+  },
+  {
+    "prompt": "Rapprochez le releve bancaire (CSV ci-joint) avec les factures ouvertes dans Tripletex. Associez les paiements entrants aux factures clients et les paiements sortants aux factures fournisseurs. Gerez correctement les paiements partiels.",
+    "timestamp": "20260321_165142_384622",
+    "hash": "f550afbd14bc"
+  }
+]

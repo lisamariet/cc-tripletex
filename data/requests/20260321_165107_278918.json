@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_165107_278918",
+  "prompt": "Crea el proyecto \"Migración Viento\" vinculado al cliente Viento SL (org. nº 857047575). El director del proyecto es Carlos Romero (carlos.romero@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

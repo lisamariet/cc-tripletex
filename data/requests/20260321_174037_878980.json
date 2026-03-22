@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_174037_878980",
+  "prompt": "Create the project \"Upgrade Windmill\" linked to the customer Windmill Ltd (org no. 978017681). The project manager is Grace Lewis (grace.lewis@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

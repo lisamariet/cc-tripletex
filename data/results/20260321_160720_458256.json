@@ -1,0 +1,400 @@
+{
+  "timestamp": "20260321_160720_458256",
+  "prompt": "Vi treng Kontorstoler fra denne kvitteringa bokfort pa avdeling Drift. Bruk rett utgiftskonto basert pa kjopet, og sorg for korrekt MVA-behandling.",
+  "parsed_task": {
+    "task_type": "register_supplier_invoice",
+    "fields": {
+      "supplierName": "IKEA",
+      "supplierOrgNumber": "919274379",
+      "amount": 13860.0,
+      "description": "Kjøp av kontorstoler og mus fra IKEA",
+      "invoiceDate": "2026-02-22",
+      "expenseAccount": 6540,
+      "vatRate": 25
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 287.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "organizationNumber": "919274379"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 247.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "name": "IKEA"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 201,
+      "duration_ms": 276.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "request_body": {
+        "name": "IKEA",
+        "isSupplier": true,
+        "organizationNumber": "919274379"
+      },
+      "response_body": "{\"value\":{\"id\":108372375,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108372375\",\"name\":\"IKEA\",\"organizationNumber\":\"919274379\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405594331,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405594331\"},\"physicalAddress\":{\"id\":405594330,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405594330\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":465539659,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539659\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"IKEA (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 241.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "6540"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":465539870,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539870\",\"number\":6540,\"numberPretty\":\"6540\",\"name\":\"Inventar\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"65\",\"groupingCode\":\"6500\",\"displayName\":\"6540 Inventar\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 238.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2400"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":465539659,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539659\",\"number\":2400,\"numberPretty\":\"2400\",\"name\":\"Leverandørgjeld\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"VENDOR\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":true,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"24\",\"groupingCode\":\"2400\",\"displayName\":\"2400 Leverandørgjeld\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/465539870",
+      "status": 200,
+      "duration_ms": 263.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/465539870",
+      "response_body": "{\"value\":{\"id\":465539870,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539870\",\"number\":6540,\"numberPretty\":\"6540\",\"name\":\"Inventar\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"65\",\"groupingCode\":\"6500\",\"displayName\":\"6540 Inventar\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 271.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucherType",
+      "query_params": {
+        "name": "Leverandørfaktura"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":11073448,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11073448\",\"name\":\"Leverandørfaktura\",\"displayName\":\"Leverandørfaktura\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 266.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/vatType",
+      "query_params": {
+        "number": "11"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":11,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\",\"name\":\"Fradrag inngående avgift, middels sats\",\"number\":\"11\",\"displayName\":\"11: (15%) Fradrag inngående avgift, middels sats\",\"percentage\":15,\"deductionPercentage\":100.0,\"parentType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplierInvoice",
+      "status": 500,
+      "duration_ms": 335.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplierInvoice",
+      "request_body": {
+        "invoiceDate": "2026-02-22",
+        "supplier": {
+          "id": 108372375
+        },
+        "amountCurrency": 13860.0,
+        "currency": {
+          "id": 1
+        },
+        "voucher": {
+          "date": "2026-02-22",
+          "description": "Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA",
+          "postings": [
+            {
+              "account": {
+                "id": 465539870
+              },
+              "amountGross": 13860.0,
+              "amountGrossCurrency": 13860.0,
+              "row": 1,
+              "vatType": {
+                "id": 11
+              }
+            }
+          ],
+          "voucherType": {
+            "id": 11073448
+          }
+        },
+        "invoiceDueDate": "2026-03-24"
+      },
+      "response_body": "{\"status\":500,\"code\":1002,\"message\":null,\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"2eb6abeb-754b-4250-bbfc-421e92a6272d\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 472.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2026-02-22",
+        "description": "Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA",
+        "postings": [
+          {
+            "account": {
+              "id": 465539870
+            },
+            "amountGross": 13860.0,
+            "amountGrossCurrency": 13860.0,
+            "row": 1,
+            "vatType": {
+              "id": 11
+            }
+          },
+          {
+            "account": {
+              "id": 465539659
+            },
+            "supplier": {
+              "id": 108372375
+            },
+            "amountGross": -13860.0,
+            "amountGrossCurrency": -13860.0,
+            "row": 2
+          }
+        ],
+        "voucherType": {
+          "id": 11073448
+        }
+      },
+      "response_body": "{\"value\":{\"id\":609023179,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609023179\",\"date\":\"2026-02-22\",\"number\":1,\"tempNumber\":0,\"year\":2026,\"description\":\"Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA\",\"voucherType\":{\"id\":11073448,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11073448\"},\"reverseVoucher\":null,\"postings\":[{\"id\":3845459942,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845459942\",\"voucher\":{\"id\":609023179,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609023179\"},\"date\":\"2026-02-22\",\"description\":\"Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA\",\"account\":{\"id\":465539870,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539870\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},\"amount\":12052.17,\"amountCurrency\":12052.17,\"amountGross\":13860.0,\"amountGrossCurrency\":13860.0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":false,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845459943,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845459943\",\"voucher\":{\"id\":609023179,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609023179\"},\"date\":\"2026-02-22\",\"description\":\"Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA\",\"account\":{\"id\":465539659,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539659\"},\"amortizationAcc"
+    }
+  ],
+  "total_calls": 10,
+  "error_count_4xx": 0,
+  "total_duration_ms": 11443.0,
+  "result": {
+    "status": "completed",
+    "taskType": "register_supplier_invoice",
+    "created": {
+      "id": 609023179,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609023179",
+      "date": "2026-02-22",
+      "number": 1,
+      "tempNumber": 0,
+      "year": 2026,
+      "description": "Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA",
+      "voucherType": {
+        "id": 11073448,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11073448"
+      },
+      "reverseVoucher": null,
+      "postings": [
+        {
+          "id": 3845459942,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845459942",
+          "voucher": {
+            "id": 609023179,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609023179"
+          },
+          "date": "2026-02-22",
+          "description": "Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA",
+          "account": {
+            "id": 465539870,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539870"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": null,
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 11,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11"
+          },
+          "amount": 12052.17,
+          "amountCurrency": 12052.17,
+          "amountGross": 13860.0,
+          "amountGrossCurrency": 13860.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 1,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": false,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845459943,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845459943",
+          "voucher": {
+            "id": 609023179,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609023179"
+          },
+          "date": "2026-02-22",
+          "description": "Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA",
+          "account": {
+            "id": 465539659,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539659"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": {
+            "id": 108372375,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108372375"
+          },
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": -13860.0,
+          "amountCurrency": -13860.0,
+          "amountGross": -13860.0,
+          "amountGrossCurrency": -13860.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 2,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845459946,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845459946",
+          "voucher": {
+            "id": 609023179,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609023179"
+          },
+          "date": "2026-02-22",
+          "description": "Leverandørfaktura: Kjøp av kontorstoler og mus fra IKEA",
+          "account": {
+            "id": 465539682,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/465539682"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": null,
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": 1807.83,
+          "amountCurrency": 1807.83,
+          "amountGross": 1807.83,
+          "amountGrossCurrency": 1807.83,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 0,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": true,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        }
+      ],
+      "document": null,
+      "attachment": null,
+      "externalVoucherNumber": "",
+      "ediDocument": null,
+      "supplierVoucherType": null,
+      "wasAutoMatched": false,
+      "vendorInvoiceNumber": null,
+      "numberAsString": "1-2026"
+    }
+  }
+}

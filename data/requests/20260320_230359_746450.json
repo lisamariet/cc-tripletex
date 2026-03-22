@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_230359_746450",
+  "prompt": "Erstellen und senden Sie eine Rechnung an den Kunden Flussgold GmbH (Org.-Nr. 965203516) über 19650 NOK ohne MwSt. Die Rechnung betrifft Cloud-Speicher.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

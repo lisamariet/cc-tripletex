@@ -1,0 +1,361 @@
+{
+  "timestamp": "20260321_222827_833136",
+  "prompt": "Ejecute el ciclo de vida completo del proyecto 'Migración Cloud Río' (Río Verde SL, org. nº 904714364): 1) El proyecto tiene un presupuesto de 212950 NOK. 2) Registre horas: Pablo González (director de proyecto, pablo.gonzalez@example.org) 63 horas y Diego López (consultor, diego.lopez@example.org) 160 horas. 3) Registre costo de proveedor de 44550 NOK de Solmar SL (org. nº 855062305). 4) Cree una factura al cliente por el proyecto.",
+  "parsed_task": {
+    "task_type": "register_timesheet",
+    "fields": {
+      "projectName": "Migración Cloud Río",
+      "customerName": "Río Verde SL",
+      "customerOrgNumber": "904714364",
+      "projectBudget": 212950,
+      "employees": [
+        {
+          "name": "Pablo González",
+          "email": "pablo.gonzalez@example.org",
+          "hours": 63
+        },
+        {
+          "name": "Diego López",
+          "email": "diego.lopez@example.org",
+          "hours": 160
+        }
+      ],
+      "supplierName": "Solmar SL",
+      "supplierOrgNumber": "855062305",
+      "supplierAmount": 44550,
+      "supplierExpenseAccount": 4000
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 640.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "pablo.gonzalez@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18680772,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18680772\",\"firstName\":\"Pablo\",\"lastName\":\"González\",\"displayName\":\"Pablo González\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"pablo.gonzalez@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":965495,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/965495\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108442241,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 427.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "query_params": {
+        "name": "Migración Cloud Río"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":402042121,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402042121\",\"name\":\"Migración Cloud Río\",\"number\":\"1\",\"displayName\":\"1 Migración Cloud Río\",\"description\":\"\",\"projectManager\":{\"id\":18680772,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18680772\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-01-01\",\"endDate\":null,\"customer\":{\"id\":108442258,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108442258\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":true,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0.0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":212950.0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0.0,\"markUpFeesEarned\":0.0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0.0,\"projectHourlyRates\":[{\"id\":11091197,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11091197\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15646068,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15646068\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"1 Migración Cloud Río\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Río Verde SL\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Pablo González\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 453.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "pablo.gonzalez@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18680772,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18680772\",\"firstName\":\"Pablo\",\"lastName\":\"González\",\"displayName\":\"Pablo González\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"pablo.gonzalez@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":965495,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/965495\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108442241,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/activity/%3EforTimeSheet",
+      "status": 200,
+      "duration_ms": 425.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity/%3EforTimeSheet",
+      "query_params": {
+        "projectId": 402042121
+      },
+      "response_body": "{\"fullResultSize\":3,\"from\":0,\"count\":3,\"versionDigest\":null,\"values\":[{\"id\":5984128,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5984128\",\"name\":\"Design\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Design\",\"deletable\":true},{\"id\":5984115,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5984115\",\"name\":\"Fakturerbart arbeid\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":true,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Fakturerbart arbeid\",\"deletable\":true},{\"id\":5984114,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5984114\",\"name\":\"Prosjektadministrasjon\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Prosjektadministrasjon\",\"deletable\":true}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 452.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/timesheet/entry",
+      "request_body": {
+        "employee": {
+          "id": 18680772
+        },
+        "project": {
+          "id": 402042121
+        },
+        "activity": {
+          "id": 5984128
+        },
+        "date": "2026-03-21",
+        "hours": 63
+      },
+      "response_body": "{\"value\":{\"id\":175912468,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175912468\",\"project\":{\"id\":402042121,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402042121\"},\"activity\":{\"id\":5984128,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5984128\"},\"date\":\"2026-03-21\",\"hours\":63.0,\"chargeableHours\":63.0,\"employee\":{\"id\":18680772,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18680772\"},\"timeClocks\":[],\"comment\":\"\",\"locked\":false,\"chargeable\":false,\"invoice\":null,\"hourlyRate\":0.00,\"hourlyCost\":0.00,\"hourlyCostPercentage\":0,\"projectChargeableHours\":63.0}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 363.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "diego.lopez@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18680773,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18680773\",\"firstName\":\"Diego\",\"lastName\":\"López\",\"displayName\":\"Diego López\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"diego.lopez@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":965495,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/965495\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108442241,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/activity/%3EforTimeSheet",
+      "status": 200,
+      "duration_ms": 343.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity/%3EforTimeSheet",
+      "query_params": {
+        "projectId": 402042121
+      },
+      "response_body": "{\"fullResultSize\":3,\"from\":0,\"count\":3,\"versionDigest\":null,\"values\":[{\"id\":5984128,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5984128\",\"name\":\"Design\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Design\",\"deletable\":false},{\"id\":5984115,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5984115\",\"name\":\"Fakturerbart arbeid\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":true,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Fakturerbart arbeid\",\"deletable\":true},{\"id\":5984114,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5984114\",\"name\":\"Prosjektadministrasjon\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Prosjektadministrasjon\",\"deletable\":true}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 406.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/timesheet/entry",
+      "request_body": {
+        "employee": {
+          "id": 18680773
+        },
+        "project": {
+          "id": 402042121
+        },
+        "activity": {
+          "id": 5984128
+        },
+        "date": "2026-03-21",
+        "hours": 160
+      },
+      "response_body": "{\"value\":{\"id\":175912469,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175912469\",\"project\":{\"id\":402042121,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402042121\"},\"activity\":{\"id\":5984128,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5984128\"},\"date\":\"2026-03-21\",\"hours\":160.0,\"chargeableHours\":160.0,\"employee\":{\"id\":18680773,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18680773\"},\"timeClocks\":[],\"comment\":\"\",\"locked\":false,\"chargeable\":false,\"invoice\":null,\"hourlyRate\":0.00,\"hourlyCost\":0.00,\"hourlyCostPercentage\":0,\"projectChargeableHours\":160.0}}"
+    },
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 382.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "organizationNumber": "855062305"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108442268,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108442268\",\"name\":\"Solmar SL\",\"organizationNumber\":\"855062305\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405732170,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405732170\"},\"physicalAddress\":{\"id\":405732169,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405732169\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":475338981,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/475338981\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"Solmar SL (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 381.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "4000"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":475339083,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/475339083\",\"number\":4000,\"numberPretty\":\"4000\",\"name\":\"Innkjøp av råvarer og halvfabrikater\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"40\",\"groupingCode\":\"4005\",\"displayName\":\"4000 Innkjøp av råvarer og halvfabrikater\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 445.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2400"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":475338981,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/475338981\",\"number\":2400,\"numberPretty\":\"2400\",\"name\":\"Leverandørgjeld\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"VENDOR\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":true,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"24\",\"groupingCode\":\"2400\",\"displayName\":\"2400 Leverandørgjeld\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/475339083",
+      "status": 200,
+      "duration_ms": 404.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/475339083",
+      "response_body": "{\"value\":{\"id\":475339083,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/475339083\",\"number\":4000,\"numberPretty\":\"4000\",\"name\":\"Innkjøp av råvarer og halvfabrikater\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"40\",\"groupingCode\":\"4005\",\"displayName\":\"4000 Innkjøp av råvarer og halvfabrikater\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 417.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucherType",
+      "query_params": {
+        "name": "Leverandørfaktura"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":11388340,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11388340\",\"name\":\"Leverandørfaktura\",\"displayName\":\"Leverandørfaktura\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 313.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/vatType",
+      "query_params": {
+        "number": "1"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":1,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\",\"name\":\"Fradrag inngående avgift, høy sats\",\"number\":\"1\",\"displayName\":\"1: (25%) Fradrag inngående avgift, høy sats\",\"percentage\":25,\"deductionPercentage\":100.0,\"parentType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplierInvoice",
+      "status": 201,
+      "duration_ms": 770.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplierInvoice",
+      "request_body": {
+        "invoiceDate": "2026-03-21",
+        "supplier": {
+          "id": 108442268
+        },
+        "amountCurrency": 44550,
+        "currency": {
+          "id": 1
+        },
+        "voucher": {
+          "date": "2026-03-21",
+          "description": "Leverandørfaktura: Prosjektkostnad: Migración Cloud Río",
+          "postings": [
+            {
+              "account": {
+                "id": 475339083
+              },
+              "supplier": {
+                "id": 108442268
+              },
+              "amount": -35640.0,
+              "amountCurrency": -35640.0,
+              "amountGross": -44550,
+              "amountGrossCurrency": -44550,
+              "row": 1,
+              "vatType": {
+                "id": 1
+              }
+            },
+            {
+              "account": {
+                "id": 475338981
+              },
+              "supplier": {
+                "id": 108442268
+              },
+              "amount": 44550,
+              "amountCurrency": 44550,
+              "amountGross": 44550,
+              "amountGrossCurrency": 44550,
+              "row": 2
+            }
+          ],
+          "voucherType": {
+            "id": 11388340
+          }
+        },
+        "invoiceDueDate": "2026-04-20"
+      },
+      "response_body": "{\"value\":{\"id\":2147645504,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplierInvoice/2147645504\",\"invoiceNumber\":\"\",\"invoiceDate\":\"2026-03-21\",\"supplier\":{\"id\":108442268,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108442268\"},\"invoiceDueDate\":\"2026-04-20\",\"kidOrReceiverReference\":\"\",\"voucher\":{\"id\":609187392,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609187392\"},\"amount\":0,\"amountCurrency\":44550,\"amountExcludingVat\":0,\"amountExcludingVatCurrency\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":true,\"orderLines\":[],\"payments\":[],\"originalInvoiceDocumentId\":0,\"approvalListElements\":[{\"id\":647196582,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647196582\"},{\"id\":647196581,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647196581\"}],\"outstandingAmount\":-44550.00}}"
+    }
+  ],
+  "total_calls": 15,
+  "error_count_4xx": 0,
+  "total_duration_ms": 10234.5,
+  "result": {
+    "status": "completed",
+    "taskType": "register_timesheet",
+    "entries": 2,
+    "totalHours": 223.0,
+    "created": {
+      "id": 175912468,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175912468",
+      "project": {
+        "id": 402042121,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/project/402042121"
+      },
+      "activity": {
+        "id": 5984128,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/activity/5984128"
+      },
+      "date": "2026-03-21",
+      "hours": 63.0,
+      "chargeableHours": 63.0,
+      "employee": {
+        "id": 18680772,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18680772"
+      },
+      "timeClocks": [],
+      "comment": "",
+      "locked": false,
+      "chargeable": false,
+      "invoice": null,
+      "hourlyRate": 0.0,
+      "hourlyCost": 0.0,
+      "hourlyCostPercentage": 0,
+      "projectChargeableHours": 63.0
+    },
+    "supplierInvoice": {
+      "status": "completed",
+      "taskType": "register_supplier_invoice",
+      "created": {
+        "id": 2147645504,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/supplierInvoice/2147645504",
+        "invoiceNumber": "",
+        "invoiceDate": "2026-03-21",
+        "supplier": {
+          "id": 108442268,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108442268"
+        },
+        "invoiceDueDate": "2026-04-20",
+        "kidOrReceiverReference": "",
+        "voucher": {
+          "id": 609187392,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609187392"
+        },
+        "amount": 0,
+        "amountCurrency": 44550,
+        "amountExcludingVat": 0,
+        "amountExcludingVatCurrency": 0,
+        "currency": {
+          "id": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+        },
+        "isCreditNote": true,
+        "orderLines": [],
+        "payments": [],
+        "originalInvoiceDocumentId": 0,
+        "approvalListElements": [
+          {
+            "id": 647196582,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647196582"
+          },
+          {
+            "id": 647196581,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647196581"
+          }
+        ],
+        "outstandingAmount": -44550.0
+      },
+      "supplierId": 108442268,
+      "voucherId": 609187392,
+      "amountExclVat": 35640.0,
+      "pdfUploaded": false
+    }
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+O cliente Estrela Lda (org. nº 975389642) tem uma fatura pendente de 47200 NOK sem IVA por "Serviço de rede". Registe o pagamento total desta fatura.

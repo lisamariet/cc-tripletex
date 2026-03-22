@@ -1,0 +1,112 @@
+{
+  "timestamp": "20260321_181809_753643",
+  "prompt": "One of your customers has an overdue invoice. Find the overdue invoice and post a reminder fee of 35 NOK. Debit accounts receivable (1500), credit reminder fees (3400). Also create an invoice for the reminder fee to the customer and send it. Additionally, register a partial payment of 5000 NOK on the overdue invoice.",
+  "parsed_task": {
+    "task_type": "create_voucher",
+    "fields": {
+      "description": "Reminder fee",
+      "postings": [
+        {
+          "debitAccount": 1500,
+          "creditAccount": 3400,
+          "amount": 35,
+          "description": "Reminder fee - overdue invoice"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 539.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1500"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":467310994,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/467310994\",\"number\":1500,\"numberPretty\":\"1500\",\"name\":\"Kundefordringer\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"CUSTOMER\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":true,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"15\",\"groupingCode\":\"1500\",\"displayName\":\"1500 Kundefordringer\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 318.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "3400"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":467311190,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/467311190\",\"number\":3400,\"numberPretty\":\"3400\",\"name\":\"Spesielt offentlig tilskudd for tilvirkede/solgte varer\",\"description\":\"\",\"type\":\"OPERATING_REVENUES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":true,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"34\",\"groupingCode\":\"3400\",\"displayName\":\"3400 Spesielt offentlig tilskudd for tilvirkede/solgte varer\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 290.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/vatType",
+      "query_params": {
+        "number": "3"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":3,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\",\"name\":\"Utgående avgift, høy sats\",\"number\":\"3\",\"displayName\":\"3: (25%) Utgående avgift, høy sats\",\"percentage\":25,\"deductionPercentage\":100.0,\"parentType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 422,
+      "duration_ms": 333.4,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":\"postings.vatType.id\",\"message\":\"Kontoen 3400 Spesielt offentlig tilskudd for tilvirkede/solgte varer er låst til mva-kode 0: Ingen avgiftsbehandling.\",\"path\":null,\"rootId\":null},{\"field\":\"postings.customer.id\",\"message\":\"Kunde mangler.\",\"path\":null,\"rootId\":null}],\"requestId\":\"8d54aca8-8e13-4558-ab5e-5308b67c0985\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2026-03-21",
+        "description": "Reminder fee",
+        "postings": [
+          {
+            "account": {
+              "id": 467310994
+            },
+            "amountGross": 35,
+            "amountGrossCurrency": 35,
+            "row": 1
+          },
+          {
+            "account": {
+              "id": 467311190
+            },
+            "amountGross": -35,
+            "amountGrossCurrency": -35,
+            "row": 2,
+            "vatType": {
+              "id": 3
+            }
+          }
+        ]
+      },
+      "response_body": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":\"postings.vatType.id\",\"message\":\"Kontoen 3400 Spesielt offentlig tilskudd for tilvirkede/solgte varer er låst til mva-kode 0: Ingen avgiftsbehandling.\",\"path\":null,\"rootId\":null},{\"field\":\"postings.customer.id\",\"message\":\"Kunde mangler.\",\"path\":null,\"rootId\":null}],\"requestId\":\"8d54aca8-8e13-4558-ab5e-5308b67c0985\"}"
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 1,
+  "total_duration_ms": 7212.9,
+  "result": {
+    "status": "completed",
+    "note": "Voucher creation failed: Validering feilet.",
+    "validationMessages": [
+      {
+        "field": "postings.vatType.id",
+        "message": "Kontoen 3400 Spesielt offentlig tilskudd for tilvirkede/solgte varer er låst til mva-kode 0: Ingen avgiftsbehandling.",
+        "path": null,
+        "rootId": null
+      },
+      {
+        "field": "postings.customer.id",
+        "message": "Kunde mangler.",
+        "path": null,
+        "rootId": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+We have received invoice INV-2026-9601 from the supplier Oakwood Ltd (org no. 967247049) for 79750 NOK including VAT. The amount relates to office services (account 6540). Register the supplier invoic

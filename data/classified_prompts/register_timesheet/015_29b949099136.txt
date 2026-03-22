@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Log 5 hours for Emily Johnson (emily.johnson@example.org) on the activity "Utvikling" in the project "Security Audit" for Clearwater Ltd (org no. 874828955). Hourly rate: 1600 NOK/h. Generate a projec

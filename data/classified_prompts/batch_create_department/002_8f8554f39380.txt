@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea tres departamentos en Tripletex: "HR", "Regnskap" y "Lager".

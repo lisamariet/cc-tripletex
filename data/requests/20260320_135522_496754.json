@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_135522_496754",
+  "prompt": "Nous avons un nouvel employé nommé Jules Bernard, né le 8. December 1982. Veuillez le créer en tant qu'employé avec l'e-mail jules.bernard@example.org et la date de début 27. December 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

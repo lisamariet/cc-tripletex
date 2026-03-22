@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crie o produto "Design web" com número de produto 4775. O preço é 27300 NOK sem IVA, utilizando a taxa padrão de 25 %.

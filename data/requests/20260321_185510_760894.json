@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_185510_760894",
+  "prompt": "Set a fixed price of 170500 NOK on the project \"Infrastructure Upgrade\" for Brightstone Ltd (org no. 850116091). The project manager is Charlotte Walker (charlotte.walker@example.org). Invoice the customer for 33% of the fixed price as a milestone payment.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

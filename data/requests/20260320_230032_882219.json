@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_230032_882219",
+  "prompt": "Kunden Nordhav AS (org.nr 996887898) har reklamert på fakturaen for \"Vedlikehold\" (19200 kr ekskl. MVA). Opprett en fullstendig kreditnota som reverserer hele fakturaen.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260319_221804_847485",
+  "prompt": "Test oppgave",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://test.example.com/v2",
+    "session_token_prefix": "test-tok..."
+  }
+}

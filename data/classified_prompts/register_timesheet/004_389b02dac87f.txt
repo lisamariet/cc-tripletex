@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Log 12 hours for Victoria Brown (victoria.brown@example.org) on the activity "Analyse" in the project "Data Migration" for Greenfield Ltd (org no. 890874185). Hourly rate: 850 NOK/h. Generate a projec

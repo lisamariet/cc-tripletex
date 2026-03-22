@@ -1,0 +1,17 @@
+{
+  "timestamp": "20260321_102550_009708",
+  "prompt": "Precisamos da despesa de Oppbevaringsboks deste recibo registada no departamento Markedsføring. Use a conta de despesas correta e garanta o tratamento correto do IVA.",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 11043.7,
+  "result": {
+    "status": "completed",
+    "note": "Fallback LLM error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZG4hG3T36YDz8fpiZxMU'}"
+  }
+}

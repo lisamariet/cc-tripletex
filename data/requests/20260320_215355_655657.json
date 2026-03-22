@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_215355_655657",
+  "prompt": "Registrieren Sie den Lieferanten Waldstein GmbH mit der Organisationsnummer 874546445. E-Mail: faktura@waldsteingmbh.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

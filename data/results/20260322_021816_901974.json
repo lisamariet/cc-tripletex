@@ -1,0 +1,311 @@
+{
+  "timestamp": "20260322_021816_901974",
+  "prompt": "Crie uma dimensão contabilística personalizada \"Marked\" com os valores \"Bedrift\" e \"Privat\". Em seguida, lance um documento na conta 6590 por 16750 NOK, vinculado ao valor de dimensão \"Bedrift\".",
+  "parsed_task": {
+    "task_type": "create_custom_dimension",
+    "fields": {
+      "dimensionName": "Marked",
+      "values": [
+        "Bedrift",
+        "Privat"
+      ],
+      "voucherDate": "2024-03-20",
+      "voucherDescription": "Voucher linked to dimension Bedrift",
+      "accountNumber": 6590,
+      "amount": 16750,
+      "dimensionValue": "Bedrift"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/accountingDimensionName",
+      "status": 200,
+      "duration_ms": 4522.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionName",
+      "query_params": {
+        "fields": "id,dimensionName,dimensionIndex,active"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":null,\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionName",
+      "status": 201,
+      "duration_ms": 5030.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionName",
+      "request_body": {
+        "dimensionName": "Marked",
+        "active": true
+      },
+      "response_body": "{\"value\":{\"id\":2922,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionName/2922\",\"dimensionName\":\"Marked\",\"description\":null,\"dimensionIndex\":1,\"active\":true}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/accountingDimensionValue/search",
+      "status": 200,
+      "duration_ms": 4413.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionValue/search",
+      "query_params": {
+        "dimensionIndex": "1"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":null,\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionValue",
+      "status": 201,
+      "duration_ms": 4674.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionValue",
+      "request_body": {
+        "displayName": "Bedrift",
+        "dimensionIndex": 1,
+        "active": true,
+        "showInVoucherRegistration": true
+      },
+      "response_body": "{\"value\":{\"id\":19871,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/19871\",\"displayName\":\"Bedrift\",\"nameAndNumber\":\"Bedrift\",\"dimensionIndex\":1,\"active\":true,\"number\":null,\"showInVoucherRegistration\":true,\"position\":1}}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionValue",
+      "status": 201,
+      "duration_ms": 5408.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionValue",
+      "request_body": {
+        "displayName": "Privat",
+        "dimensionIndex": 1,
+        "active": true,
+        "showInVoucherRegistration": true
+      },
+      "response_body": "{\"value\":{\"id\":19872,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/19872\",\"displayName\":\"Privat\",\"nameAndNumber\":\"Privat\",\"dimensionIndex\":1,\"active\":true,\"number\":null,\"showInVoucherRegistration\":true,\"position\":2}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 4830.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "6590"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":457380009,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/457380009\",\"number\":6590,\"numberPretty\":\"6590\",\"name\":\"Annet driftsmateriale\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"65\",\"groupingCode\":\"6500\",\"displayName\":\"6590 Annet driftsmateriale\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 5073.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1920"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":457379733,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/457379733\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 18512.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2024-03-20",
+        "description": "Voucher linked to dimension Bedrift",
+        "postings": [
+          {
+            "account": {
+              "id": 457380009
+            },
+            "amountGross": 16750,
+            "amountGrossCurrency": 16750,
+            "row": 1,
+            "freeAccountingDimension1": {
+              "id": 19871
+            }
+          },
+          {
+            "account": {
+              "id": 457379733
+            },
+            "amountGross": -16750,
+            "amountGrossCurrency": -16750,
+            "row": 2
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":609276704,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609276704\",\"date\":\"2024-03-20\",\"number\":1,\"tempNumber\":0,\"year\":2024,\"description\":\"Voucher linked to dimension Bedrift\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3846136654,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846136654\",\"voucher\":{\"id\":609276704,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609276704\"},\"date\":\"2024-03-20\",\"description\":\"Voucher linked to dimension Bedrift\",\"account\":{\"id\":457380009,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/457380009\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"amount\":16750.00,\"amountCurrency\":16750.00,\"amountGross\":16750,\"amountGrossCurrency\":16750,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":false,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":{\"id\":19871,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/19871\"},\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3846136655,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846136655\",\"voucher\":{\"id\":609276704,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609276704\"},\"date\":\"2024-03-20\",\"description\":\"Voucher linked to dimension Bedrift\",\"account\":{\"id\":457379733,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/457379733\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDat"
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 49261.7,
+  "result": {
+    "status": "completed",
+    "taskType": "create_custom_dimension",
+    "dimension": {
+      "id": 2922,
+      "name": "Marked",
+      "index": 1
+    },
+    "values": [
+      {
+        "id": 19871,
+        "name": "Bedrift"
+      },
+      {
+        "id": 19872,
+        "name": "Privat"
+      }
+    ],
+    "voucher": {
+      "status": "completed",
+      "created": {
+        "id": 609276704,
+        "version": 5,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609276704",
+        "date": "2024-03-20",
+        "number": 1,
+        "tempNumber": 0,
+        "year": 2024,
+        "description": "Voucher linked to dimension Bedrift",
+        "voucherType": null,
+        "reverseVoucher": null,
+        "postings": [
+          {
+            "id": 3846136654,
+            "version": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846136654",
+            "voucher": {
+              "id": 609276704,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609276704"
+            },
+            "date": "2024-03-20",
+            "description": "Voucher linked to dimension Bedrift",
+            "account": {
+              "id": 457380009,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/457380009"
+            },
+            "amortizationAccount": null,
+            "amortizationStartDate": null,
+            "amortizationEndDate": null,
+            "customer": null,
+            "supplier": null,
+            "employee": null,
+            "project": null,
+            "product": null,
+            "department": null,
+            "vatType": {
+              "id": 0,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+            },
+            "amount": 16750.0,
+            "amountCurrency": 16750.0,
+            "amountGross": 16750,
+            "amountGrossCurrency": 16750,
+            "currency": {
+              "id": 1,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+            },
+            "closeGroup": null,
+            "invoiceNumber": "",
+            "termOfPayment": null,
+            "row": 1,
+            "type": null,
+            "externalRef": "",
+            "systemGenerated": false,
+            "taxTransactionType": "(Ikke valgt)",
+            "taxTransactionTypeId": 0,
+            "matched": false,
+            "quantityAmount1": 0,
+            "quantityType1": null,
+            "quantityAmount2": 0,
+            "quantityType2": null,
+            "isVatReadonly": false,
+            "isAmountVatClosed": false,
+            "postingRuleId": 0,
+            "freeAccountingDimension1": {
+              "id": 19871,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/19871"
+            },
+            "freeAccountingDimension2": null,
+            "freeAccountingDimension3": null,
+            "asset": null
+          },
+          {
+            "id": 3846136655,
+            "version": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846136655",
+            "voucher": {
+              "id": 609276704,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609276704"
+            },
+            "date": "2024-03-20",
+            "description": "Voucher linked to dimension Bedrift",
+            "account": {
+              "id": 457379733,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/457379733"
+            },
+            "amortizationAccount": null,
+            "amortizationStartDate": null,
+            "amortizationEndDate": null,
+            "customer": null,
+            "supplier": null,
+            "employee": null,
+            "project": null,
+            "product": null,
+            "department": null,
+            "vatType": {
+              "id": 0,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+            },
+            "amount": -16750.0,
+            "amountCurrency": -16750.0,
+            "amountGross": -16750.0,
+            "amountGrossCurrency": -16750.0,
+            "currency": {
+              "id": 1,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+            },
+            "closeGroup": null,
+            "invoiceNumber": "",
+            "termOfPayment": null,
+            "row": 2,
+            "type": null,
+            "externalRef": "",
+            "systemGenerated": false,
+            "taxTransactionType": "(Ikke valgt)",
+            "taxTransactionTypeId": 0,
+            "matched": false,
+            "quantityAmount1": 0,
+            "quantityType1": null,
+            "quantityAmount2": 0,
+            "quantityType2": null,
+            "isVatReadonly": true,
+            "isAmountVatClosed": false,
+            "postingRuleId": 0,
+            "freeAccountingDimension1": null,
+            "freeAccountingDimension2": null,
+            "freeAccountingDimension3": null,
+            "asset": null
+          }
+        ],
+        "document": null,
+        "attachment": null,
+        "externalVoucherNumber": "",
+        "ediDocument": null,
+        "supplierVoucherType": null,
+        "wasAutoMatched": false,
+        "vendorInvoiceNumber": null,
+        "numberAsString": "1-2024"
+      }
+    }
+  }
+}

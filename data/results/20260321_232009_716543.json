@@ -1,0 +1,128 @@
+{
+  "timestamp": "20260321_232009_716543",
+  "prompt": "Créez trois départements dans Tripletex : \"Produksjon\", \"Salg\" et \"Innkjøp\".",
+  "parsed_task": {
+    "task_type": "batch_create_department",
+    "fields": {
+      "items": [
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Produksjon"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 1 of 3. French prompt to create a department named 'Produksjon'."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Salg"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 2 of 3. French prompt to create a department named 'Salg'."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Innkjøp"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 3 of 3. French prompt to create a department named 'Innkjøp'."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 3434.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Produksjon"
+      },
+      "response_body": "{\"value\":{\"id\":971007,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/971007\",\"name\":\"Produksjon\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Produksjon\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 364.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Salg"
+      },
+      "response_body": "{\"value\":{\"id\":971015,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/971015\",\"name\":\"Salg\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Salg\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 395.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Innkjøp"
+      },
+      "response_body": "{\"value\":{\"id\":971021,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/971021\",\"name\":\"Innkjøp\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Innkjøp\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 5731.9,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_create_department",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 971007,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/971007",
+          "name": "Produksjon",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Produksjon",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 971015,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/971015",
+          "name": "Salg",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Salg",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 971021,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/971021",
+          "name": "Innkjøp",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Innkjøp",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      }
+    ]
+  }
+}

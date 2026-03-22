@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crie uma dimensão contabilística personalizada "Region" com os valores "Midt-Norge" e "Vestlandet". Em seguida, lance um documento na conta 6590 por 6500 NOK, vinculado ao valor de dimensão "Vestlande

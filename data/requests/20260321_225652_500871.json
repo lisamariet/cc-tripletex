@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_225652_500871",
+  "prompt": "Gjennomfør hele prosjektsyklusen for 'Systemoppgradering Brattli' (Brattli AS, org.nr 960456300): 1) Prosjektet har budsjett 244200 kr. 2) Registrer timer: Marte Johansen (prosjektleder, marte.johansen@example.org) 75 timer og Sigurd Nilsen (konsulent, sigurd.nilsen@example.org) 124 timer. 3) Registrer leverandørkostnad 38950 kr fra Tindra AS (org.nr 902214186). 4) Opprett kundefaktura for prosjektet.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

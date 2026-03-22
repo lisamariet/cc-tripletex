@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_205744_680768",
+  "prompt": "Vi har mottatt faktura INV-2026-8551 fra leverandøren Bergvik AS (org.nr 989568469) på 14850 kr inklusiv MVA. Beløpet gjelder kontortjenester (konto 6300). Registrer leverandørfakturaen med korrekt inngående MVA (25 %).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

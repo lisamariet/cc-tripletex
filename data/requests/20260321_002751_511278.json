@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_002751_511278",
+  "prompt": "O pagamento de Porto Alegre Lda (org. nº 957867227) referente à fatura \"Armazenamento na nuvem\" (48300 NOK sem IVA) foi devolvido pelo banco. Reverta o pagamento para que a fatura volte a mostrar o montante em aberto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

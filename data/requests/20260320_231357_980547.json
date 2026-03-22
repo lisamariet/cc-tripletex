@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_231357_980547",
+  "prompt": "Nous avons reçu la facture INV-2026-7606 du fournisseur Lumière SARL (nº org. 913175212) de 72350 NOK TTC. Le montant concerne des services de bureau (compte 6300). Enregistrez la facture fournisseur avec la TVA déductible correcte (25 %).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

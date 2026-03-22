@@ -1,0 +1,54 @@
+{
+  "timestamp": "20260320_150936_806491",
+  "prompt": "Opprett en fri regnskapsdimensjon \"Produktlinje\" med verdiene \"Standard\" og \"Avansert\". Bokfør deretter et bilag på konto 7000 for 12700 kr, knyttet til dimensjonsverdien \"Standard\".",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/ledger/dimension",
+      "status": 404,
+      "duration_ms": 1370.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9aa2d487-b9f4-4a5c-8a15-bfa8015f431f\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/dimension/$PREV_0.value.id/dimensionValue",
+      "status": 404,
+      "duration_ms": 1488.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"5fe6c76e-0c67-406c-9eec-16572d2e4ae6\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/dimension/$PREV_0.value.id/dimensionValue",
+      "status": 404,
+      "duration_ms": 1325.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"8340fb0d-b656-416f-b372-8614c4950423\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1524.1,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 422,
+      "duration_ms": 1131.9,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"postings.account.id\",\"message\":\"Verdien er ikke av korrekt type for dette feltet.\",\"path\":\"postings[0].account.id\",\"rootId\":null}],\"requestId\":\"7f3eca8c-ce14-4b5f-a045-d744b15f5c74\"}"
+    }
+  ],
+  "total_calls": 5,
+  "error_count_4xx": 4,
+  "total_duration_ms": 15678.9,
+  "result": {
+    "status": "completed",
+    "fallback": true,
+    "calls_made": 5
+  }
+}

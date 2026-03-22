@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_091247_765421",
+  "prompt": "Crea el cliente Dorada SL con número de organización 823073917. La dirección es Kirkegata 46, 4006 Stavanger. Correo: post@dorada.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

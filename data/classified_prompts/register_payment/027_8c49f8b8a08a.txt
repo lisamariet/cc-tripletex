@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Enviámos uma fatura de 13986 EUR ao Porto Alegre Lda (org. nº 906918129) quando a taxa de câmbio era 10.37 NOK/EUR. O cliente pagou agora, mas a taxa é 11.31 NOK/EUR. Registe o pagamento e lance a dif

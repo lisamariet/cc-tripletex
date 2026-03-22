@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_231742_622107",
+  "prompt": "Erfassen Sie 14 Stunden für Anna Wagner (anna.wagner@example.org) auf der Aktivität \"Analyse\" im Projekt \"Sicherheitsaudit\" für Waldstein GmbH (Org.-Nr. 948366207). Stundensatz: 1150 NOK/h. Erstellen Sie eine Projektrechnung an den Kunden basierend auf den erfassten Stunden.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

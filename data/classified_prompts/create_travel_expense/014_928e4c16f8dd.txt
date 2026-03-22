@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Registe uma despesa de viagem para Bruno Silva (bruno.silva@example.org) referente a "Conferência Bodø". A viagem durou 3 dias com ajudas de custo (taxa diária 800 NOK). Despesas: bilhete de avião 490

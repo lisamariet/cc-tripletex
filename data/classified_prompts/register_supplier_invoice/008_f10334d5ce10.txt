@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+We have received invoice INV-2026-3205 from the supplier Ironbridge Ltd (org no. 828254375) for 24500 NOK including VAT. The amount relates to office services (account 6590). Register the supplier inv

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_151103_026586",
+  "prompt": "Créez le produit \"Design web\" avec le numéro de produit 8115. Le prix est de 17200 NOK hors TVA, avec le taux standard de 25 %.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_230152_950407",
+  "prompt": "Crie um pedido para o cliente Rio Azul Lda (org. nº 942366108) com os produtos Sessão de formação (5517) a 15250 NOK e Consultoria de dados (3392) a 19750 NOK. Converta o pedido em fatura e registe o pagamento total.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

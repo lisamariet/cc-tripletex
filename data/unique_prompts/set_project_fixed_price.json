@@ -1,0 +1,77 @@
+[
+  {
+    "prompt": "Legen Sie einen Festpreis von 305450 NOK für das Projekt \"Infrastruktur-Upgrade\" für Sonnental GmbH (Org.-Nr. 967604178) fest. Projektleiter ist Hannah Schneider (hannah.schneider@example.org). Stellen Sie dem Kunden 33 % des Festpreises als Meilensteinzahlung in Rechnung.",
+    "timestamp": "20260320_185911_057633",
+    "hash": "fc35352fae90"
+  },
+  {
+    "prompt": "Fixez un prix forfaitaire de 365350 NOK sur le projet \"Intégration CRM\" pour Colline SARL (nº org. 894562234). Le chef de projet est Adam Thomas (adam.thomas@example.org). Facturez au client 75 % du prix fixe comme paiement d'étape.",
+    "timestamp": "20260320_231311_482494",
+    "hash": "ad90446a17d0"
+  },
+  {
+    "prompt": "Set a fixed price of 498050 NOK on the project \"CRM Integration\" for Ridgepoint Ltd (org no. 844419856). The project manager is George Walker (george.walker@example.org). Invoice the customer for 50% of the fixed price as a milestone payment.",
+    "timestamp": "20260320_233656_429175",
+    "hash": "0af6ec2c45be"
+  },
+  {
+    "prompt": "Fixez un prix forfaitaire de 328650 NOK sur le projet \"Développement e-commerce\" pour Cascade SARL (nº org. 913754689). Le chef de projet est Alice Moreau (alice.moreau@example.org). Facturez au client 25 % du prix fixe comme paiement d'étape.",
+    "timestamp": "20260321_001213_087732",
+    "hash": "e20f1e8e75c2"
+  },
+  {
+    "prompt": "Defina um preço fixo de 313650 NOK no projeto \"Migração para nuvem\" para Estrela Lda (org. nº 922471126). O gestor de projeto é Leonor Sousa (leonor.sousa@example.org). Fature ao cliente 50 % do preço fixo como pagamento por etapa.",
+    "timestamp": "20260321_003507_909478",
+    "hash": "3ca8a4b67db6"
+  },
+  {
+    "prompt": "Fixez un prix forfaitaire de 125550 NOK sur le projet \"Mise à niveau infrastructure\" pour Soleil SARL (nº org. 931336738). Le chef de projet est Nathan Thomas (nathan.thomas@example.org). Facturez au client 25 % du prix fixe comme paiement d'étape.",
+    "timestamp": "20260321_005331_317611",
+    "hash": "83ed9c682a45"
+  },
+  {
+    "prompt": "Um dos seus clientes tem uma fatura vencida. Encontre a fatura vencida e registe uma taxa de lembrete de 70 NOK. Debito contas a receber (1500), credito receitas de lembrete (3400). Também crie uma fatura para a taxa de lembrete ao cliente e envie-a. Além disso, registe um pagamento parcial de 5000 NOK na fatura vencida.",
+    "timestamp": "20260321_142951_468677",
+    "hash": "e2ad97605ffe"
+  },
+  {
+    "prompt": "L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 50 NOK. Debit creances clients (1500), credit revenus de rappel (3400). Créez également une facture pour les frais de rappel au client et envoyez-la. De plus, enregistrez un paiement partiel de 5000 NOK sur la facture en retard.",
+    "timestamp": "20260321_160742_591045",
+    "hash": "7848ab15bcd3"
+  },
+  {
+    "prompt": "Set a fixed price of 433600 NOK on the project \"Automation Project\" for Clearwater Ltd (org no. 934928199). The project manager is James Brown (james.brown@example.org). Invoice the customer for 25% of the fixed price as a milestone payment.",
+    "timestamp": "20260321_180436_975326",
+    "hash": "ff3a6a612eb4"
+  },
+  {
+    "prompt": "Set a fixed price of 170500 NOK on the project \"Infrastructure Upgrade\" for Brightstone Ltd (org no. 850116091). The project manager is Charlotte Walker (charlotte.walker@example.org). Invoice the customer for 33% of the fixed price as a milestone payment.",
+    "timestamp": "20260321_185510_760894",
+    "hash": "c792f8306759"
+  },
+  {
+    "prompt": "Defina um preço fixo de 420900 NOK no projeto \"Implementação ERP\" para Horizonte Lda (org. nº 976946081). O gestor de projeto é Rafael Santos (rafael.santos@example.org). Fature ao cliente 33 % do preço fixo como pagamento por etapa.",
+    "timestamp": "20260321_230127_547961",
+    "hash": "8cfc99118539"
+  },
+  {
+    "prompt": "Legen Sie einen Festpreis von 473250 NOK für das Projekt \"Datensicherheit\" für Windkraft GmbH (Org.-Nr. 886395582) fest. Projektleiter ist Maximilian Wagner (maximilian.wagner@example.org). Stellen Sie dem Kunden 25 % des Festpreises als Meilensteinzahlung in Rechnung.",
+    "timestamp": "20260322_005633_614869",
+    "hash": "16048dafc02e"
+  },
+  {
+    "prompt": "Establezca un precio fijo de 261700 NOK en el proyecto \"Integración CRM\" para Luna SL (org. nº 847950021). El director del proyecto es Andrés López (andres.lopez@example.org). Facture al cliente el 75 % del precio fijo como pago parcial.",
+    "timestamp": "20260322_014745_656221",
+    "hash": "1c006e240248"
+  },
+  {
+    "prompt": "Legen Sie einen Festpreis von 221600 NOK für das Projekt \"CRM-Integration\" für Brückentor GmbH (Org.-Nr. 815400542) fest. Projektleiter ist Maximilian Hoffmann (maximilian.hoffmann@example.org). Stellen Sie dem Kunden 75 % des Festpreises als Meilensteinzahlung in Rechnung.",
+    "timestamp": "20260322_022049_897515",
+    "hash": "f00e302ce0b1"
+  },
+  {
+    "prompt": "Sett fastpris 352200 kr på prosjektet \"Automatiseringsprosjekt\" for Nordhav AS (org.nr 940514584). Prosjektleder er Thea Nilsen (thea.nilsen@example.org). Fakturer kunden for 75 % av fastprisen som en delbetaling.",
+    "timestamp": "20260322_083754_392817",
+    "hash": "467157991544"
+  }
+]

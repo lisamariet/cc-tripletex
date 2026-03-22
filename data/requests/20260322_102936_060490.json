@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_102936_060490",
+  "revision": "tripletex-agent-00126-9hz",
+  "prompt": "Execute o ciclo de vida completo do projeto 'Portal Digital Estrela' (Estrela Lda, org. nº 977256828): 1) O projeto tem um orçamento de 268350 NOK. 2) Registe horas: Bruno Sousa (gestor de projeto, bruno.sousa@example.org) 38 horas e Inês Pereira (consultor, ines.pereira@example.org) 153 horas. 3) Registe custo de fornecedor de 29400 NOK de Montanha Lda (org. nº 987201940). 4) Crie uma fatura ao cliente para o projeto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

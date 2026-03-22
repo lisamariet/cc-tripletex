@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erstellen Sie das Produkt "Datenberatung" mit der Produktnummer 5524. Der Preis beträgt 22550 NOK ohne MwSt., mit dem Standardsatz von 25 %.

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Exécutez la paie de Manon Leroy (manon.leroy@example.org) pour ce mois. Le salaire de base est de 43050 NOK. Ajoutez une prime unique de 11150 NOK en plus du salaire de base.

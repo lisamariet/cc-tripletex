@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Set a fixed price of 170500 NOK on the project "Infrastructure Upgrade" for Brightstone Ltd (org no. 850116091). The project manager is Charlotte Walker (charlotte.walker@example.org). Invoice the cus

@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Opprett prosjektet "Integrasjon Tindra" knyttet til kunden Tindra AS (org.nr 887870462). Prosjektleder er Lars Johansen (lars.johansen@example.org).

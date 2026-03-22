@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Create the project "Upgrade Silveroak" linked to the customer Silveroak Ltd (org no. 937657250). The project manager is Alice Smith (alice.smith@example.org).

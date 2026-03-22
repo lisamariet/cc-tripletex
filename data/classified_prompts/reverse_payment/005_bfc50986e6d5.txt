@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+El pago de Costa Brava SL (org. nº 866888426) por la factura "Mantenimiento" (39250 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.

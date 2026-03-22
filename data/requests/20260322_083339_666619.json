@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_083339_666619",
+  "prompt": "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 6540 utilisé au lieu de 6860, montant 4800 NOK), une pièce en double (compte 7100, montant 2000 NOK), une ligne de TVA manquante (compte 4500, montant HT 14500 NOK, TVA manquante sur compte 2710), et un montant incorrect (compte 7100, 21650 NOK comptabilisé au lieu de 17900 NOK). Corrigez toutes les erreurs avec des écritures correctives.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

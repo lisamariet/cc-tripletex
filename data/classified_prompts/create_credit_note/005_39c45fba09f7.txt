@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Le client Montagne SARL (nº org. 882988155) a réclamé concernant la facture pour "Heures de conseil" (40900 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_173730_085448",
+  "prompt": "Vi har mottatt faktura INV-2026-4085 fra leverandøren Snøhetta AS (org.nr 861790029) på 44450 kr inklusiv MVA. Beløpet gjelder kontortjenester (konto 6300). Registrer leverandørfakturaen med korrekt inngående MVA (25 %).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

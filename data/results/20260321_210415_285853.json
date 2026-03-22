@@ -1,0 +1,123 @@
+{
+  "timestamp": "20260321_210415_285853",
+  "prompt": "Vi har en ny ansatt som heter Solveig Johansen, født 15. May 1993. Opprett vedkommende som ansatt med e-post solveig.johansen@example.org og startdato 18. January 2026.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Solveig",
+      "lastName": "Johansen",
+      "dateOfBirth": "1993-05-15",
+      "email": "solveig.johansen@example.org",
+      "startDate": "2026-01-18"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 1317.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "count": 1,
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":740699,\"name\":\"Avdeling\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 2070.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Solveig",
+        "lastName": "Johansen",
+        "email": "solveig.johansen@example.org",
+        "dateOfBirth": "1993-05-15",
+        "userType": "STANDARD",
+        "department": {
+          "id": 740699
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18669006,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18669006\",\"firstName\":\"Solveig\",\"lastName\":\"Johansen\",\"displayName\":\"Solveig Johansen\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1993-05-15\",\"email\":\"solveig.johansen@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":740699,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/740699\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107919268,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 2157.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18669006
+        },
+        "startDate": "2026-01-18"
+      },
+      "response_body": "{\"value\":{\"id\":2837101,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2837101\",\"employee\":{\"id\":18669006,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18669006\"},\"employmentId\":\"\",\"startDate\":\"2026-01-18\",\"endDate\":null,\"employmentEndReason\":null,\"division\":null,\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 7277.7,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18669006,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18669006",
+      "firstName": "Solveig",
+      "lastName": "Johansen",
+      "displayName": "Solveig Johansen",
+      "employeeNumber": "",
+      "dateOfBirth": "1993-05-15",
+      "email": "solveig.johansen@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 740699,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/740699"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 107919268,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_231741_256119",
+  "prompt": "The payment from Blueshore Ltd (org no. 987904135) for the invoice \"System Development\" (13100 NOK excl. VAT) was returned by the bank. Reverse the payment so the invoice shows the outstanding amount again.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

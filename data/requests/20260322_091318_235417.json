@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_091318_235417",
+  "prompt": "Enregistrez une note de frais de déplacement pour Arthur Bernard (arthur.bernard@example.org) pour \"Visite client Tromsø\". Le voyage a duré 4 jours avec indemnités journalières (taux journalier 800 NOK). Dépenses : billet d'avion 4800 NOK et taxi 300 NOK.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

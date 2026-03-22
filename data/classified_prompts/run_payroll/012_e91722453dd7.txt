@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Processe o salário de Beatriz Pereira (beatriz.pereira@example.org) para este mês. O salário base é de 58650 NOK. Adicione um bónus único de 8850 NOK além do salário base.

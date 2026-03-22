@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_020736_650189",
+  "prompt": "Execute the complete project lifecycle for 'Cloud Migration Windmill' (Windmill Ltd, org no. 882329348): 1) The project has a budget of 470800 NOK. 2) Log time: Charlotte Williams (project manager, charlotte.williams@example.org) 73 hours and Lucy Harris (consultant, lucy.harris@example.org) 47 hours. 3) Register supplier cost of 86750 NOK from Brightstone Ltd (org no. 864309429). 4) Create a customer invoice for the project.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

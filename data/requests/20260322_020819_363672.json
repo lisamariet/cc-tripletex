@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_020819_363672",
+  "prompt": "Me har motteke faktura INV-2026-6998 frå leverandøren Sjøbris AS (org.nr 932482207) på 76850 kr inklusiv MVA. Beløpet gjeld kontortenester (konto 7140). Registrer leverandørfakturaen med korrekt inngåande MVA (25 %).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

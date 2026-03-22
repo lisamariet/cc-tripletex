@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Run payroll for William Taylor (william.taylor@example.org) for this month. The base salary is 39400 NOK. Add a one-time bonus of 11800 NOK on top of the base salary. If the salary API is unavailable,

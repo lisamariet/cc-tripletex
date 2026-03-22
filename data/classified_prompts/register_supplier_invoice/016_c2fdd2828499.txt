@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Nous avons reçu la facture INV-2026-5683 du fournisseur Lumière SARL (nº org. 904564184) de 75500 NOK TTC. Le montant concerne des services de bureau (compte 7140). Enregistrez la facture fournisseur 

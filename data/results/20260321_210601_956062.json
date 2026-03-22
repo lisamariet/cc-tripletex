@@ -1,0 +1,30 @@
+{
+  "timestamp": "20260321_210601_956062",
+  "prompt": "Le client Forêt SARL (nº org. 925519685) a une facture impayée de 40750 NOK hors TVA pour \"Design web\". Enregistrez le paiement intégral de cette facture.",
+  "parsed_task": {
+    "task_type": "run_payroll",
+    "fields": {
+      "customerName": "Forêt SARL",
+      "customerOrgNumber": "925519685",
+      "amount": 40750,
+      "invoiceDescription": "Design web",
+      "lines": [
+        {
+          "description": "Design web",
+          "quantity": 1,
+          "unitPriceExcludingVat": 40750,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 1758.3,
+  "result": {
+    "status": "completed",
+    "note": "No salary amounts specified"
+  }
+}

@@ -1,0 +1,414 @@
+{
+  "timestamp": "20260321_164814_355477",
+  "prompt": "Du har motteke ein leverandorfaktura (sjaa vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren viss den ikkje finst. Bruk rett utgiftskonto og inngaaande MVA.",
+  "parsed_task": {
+    "task_type": "register_supplier_invoice",
+    "fields": {
+      "supplierName": "Elvdal AS",
+      "supplierOrgNumber": "917822778",
+      "amount": 31187,
+      "amountExcludingVat": 24950,
+      "description": "IT-konsulenttjenester",
+      "productName": "IT-konsulenttjenester",
+      "invoiceDate": "2026-04-01",
+      "invoiceNumber": "INV-2026-6601",
+      "vatRate": 25,
+      "vatCode": "11",
+      "expenseAccount": 6300,
+      "_raw_files": [
+        {
+          "filename": "files/leverandorfaktura_nn_07.pdf",
+          "content_base64": "JVBERi0xLjMKJenr8b8KMSAwIG9iago8PAovQ291bnQgMQovS2lkcyBbMyAwIFJdCi9NZWRpYUJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMiAwIG9iago8PAovT3BlbkFjdGlvbiBbMyAwIFIgL0ZpdEggbnVsbF0KL1BhZ2VMYXlvdXQgL09uZUNvbHVtbgovUGFnZXMgMSAwIFIKL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDQgMCBSCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyA3IDAgUgovVHlwZSAvUGFnZQo+PgplbmRvYmoKNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDQ0Mwo+PgpzdHJlYW0KeJyVk11r2zAUhu/7K87NoINF1dG3fJewBrawDVqv94I4wbVsD1np/v7kOCZ22pX0UuI87yMd6TD4fkOJ1PD3ZpXD3RoBFaEU8h3c5/0WR4IGtBV9Ub6F23v/snUelo+fIX8+Fd2tGSB9i9OcKHvkfoU9aUIGFrVhTGsz4U/FUo3FeRv2excdIOdfQChE2ISyi6VrOtdsZ2oENlczYQlnoKwlhh/j1stN/vtheYEhvnFiJTXB4aZrV8VDcM2hrouQXV53DqM0RIsp/e3n04JRphZKUbzKzFOP6dS8dbG90ntmaSoQpDdfJU27hg3SNuyc990HrGe4t8qrrVJrYobj5qXP4GsZI+zKULuRZoZwCZIJIhDqhCUTjmsPj3DO4owIecxaFV0VypfCd8WYMwdrkEoRyy+CJOdEinmSb/+834OTnVqiTw+eL6q26Q6+aGJ8Lpqii0WYZEiGhNMpkT5qerQqvD9JwlCiOYjUMzFwP56WwOSnDBTj+pJPLWdzXqeJ1iCkJApP0xWdj1nfVfOK/88ki5TKzBHftE36IenPUfpqhrlNPRyGbuWaqhpKGRrLDUWt+Ej8A6dGDK0KZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iago2IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKNyAwIG9iago8PAovRm9udCA8PC9GMSA1IDAgUgovRjIgNiAwIFI+PgovUHJvY1NldCBbL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSV0KPj4KZW5kb2JqCjggMCBvYmoKPDwKL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDMwNDE5MTgwNVopCj4+CmVuZG9iagp4cmVmCjAgOQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDEwMiAwMDAwMCBuIAowMDAwMDAwMjA1IDAwMDAwIG4gCjAwMDAwMDAyODUgMDAwMDAgbiAKMDAwMDAwMDgwMCAwMDAwMCBuIAowMDAwMDAwOTAyIDAwMDAwIG4gCjAwMDAwMDA5OTkgMDAwMDAgbiAKMDAwMDAwMTA5NiAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDkKL1Jvb3QgMiAwIFIKL0luZm8gOCAwIFIKL0lEIFs8MTYxMTZDRjU0Q0RERURDMjFGRTZGOUVDMThDNDY1OTE+PDE2MTE2Q0Y1NENEREVEQzIxRkU2RjlFQzE4QzQ2NTkxPl0KPj4Kc3RhcnR4cmVmCjExNTEKJSVFT0YK",
+          "mime_type": "application/pdf"
+        }
+      ]
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 1710.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "organizationNumber": "917822778"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 2002.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "name": "Elvdal AS"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 201,
+      "duration_ms": 2313.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "request_body": {
+        "name": "Elvdal AS",
+        "isSupplier": true,
+        "organizationNumber": "917822778"
+      },
+      "response_body": "{\"value\":{\"id\":108377930,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108377930\",\"name\":\"Elvdal AS\",\"organizationNumber\":\"917822778\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405605304,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405605304\"},\"physicalAddress\":{\"id\":405605303,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405605303\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":359355977,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/359355977\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"Elvdal AS (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2621.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "6300"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":359356173,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/359356173\",\"number\":6300,\"numberPretty\":\"6300\",\"name\":\"Leie lokale\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"63\",\"groupingCode\":\"6300\",\"displayName\":\"6300 Leie lokale\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2302.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2400"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":359355977,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/359355977\",\"number\":2400,\"numberPretty\":\"2400\",\"name\":\"Leverandørgjeld\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"VENDOR\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":true,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"24\",\"groupingCode\":\"2400\",\"displayName\":\"2400 Leverandørgjeld\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/359356173",
+      "status": 200,
+      "duration_ms": 2581.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/359356173",
+      "response_body": "{\"value\":{\"id\":359356173,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/359356173\",\"number\":6300,\"numberPretty\":\"6300\",\"name\":\"Leie lokale\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"63\",\"groupingCode\":\"6300\",\"displayName\":\"6300 Leie lokale\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 1959.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucherType",
+      "query_params": {
+        "name": "Leverandørfaktura"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":7661371,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/7661371\",\"name\":\"Leverandørfaktura\",\"displayName\":\"Leverandørfaktura\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 2928.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/vatType",
+      "query_params": {
+        "number": "11"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":11,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\",\"name\":\"Fradrag inngående avgift, middels sats\",\"number\":\"11\",\"displayName\":\"11: (15%) Fradrag inngående avgift, middels sats\",\"percentage\":15,\"deductionPercentage\":100.0,\"parentType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplierInvoice",
+      "status": 500,
+      "duration_ms": 2129.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplierInvoice",
+      "request_body": {
+        "invoiceDate": "2026-04-01",
+        "supplier": {
+          "id": 108377930
+        },
+        "amountCurrency": 31187,
+        "currency": {
+          "id": 1
+        },
+        "voucher": {
+          "date": "2026-04-01",
+          "description": "Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester",
+          "postings": [
+            {
+              "account": {
+                "id": 359356173
+              },
+              "amountGross": 31187,
+              "amountGrossCurrency": 31187,
+              "row": 1,
+              "vatType": {
+                "id": 11
+              }
+            }
+          ],
+          "voucherType": {
+            "id": 7661371
+          }
+        },
+        "invoiceNumber": "INV-2026-6601",
+        "invoiceDueDate": "2026-05-01"
+      },
+      "response_body": "{\"status\":500,\"code\":1002,\"message\":null,\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"22d14677-4bde-4688-8e64-095cf9bef11b\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 16970.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2026-04-01",
+        "description": "Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester",
+        "postings": [
+          {
+            "account": {
+              "id": 359356173
+            },
+            "amountGross": 31187,
+            "amountGrossCurrency": 31187,
+            "row": 1,
+            "vatType": {
+              "id": 11
+            }
+          },
+          {
+            "account": {
+              "id": 359355977
+            },
+            "supplier": {
+              "id": 108377930
+            },
+            "amountGross": -31187,
+            "amountGrossCurrency": -31187,
+            "row": 2
+          }
+        ],
+        "voucherType": {
+          "id": 7661371
+        },
+        "externalVoucherNumber": "INV-2026-6601",
+        "vendorInvoiceNumber": "INV-2026-6601"
+      },
+      "response_body": "{\"value\":{\"id\":609040399,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040399\",\"date\":\"2026-04-01\",\"number\":1,\"tempNumber\":0,\"year\":2026,\"description\":\"Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester\",\"voucherType\":{\"id\":7661371,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/7661371\"},\"reverseVoucher\":null,\"postings\":[{\"id\":3845507973,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845507973\",\"voucher\":{\"id\":609040399,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040399\"},\"date\":\"2026-04-01\",\"description\":\"Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester\",\"account\":{\"id\":359356173,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/359356173\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},\"amount\":27119.13,\"amountCurrency\":27119.13,\"amountGross\":31187,\"amountGrossCurrency\":31187,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":false,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845507974,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845507974\",\"voucher\":{\"id\":609040399,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040399\"},\"date\":\"2026-04-01\",\"description\":\"Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester\",\"account\":{\"id\":359355977,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/3593559"
+    }
+  ],
+  "total_calls": 10,
+  "error_count_4xx": 0,
+  "total_duration_ms": 41778.4,
+  "result": {
+    "status": "completed",
+    "taskType": "register_supplier_invoice",
+    "created": {
+      "id": 609040399,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040399",
+      "date": "2026-04-01",
+      "number": 1,
+      "tempNumber": 0,
+      "year": 2026,
+      "description": "Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester",
+      "voucherType": {
+        "id": 7661371,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/7661371"
+      },
+      "reverseVoucher": null,
+      "postings": [
+        {
+          "id": 3845507973,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845507973",
+          "voucher": {
+            "id": 609040399,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040399"
+          },
+          "date": "2026-04-01",
+          "description": "Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester",
+          "account": {
+            "id": 359356173,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/359356173"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": null,
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 11,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11"
+          },
+          "amount": 27119.13,
+          "amountCurrency": 27119.13,
+          "amountGross": 31187,
+          "amountGrossCurrency": 31187,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 1,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": false,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845507974,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845507974",
+          "voucher": {
+            "id": 609040399,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040399"
+          },
+          "date": "2026-04-01",
+          "description": "Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester",
+          "account": {
+            "id": 359355977,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/359355977"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": {
+            "id": 108377930,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108377930"
+          },
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": -31187.0,
+          "amountCurrency": -31187.0,
+          "amountGross": -31187.0,
+          "amountGrossCurrency": -31187.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 2,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845507980,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845507980",
+          "voucher": {
+            "id": 609040399,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040399"
+          },
+          "date": "2026-04-01",
+          "description": "Leverandørfaktura: IT-konsulenttjenester — IT-konsulenttjenester",
+          "account": {
+            "id": 359356000,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/359356000"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": null,
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": 4067.87,
+          "amountCurrency": 4067.87,
+          "amountGross": 4067.87,
+          "amountGrossCurrency": 4067.87,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 0,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": true,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        }
+      ],
+      "document": null,
+      "attachment": null,
+      "externalVoucherNumber": "INV-2026-6601",
+      "ediDocument": null,
+      "supplierVoucherType": null,
+      "wasAutoMatched": false,
+      "vendorInvoiceNumber": null,
+      "numberAsString": "1-2026"
+    }
+  }
+}

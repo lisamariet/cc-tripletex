@@ -1,0 +1,3 @@
+Confidence: 0.88
+
+Os custos totais aumentaram significativamente de janeiro a fevereiro de 2026. Analise o livro razão e identifique as três contas de despesa com o maior aumento em valor. Crie um projeto interno para 

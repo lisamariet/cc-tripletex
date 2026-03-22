@@ -1,0 +1,92 @@
+[
+  {
+    "prompt": "Opprett produktet \"Konsulenttimer\" med produktnummer 9497. Prisen er 17300 kr eksklusiv MVA, og standard MVA-sats på 25 % skal brukes.",
+    "timestamp": "20260319_231533_949354",
+    "hash": "45762dd071f6"
+  },
+  {
+    "prompt": "Erstellen Sie das Produkt \"Orangensaft\" mit der Produktnummer 1256. Der Preis beträgt 17450 NOK ohne MwSt., mit dem MwSt.-Satz für Lebensmittel von 15 %.",
+    "timestamp": "20260320_074340_801034",
+    "hash": "a9c3c3ac4132"
+  },
+  {
+    "prompt": "Crea el producto \"Mantenimiento\" con número de producto 4508. El precio es 41500 NOK sin IVA, utilizando la tasa estándar del 25 %.",
+    "timestamp": "20260320_134230_630948",
+    "hash": "0d53f6c1972b"
+  },
+  {
+    "prompt": "Créez le produit \"Design web\" avec le numéro de produit 8115. Le prix est de 17200 NOK hors TVA, avec le taux standard de 25 %.",
+    "timestamp": "20260320_151103_026586",
+    "hash": "730ad7592e93"
+  },
+  {
+    "prompt": "Erstellen Sie das Produkt \"Cloud-Speicher\" mit der Produktnummer 9235. Der Preis beträgt 28800 NOK ohne MwSt., mit dem Standardsatz von 25 %.",
+    "timestamp": "20260320_163111_304389",
+    "hash": "76bdfdeab604"
+  },
+  {
+    "prompt": "Crea el producto \"Servicio de red\" con número de producto 6866. El precio es 19100 NOK sin IVA, utilizando la tasa estándar del 25 %.",
+    "timestamp": "20260320_183749_024323",
+    "hash": "c465884bea62"
+  },
+  {
+    "prompt": "Erstellen Sie das Produkt \"Datenberatung\" mit der Produktnummer 9788. Der Preis beträgt 41150 NOK ohne MwSt., mit dem Standardsatz von 25 %.",
+    "timestamp": "20260320_185701_602618",
+    "hash": "1b6b73b66fa9"
+  },
+  {
+    "prompt": "Erstellen Sie das Produkt \"Datenberatung\" mit der Produktnummer 5524. Der Preis beträgt 22550 NOK ohne MwSt., mit dem Standardsatz von 25 %.",
+    "timestamp": "20260320_214910_523507",
+    "hash": "0f8884cd90f7"
+  },
+  {
+    "prompt": "Opprett produktet \"Frokostblanding\" med produktnummer 1391. Prisen er 37450 kr eksklusiv MVA, og MVA-sats for næringsmidler på 15 % skal brukes.",
+    "timestamp": "20260321_001448_493872",
+    "hash": "51aae35aa750"
+  },
+  {
+    "prompt": "Crie o produto \"Design web\" com número de produto 4775. O preço é 27300 NOK sem IVA, utilizando a taxa padrão de 25 %.",
+    "timestamp": "20260321_002554_723171",
+    "hash": "4cc8470cf828"
+  },
+  {
+    "prompt": "Erstellen Sie das Produkt \"Datenberatung\" mit der Produktnummer 7855. Der Preis beträgt 41550 NOK ohne MwSt., mit dem Standardsatz von 25 %.",
+    "timestamp": "20260321_002924_266015",
+    "hash": "3a9c9011abae"
+  },
+  {
+    "prompt": "Créez le produit \"Stockage cloud\" avec le numéro de produit 9433. Le prix est de 7550 NOK hors TVA, avec le taux standard de 25 %.",
+    "timestamp": "20260321_005151_069295",
+    "hash": "aa154ce122f2"
+  },
+  {
+    "prompt": "Create the product \"Textbook\" with product number 9036. The price is 33950 NOK excluding VAT, using the 0% VAT rate for books.",
+    "timestamp": "20260321_220755_828614",
+    "hash": "8f48b695c3e0"
+  },
+  {
+    "prompt": "Opprett produktet \"Vedlikehold\" med produktnummer 6794. Prisen er 31600 kr eksklusiv MVA, og standard MVA-sats på 25 % skal brukes.",
+    "timestamp": "20260321_230212_430862",
+    "hash": "a21124ad66f7"
+  },
+  {
+    "prompt": "Create the product \"Training Session\" with product number 7908. The price is 26250 NOK excluding VAT, using the standard 25% VAT rate.",
+    "timestamp": "20260321_231729_150954",
+    "hash": "5adbb1bafa72"
+  },
+  {
+    "prompt": "Opprett produktet \"Skylagring\" med produktnummer 6283. Prisen er 19050 kr eksklusiv MVA, og standard MVA-sats på 25 % skal nyttast.",
+    "timestamp": "20260321_231843_968971",
+    "hash": "defeed00763e"
+  },
+  {
+    "prompt": "Créez le produit \"Eau minérale\" avec le numéro de produit 7027. Le prix est de 36750 NOK hors TVA, avec le taux de TVA pour les denrées alimentaires de 15 %.",
+    "timestamp": "20260322_014805_556726",
+    "hash": "d67596ff5704"
+  },
+  {
+    "prompt": "Crea el producto \"Mantenimiento\" con número de producto 7266. El precio es 650 NOK sin IVA, utilizando la tasa estándar del 25 %.",
+    "timestamp": "20260322_015021_930928",
+    "hash": "8195401d7077"
+  }
+]

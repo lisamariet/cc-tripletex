@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_115606_569179",
+  "revision": "tripletex-agent-00133-l9s",
+  "prompt": "Create the product \"Training Session\" with product number 7908. The price is 26250 NOK excluding VAT, using the standard 25% VAT rate.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

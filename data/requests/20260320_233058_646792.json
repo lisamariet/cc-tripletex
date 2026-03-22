@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_233058_646792",
+  "prompt": "Create the project \"Analysis Oakwood\" linked to the customer Oakwood Ltd (org no. 849612913). The project manager is Lucy Taylor (lucy.taylor@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "timestamp": "20260321_174037_878980",
+  "prompt": "Create the project \"Upgrade Windmill\" linked to the customer Windmill Ltd (org no. 978017681). The project manager is Grace Lewis (grace.lewis@example.org).",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "name": "Upgrade Windmill",
+      "customerName": "Windmill Ltd",
+      "customerOrgNumber": "978017681",
+      "projectManagerName": "Grace Lewis"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 3260.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "firstName": "Grace",
+        "lastName": "Lewis"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18612466,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18612466\",\"firstName\":\"Grace\",\"lastName\":\"Lewis\",\"displayName\":\"Grace Lewis\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"grace.lewis@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":735300,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/735300\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107908469,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 3428.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "978017681",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108320279,\"name\":\"Windmill Ltd\",\"organizationNumber\":\"978017681\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 2637.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "Upgrade Windmill",
+        "isInternal": false,
+        "projectManager": {
+          "id": 18612466
+        },
+        "customer": {
+          "id": 108320279
+        },
+        "startDate": "2026-03-21"
+      },
+      "response_body": "{\"value\":{\"id\":402023069,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402023069\",\"name\":\"Upgrade Windmill\",\"number\":\"1\",\"displayName\":\"1 Upgrade Windmill\",\"description\":\"\",\"projectManager\":{\"id\":18612466,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18612466\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-21\",\"endDate\":null,\"customer\":{\"id\":108320279,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108320279\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":false,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11086492,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11086492\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15641192,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15641192\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"1 Upgrade Windmill\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Windmill Ltd\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Grace Lewis\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":0,\"accountingDimensionValues\":[]}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 10695.3,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "created": {
+      "id": 402023069,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/402023069",
+      "name": "Upgrade Windmill",
+      "number": "1",
+      "displayName": "1 Upgrade Windmill",
+      "description": "",
+      "projectManager": {
+        "id": 18612466,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18612466"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-21",
+      "endDate": null,
+      "customer": {
+        "id": 108320279,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108320279"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": false,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 0,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11086492,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11086492"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15641192,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15641192"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "1 Upgrade Windmill",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Windmill Ltd",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Grace Lewis",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 0,
+      "accountingDimensionValues": []
+    }
+  }
+}

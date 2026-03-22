@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_222419_829249",
+  "prompt": "Gjennomfør hele prosjektsyklusen for 'Dataplattform Brattli' (Brattli AS, org.nr 937190808): 1) Prosjektet har budsjett 349100 kr. 2) Registrer timer: Hilde Ødegård (prosjektleder, hilde.degard@example.org) 21 timer og Lars Johansen (konsulent, lars.johansen@example.org) 141 timer. 3) Registrer leverandørkostnad 71800 kr fra Lysgård AS (org.nr 898870936). 4) Opprett kundefaktura for prosjektet.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

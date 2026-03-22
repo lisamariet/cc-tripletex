@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crie e envie uma fatura ao cliente Porto Alegre Lda (org. nº 826870192) por 22700 NOK sem IVA. A fatura refere-se a Design web.

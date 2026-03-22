@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Processe o salário de Maria Almeida (maria.almeida@example.org) para este mês. O salário base é de 33550 NOK. Adicione um bónus único de 14400 NOK além do salário base.

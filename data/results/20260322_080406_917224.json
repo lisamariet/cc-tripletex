@@ -1,0 +1,327 @@
+{
+  "timestamp": "20260322_080406_917224",
+  "prompt": "Du har mottatt en leverandorfaktura (se vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren hvis den ikke finnes. Bruk riktig utgiftskonto og inngaende MVA.",
+  "parsed_task": {
+    "task_type": "register_supplier_invoice",
+    "fields": {
+      "supplierName": "Polaris AS",
+      "supplierOrgNumber": "850969426",
+      "amount": 52187,
+      "amountExcludingVat": 41750,
+      "description": "Skylagring",
+      "productName": "Skylagring",
+      "invoiceDate": "2026-05-25",
+      "invoiceNumber": "INV-2026-4783",
+      "dueDate": "2026-06-24",
+      "vatRate": 25,
+      "vatCode": "11",
+      "expenseAccount": 6340,
+      "_raw_files": [
+        {
+          "filename": "files/leverandorfaktura_nb_01.pdf",
+          "content_base64": "JVBERi0xLjMKJenr8b8KMSAwIG9iago8PAovQ291bnQgMQovS2lkcyBbMyAwIFJdCi9NZWRpYUJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMiAwIG9iago8PAovT3BlbkFjdGlvbiBbMyAwIFIgL0ZpdEggbnVsbF0KL1BhZ2VMYXlvdXQgL09uZUNvbHVtbgovUGFnZXMgMSAwIFIKL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDQgMCBSCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyA3IDAgUgovVHlwZSAvUGFnZQo+PgplbmRvYmoKNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDQ0MQo+PgpzdHJlYW0KeJyVk8tu2zAQRff5itkUSIGG4ZAcPrSz0RpIjbZBrWZPwLKh6FVQcov+fSnLhiUlDdwliXvuHQ5nBHy+4YwM/L5ZpnC/QkDNOId0B5/S/koiQwvGqV6UbuH2sSl9yFtYbN5D+nxS3a8EIH8NNJJpdwS/hT2rQwKWuNNOCT3iT2LSZ/FDvT20Xch/ZXlWA9EHUBoR1jG5y33d+no7iUcQ03ihHJMCtHPMyqPlarFOf3xfzDDEV6rWZBgOz135ojsEXx+qKgvJ/MlTGMkyo8b0w9enO8GFvlPGyquSZWw0HydvfddcmXthBTFOrE++KjTeWjGENmHny7L9j9QLLBTj+upUMobZodw0LxP4mHcd7PJQ+TMtLJMEFG0VQhWxmITncwkbuHhJwRQdvZZZW/RzU7bZ2WcKVkBaMydnRiQlIzV1Kpufb/fglM4dM8OHb4o/pd+HvN6PQBLIJB/LFJr4U0V4e4WUoX6QVGyUGrgvTwsQ9C6JSiXN3CA2WswM4jJHAyKmceh00/myS/qS7Av+HzusoquwR3zd1HEu+knjL7ZXuti5YdWWvi6KQSqFQ0USjcEz8RfNagsOCmVuZHN0cmVhbQplbmRvYmoKNSAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKNiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0ZvbnQgPDwvRjEgNSAwIFIKL0YyIDYgMCBSPj4KL1Byb2NTZXQgWy9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUldCj4+CmVuZG9iago4IDAgb2JqCjw8Ci9DcmVhdGlvbkRhdGUgKEQ6MjAyNjAzMDQxOTE4MDVaKQo+PgplbmRvYmoKeHJlZgowIDkKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDAxMDIgMDAwMDAgbiAKMDAwMDAwMDIwNSAwMDAwMCBuIAowMDAwMDAwMjg1IDAwMDAwIG4gCjAwMDAwMDA3OTggMDAwMDAgbiAKMDAwMDAwMDkwMCAwMDAwMCBuIAowMDAwMDAwOTk3IDAwMDAwIG4gCjAwMDAwMDEwOTQgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA5Ci9Sb290IDIgMCBSCi9JbmZvIDggMCBSCi9JRCBbPDEzMDdDQjk4RDQ4QjAwODQ5NTRCMTg5NTUwQzc5NjQ0PjwxMzA3Q0I5OEQ0OEIwMDg0OTU0QjE4OTU1MEM3OTY0ND5dCj4+CnN0YXJ0eHJlZgoxMTQ5CiUlRU9GCg==",
+          "mime_type": "application/pdf"
+        }
+      ]
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 440.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "organizationNumber": "850969426",
+        "fields": "id,name,organizationNumber,version"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 387.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "name": "Polaris AS",
+        "fields": "id,name,organizationNumber,version"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 201,
+      "duration_ms": 501.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "request_body": {
+        "name": "Polaris AS",
+        "isSupplier": true,
+        "organizationNumber": "850969426"
+      },
+      "response_body": "{\"value\":{\"id\":108552729,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108552729\",\"name\":\"Polaris AS\",\"organizationNumber\":\"850969426\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405951291,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405951291\"},\"physicalAddress\":{\"id\":405951290,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405951290\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":493818405,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818405\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"Polaris AS (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 509.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "6340"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":493818603,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818603\",\"number\":6340,\"numberPretty\":\"6340\",\"name\":\"Lys, varme\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"63\",\"groupingCode\":\"6340\",\"displayName\":\"6340 Lys, varme\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 434.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2400"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":493818405,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818405\",\"number\":2400,\"numberPretty\":\"2400\",\"name\":\"Leverandørgjeld\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"VENDOR\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":true,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"24\",\"groupingCode\":\"2400\",\"displayName\":\"2400 Leverandørgjeld\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/493818603",
+      "status": 200,
+      "duration_ms": 465.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/493818603",
+      "response_body": "{\"value\":{\"id\":493818603,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818603\",\"number\":6340,\"numberPretty\":\"6340\",\"name\":\"Lys, varme\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"63\",\"groupingCode\":\"6340\",\"displayName\":\"6340 Lys, varme\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 483.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucherType",
+      "query_params": {
+        "name": "Leverandørfaktura"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":11982199,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11982199\",\"name\":\"Leverandørfaktura\",\"displayName\":\"Leverandørfaktura\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 405.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/vatType",
+      "query_params": {
+        "number": "1"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":1,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\",\"name\":\"Fradrag inngående avgift, høy sats\",\"number\":\"1\",\"displayName\":\"1: (25%) Fradrag inngående avgift, høy sats\",\"percentage\":25,\"deductionPercentage\":100.0,\"parentType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplierInvoice",
+      "status": 201,
+      "duration_ms": 545.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplierInvoice",
+      "request_body": {
+        "invoiceDate": "2026-05-25",
+        "supplier": {
+          "id": 108552729
+        },
+        "amountCurrency": -52187,
+        "currency": {
+          "id": 1
+        },
+        "voucher": {
+          "date": "2026-05-25",
+          "description": "Leverandørfaktura: Skylagring — Skylagring",
+          "postings": [
+            {
+              "account": {
+                "id": 493818603
+              },
+              "supplier": {
+                "id": 108552729
+              },
+              "amount": 41750.0,
+              "amountCurrency": 41750.0,
+              "amountGross": 52187,
+              "amountGrossCurrency": 52187,
+              "row": 1,
+              "vatType": {
+                "id": 1
+              }
+            },
+            {
+              "account": {
+                "id": 493818405
+              },
+              "supplier": {
+                "id": 108552729
+              },
+              "amount": -52187,
+              "amountCurrency": -52187,
+              "amountGross": -52187,
+              "amountGrossCurrency": -52187,
+              "row": 2
+            }
+          ],
+          "voucherType": {
+            "id": 11982199
+          }
+        },
+        "invoiceNumber": "INV-2026-4783",
+        "invoiceDueDate": "2026-06-24"
+      },
+      "response_body": "{\"value\":{\"id\":2147683261,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplierInvoice/2147683261\",\"invoiceNumber\":\"INV-2026-4783\",\"invoiceDate\":\"2026-05-25\",\"supplier\":{\"id\":108552729,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108552729\"},\"invoiceDueDate\":\"2026-06-24\",\"kidOrReceiverReference\":\"\",\"voucher\":{\"id\":609350046,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046\"},\"amount\":0,\"amountCurrency\":-52187,\"amountExcludingVat\":0,\"amountExcludingVatCurrency\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":false,\"orderLines\":[],\"payments\":[],\"originalInvoiceDocumentId\":0,\"approvalListElements\":[{\"id\":647481573,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647481573\"},{\"id\":647481572,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647481572\"}],\"outstandingAmount\":52187.00}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucher/609350046",
+      "status": 200,
+      "duration_ms": 415.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher/609350046",
+      "query_params": {
+        "fields": "*,postings(*)"
+      },
+      "response_body": "{\"value\":{\"id\":609350046,\"version\":4,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046\",\"date\":\"2026-05-25\",\"number\":0,\"tempNumber\":1,\"year\":2026,\"description\":\"\",\"voucherType\":{\"id\":11982199,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11982199\"},\"reverseVoucher\":null,\"postings\":[{\"id\":3846327430,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846327430\",\"voucher\":{\"id\":609350046,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046\"},\"date\":\"2026-05-25\",\"description\":\"\",\"account\":{\"id\":493818603,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818603\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":{\"id\":108552729,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108552729\"},\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"amount\":41749.6,\"amountCurrency\":41749.6,\"amountGross\":52187.0,\"amountGrossCurrency\":52187.0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":\"INVOICE_EXPENSE\",\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":false,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3846327431,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846327431\",\"voucher\":{\"id\":609350046,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046\"},\"date\":\"2026-05-25\",\"description\":\"\",\"account\":{\"id\":493818405,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818405\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"s"
+    },
+    {
+      "method": "PUT",
+      "path": "/ledger/voucher/609350046",
+      "status": 200,
+      "duration_ms": 659.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher/609350046",
+      "request_body": {
+        "id": 609350046,
+        "version": 4,
+        "date": "2026-05-25",
+        "postings": [
+          {
+            "id": 3846327430,
+            "version": 0,
+            "date": "2026-05-25",
+            "account": {
+              "id": 493818603
+            },
+            "supplier": {
+              "id": 108552729
+            },
+            "amount": 41750.0,
+            "amountCurrency": 41750.0,
+            "amountGross": 52187,
+            "amountGrossCurrency": 52187,
+            "row": 1,
+            "vatType": {
+              "id": 1
+            }
+          },
+          {
+            "id": 3846327431,
+            "version": 0,
+            "date": "2026-05-25",
+            "account": {
+              "id": 493818405
+            },
+            "supplier": {
+              "id": 108552729
+            },
+            "amount": -52187,
+            "amountCurrency": -52187,
+            "amountGross": -52187,
+            "amountGrossCurrency": -52187,
+            "row": 2
+          },
+          {
+            "id": 3846327435,
+            "version": 0,
+            "date": "2026-05-25",
+            "account": {
+              "id": 493818427,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818427"
+            },
+            "amount": 10437.4,
+            "amountCurrency": 10437.4,
+            "amountGross": 10437.4,
+            "amountGrossCurrency": 10437.4,
+            "row": 0
+          }
+        ],
+        "voucherType": {
+          "id": 11982199
+        }
+      },
+      "response_body": "{\"value\":{\"id\":609350046,\"version\":7,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046\",\"date\":\"2026-05-25\",\"number\":1,\"tempNumber\":1,\"year\":2026,\"description\":\"\",\"voucherType\":{\"id\":11982199,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11982199\"},\"reverseVoucher\":null,\"postings\":[{\"id\":3846327430,\"version\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846327430\",\"voucher\":{\"id\":609350046,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046\"},\"date\":\"2026-05-25\",\"description\":\"\",\"account\":{\"id\":493818603,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818603\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":{\"id\":108552729,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108552729\"},\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"amount\":41749.60,\"amountCurrency\":41749.60,\"amountGross\":52187,\"amountGrossCurrency\":52187,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":\"INVOICE_EXPENSE\",\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":false,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3846327431,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846327431\",\"voucher\":{\"id\":609350046,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046\"},\"date\":\"2026-05-25\",\"description\":\"\",\"account\":{\"id\":493818405,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/493818405\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"sup"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher/609350046/attachment",
+      "status": 201,
+      "duration_ms": 465.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher/609350046/attachment",
+      "response_body": "{\"value\":{\"id\":609350046,\"version\":8,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046\",\"date\":\"2026-05-25\",\"number\":1,\"tempNumber\":1,\"year\":2026,\"description\":\"\",\"voucherType\":{\"id\":11982199,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11982199\"},\"reverseVoucher\":null,\"postings\":[{\"id\":3846327430,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846327430\"},{\"id\":3846327431,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846327431\"},{\"id\":3846327458,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846327458\"}],\"document\":null,\"attachment\":{\"id\":1024353482,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/document/1024353482\"},\"externalVoucherNumber\":\"\",\"ediDocument\":null,\"supplierVoucherType\":\"TYPE_SUPPLIER_INVOICE_SIMPLE\",\"wasAutoMatched\":false,\"vendorInvoiceNumber\":\"INV-2026-4783\",\"numberAsString\":\"1-2026\"}}"
+    }
+  ],
+  "total_calls": 12,
+  "error_count_4xx": 0,
+  "total_duration_ms": 10292.3,
+  "result": {
+    "status": "completed",
+    "taskType": "register_supplier_invoice",
+    "created": {
+      "id": 2147683261,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/supplierInvoice/2147683261",
+      "invoiceNumber": "INV-2026-4783",
+      "invoiceDate": "2026-05-25",
+      "supplier": {
+        "id": 108552729,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108552729"
+      },
+      "invoiceDueDate": "2026-06-24",
+      "kidOrReceiverReference": "",
+      "voucher": {
+        "id": 609350046,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609350046"
+      },
+      "amount": 0,
+      "amountCurrency": -52187,
+      "amountExcludingVat": 0,
+      "amountExcludingVatCurrency": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "orderLines": [],
+      "payments": [],
+      "originalInvoiceDocumentId": 0,
+      "approvalListElements": [
+        {
+          "id": 647481573,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647481573"
+        },
+        {
+          "id": 647481572,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647481572"
+        }
+      ],
+      "outstandingAmount": 52187.0
+    },
+    "supplierId": 108552729,
+    "voucherId": 609350046,
+    "amountExclVat": 41750.0,
+    "pdfUploaded": true
+  }
+}

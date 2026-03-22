@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+The customer Ridgepoint Ltd (org no. 989339028) has complained about the invoice for "Maintenance" (19650 NOK excl. VAT). Issue a full credit note that reverses the entire invoice.

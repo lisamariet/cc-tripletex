@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Enviámos uma fatura de 4885 EUR ao Luz do Sol Lda (org. nº 947361074) quando a taxa de câmbio era 11.81 NOK/EUR. O cliente pagou agora, mas a taxa é 10.83 NOK/EUR. Registe o pagamento e lance a difere

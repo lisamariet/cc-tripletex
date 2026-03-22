@@ -1,0 +1,85 @@
+{
+  "timestamp": "20260321_203743_040222",
+  "prompt": "Der Kunde Nordlicht GmbH (Org.-Nr. 912435113) hat die Rechnung für \"Webdesign\" (40550 NOK ohne MwSt.) reklamiert. Erstellen Sie eine vollständige Gutschrift, die die gesamte Rechnung storniert.",
+  "parsed_task": {
+    "task_type": "create_credit_note",
+    "fields": {
+      "customerName": "Nordlicht GmbH",
+      "customerOrgNumber": "912435113",
+      "invoiceDescription": "Webdesign",
+      "amount": 40550,
+      "lines": [
+        {
+          "description": "Webdesign",
+          "quantity": 1,
+          "unitPriceExcludingVat": 40550,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 1866.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"value\":{\"bankAccountReady\":true}}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1753.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "912435113",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108327714,\"name\":\"Nordlicht GmbH\",\"organizationNumber\":\"912435113\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 2225.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice",
+      "query_params": {
+        "invoiceDateFrom": "2000-01-01",
+        "invoiceDateTo": "2026-03-21",
+        "fields": "id,amount,amountCurrency,amountOutstanding,amountExcludingVat,amountExcludingVatCurrency",
+        "customerId": 108327714
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":2147574343,\"amount\":50687.5,\"amountCurrency\":50687.5,\"amountExcludingVat\":40550.0,\"amountExcludingVatCurrency\":40550.0,\"amountOutstanding\":50687.50}]}"
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147574343/:createCreditNote",
+      "status": 200,
+      "duration_ms": 4052.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/2147574343/:createCreditNote",
+      "query_params": {
+        "date": "2026-03-21",
+        "sendToCustomer": false
+      },
+      "response_body": "{\"value\":{\"id\":2147635767,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147635767\",\"invoiceNumber\":2,\"invoiceDate\":\"2026-03-21\",\"customer\":{\"id\":108327714,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108327714\"},\"creditedInvoice\":2147574343,\"isCredited\":false,\"invoiceDueDate\":\"2026-03-21\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":401993484,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/401993484\"}],\"orderLines\":[{\"id\":1607573057,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607573057\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965793341,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965793341\"}],\"voucher\":{\"id\":609140938,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609140938\"},\"deliveryDate\":\"2026-03-01\",\"amount\":-50687.50,\"amountCurrency\":-50687.50,\"amountExcludingVat\":-40550.00,\"amountExcludingVatCurrency\":-40550.00,\"amountRoundoff\":0.00,\"amountRoundoffCurrency\":0.00,\"amountOutstanding\":0.00,\"amountCurrencyOutstanding\":0.00,\"amountOutstandingTotal\":0.00,\"amountCurrencyOutstandingTotal\":0.00,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":true,\"isCharged\":true,\"isApproved\":false,\"postings\":[{\"id\":3845095392,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845095392\"},{\"id\":3845777521,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845777521\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024288654}}"
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 11651.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_credit_note",
+    "invoiceId": 2147574343
+  }
+}

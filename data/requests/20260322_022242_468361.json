@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_022242_468361",
+  "prompt": "Log 15 hours for Samuel Williams (samuel.williams@example.org) on the activity \"Analyse\" in the project \"Website Redesign\" for Windmill Ltd (org no. 898523942). Hourly rate: 1950 NOK/h. Generate a project invoice to the customer based on the logged hours.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

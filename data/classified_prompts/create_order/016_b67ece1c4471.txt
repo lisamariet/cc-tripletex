@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create an order for the customer Northwave Ltd (org no. 997677889) with the products Cloud Storage (4257) at 27150 NOK and System Development (7968) at 10100 NOK. Convert the order to an invoice and r

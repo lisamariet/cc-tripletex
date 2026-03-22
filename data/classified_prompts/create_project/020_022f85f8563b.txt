@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Opprett prosjektet "Integrasjon Havbris" knyttet til kunden Havbris AS (org.nr 999148387). Prosjektleder er Henrik Ødegård (henrik.degard@example.org).

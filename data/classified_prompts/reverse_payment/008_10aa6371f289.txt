@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Le paiement de Forêt SARL (nº org. 893396128) pour la facture "Maintenance" (44250 NOK HT) a été retourné par la banque. Annulez le paiement afin que la facture affiche à nouveau le montant impayé.

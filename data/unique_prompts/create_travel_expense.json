@@ -1,0 +1,102 @@
+[
+  {
+    "prompt": "Erfassen Sie eine Reisekostenabrechnung für Paul Hoffmann (paul.hoffmann@example.org) für \"Kundenbesuch Trondheim\". Die Reise dauerte 5 Tage mit Tagegeld (Tagessatz 800 NOK). Auslagen: Flugticket 2450 NOK und Taxi 300 NOK.",
+    "timestamp": "20260320_150957_468066",
+    "hash": "53cadef16283"
+  },
+  {
+    "prompt": "Registrer en reiseregning for Astrid Larsen (astrid.larsen@example.org) for \"Konferanse Ålesund\". Reisen varte 4 dager med diett (dagsats 800 kr). Utlegg: flybillett 6750 kr og taxi 500 kr.",
+    "timestamp": "20260320_152333_586149",
+    "hash": "3e6105ead5f2"
+  },
+  {
+    "prompt": "Registrer en reiseregning for Lars Johansen (lars.johansen@example.org) for \"Kundebesøk Stavanger\". Reisen varte 3 dager med diett (dagsats 800 kr). Utlegg: flybillett 3900 kr og taxi 350 kr.",
+    "timestamp": "20260320_152424_475418",
+    "hash": "12969ce23557"
+  },
+  {
+    "prompt": "Register a travel expense for Charles Harris (charles.harris@example.org) for \"Client visit Oslo\". The trip lasted 5 days with per diem (daily rate 800 NOK). Expenses: flight ticket 2300 NOK and taxi 500 NOK.",
+    "timestamp": "20260320_152802_230976",
+    "hash": "4255861381f5"
+  },
+  {
+    "prompt": "Register a travel expense for Charlotte Williams (charlotte.williams@example.org) for \"Client visit Bodø\". The trip lasted 3 days with per diem (daily rate 800 NOK). Expenses: flight ticket 6200 NOK and taxi 400 NOK.",
+    "timestamp": "20260320_152919_236020",
+    "hash": "7dbb5cacad36"
+  },
+  {
+    "prompt": "Registrer en reiseregning for Ragnhild Bakken (ragnhild.bakken@example.org) for \"Kundebesøk Kristiansand\". Reisen varte 4 dager med diett (dagsats 800 kr). Utlegg: flybillett 5450 kr og taxi 550 kr.",
+    "timestamp": "20260320_163113_037210",
+    "hash": "81e7d9ef9c69"
+  },
+  {
+    "prompt": "Registrer ei reiserekning for Marit Vik (marit.vik@example.org) for \"Konferanse Kristiansand\". Reisa varte 4 dagar med diett (dagssats 800 kr). Utlegg: flybillett 7600 kr og taxi 600 kr.",
+    "timestamp": "20260320_224227_650755",
+    "hash": "87f67b98aacd"
+  },
+  {
+    "prompt": "Register a travel expense for Charlotte Smith (charlotte.smith@example.org) for \"Conference Tromsø\". The trip lasted 2 days with per diem (daily rate 800 NOK). Expenses: flight ticket 6400 NOK and taxi 600 NOK.",
+    "timestamp": "20260320_225324_750545",
+    "hash": "e41992fb1f5d"
+  },
+  {
+    "prompt": "Register a travel expense for Thomas Lewis (thomas.lewis@example.org) for \"Client visit Oslo\". The trip lasted 4 days with per diem (daily rate 800 NOK). Expenses: flight ticket 7250 NOK and taxi 600 NOK.",
+    "timestamp": "20260320_231616_624318",
+    "hash": "3be65ad571bb"
+  },
+  {
+    "prompt": "Registre una nota de gastos de viaje para Pablo Sánchez (pablo.sanchez@example.org) por \"Visita cliente Tromsø\". El viaje duró 2 días con dietas (tarifa diaria 800 NOK). Gastos: billete de avión 4000 NOK y taxi 450 NOK.",
+    "timestamp": "20260320_233115_661992",
+    "hash": "d85a7a44ec42"
+  },
+  {
+    "prompt": "Registrer en reiseregning for Sigurd Hansen (sigurd.hansen@example.org) for \"Kundebesøk Trondheim\". Reisen varte 4 dager med diett (dagsats 800 kr). Utlegg: flybillett 6150 kr og taxi 500 kr.",
+    "timestamp": "20260321_001022_460811",
+    "hash": "68e26e420773"
+  },
+  {
+    "prompt": "Enregistrez une note de frais de déplacement pour Arthur Robert (arthur.robert@example.org) pour \"Visite client Kristiansand\". Le voyage a duré 5 jours avec indemnités journalières (taux journalier 800 NOK). Dépenses : billet d'avion 3850 NOK et taxi 650 NOK.",
+    "timestamp": "20260321_003931_510266",
+    "hash": "4e52ce08b551"
+  },
+  {
+    "prompt": "Registe uma despesa de viagem para Bruno Silva (bruno.silva@example.org) referente a \"Conferência Bodø\". A viagem durou 3 dias com ajudas de custo (taxa diária 800 NOK). Despesas: bilhete de avião 4900 NOK e táxi 450 NOK.",
+    "timestamp": "20260321_143114_408516",
+    "hash": "928e4c16f8dd"
+  },
+  {
+    "prompt": "Registe uma despesa de viagem para Maria Martins (maria.martins@example.org) referente a \"Visita cliente Trondheim\". A viagem durou 2 dias com ajudas de custo (taxa diária 800 NOK). Despesas: bilhete de avião 7000 NOK e táxi 700 NOK.",
+    "timestamp": "20260321_214844_314624",
+    "hash": "fd3915c4e9d2"
+  },
+  {
+    "prompt": "Registre una nota de gastos de viaje para Ricardo Romero (ricardo.romero@example.org) por \"Conferencia Ålesund\". El viaje duró 5 días con dietas (tarifa diaria 800 NOK). Gastos: billete de avión 4700 NOK y taxi 550 NOK.",
+    "timestamp": "20260321_223541_934163",
+    "hash": "7aa965b8eaa2"
+  },
+  {
+    "prompt": "Registrer ei reiserekning for Svein Berge (svein.berge@example.org) for \"Kundebesøk Trondheim\". Reisa varte 5 dagar med diett (dagssats 800 kr). Utlegg: flybillett 2850 kr og taxi 200 kr.",
+    "timestamp": "20260321_230125_437384",
+    "hash": "fff10fa20efa"
+  },
+  {
+    "prompt": "Registrer en reiseregning for Magnus Haugen (magnus.haugen@example.org) for \"Kundebesøk Bergen\". Reisen varte 4 dager med diett (dagsats 800 kr). Utlegg: flybillett 5050 kr og taxi 750 kr.",
+    "timestamp": "20260322_020733_645471",
+    "hash": "f53f532d42c7"
+  },
+  {
+    "prompt": "Enregistrez une note de frais de déplacement pour Arthur Bernard (arthur.bernard@example.org) pour \"Visite client Tromsø\". Le voyage a duré 4 jours avec indemnités journalières (taux journalier 800 NOK). Dépenses : billet d'avion 4800 NOK et taxi 300 NOK.",
+    "timestamp": "20260322_091318_235417",
+    "hash": "96fb2f7748ff"
+  },
+  {
+    "prompt": "Registrer ei reiserekning for Arne Vik (arne.vik@example.org) for \"Kundebesøk Stavanger\". Reisa varte 2 dagar med diett (dagssats 800 kr). Utlegg: flybillett 3600 kr og taxi 550 kr.",
+    "timestamp": "20260322_094137_055482",
+    "hash": "d908f92a6e5d"
+  },
+  {
+    "prompt": "Register a travel expense for Alice Clark (alice.clark@example.org) for \"Client visit Oslo\". The trip lasted 3 days with per diem (daily rate 800 NOK). Expenses: flight ticket 2800 NOK and taxi 450 NOK.",
+    "timestamp": "20260322_102704_784288",
+    "hash": "42901e107cbb"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_093249_767849",
+  "prompt": "El pago de Dorada SL (org. nº 849807021) por la factura \"Mantenimiento\" (8900 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

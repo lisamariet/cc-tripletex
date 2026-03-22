@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_183418_622262",
+  "prompt": "Wir haben eine Rechnung über 8077 EUR an Bergwerk GmbH (Org.-Nr. 863352010) gesendet, als der Wechselkurs 10.91 NOK/EUR betrug. Der Kunde hat nun bezahlt, aber der Kurs liegt bei 10.29 NOK/EUR. Erfassen Sie die Zahlung und buchen Sie die Wechselkursdifferenz (disagio) auf das korrekte Konto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

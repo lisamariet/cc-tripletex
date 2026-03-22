@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+You received an employment contract (see attached PDF). Create the employee in Tripletex with all details from the contract: national identity number, date of birth, department, occupation code, salar

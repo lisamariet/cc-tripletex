@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Legen Sie einen Festpreis von 221600 NOK für das Projekt "CRM-Integration" für Brückentor GmbH (Org.-Nr. 815400542) fest. Projektleiter ist Maximilian Hoffmann (maximilian.hoffmann@example.org). Stell

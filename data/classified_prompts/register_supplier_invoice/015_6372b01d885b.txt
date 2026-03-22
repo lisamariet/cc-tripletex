@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Vi har mottatt faktura INV-2026-4085 fra leverandøren Snøhetta AS (org.nr 861790029) på 44450 kr inklusiv MVA. Beløpet gjelder kontortjenester (konto 6300). Registrer leverandørfakturaen med korrekt i

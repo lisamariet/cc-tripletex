@@ -1,0 +1,242 @@
+{
+  "timestamp": "20260321_072403_790101",
+  "prompt": "Erstellen Sie eine benutzerdefinierte Buchhaltungsdimension \"Kostsenter\" mit den Werten \"IT\" und \"Innkjøp\". Buchen Sie dann einen Beleg auf Konto 7000 über 19450 NOK, verknüpft mit dem Dimensionswert \"IT\".",
+  "parsed_task": {
+    "task_type": "create_custom_dimension",
+    "fields": {
+      "dimensionName": "Kostsenter",
+      "values": [
+        "IT",
+        "Innkjøp"
+      ],
+      "voucherDate": "2024-07-23",
+      "voucherDescription": "Voucher linked to dimension IT",
+      "accountNumber": 7000,
+      "amount": 19450,
+      "dimensionValue": "IT"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/accountingDimensionName",
+      "status": 200,
+      "duration_ms": 1108.1,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionName",
+      "status": 201,
+      "duration_ms": 1129.4,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/accountingDimensionValue/search",
+      "status": 200,
+      "duration_ms": 1134.0,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionValue",
+      "status": 201,
+      "duration_ms": 1110.5,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionValue",
+      "status": 201,
+      "duration_ms": 1119.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1057.1,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1102.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 1219.1,
+      "error": null
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 10771.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_custom_dimension",
+    "dimension": {
+      "id": 1892,
+      "name": "Kostsenter",
+      "index": 1
+    },
+    "values": [
+      {
+        "id": 17558,
+        "name": "IT"
+      },
+      {
+        "id": 17559,
+        "name": "Innkjøp"
+      }
+    ],
+    "voucher": {
+      "status": "completed",
+      "created": {
+        "id": 608894698,
+        "version": 5,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608894698",
+        "date": "2024-07-23",
+        "number": 1,
+        "tempNumber": 0,
+        "year": 2024,
+        "description": "Voucher linked to dimension IT",
+        "voucherType": null,
+        "reverseVoucher": null,
+        "postings": [
+          {
+            "id": 3845102786,
+            "version": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845102786",
+            "voucher": {
+              "id": 608894698,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608894698"
+            },
+            "date": "2024-07-23",
+            "description": "Voucher linked to dimension IT",
+            "account": {
+              "id": 368420629,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/368420629"
+            },
+            "amortizationAccount": null,
+            "amortizationStartDate": null,
+            "amortizationEndDate": null,
+            "customer": null,
+            "supplier": null,
+            "employee": null,
+            "project": null,
+            "product": null,
+            "department": null,
+            "vatType": {
+              "id": 0,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+            },
+            "amount": 19450.0,
+            "amountCurrency": 19450.0,
+            "amountGross": 19450,
+            "amountGrossCurrency": 19450,
+            "currency": {
+              "id": 1,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+            },
+            "closeGroup": null,
+            "invoiceNumber": "",
+            "termOfPayment": null,
+            "row": 1,
+            "type": null,
+            "externalRef": "",
+            "systemGenerated": false,
+            "taxTransactionType": "(Ikke valgt)",
+            "taxTransactionTypeId": 0,
+            "matched": false,
+            "quantityAmount1": 0,
+            "quantityType1": null,
+            "quantityAmount2": 0,
+            "quantityType2": null,
+            "isVatReadonly": false,
+            "isAmountVatClosed": false,
+            "postingRuleId": 0,
+            "freeAccountingDimension1": {
+              "id": 17558,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/17558"
+            },
+            "freeAccountingDimension2": null,
+            "freeAccountingDimension3": null,
+            "asset": null
+          },
+          {
+            "id": 3845102787,
+            "version": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845102787",
+            "voucher": {
+              "id": 608894698,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608894698"
+            },
+            "date": "2024-07-23",
+            "description": "Voucher linked to dimension IT",
+            "account": {
+              "id": 368420333,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/368420333"
+            },
+            "amortizationAccount": null,
+            "amortizationStartDate": null,
+            "amortizationEndDate": null,
+            "customer": null,
+            "supplier": null,
+            "employee": null,
+            "project": null,
+            "product": null,
+            "department": null,
+            "vatType": {
+              "id": 0,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+            },
+            "amount": -19450.0,
+            "amountCurrency": -19450.0,
+            "amountGross": -19450.0,
+            "amountGrossCurrency": -19450.0,
+            "currency": {
+              "id": 1,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+            },
+            "closeGroup": null,
+            "invoiceNumber": "",
+            "termOfPayment": null,
+            "row": 2,
+            "type": null,
+            "externalRef": "",
+            "systemGenerated": false,
+            "taxTransactionType": "(Ikke valgt)",
+            "taxTransactionTypeId": 0,
+            "matched": false,
+            "quantityAmount1": 0,
+            "quantityType1": null,
+            "quantityAmount2": 0,
+            "quantityType2": null,
+            "isVatReadonly": true,
+            "isAmountVatClosed": false,
+            "postingRuleId": 0,
+            "freeAccountingDimension1": null,
+            "freeAccountingDimension2": null,
+            "freeAccountingDimension3": null,
+            "asset": null
+          }
+        ],
+        "document": null,
+        "attachment": null,
+        "externalVoucherNumber": "",
+        "ediDocument": null,
+        "supplierVoucherType": null,
+        "wasAutoMatched": false,
+        "vendorInvoiceNumber": null,
+        "numberAsString": "1-2024"
+      }
+    }
+  }
+}

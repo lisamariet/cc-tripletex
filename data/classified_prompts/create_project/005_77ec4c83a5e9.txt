@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez le projet "Intégration Montagne" lié au client Montagne SARL (nº org. 975615766). Le chef de projet est Jules Robert (jules.robert@example.org).

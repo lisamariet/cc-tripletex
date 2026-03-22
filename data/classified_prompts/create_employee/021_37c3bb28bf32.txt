@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+You received an offer letter (see attached PDF) for a new employee. Complete the onboarding: create the employee, assign the correct department, set up employment details with percentage and annual sa

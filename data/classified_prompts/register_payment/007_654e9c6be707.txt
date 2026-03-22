@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+El cliente Olivares SL (org. nº 874863807) tiene una factura pendiente de 12700 NOK sin IVA por "Servicio de red". Registre el pago completo de esta factura.

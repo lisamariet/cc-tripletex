@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Registrer en reiseregning for Astrid Larsen (astrid.larsen@example.org) for "Konferanse Ålesund". Reisen varte 4 dager med diett (dagsats 800 kr). Utlegg: flybillett 6750 kr og taxi 500 kr.

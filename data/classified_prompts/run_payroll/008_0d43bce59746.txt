@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Ejecute la nómina de Marta López (marta.lopez@example.org) para este mes. El salario base es de 31300 NOK. Añada una bonificación única de 13300 NOK además del salario base.

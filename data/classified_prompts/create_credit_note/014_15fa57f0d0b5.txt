@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Kunden Elvdal AS (org.nr 812449982) har reklamert på fakturaen for "Datarådgjeving" (45300 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen.

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Run payroll for Sarah Brown (sarah.brown@example.org) for this month. The base salary is 48300 NOK. Add a one-time bonus of 11650 NOK on top of the base salary. If the salary API is unavailable, you c

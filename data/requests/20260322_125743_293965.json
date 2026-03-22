@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_125743_293965",
+  "revision": "tripletex-agent-00134-q96",
+  "prompt": "Execute the complete project lifecycle for 'Cloud Migration Northwave' (Northwave Ltd, org no. 932075482): 1) The project has a budget of 396900 NOK. 2) Log time: Samuel Brown (project manager, samuel.brown@example.org) 74 hours and Sarah Lewis (consultant, sarah.lewis@example.org) 85 hours. 3) Register supplier cost of 56750 NOK from Clearwater Ltd (org no. 889264985). 4) Create a customer invoice for the project.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

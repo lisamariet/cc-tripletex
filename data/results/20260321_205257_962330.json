@@ -1,0 +1,360 @@
+{
+  "timestamp": "20260321_205257_962330",
+  "prompt": "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Viento' (Viento SL, org. nº 828947818): 1) El proyecto tiene un presupuesto de 225650 NOK. 2) Registre horas: Andrés Hernández (director de proyecto, andres.hernandez@example.org) 72 horas y Javier Rodríguez (consultor, javier.rodriguez@example.org) 60 horas. 3) Registre costo de proveedor de 34650 NOK de Río Verde SL (org. nº 900901666). 4) Cree una factura al cliente por el proyecto.",
+  "parsed_task": {
+    "task_type": "register_timesheet",
+    "fields": {
+      "projectName": "Actualización Sistema Viento",
+      "customerName": "Viento SL",
+      "customerOrgNumber": "828947818",
+      "projectBudget": 225650,
+      "employees": [
+        {
+          "name": "Andrés Hernández",
+          "email": "andres.hernandez@example.org",
+          "hours": 72
+        },
+        {
+          "name": "Javier Rodríguez",
+          "email": "javier.rodriguez@example.org",
+          "hours": 60
+        }
+      ],
+      "supplierName": "Río Verde SL",
+      "supplierOrgNumber": "900901666",
+      "supplierAmount": 34650,
+      "supplierExpenseAccount": 4000
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 339.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "andres.hernandez@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18667397,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18667397\",\"firstName\":\"Andrés\",\"lastName\":\"Hernández\",\"displayName\":\"Andrés Hernández\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"andres.hernandez@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":957806,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/957806\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108422502,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 200,
+      "duration_ms": 285.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "query_params": {
+        "name": "Actualización Sistema Viento"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":402036080,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402036080\",\"name\":\"Actualización Sistema Viento\",\"number\":\"1\",\"displayName\":\"1 Actualización Sistema Viento\",\"description\":\"\",\"projectManager\":{\"id\":18667397,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18667397\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-01-01\",\"endDate\":null,\"customer\":{\"id\":108422513,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108422513\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":true,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0.0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":225650.0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0.0,\"markUpFeesEarned\":0.0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0.0,\"projectHourlyRates\":[{\"id\":11089573,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11089573\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15644365,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15644365\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"1 Actualización Sistema Viento\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Viento SL\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Andrés Hernández\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.0"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 287.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "andres.hernandez@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18667397,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18667397\",\"firstName\":\"Andrés\",\"lastName\":\"Hernández\",\"displayName\":\"Andrés Hernández\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"andres.hernandez@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":957806,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/957806\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108422502,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/activity/%3EforTimeSheet",
+      "status": 200,
+      "duration_ms": 268.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity/%3EforTimeSheet",
+      "query_params": {
+        "projectId": 402036080
+      },
+      "response_body": "{\"fullResultSize\":3,\"from\":0,\"count\":3,\"versionDigest\":null,\"values\":[{\"id\":5959639,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5959639\",\"name\":\"Fakturerbart arbeid\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":true,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Fakturerbart arbeid\",\"deletable\":true},{\"id\":5959638,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5959638\",\"name\":\"Prosjektadministrasjon\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Prosjektadministrasjon\",\"deletable\":true},{\"id\":5959670,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5959670\",\"name\":\"Testing\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Testing\",\"deletable\":true}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 316.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/timesheet/entry",
+      "request_body": {
+        "employee": {
+          "id": 18667397
+        },
+        "project": {
+          "id": 402036080
+        },
+        "activity": {
+          "id": 5959639
+        },
+        "date": "2026-03-21",
+        "hours": 72
+      },
+      "response_body": "{\"value\":{\"id\":175911239,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175911239\",\"project\":{\"id\":402036080,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402036080\"},\"activity\":{\"id\":5959639,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5959639\"},\"date\":\"2026-03-21\",\"hours\":72.0,\"chargeableHours\":72.0,\"employee\":{\"id\":18667397,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18667397\"},\"timeClocks\":[],\"comment\":\"\",\"locked\":false,\"chargeable\":true,\"invoice\":null,\"hourlyRate\":0.00,\"hourlyCost\":0.00,\"hourlyCostPercentage\":0,\"projectChargeableHours\":72.0}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 268.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "javier.rodriguez@example.org"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18667400,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18667400\",\"firstName\":\"Javier\",\"lastName\":\"Rodríguez\",\"displayName\":\"Javier Rodríguez\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"javier.rodriguez@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":957806,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/957806\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108422502,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/activity/%3EforTimeSheet",
+      "status": 200,
+      "duration_ms": 253.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity/%3EforTimeSheet",
+      "query_params": {
+        "projectId": 402036080
+      },
+      "response_body": "{\"fullResultSize\":3,\"from\":0,\"count\":3,\"versionDigest\":null,\"values\":[{\"id\":5959639,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5959639\",\"name\":\"Fakturerbart arbeid\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":true,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Fakturerbart arbeid\",\"deletable\":false},{\"id\":5959638,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5959638\",\"name\":\"Prosjektadministrasjon\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Prosjektadministrasjon\",\"deletable\":true},{\"id\":5959670,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5959670\",\"name\":\"Testing\",\"number\":\"\",\"description\":\"\",\"activityType\":\"PROJECT_GENERAL_ACTIVITY\",\"isProjectActivity\":true,\"isGeneral\":true,\"isTask\":false,\"isDisabled\":false,\"isChargeable\":false,\"rate\":0.0,\"costPercentage\":0.0,\"displayName\":\"Testing\",\"deletable\":true}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/timesheet/entry",
+      "status": 201,
+      "duration_ms": 301.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/timesheet/entry",
+      "request_body": {
+        "employee": {
+          "id": 18667400
+        },
+        "project": {
+          "id": 402036080
+        },
+        "activity": {
+          "id": 5959639
+        },
+        "date": "2026-03-21",
+        "hours": 60
+      },
+      "response_body": "{\"value\":{\"id\":175911241,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175911241\",\"project\":{\"id\":402036080,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402036080\"},\"activity\":{\"id\":5959639,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/activity/5959639\"},\"date\":\"2026-03-21\",\"hours\":60.0,\"chargeableHours\":60.0,\"employee\":{\"id\":18667400,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18667400\"},\"timeClocks\":[],\"comment\":\"\",\"locked\":false,\"chargeable\":true,\"invoice\":null,\"hourlyRate\":0.00,\"hourlyCost\":0.00,\"hourlyCostPercentage\":0,\"projectChargeableHours\":60.0}}"
+    },
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 238.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "organizationNumber": "900901666"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108422526,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108422526\",\"name\":\"Río Verde SL\",\"organizationNumber\":\"900901666\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405693337,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405693337\"},\"physicalAddress\":{\"id\":405693336,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405693336\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":472211038,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/472211038\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"Río Verde SL (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 256.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "4000"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":472211140,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/472211140\",\"number\":4000,\"numberPretty\":\"4000\",\"name\":\"Innkjøp av råvarer og halvfabrikater\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"40\",\"groupingCode\":\"4005\",\"displayName\":\"4000 Innkjøp av råvarer og halvfabrikater\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 270.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2400"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":472211038,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/472211038\",\"number\":2400,\"numberPretty\":\"2400\",\"name\":\"Leverandørgjeld\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"VENDOR\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":true,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"24\",\"groupingCode\":\"2400\",\"displayName\":\"2400 Leverandørgjeld\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/472211140",
+      "status": 200,
+      "duration_ms": 268.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/472211140",
+      "response_body": "{\"value\":{\"id\":472211140,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/472211140\",\"number\":4000,\"numberPretty\":\"4000\",\"name\":\"Innkjøp av råvarer og halvfabrikater\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"40\",\"groupingCode\":\"4005\",\"displayName\":\"4000 Innkjøp av råvarer og halvfabrikater\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 259.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucherType",
+      "query_params": {
+        "name": "Leverandørfaktura"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":11287827,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11287827\",\"name\":\"Leverandørfaktura\",\"displayName\":\"Leverandørfaktura\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 254.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/vatType",
+      "query_params": {
+        "number": "1"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":1,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\",\"name\":\"Fradrag inngående avgift, høy sats\",\"number\":\"1\",\"displayName\":\"1: (25%) Fradrag inngående avgift, høy sats\",\"percentage\":25,\"deductionPercentage\":100.0,\"parentType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplierInvoice",
+      "status": 201,
+      "duration_ms": 470.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplierInvoice",
+      "request_body": {
+        "invoiceDate": "2026-03-21",
+        "supplier": {
+          "id": 108422526
+        },
+        "amountCurrency": 34650,
+        "currency": {
+          "id": 1
+        },
+        "voucher": {
+          "date": "2026-03-21",
+          "description": "Leverandørfaktura: Prosjektkostnad: Actualización Sistema Viento",
+          "postings": [
+            {
+              "account": {
+                "id": 472211140
+              },
+              "supplier": {
+                "id": 108422526
+              },
+              "amount": 27720.0,
+              "amountCurrency": 27720.0,
+              "amountGross": 34650,
+              "amountGrossCurrency": 34650,
+              "row": 1,
+              "vatType": {
+                "id": 1
+              }
+            },
+            {
+              "account": {
+                "id": 472211038
+              },
+              "supplier": {
+                "id": 108422526
+              },
+              "amount": -34650,
+              "amountCurrency": -34650,
+              "amountGross": -34650,
+              "amountGrossCurrency": -34650,
+              "row": 2
+            }
+          ],
+          "voucherType": {
+            "id": 11287827
+          }
+        },
+        "invoiceDueDate": "2026-04-20"
+      },
+      "response_body": "{\"value\":{\"id\":2147637024,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplierInvoice/2147637024\",\"invoiceNumber\":\"\",\"invoiceDate\":\"2026-03-21\",\"supplier\":{\"id\":108422526,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108422526\"},\"invoiceDueDate\":\"2026-04-20\",\"kidOrReceiverReference\":\"\",\"voucher\":{\"id\":609147233,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609147233\"},\"amount\":0,\"amountCurrency\":34650,\"amountExcludingVat\":0,\"amountExcludingVatCurrency\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":true,\"orderLines\":[],\"payments\":[],\"originalInvoiceDocumentId\":0,\"approvalListElements\":[{\"id\":647125595,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647125595\"},{\"id\":647125594,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647125594\"}],\"outstandingAmount\":-34650.00}}"
+    }
+  ],
+  "total_calls": 15,
+  "error_count_4xx": 0,
+  "total_duration_ms": 8406.3,
+  "result": {
+    "status": "completed",
+    "taskType": "register_timesheet",
+    "entries": 2,
+    "totalHours": 132.0,
+    "created": {
+      "id": 175911239,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/timesheet/entry/175911239",
+      "project": {
+        "id": 402036080,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/project/402036080"
+      },
+      "activity": {
+        "id": 5959639,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/activity/5959639"
+      },
+      "date": "2026-03-21",
+      "hours": 72.0,
+      "chargeableHours": 72.0,
+      "employee": {
+        "id": 18667397,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18667397"
+      },
+      "timeClocks": [],
+      "comment": "",
+      "locked": false,
+      "chargeable": true,
+      "invoice": null,
+      "hourlyRate": 0.0,
+      "hourlyCost": 0.0,
+      "hourlyCostPercentage": 0,
+      "projectChargeableHours": 72.0
+    },
+    "supplierInvoice": {
+      "status": "completed",
+      "taskType": "register_supplier_invoice",
+      "created": {
+        "id": 2147637024,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/supplierInvoice/2147637024",
+        "invoiceNumber": "",
+        "invoiceDate": "2026-03-21",
+        "supplier": {
+          "id": 108422526,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108422526"
+        },
+        "invoiceDueDate": "2026-04-20",
+        "kidOrReceiverReference": "",
+        "voucher": {
+          "id": 609147233,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609147233"
+        },
+        "amount": 0,
+        "amountCurrency": 34650,
+        "amountExcludingVat": 0,
+        "amountExcludingVatCurrency": 0,
+        "currency": {
+          "id": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+        },
+        "isCreditNote": true,
+        "orderLines": [],
+        "payments": [],
+        "originalInvoiceDocumentId": 0,
+        "approvalListElements": [
+          {
+            "id": 647125595,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647125595"
+          },
+          {
+            "id": 647125594,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/voucherApprovalListElement/647125594"
+          }
+        ],
+        "outstandingAmount": -34650.0
+      },
+      "supplierId": 108422526,
+      "voucherId": 609147233,
+      "amountExclVat": 27720.0
+    }
+  }
+}

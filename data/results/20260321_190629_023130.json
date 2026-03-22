@@ -1,0 +1,83 @@
+{
+  "timestamp": "20260321_190629_023130",
+  "prompt": "Register the supplier Oakwood Ltd with organization number 887507295. Email: faktura@oakwoodltd.no.",
+  "parsed_task": {
+    "task_type": "create_supplier",
+    "fields": {
+      "name": "Oakwood Ltd",
+      "organizationNumber": "887507295",
+      "email": "faktura@oakwoodltd.no"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 201,
+      "duration_ms": 2029.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "request_body": {
+        "name": "Oakwood Ltd",
+        "organizationNumber": "887507295",
+        "email": "faktura@oakwoodltd.no"
+      },
+      "response_body": "{\"value\":{\"id\":108400498,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108400498\",\"name\":\"Oakwood Ltd\",\"organizationNumber\":\"887507295\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"faktura@oakwoodltd.no\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405649970,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405649970\"},\"physicalAddress\":{\"id\":405649969,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405649969\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":373620991,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/373620991\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"Oakwood Ltd (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}}"
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3357.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_supplier",
+    "created": {
+      "id": 108400498,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108400498",
+      "name": "Oakwood Ltd",
+      "organizationNumber": "887507295",
+      "supplierNumber": 20001,
+      "customerNumber": 0,
+      "isSupplier": true,
+      "isCustomer": false,
+      "isInactive": false,
+      "email": "faktura@oakwoodltd.no",
+      "invoiceEmail": "",
+      "overdueNoticeEmail": "",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "isPrivateIndividual": false,
+      "showProducts": false,
+      "accountManager": null,
+      "postalAddress": {
+        "id": 405649970,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405649970"
+      },
+      "physicalAddress": {
+        "id": 405649969,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405649969"
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "bankAccountPresentation": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "ledgerAccount": {
+        "id": 373620991,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/373620991"
+      },
+      "language": "NO",
+      "isWholesaler": false,
+      "displayName": "Oakwood Ltd (20001)",
+      "locale": "no_NO",
+      "website": ""
+    }
+  }
+}

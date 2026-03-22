@@ -1,0 +1,154 @@
+{
+  "timestamp": "20260321_224938_876195",
+  "prompt": "Crie o projeto \"Integração Porto\" vinculado ao cliente Porto Alegre Lda (org. nº 884811686). O gerente de projeto é Lucas Silva (lucas.silva@example.org).",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "name": "Integração Porto",
+      "customerName": "Porto Alegre Lda",
+      "customerOrgNumber": "884811686",
+      "projectManagerName": "Lucas Silva"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1801.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "firstName": "Lucas",
+        "lastName": "Silva"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18684029,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18684029\",\"firstName\":\"Lucas\",\"lastName\":\"Silva\",\"displayName\":\"Lucas Silva\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"lucas.silva@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":967288,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/967288\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108447407,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 431.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "884811686",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108447477,\"name\":\"Porto Alegre Lda\",\"organizationNumber\":\"884811686\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 521.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "Integração Porto",
+        "isInternal": false,
+        "projectManager": {
+          "id": 18684029
+        },
+        "customer": {
+          "id": 108447477
+        },
+        "startDate": "2026-03-21"
+      },
+      "response_body": "{\"value\":{\"id\":402043510,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402043510\",\"name\":\"Integração Porto\",\"number\":\"1\",\"displayName\":\"1 Integração Porto\",\"description\":\"\",\"projectManager\":{\"id\":18684029,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18684029\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-21\",\"endDate\":null,\"customer\":{\"id\":108447477,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108447477\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":false,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11091560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11091560\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15646452,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15646452\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"1 Integração Porto\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Porto Alegre Lda\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Lucas Silva\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":0,\"accountingDimensionValues\":[]}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3939.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "created": {
+      "id": 402043510,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/402043510",
+      "name": "Integração Porto",
+      "number": "1",
+      "displayName": "1 Integração Porto",
+      "description": "",
+      "projectManager": {
+        "id": 18684029,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18684029"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-21",
+      "endDate": null,
+      "customer": {
+        "id": 108447477,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108447477"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": false,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 0,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11091560,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11091560"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15646452,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15646452"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "1 Integração Porto",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Porto Alegre Lda",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Lucas Silva",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 0,
+      "accountingDimensionValues": []
+    }
+  }
+}

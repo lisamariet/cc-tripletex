@@ -1,0 +1,1079 @@
+{
+  "timestamp": "20260321_165027_766713",
+  "prompt": "Totalkostnadene økte betydelig fra januar til februar 2026. Analyser hovedboken og finn de tre kostnadskontoene med størst økning i beløp. Opprett et internt prosjekt for hver av de tre kontoene med kontoens navn. Opprett også en aktivitet for hvert prosjekt.",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "analyzeTopCosts": true,
+      "projectCount": 3,
+      "isInternal": true,
+      "period": "2026-01-01/2026-02-28",
+      "createActivity": true
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2511.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "from": 0,
+        "count": 500,
+        "isApplicableForSupplierInvoice": false
+      },
+      "response_body": "{\"fullResultSize\":425,\"from\":0,\"count\":425,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":466115836,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466115836\",\"number\":1000,\"numberPretty\":\"1000\",\"name\":\"Forskning og utvikling, ervervet\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke avskrivbart driftsmiddel\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"10\",\"groupingCode\":\"1000\",\"displayName\":\"1000 Forskning og utvikling, ervervet\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null},{\"id\":46611583"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116131/balance",
+      "status": 404,
+      "duration_ms": 308.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"82edc1b7-4c4f-4776-a016-cad2ef38dd3a\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116131/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"82edc1b7-4c4f-4776-a016-cad2ef38dd3a\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116132/balance",
+      "status": 404,
+      "duration_ms": 311.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"e545edf1-be5c-4cb0-96af-db03a74aab10\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116132/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"e545edf1-be5c-4cb0-96af-db03a74aab10\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116133/balance",
+      "status": 404,
+      "duration_ms": 299.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"d9212114-a0ce-4ca6-b73f-d746299428b4\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116133/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"d9212114-a0ce-4ca6-b73f-d746299428b4\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116135/balance",
+      "status": 404,
+      "duration_ms": 351.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"bf40c54b-4741-4187-827a-94a8ec00d3ff\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116135/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"bf40c54b-4741-4187-827a-94a8ec00d3ff\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116136/balance",
+      "status": 404,
+      "duration_ms": 306.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"d25d594b-b7fa-4dd8-b0bc-1498c7e91365\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116136/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"d25d594b-b7fa-4dd8-b0bc-1498c7e91365\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116137/balance",
+      "status": 404,
+      "duration_ms": 335.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"745eaae4-73d7-4a5b-9162-27fc51ed9757\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116137/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"745eaae4-73d7-4a5b-9162-27fc51ed9757\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116139/balance",
+      "status": 404,
+      "duration_ms": 506.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1bd68c38-56f8-4dec-abf4-5ab10692945a\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116139/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1bd68c38-56f8-4dec-abf4-5ab10692945a\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116140/balance",
+      "status": 404,
+      "duration_ms": 319.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"018b8920-2b6e-4386-aaea-de2feaf7e103\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116140/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"018b8920-2b6e-4386-aaea-de2feaf7e103\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116141/balance",
+      "status": 404,
+      "duration_ms": 293.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"24504b0e-bbc2-4cb6-aa6d-32a95d1bb069\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116141/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"24504b0e-bbc2-4cb6-aa6d-32a95d1bb069\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116144/balance",
+      "status": 404,
+      "duration_ms": 301.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"f52cd077-89ca-40f6-b34e-bb5787db5e7b\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116144/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"f52cd077-89ca-40f6-b34e-bb5787db5e7b\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116145/balance",
+      "status": 404,
+      "duration_ms": 300.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"82df1ec5-9e99-4bdc-a6c5-dc127ce1e698\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116145/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"82df1ec5-9e99-4bdc-a6c5-dc127ce1e698\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116146/balance",
+      "status": 404,
+      "duration_ms": 298.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"8d9797ca-42c4-407f-b449-db66e0852ae2\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116146/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"8d9797ca-42c4-407f-b449-db66e0852ae2\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116147/balance",
+      "status": 404,
+      "duration_ms": 297.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"bbf11a5c-70a9-4282-89c2-bc9ace55b456\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116147/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"bbf11a5c-70a9-4282-89c2-bc9ace55b456\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116148/balance",
+      "status": 404,
+      "duration_ms": 323.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"f4370509-7a1a-4e20-9b38-5ff585ebf6a2\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116148/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"f4370509-7a1a-4e20-9b38-5ff585ebf6a2\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116151/balance",
+      "status": 404,
+      "duration_ms": 305.1,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9fe99eff-91b9-495b-abfb-e9af93bbe44a\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116151/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9fe99eff-91b9-495b-abfb-e9af93bbe44a\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116152/balance",
+      "status": 404,
+      "duration_ms": 314.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"143fad75-bff6-4590-adcf-b393f1fdd444\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116152/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"143fad75-bff6-4590-adcf-b393f1fdd444\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116153/balance",
+      "status": 404,
+      "duration_ms": 358.1,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"03794d5d-579b-4c91-bd8e-e5d411ec1de5\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116153/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"03794d5d-579b-4c91-bd8e-e5d411ec1de5\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116154/balance",
+      "status": 404,
+      "duration_ms": 327.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"4f6a2f26-be7e-4cd2-b0cd-709f716f0977\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116154/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"4f6a2f26-be7e-4cd2-b0cd-709f716f0977\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116155/balance",
+      "status": 404,
+      "duration_ms": 284.9,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3ee43a18-1eb2-4223-8eef-8dfdc5ab607e\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116155/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3ee43a18-1eb2-4223-8eef-8dfdc5ab607e\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116156/balance",
+      "status": 404,
+      "duration_ms": 275.8,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"e459101a-40bc-47a1-aa98-226d1c152029\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116156/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"e459101a-40bc-47a1-aa98-226d1c152029\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116157/balance",
+      "status": 404,
+      "duration_ms": 303.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"b566c1b1-efb1-4270-a92e-6002fe378662\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116157/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"b566c1b1-efb1-4270-a92e-6002fe378662\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116158/balance",
+      "status": 404,
+      "duration_ms": 295.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"792532be-248a-4dda-8b13-6833329c58e8\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116158/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"792532be-248a-4dda-8b13-6833329c58e8\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116159/balance",
+      "status": 404,
+      "duration_ms": 319.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"585cf006-2ec7-4ca5-9ef4-119258436441\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116159/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"585cf006-2ec7-4ca5-9ef4-119258436441\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116160/balance",
+      "status": 404,
+      "duration_ms": 300.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"833b7cd7-9ead-4628-a9de-35ed533c6ac8\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116160/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"833b7cd7-9ead-4628-a9de-35ed533c6ac8\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116161/balance",
+      "status": 404,
+      "duration_ms": 301.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"d806d28c-c992-435a-82e9-024a4375ebe6\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116161/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"d806d28c-c992-435a-82e9-024a4375ebe6\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116162/balance",
+      "status": 404,
+      "duration_ms": 307.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"41614600-871b-4312-b9f3-e4ec3299eb9c\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116162/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"41614600-871b-4312-b9f3-e4ec3299eb9c\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116163/balance",
+      "status": 404,
+      "duration_ms": 291.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"5546dc9f-4e28-4fad-822c-fdeb8c1ee247\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116163/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"5546dc9f-4e28-4fad-822c-fdeb8c1ee247\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116164/balance",
+      "status": 404,
+      "duration_ms": 316.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"63762e38-96ca-442b-bd30-fad2491e59c3\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116164/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"63762e38-96ca-442b-bd30-fad2491e59c3\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116165/balance",
+      "status": 404,
+      "duration_ms": 349.8,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"12cdaa64-c785-4cbe-9716-4c2a6c7f4663\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116165/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"12cdaa64-c785-4cbe-9716-4c2a6c7f4663\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116166/balance",
+      "status": 404,
+      "duration_ms": 300.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9bda00b7-d4e9-47d3-a1ee-c9fb1e922d8e\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116166/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9bda00b7-d4e9-47d3-a1ee-c9fb1e922d8e\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116167/balance",
+      "status": 404,
+      "duration_ms": 281.8,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"7528dae2-ae6e-4806-8313-f58bba03eedc\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116167/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"7528dae2-ae6e-4806-8313-f58bba03eedc\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116168/balance",
+      "status": 404,
+      "duration_ms": 298.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3c50808b-0979-4f6f-aaea-268752df5d62\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116168/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3c50808b-0979-4f6f-aaea-268752df5d62\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116169/balance",
+      "status": 404,
+      "duration_ms": 289.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"10ccb938-9bae-4f6d-a4b6-e0f63899ae97\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116169/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"10ccb938-9bae-4f6d-a4b6-e0f63899ae97\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116170/balance",
+      "status": 404,
+      "duration_ms": 298.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"ccbf39e6-291f-46a5-b803-08b481dd205a\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116170/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"ccbf39e6-291f-46a5-b803-08b481dd205a\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116171/balance",
+      "status": 404,
+      "duration_ms": 289.0,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9ab84566-1c89-4f98-a08f-852b8e4e8eb7\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116171/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9ab84566-1c89-4f98-a08f-852b8e4e8eb7\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116172/balance",
+      "status": 404,
+      "duration_ms": 292.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3c1ace9e-8ea3-4eac-a827-a6a2fb228f2e\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116172/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3c1ace9e-8ea3-4eac-a827-a6a2fb228f2e\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116173/balance",
+      "status": 404,
+      "duration_ms": 292.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1e3a5af0-b37a-4102-be27-e18092447b81\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116173/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1e3a5af0-b37a-4102-be27-e18092447b81\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116174/balance",
+      "status": 404,
+      "duration_ms": 341.9,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"125bb7fa-92bc-4148-8c7f-6bfc05aa9ffb\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116174/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"125bb7fa-92bc-4148-8c7f-6bfc05aa9ffb\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116175/balance",
+      "status": 404,
+      "duration_ms": 270.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"87766e8b-fa47-4545-b3d1-d242fa00e095\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116175/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"87766e8b-fa47-4545-b3d1-d242fa00e095\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116176/balance",
+      "status": 404,
+      "duration_ms": 283.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"c9c456db-3e5b-4698-8585-c3880a3c9009\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116176/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"c9c456db-3e5b-4698-8585-c3880a3c9009\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116177/balance",
+      "status": 404,
+      "duration_ms": 275.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3a061644-e0a4-4bf2-af4d-1b228faaf863\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116177/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3a061644-e0a4-4bf2-af4d-1b228faaf863\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116178/balance",
+      "status": 404,
+      "duration_ms": 311.2,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9dcf02d8-1d3c-4304-9925-fdb471cce101\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116178/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9dcf02d8-1d3c-4304-9925-fdb471cce101\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116179/balance",
+      "status": 404,
+      "duration_ms": 326.9,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"57ea8ebf-293a-4a01-a374-b0707b8137e9\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116179/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"57ea8ebf-293a-4a01-a374-b0707b8137e9\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116180/balance",
+      "status": 404,
+      "duration_ms": 276.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"ad846476-9b2d-47ca-996f-0841b6f5a576\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116180/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"ad846476-9b2d-47ca-996f-0841b6f5a576\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116181/balance",
+      "status": 404,
+      "duration_ms": 4415.8,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"e2a3c677-0c34-4ede-b2f9-a8c416640564\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116181/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"e2a3c677-0c34-4ede-b2f9-a8c416640564\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116184/balance",
+      "status": 404,
+      "duration_ms": 296.9,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9e134669-45b3-4380-b1de-ef1478202766\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116184/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9e134669-45b3-4380-b1de-ef1478202766\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116182/balance",
+      "status": 404,
+      "duration_ms": 304.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"42a4f473-eac7-464c-b9f3-e7b845e8f773\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116182/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"42a4f473-eac7-464c-b9f3-e7b845e8f773\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116183/balance",
+      "status": 404,
+      "duration_ms": 326.1,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"25735076-88ef-4400-9bc4-30b69bc8763b\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116183/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"25735076-88ef-4400-9bc4-30b69bc8763b\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116185/balance",
+      "status": 404,
+      "duration_ms": 314.2,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"17784fd6-8503-4696-9c5a-4c003d819423\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116185/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"17784fd6-8503-4696-9c5a-4c003d819423\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116186/balance",
+      "status": 404,
+      "duration_ms": 293.2,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"45156e65-ad5e-481a-b09f-ffb7bcfb1fb6\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116186/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"45156e65-ad5e-481a-b09f-ffb7bcfb1fb6\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116187/balance",
+      "status": 404,
+      "duration_ms": 291.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"79034836-fc41-4233-bdf5-ffdeaf59183e\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116187/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"79034836-fc41-4233-bdf5-ffdeaf59183e\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116188/balance",
+      "status": 404,
+      "duration_ms": 405.2,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"111af896-9ff3-4866-a0e6-bcebd563479d\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116188/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"111af896-9ff3-4866-a0e6-bcebd563479d\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116189/balance",
+      "status": 404,
+      "duration_ms": 435.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"64069f42-4486-4e5e-bd78-a36ad5c39d28\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116189/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"64069f42-4486-4e5e-bd78-a36ad5c39d28\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116190/balance",
+      "status": 404,
+      "duration_ms": 343.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3748d141-f802-4392-99ff-e477d025c858\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116190/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"3748d141-f802-4392-99ff-e477d025c858\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116191/balance",
+      "status": 404,
+      "duration_ms": 532.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"b586146d-b8a8-491f-b74c-2b3cde6c5738\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116191/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"b586146d-b8a8-491f-b74c-2b3cde6c5738\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116192/balance",
+      "status": 404,
+      "duration_ms": 788.9,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"93b1a24d-bb73-41ac-a70b-a2be61ffa5ae\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116192/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"93b1a24d-bb73-41ac-a70b-a2be61ffa5ae\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116193/balance",
+      "status": 404,
+      "duration_ms": 308.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"a16e3a09-9207-4302-8ac0-67a2e69257d6\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116193/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"a16e3a09-9207-4302-8ac0-67a2e69257d6\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116194/balance",
+      "status": 404,
+      "duration_ms": 308.8,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"02567154-18b8-4f1e-b36a-c0af52659e73\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116194/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"02567154-18b8-4f1e-b36a-c0af52659e73\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116195/balance",
+      "status": 404,
+      "duration_ms": 308.8,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"8ddd325c-1f0c-478a-ab12-ee1b352b456b\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116195/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"8ddd325c-1f0c-478a-ab12-ee1b352b456b\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116200/balance",
+      "status": 404,
+      "duration_ms": 315.6,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9cb91c5e-190b-456f-9fd9-1a3428cfe498\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116200/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"9cb91c5e-190b-456f-9fd9-1a3428cfe498\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116207/balance",
+      "status": 404,
+      "duration_ms": 298.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"364e942e-d75e-4efe-bbae-f4bd2dfc772f\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116207/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"364e942e-d75e-4efe-bbae-f4bd2dfc772f\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116208/balance",
+      "status": 404,
+      "duration_ms": 301.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"60d89f2a-26ed-4a1c-842a-64ab0720e42e\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116208/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"60d89f2a-26ed-4a1c-842a-64ab0720e42e\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116209/balance",
+      "status": 404,
+      "duration_ms": 310.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"901f91b2-75ad-4bdd-9be6-6e226e9e49f7\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116209/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"901f91b2-75ad-4bdd-9be6-6e226e9e49f7\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116210/balance",
+      "status": 404,
+      "duration_ms": 361.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"c99e01ce-c9ea-4161-a107-4a2a09d457b9\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116210/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"c99e01ce-c9ea-4161-a107-4a2a09d457b9\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116211/balance",
+      "status": 404,
+      "duration_ms": 318.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"0389cb39-9c1d-479b-81c0-9d4083a82324\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116211/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"0389cb39-9c1d-479b-81c0-9d4083a82324\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116212/balance",
+      "status": 404,
+      "duration_ms": 369.8,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"478418a0-41ee-4324-8803-d87713947597\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116212/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"478418a0-41ee-4324-8803-d87713947597\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116215/balance",
+      "status": 404,
+      "duration_ms": 300.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"5b66714a-1103-4730-8313-5a8999a48444\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116215/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"5b66714a-1103-4730-8313-5a8999a48444\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116268/balance",
+      "status": 404,
+      "duration_ms": 506.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"4d920dc9-b066-40ad-b3d2-b140dbe9b661\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116268/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"4d920dc9-b066-40ad-b3d2-b140dbe9b661\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116270/balance",
+      "status": 404,
+      "duration_ms": 301.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"cbbe8626-53f7-4c9f-9307-f2f38d7ecd85\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116270/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"cbbe8626-53f7-4c9f-9307-f2f38d7ecd85\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116271/balance",
+      "status": 404,
+      "duration_ms": 347.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"2eaaecfb-fb4a-4f37-85ad-3c5571004cbe\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116271/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"2eaaecfb-fb4a-4f37-85ad-3c5571004cbe\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116273/balance",
+      "status": 404,
+      "duration_ms": 325.5,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1b3ac31d-1d87-4c60-8519-431b1dfdc9ac\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116273/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1b3ac31d-1d87-4c60-8519-431b1dfdc9ac\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116299/balance",
+      "status": 404,
+      "duration_ms": 441.3,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"eeb10c51-6c57-430a-a7c8-5e33d06224da\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116299/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"eeb10c51-6c57-430a-a7c8-5e33d06224da\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116302/balance",
+      "status": 404,
+      "duration_ms": 284.8,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1d15c4e0-6b0c-4228-bc4d-9365e503274b\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116302/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1d15c4e0-6b0c-4228-bc4d-9365e503274b\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116303/balance",
+      "status": 404,
+      "duration_ms": 289.2,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"17d64a50-55f0-4832-a3fe-a72e13c25236\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116303/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"17d64a50-55f0-4832-a3fe-a72e13c25236\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116304/balance",
+      "status": 404,
+      "duration_ms": 312.2,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"ccc4d947-3ba9-4c17-853b-ae7e5a26bc46\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116304/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"ccc4d947-3ba9-4c17-853b-ae7e5a26bc46\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116305/balance",
+      "status": 404,
+      "duration_ms": 304.4,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"953e002e-1c82-4391-ad4c-6952fd01f8a0\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116305/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"953e002e-1c82-4391-ad4c-6952fd01f8a0\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116306/balance",
+      "status": 404,
+      "duration_ms": 302.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"29804ca8-3920-48de-b577-9866cf0b6be5\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116306/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"29804ca8-3920-48de-b577-9866cf0b6be5\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116307/balance",
+      "status": 404,
+      "duration_ms": 272.2,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"76144d43-646e-4d26-82df-20f5b6cc378e\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116307/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"76144d43-646e-4d26-82df-20f5b6cc378e\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116308/balance",
+      "status": 404,
+      "duration_ms": 310.9,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"b1345c0c-943d-4cf2-b6e0-60532f7f8968\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116308/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"b1345c0c-943d-4cf2-b6e0-60532f7f8968\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/account/466116309/balance",
+      "status": 404,
+      "duration_ms": 302.7,
+      "error": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1dc03652-f6de-416c-828e-0c29a980d624\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/account/466116309/balance",
+      "query_params": {
+        "periodDateFrom": "2026-01-01",
+        "periodDateTo": "2026-02-28"
+      },
+      "response_body": "{\"status\":404,\"code\":6000,\"message\":\"Object not found\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1dc03652-f6de-416c-828e-0c29a980d624\"}"
+    }
+  ],
+  "total_calls": 81,
+  "error_count_4xx": 80,
+  "total_duration_ms": 35344.9,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "note": "No cost account movements found"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "timestamp": "20260320_084027_305835",
+  "prompt": "Crie uma dimensão contabilística personalizada \"Region\" com os valores \"Sør-Norge\" e \"Nord-Norge\". Em seguida, lance um documento na conta 7140 por 23050 NOK, vinculado ao valor de dimensão \"Sør-Norge\".",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3628.5,
+  "result": {
+    "status": "completed",
+    "note": "No handler for task type: unknown"
+  }
+}

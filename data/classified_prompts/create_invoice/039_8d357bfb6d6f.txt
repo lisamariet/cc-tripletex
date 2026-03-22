@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea y envía una factura al cliente Viento SL (org. nº 844876831) por 35350 NOK sin IVA. La factura es por Licencia de software.

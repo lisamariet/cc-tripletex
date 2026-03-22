@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erstellen Sie drei Abteilungen in Tripletex: "Økonomi", "Regnskap" und "Kvalitetskontroll".

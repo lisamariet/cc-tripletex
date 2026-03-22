@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_080451_067980",
+  "prompt": "Crie o projeto \"Análise Porto\" vinculado ao cliente Porto Alegre Lda (org. nº 996943305). O gerente de projeto é Lucas Oliveira (lucas.oliveira@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

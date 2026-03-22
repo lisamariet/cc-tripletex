@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_021133_262612",
+  "prompt": "Le client Colline SARL (nº org. 879581265) a réclamé concernant la facture pour \"Conseil en données\" (23750 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

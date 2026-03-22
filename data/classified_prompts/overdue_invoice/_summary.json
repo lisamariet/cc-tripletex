@@ -1,0 +1,62 @@
+[
+  {
+    "prompt": "Um dos seus clientes tem uma fatura vencida. Encontre a fatura vencida e registe uma taxa de lembrete de 70 NOK. Debito contas a receber (1500), credito receitas de lembrete (3400). Também crie uma fa",
+    "confidence": 0.98,
+    "hash": "e2ad97605ffe"
+  },
+  {
+    "prompt": "L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 50 NOK. Debit creances clients (1500), credit revenus de rappel (3400). Créez également ",
+    "confidence": 0.95,
+    "hash": "7848ab15bcd3"
+  },
+  {
+    "prompt": "En av kundene dine har en forfalt faktura. Finn den forfalte fakturaen og bokfor et purregebyr pa 50 kr. Debet kundefordringer (1500), kredit purregebyr (3400). Opprett også en faktura for purregebyre",
+    "confidence": 0.96,
+    "hash": "a356d293708f"
+  },
+  {
+    "prompt": "L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 65 NOK. Debit creances clients (1500), credit revenus de rappel (3400). Créez également ",
+    "confidence": 0.96,
+    "hash": "ee980219dd30"
+  },
+  {
+    "prompt": "One of your customers has an overdue invoice. Find the overdue invoice and post a reminder fee of 35 NOK. Debit accounts receivable (1500), credit reminder fees (3400). Also create an invoice for the ",
+    "confidence": 0.96,
+    "hash": "99178da1b6a5"
+  },
+  {
+    "prompt": "Einer Ihrer Kunden hat eine uberfallige Rechnung. Finden Sie die uberfallige Rechnung und buchen Sie eine Mahngebuhr von 70 NOK. Soll Forderungen (1500), Haben Mahngebuhren (3400). Erstellen Sie außer",
+    "confidence": 0.96,
+    "hash": "90c616eeb724"
+  },
+  {
+    "prompt": "Uno de sus clientes tiene una factura vencida. Encuentre la factura vencida y registre un cargo por recordatorio de 55 NOK. Debito cuentas por cobrar (1500), credito ingresos por recordatorio (3400). ",
+    "confidence": 0.96,
+    "hash": "bf41dbba9ef4"
+  },
+  {
+    "prompt": "Uno de sus clientes tiene una factura vencida. Encuentre la factura vencida y registre un cargo por recordatorio de 60 NOK. Debito cuentas por cobrar (1500), credito ingresos por recordatorio (3400). ",
+    "confidence": 0.96,
+    "hash": "33796e67ecf9"
+  },
+  {
+    "prompt": "Uno de sus clientes tiene una factura vencida. Encuentre la factura vencida y registre un cargo por recordatorio de 35 NOK. Debito cuentas por cobrar (1500), credito ingresos por recordatorio (3400). ",
+    "confidence": 0.96,
+    "hash": "c4445627d87f"
+  },
+  {
+    "prompt": "Ein av kundane dine har ein forfallen faktura. Finn den forfalne fakturaen og bokfor eit purregebyr pa 55 kr. Debet kundefordringar (1500), kredit purregebyr (3400). Opprett også ein faktura for purre",
+    "confidence": 0.96,
+    "hash": "50ba0f27bb7b"
+  },
+  {
+    "prompt": "Ein av kundane dine har ein forfallen faktura. Finn den forfalne fakturaen og bokfor eit purregebyr pa 65 kr. Debet kundefordringar (1500), kredit purregebyr (3400). Opprett også ein faktura for purre",
+    "confidence": 0.96,
+    "hash": "dd72914f7edd"
+  },
+  {
+    "prompt": "Uno de sus clientes tiene una factura vencida. Encuentre la factura vencida y registre un cargo por recordatorio de 40 NOK. Debito cuentas por cobrar (1500), credito ingresos por recordatorio (3400). ",
+    "confidence": 0.96,
+    "hash": "d2dd28c316d7"
+  }
+]

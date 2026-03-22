@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez une commande pour le client Cascade SARL (nº org. 804781943) avec les produits Développement système (1393) à 13950 NOK et Rapport d'analyse (5377) à 22000 NOK. Convertissez la commande en factu

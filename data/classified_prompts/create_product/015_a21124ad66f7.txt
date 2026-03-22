@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett produktet "Vedlikehold" med produktnummer 6794. Prisen er 31600 kr eksklusiv MVA, og standard MVA-sats på 25 % skal brukes.

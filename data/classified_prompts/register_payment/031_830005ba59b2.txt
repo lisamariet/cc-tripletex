@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Nous avons envoyé une facture de 12689 EUR à Océan SARL (nº org. 863081793) lorsque le taux de change était de 11.28 NOK/EUR. Le client a maintenant payé, mais le taux est de 10.71 NOK/EUR. Enregistre

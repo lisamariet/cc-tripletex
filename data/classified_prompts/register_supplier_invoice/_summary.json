@@ -1,0 +1,127 @@
+[
+  {
+    "prompt": "Hemos recibido la factura INV-2026-4194 del proveedor Viento SL (org. nº 933672905) por 19350 NOK con IVA incluido. El importe corresponde a servicios de oficina (cuenta 6540). Registre la factura del",
+    "confidence": 0.95,
+    "hash": "d9d37dc37fa9"
+  },
+  {
+    "prompt": "Recebemos a fatura INV-2026-4855 do fornecedor Solmar Lda (org. nº 972752843) no valor de 62600 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 6860). Registe a fatura do fo",
+    "confidence": 0.95,
+    "hash": "6abb193e4c08"
+  },
+  {
+    "prompt": "Recebemos a fatura INV-2026-4811 do fornecedor Montanha Lda (org. nº 859712355) no valor de 33200 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 7300). Registe a fatura do ",
+    "confidence": 0.95,
+    "hash": "06a9298486d8"
+  },
+  {
+    "prompt": "Recebemos a fatura INV-2026-3088 do fornecedor Luz do Sol Lda (org. nº 895339016) no valor de 35200 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 7100). Registe a fatura d",
+    "confidence": 0.95,
+    "hash": "e8fb0db27f14"
+  },
+  {
+    "prompt": "Nous avons reçu la facture INV-2026-7606 du fournisseur Lumière SARL (nº org. 913175212) de 72350 NOK TTC. Le montant concerne des services de bureau (compte 6300). Enregistrez la facture fournisseur ",
+    "confidence": 0.95,
+    "hash": "7717ccf92a19"
+  },
+  {
+    "prompt": "Recebemos a fatura INV-2026-6293 do fornecedor Montanha Lda (org. nº 980979431) no valor de 12050 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 7000). Registe a fatura do ",
+    "confidence": 0.95,
+    "hash": "6353d084b80f"
+  },
+  {
+    "prompt": "Nous avons reçu la facture INV-2026-4914 du fournisseur Océan SARL (nº org. 853705209) de 56300 NOK TTC. Le montant concerne des services de bureau (compte 6500). Enregistrez la facture fournisseur av",
+    "confidence": 0.95,
+    "hash": "f6f9c119dbc2"
+  },
+  {
+    "prompt": "We have received invoice INV-2026-3205 from the supplier Ironbridge Ltd (org no. 828254375) for 24500 NOK including VAT. The amount relates to office services (account 6590). Register the supplier inv",
+    "confidence": 0.95,
+    "hash": "f10334d5ce10"
+  },
+  {
+    "prompt": "Wir haben die Rechnung INV-2026-2118 vom Lieferanten Brückentor GmbH (Org.-Nr. 981448294) über 70400 NOK einschließlich MwSt. erhalten. Der Betrag betrifft Bürodienstleistungen (Konto 6590). Erfassen ",
+    "confidence": 0.95,
+    "hash": "4cb15cc699a4"
+  },
+  {
+    "prompt": "We have received invoice INV-2026-9601 from the supplier Oakwood Ltd (org no. 967247049) for 79750 NOK including VAT. The amount relates to office services (account 6540). Register the supplier invoic",
+    "confidence": 0.95,
+    "hash": "11acdf0eb725"
+  },
+  {
+    "prompt": "Me har motteke faktura INV-2026-9559 frå leverandøren Elvdal AS (org.nr 935041740) på 36600 kr inklusiv MVA. Beløpet gjeld kontortenester (konto 7100). Registrer leverandørfakturaen med korrekt inngåa",
+    "confidence": 0.95,
+    "hash": "fcf8c4f19574"
+  },
+  {
+    "prompt": "Du har motteke ein leverandorfaktura (sjaa vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren viss den ikkje finst. Bruk rett utgiftskonto og inngaaande MVA.",
+    "confidence": 0.98,
+    "hash": "c5aa9f43025c"
+  },
+  {
+    "prompt": "Voce recebeu uma fatura de fornecedor (ver PDF anexo). Registe a fatura no Tripletex. Crie o fornecedor se nao existir. Use a conta de despesas correta e o IVA de entrada.",
+    "confidence": 0.98,
+    "hash": "44d8985f8430"
+  },
+  {
+    "prompt": "Sie haben eine Lieferantenrechnung erhalten (siehe beigefugte PDF). Registrieren Sie die Rechnung in Tripletex. Erstellen Sie den Lieferanten, falls er nicht existiert. Verwenden Sie das richtige Aufw",
+    "confidence": 0.98,
+    "hash": "9c942d38df2c"
+  },
+  {
+    "prompt": "Vi har mottatt faktura INV-2026-4085 fra leverandøren Snøhetta AS (org.nr 861790029) på 44450 kr inklusiv MVA. Beløpet gjelder kontortjenester (konto 6300). Registrer leverandørfakturaen med korrekt i",
+    "confidence": 0.95,
+    "hash": "6372b01d885b"
+  },
+  {
+    "prompt": "Nous avons reçu la facture INV-2026-5683 du fournisseur Lumière SARL (nº org. 904564184) de 75500 NOK TTC. Le montant concerne des services de bureau (compte 7140). Enregistrez la facture fournisseur ",
+    "confidence": 0.95,
+    "hash": "c2fdd2828499"
+  },
+  {
+    "prompt": "Has recibido una factura de proveedor (ver PDF adjunto). Registra la factura en Tripletex. Crea el proveedor si no existe. Usa la cuenta de gastos correcta y el IVA de entrada.",
+    "confidence": 0.98,
+    "hash": "55e899c14195"
+  },
+  {
+    "prompt": "Vi har mottatt faktura INV-2026-8551 fra leverandøren Bergvik AS (org.nr 989568469) på 14850 kr inklusiv MVA. Beløpet gjelder kontortjenester (konto 6300). Registrer leverandørfakturaen med korrekt in",
+    "confidence": 0.95,
+    "hash": "d87cb8f045e4"
+  },
+  {
+    "prompt": "You received a supplier invoice (see attached PDF). Register the invoice in Tripletex. Create the supplier if it does not exist. Use the correct expense account and input VAT.",
+    "confidence": 0.98,
+    "hash": "15c1b9b942c9"
+  },
+  {
+    "prompt": "Vous avez recu une facture fournisseur (voir PDF ci-joint). Enregistrez la facture dans Tripletex. Creez le fournisseur s'il n'existe pas. Utilisez le bon compte de charges et la TVA deductible.",
+    "confidence": 0.98,
+    "hash": "47e593c22cb3"
+  },
+  {
+    "prompt": "Recebemos a fatura INV-2026-6556 do fornecedor Solmar Lda (org. nº 974178680) no valor de 50750 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 6500). Registe a fatura do fo",
+    "confidence": 0.95,
+    "hash": "0ac1a47ba8ff"
+  },
+  {
+    "prompt": "Nous avons reçu la facture INV-2026-6571 du fournisseur Prairie SARL (nº org. 965215727) de 30100 NOK TTC. Le montant concerne des services de bureau (compte 6340). Enregistrez la facture fournisseur ",
+    "confidence": 0.95,
+    "hash": "252e079354c6"
+  },
+  {
+    "prompt": "Me har motteke faktura INV-2026-6998 frå leverandøren Sjøbris AS (org.nr 932482207) på 76850 kr inklusiv MVA. Beløpet gjeld kontortenester (konto 7140). Registrer leverandørfakturaen med korrekt inngå",
+    "confidence": 0.95,
+    "hash": "0a7dcb3695f6"
+  },
+  {
+    "prompt": "Hemos recibido la factura INV-2026-1515 del proveedor Costa Brava SL (org. nº 886379250) por 47650 NOK con IVA incluido. El importe corresponde a servicios de oficina (cuenta 7100). Registre la factur",
+    "confidence": 0.95,
+    "hash": "c9d44f1f390b"
+  },
+  {
+    "prompt": "Du har mottatt en leverandorfaktura (se vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren hvis den ikke finnes. Bruk riktig utgiftskonto og inngaende MVA.",
+    "confidence": 0.98,
+    "hash": "2f7eee72d1eb"
+  }
+]

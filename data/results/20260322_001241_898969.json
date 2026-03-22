@@ -1,0 +1,204 @@
+{
+  "timestamp": "20260322_001241_898969",
+  "prompt": "Du har motteke ein arbeidskontrakt (sjaa vedlagt PDF). Opprett den tilsette i Tripletex med alle detaljar fraa kontrakten: personnummer, fodselsdato, avdeling, stillingskode, lonn, stillingsprosent og startdato.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Liv",
+      "lastName": "Aasen",
+      "email": "liv.aasen@example.org",
+      "dateOfBirth": "1985-07-24",
+      "startDate": "2026-12-10",
+      "nationalIdentityNumber": "24078559566",
+      "bankAccountNumber": "30392987718",
+      "occupationCode": "4110",
+      "employmentPercentage": 80,
+      "annualSalary": 530000,
+      "department": "IT",
+      "_raw_files": [
+        {
+          "filename": "files/arbeidskontrakt_nn_06.pdf",
+          "content_base64": "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",
+          "mime_type": "application/pdf"
+        }
+      ]
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 405.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "name": "IT",
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 405.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "IT"
+      },
+      "response_body": "{\"value\":{\"id\":978357,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/978357\",\"name\":\"IT\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"IT\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 531.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Liv",
+        "lastName": "Aasen",
+        "email": "liv.aasen@example.org",
+        "dateOfBirth": "1985-07-24",
+        "nationalIdentityNumber": "24078559566",
+        "bankAccountNumber": "30392987718",
+        "userType": "STANDARD",
+        "department": {
+          "id": 978357
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18705392,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18705392\",\"firstName\":\"Liv\",\"lastName\":\"Aasen\",\"displayName\":\"Liv Aasen\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1985-07-24\",\"email\":\"liv.aasen@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"24078559566\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"30392987718\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":978357,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/978357\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108475120,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 465.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18705392
+        },
+        "startDate": "2026-12-10"
+      },
+      "response_body": "{\"value\":{\"id\":2854732,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2854732\",\"employee\":{\"id\":18705392,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18705392\"},\"employmentId\":\"\",\"startDate\":\"2026-12-10\",\"endDate\":null,\"employmentEndReason\":null,\"division\":null,\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee/employment/occupationCode",
+      "status": 200,
+      "duration_ms": 354.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment/occupationCode",
+      "query_params": {
+        "nameAndCode": "4110",
+        "count": 1
+      },
+      "response_body": "{\"fullResultSize\":2,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":1,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/occupationCode/1\",\"nameNO\":\"1.NESTLEDER (ARBEIDSGIVER-/ARBEIDSTAKERORG.)\",\"code\":\"1142109\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment/details",
+      "status": 201,
+      "duration_ms": 378.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment/details",
+      "request_body": {
+        "employment": {
+          "id": 2854732
+        },
+        "date": "2026-12-10",
+        "employmentType": "ORDINARY",
+        "employmentForm": "PERMANENT",
+        "remunerationType": "MONTHLY_WAGE",
+        "workingHoursScheme": "NOT_SHIFT",
+        "percentageOfFullTimeEquivalent": 80,
+        "occupationCode": {
+          "id": 1
+        },
+        "annualSalary": 530000,
+        "monthlySalary": 44166.67
+      },
+      "response_body": "{\"value\":{\"id\":3752726,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/details/3752726\",\"employment\":{\"id\":2854732,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2854732\"},\"date\":\"2026-12-10\",\"employmentType\":\"ORDINARY\",\"employmentForm\":\"PERMANENT\",\"remunerationType\":\"MONTHLY_WAGE\",\"workingHoursScheme\":\"NOT_SHIFT\",\"shiftDurationHours\":0,\"occupationCode\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/occupationCode/1\"},\"percentageOfFullTimeEquivalent\":80,\"annualSalary\":530000,\"hourlyWage\":272,\"payrollTaxMunicipalityId\":null,\"monthlySalary\":44166.67}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/standardTime",
+      "status": 201,
+      "duration_ms": 388.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/standardTime",
+      "request_body": {
+        "employee": {
+          "id": 18705392
+        },
+        "fromDate": "2026-12-10",
+        "hoursPerDay": 7.5
+      },
+      "response_body": "{\"value\":{\"id\":44702,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/standardTime/44702\",\"employee\":{\"id\":18705392,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18705392\"},\"fromDate\":\"2026-12-10\",\"hoursPerDay\":7.5}}"
+    }
+  ],
+  "total_calls": 7,
+  "error_count_4xx": 0,
+  "total_duration_ms": 8533.1,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18705392,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18705392",
+      "firstName": "Liv",
+      "lastName": "Aasen",
+      "displayName": "Liv Aasen",
+      "employeeNumber": "",
+      "dateOfBirth": "1985-07-24",
+      "email": "liv.aasen@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "24078559566",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "30392987718",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 978357,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/978357"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 108475120,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

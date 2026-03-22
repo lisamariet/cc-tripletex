@@ -1,0 +1,308 @@
+{
+  "timestamp": "20260321_223540_021899",
+  "prompt": "Cree una dimensión contable personalizada \"Kostsenter\" con los valores \"Markedsføring\" y \"Kundeservice\". Luego registre un asiento en la cuenta 7000 por 30250 NOK, vinculado al valor de dimensión \"Kundeservice\".",
+  "parsed_task": {
+    "task_type": "create_custom_dimension",
+    "fields": {
+      "dimensionName": "Kostsenter",
+      "values": [
+        "Markedsføring",
+        "Kundeservice"
+      ],
+      "voucherDate": "2024-05-21",
+      "voucherDescription": "Asiento vinculado al valor de dimensión Kundeservice",
+      "accountNumber": 7000,
+      "amount": 30250,
+      "dimensionValue": "Kundeservice"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/accountingDimensionName",
+      "status": 200,
+      "duration_ms": 5083.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionName",
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":null,\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionName",
+      "status": 201,
+      "duration_ms": 3124.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionName",
+      "request_body": {
+        "dimensionName": "Kostsenter",
+        "active": true
+      },
+      "response_body": "{\"value\":{\"id\":2630,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionName/2630\",\"dimensionName\":\"Kostsenter\",\"description\":null,\"dimensionIndex\":1,\"active\":true}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/accountingDimensionValue/search",
+      "status": 200,
+      "duration_ms": 3168.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionValue/search",
+      "query_params": {
+        "dimensionIndex": "1"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":null,\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionValue",
+      "status": 201,
+      "duration_ms": 3065.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionValue",
+      "request_body": {
+        "displayName": "Markedsføring",
+        "dimensionIndex": 1,
+        "active": true,
+        "showInVoucherRegistration": true
+      },
+      "response_body": "{\"value\":{\"id\":19238,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/19238\",\"displayName\":\"Markedsføring\",\"nameAndNumber\":\"Markedsføring\",\"dimensionIndex\":1,\"active\":true,\"number\":null,\"showInVoucherRegistration\":true,\"position\":1}}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionValue",
+      "status": 201,
+      "duration_ms": 2906.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/accountingDimensionValue",
+      "request_body": {
+        "displayName": "Kundeservice",
+        "dimensionIndex": 1,
+        "active": true,
+        "showInVoucherRegistration": true
+      },
+      "response_body": "{\"value\":{\"id\":19240,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/19240\",\"displayName\":\"Kundeservice\",\"nameAndNumber\":\"Kundeservice\",\"dimensionIndex\":1,\"active\":true,\"number\":null,\"showInVoucherRegistration\":true,\"position\":2}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2688.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "7000"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":376965566,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/376965566\",\"number\":7000,\"numberPretty\":\"7000\",\"name\":\"Drivstoff, selskapets transportmidler\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"70\",\"groupingCode\":\"7000\",\"displayName\":\"7000 Drivstoff, selskapets transportmidler\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2922.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1920"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":376965270,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/376965270\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 2981.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2024-05-21",
+        "description": "Asiento vinculado al valor de dimensión Kundeservice",
+        "postings": [
+          {
+            "account": {
+              "id": 376965566
+            },
+            "amountGross": 30250,
+            "amountGrossCurrency": 30250,
+            "row": 1,
+            "freeAccountingDimension1": {
+              "id": 19240
+            }
+          },
+          {
+            "account": {
+              "id": 376965270
+            },
+            "amountGross": -30250,
+            "amountGrossCurrency": -30250,
+            "row": 2
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":609189707,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609189707\",\"date\":\"2024-05-21\",\"number\":1,\"tempNumber\":0,\"year\":2024,\"description\":\"Asiento vinculado al valor de dimensión Kundeservice\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3845907313,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845907313\",\"voucher\":{\"id\":609189707,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609189707\"},\"date\":\"2024-05-21\",\"description\":\"Asiento vinculado al valor de dimensión Kundeservice\",\"account\":{\"id\":376965566,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/376965566\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"amount\":30250.00,\"amountCurrency\":30250.00,\"amountGross\":30250,\"amountGrossCurrency\":30250,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":false,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":{\"id\":19240,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/19240\"},\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845907314,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845907314\",\"voucher\":{\"id\":609189707,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609189707\"},\"date\":\"2024-05-21\",\"description\":\"Asiento vinculado al valor de dimensión Kundeservice\",\"account\":{\"id\":376965270,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/376965270\"},\"amortizationAccount\":nu"
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 27855.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_custom_dimension",
+    "dimension": {
+      "id": 2630,
+      "name": "Kostsenter",
+      "index": 1
+    },
+    "values": [
+      {
+        "id": 19238,
+        "name": "Markedsføring"
+      },
+      {
+        "id": 19240,
+        "name": "Kundeservice"
+      }
+    ],
+    "voucher": {
+      "status": "completed",
+      "created": {
+        "id": 609189707,
+        "version": 5,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609189707",
+        "date": "2024-05-21",
+        "number": 1,
+        "tempNumber": 0,
+        "year": 2024,
+        "description": "Asiento vinculado al valor de dimensión Kundeservice",
+        "voucherType": null,
+        "reverseVoucher": null,
+        "postings": [
+          {
+            "id": 3845907313,
+            "version": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845907313",
+            "voucher": {
+              "id": 609189707,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609189707"
+            },
+            "date": "2024-05-21",
+            "description": "Asiento vinculado al valor de dimensión Kundeservice",
+            "account": {
+              "id": 376965566,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/376965566"
+            },
+            "amortizationAccount": null,
+            "amortizationStartDate": null,
+            "amortizationEndDate": null,
+            "customer": null,
+            "supplier": null,
+            "employee": null,
+            "project": null,
+            "product": null,
+            "department": null,
+            "vatType": {
+              "id": 0,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+            },
+            "amount": 30250.0,
+            "amountCurrency": 30250.0,
+            "amountGross": 30250,
+            "amountGrossCurrency": 30250,
+            "currency": {
+              "id": 1,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+            },
+            "closeGroup": null,
+            "invoiceNumber": "",
+            "termOfPayment": null,
+            "row": 1,
+            "type": null,
+            "externalRef": "",
+            "systemGenerated": false,
+            "taxTransactionType": "(Ikke valgt)",
+            "taxTransactionTypeId": 0,
+            "matched": false,
+            "quantityAmount1": 0,
+            "quantityType1": null,
+            "quantityAmount2": 0,
+            "quantityType2": null,
+            "isVatReadonly": false,
+            "isAmountVatClosed": false,
+            "postingRuleId": 0,
+            "freeAccountingDimension1": {
+              "id": 19240,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/19240"
+            },
+            "freeAccountingDimension2": null,
+            "freeAccountingDimension3": null,
+            "asset": null
+          },
+          {
+            "id": 3845907314,
+            "version": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845907314",
+            "voucher": {
+              "id": 609189707,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609189707"
+            },
+            "date": "2024-05-21",
+            "description": "Asiento vinculado al valor de dimensión Kundeservice",
+            "account": {
+              "id": 376965270,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/376965270"
+            },
+            "amortizationAccount": null,
+            "amortizationStartDate": null,
+            "amortizationEndDate": null,
+            "customer": null,
+            "supplier": null,
+            "employee": null,
+            "project": null,
+            "product": null,
+            "department": null,
+            "vatType": {
+              "id": 0,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+            },
+            "amount": -30250.0,
+            "amountCurrency": -30250.0,
+            "amountGross": -30250.0,
+            "amountGrossCurrency": -30250.0,
+            "currency": {
+              "id": 1,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+            },
+            "closeGroup": null,
+            "invoiceNumber": "",
+            "termOfPayment": null,
+            "row": 2,
+            "type": null,
+            "externalRef": "",
+            "systemGenerated": false,
+            "taxTransactionType": "(Ikke valgt)",
+            "taxTransactionTypeId": 0,
+            "matched": false,
+            "quantityAmount1": 0,
+            "quantityType1": null,
+            "quantityAmount2": 0,
+            "quantityType2": null,
+            "isVatReadonly": true,
+            "isAmountVatClosed": false,
+            "postingRuleId": 0,
+            "freeAccountingDimension1": null,
+            "freeAccountingDimension2": null,
+            "freeAccountingDimension3": null,
+            "asset": null
+          }
+        ],
+        "document": null,
+        "attachment": null,
+        "externalVoucherNumber": "",
+        "ediDocument": null,
+        "supplierVoucherType": null,
+        "wasAutoMatched": false,
+        "vendorInvoiceNumber": null,
+        "numberAsString": "1-2024"
+      }
+    }
+  }
+}

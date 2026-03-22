@@ -1,0 +1,129 @@
+{
+  "timestamp": "20260320_230039_733293",
+  "prompt": "Create the project \"Upgrade Greenfield\" linked to the customer Greenfield Ltd (org no. 918986197). The project manager is Emily Walker (emily.walker@example.org).",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "name": "Upgrade Greenfield",
+      "customerName": "Greenfield Ltd",
+      "customerOrgNumber": "918986197",
+      "projectManagerName": "Emily Walker"
+    },
+    "confidence": 0.96
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 2010.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 2513.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 2216.9,
+      "error": null
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 13887.0,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "created": {
+      "id": 401976920,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/401976920",
+      "name": "Upgrade Greenfield",
+      "number": "1",
+      "displayName": "1 Upgrade Greenfield",
+      "description": "",
+      "projectManager": {
+        "id": 18588362,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18588362"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-20",
+      "endDate": null,
+      "customer": {
+        "id": 108282275,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108282275"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": false,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 0,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11073488,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11073488"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15628030,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15628030"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "1 Upgrade Greenfield",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Greenfield Ltd",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Emily Walker",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 0,
+      "accountingDimensionValues": []
+    }
+  }
+}

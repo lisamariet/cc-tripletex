@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_231249_756892",
+  "prompt": "Nous avons un nouvel employé nommé Léa Thomas, né le 30. June 2000. Veuillez le créer en tant qu'employé avec l'e-mail lea.thomas@example.org et la date de début 8. October 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

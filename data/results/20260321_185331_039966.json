@@ -1,0 +1,90 @@
+{
+  "timestamp": "20260321_185331_039966",
+  "prompt": "Registrer 15 timer for Solveig Bakken (solveig.bakken@example.org) på aktiviteten \"Testing\" i prosjektet \"Systemoppgradering\" for Stormberg AS (org.nr 963903359). Timesats: 1900 kr/t. Generer en prosjektfaktura til kunden basert på de registrerte timene.",
+  "parsed_task": {
+    "task_type": "register_timesheet",
+    "fields": {
+      "employeeName": "Solveig Bakken",
+      "employeeEmail": "solveig.bakken@example.org",
+      "activityName": "Testing",
+      "projectName": "Systemoppgradering",
+      "hours": 15,
+      "hourlyRate": 1900,
+      "customerName": "Stormberg AS",
+      "customerOrgNumber": "963903359"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 403,
+      "duration_ms": 61.4,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "solveig.bakken@example.org"
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 403,
+      "duration_ms": 54.6,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "firstName": "Solveig",
+        "lastName": "Bakken"
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/project",
+      "status": 403,
+      "duration_ms": 49.4,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "query_params": {
+        "name": "Systemoppgradering"
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 403,
+      "duration_ms": 52.2,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "count": 1
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 403,
+      "duration_ms": 46.2,
+      "error": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "Systemoppgradering",
+        "isInternal": false,
+        "startDate": "2026-03-21"
+      },
+      "response_body": "{\"error\":\"Invalid or expired proxy token. Each submission receives a unique token - do not reuse tokens from previous submissions.\",\"source\":\"nmiai-proxy\"}"
+    }
+  ],
+  "total_calls": 5,
+  "error_count_4xx": 5,
+  "total_duration_ms": 1925.6,
+  "result": {
+    "status": "completed",
+    "note": "Could not find or create project"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+O pagamento de Porto Alegre Lda (org. nº 957867227) referente à fatura "Armazenamento na nuvem" (48300 NOK sem IVA) foi devolvido pelo banco. Reverta o pagamento para que a fatura volte a mostrar o mo

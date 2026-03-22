@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Me sende ein faktura på 11400 EUR til Fjelltopp AS (org.nr 814814696) då kursen var 10.22 NOK/EUR. Kunden har no betalt, men kursen er 10.70 NOK/EUR. Registrer betalinga og bokfør valutadifferansen (a

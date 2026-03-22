@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Create the project "Analysis Oakwood" linked to the customer Oakwood Ltd (org no. 849612913). The project manager is Lucy Taylor (lucy.taylor@example.org).

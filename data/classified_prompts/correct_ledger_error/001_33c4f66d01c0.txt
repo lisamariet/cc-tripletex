@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett en fri regnskapsdimensjon "Produktlinje" med verdiene "Standard" og "Avansert". Bokfør deretter et bilag på konto 7000 for 12700 kr, knyttet til dimensjonsverdien "Standard".

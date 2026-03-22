@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Ejecute la nómina de María Rodríguez (maria.rodriguez@example.org) para este mes. El salario base es de 58750 NOK. Añada una bonificación única de 10750 NOK además del salario base.

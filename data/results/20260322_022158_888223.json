@@ -1,0 +1,29 @@
+{
+  "timestamp": "20260322_022158_888223",
+  "prompt": "Opprett en fri regnskapsdimensjon \"Kostsenter\" med verdiene \"Innkjøp\" og \"Logistikk\". Bokfør deretter et bilag på konto 6590 for 34250 kr, knyttet til dimensjonsverdien \"Innkjøp\".",
+  "parsed_task": {
+    "task_type": "correct_ledger_error",
+    "fields": {
+      "dimensionName": "Kostsenter",
+      "values": [
+        "Innkjøp",
+        "Logistikk"
+      ],
+      "voucherDate": "2026-03-20",
+      "voucherDescription": "Bilag knyttet til dimensjonsverdi Innkjøp",
+      "accountNumber": 6590,
+      "amount": 34250,
+      "dimensionValue": "Innkjøp"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 1734.2,
+  "result": {
+    "status": "completed",
+    "taskType": "correct_ledger_error",
+    "message": "Could not find the erroneous voucher to correct"
+  }
+}

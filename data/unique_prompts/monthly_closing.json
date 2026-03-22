@@ -1,0 +1,92 @@
+[
+  {
+    "prompt": "Realice el cierre anual simplificado de 2025: 1) Calcule y contabilice la depreciación anual de tres activos: Kontormaskiner (50350 NOK, 3 años lineales, cuenta 1200), Programvare (167200 NOK, 5 años, cuenta 1250), Inventar (310400 NOK, 3 años, cuenta 1240). Use cuenta 6010 para gasto de depreciación y 1209 para depreciación acumulada. 2) Revierta gastos prepagados (total 77400 NOK en cuenta 1700). 3) Calcule y contabilice la provisión de impuestos (22 % del resultado imponible) en cuenta 8700/2920. Registre cada depreciación como un comprobante separado.",
+    "timestamp": "20260321_102634_102027",
+    "hash": "ae18760fe87a"
+  },
+  {
+    "prompt": "Realice el cierre mensual de marzo de 2026. Registre la periodificación (4600 NOK por mes de la cuenta 1700 a gasto). Contabilice la depreciación mensual de un activo fijo con costo de adquisición 220600 NOK y vida útil 4 años (depreciación lineal a cuenta 6020). Verifique que el balance de saldos sea cero. También registre una provisión salarial (débito cuenta de gastos salariales 5000, crédito cuenta de salarios acumulados 2900).",
+    "timestamp": "20260321_102857_548410",
+    "hash": "f04e5a517ae5"
+  },
+  {
+    "prompt": "Realize o encerramento mensal de março de 2026. Registe a reversão de acréscimos (12200 NOK por mês da conta 1710 para despesa). Registe a depreciação mensal de um ativo fixo com custo de aquisição 116350 NOK e vida útil 7 anos (depreciação linear para conta 6010). Verifique se o balancete está a zero. Registe também uma provisão salarial (débito conta de despesas salariais 5000, crédito conta de salários acumulados 2900).",
+    "timestamp": "20260321_143126_048165",
+    "hash": "b465e04e9794"
+  },
+  {
+    "prompt": "Führen Sie den Monatsabschluss für März 2026 durch. Buchen Sie die Rechnungsabgrenzung (3400 NOK pro Monat von Konto 1700 auf Aufwand). Erfassen Sie die monatliche Abschreibung für eine Anlage mit Anschaffungskosten 289700 NOK und Nutzungsdauer 7 Jahre (lineare Abschreibung auf Konto 6020). Überprüfen Sie, ob die Saldenbilanz null ergibt. Buchen Sie außerdem eine Gehaltsrückstellung (Soll Gehaltsaufwand Konto 5000, Haben aufgelaufene Gehälter Konto 2900).",
+    "timestamp": "20260321_152443_574819",
+    "hash": "4327f0432f4c"
+  },
+  {
+    "prompt": "Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobilisations : Programvare (111950 NOK, 9 ans linéaire, compte 1250), Kontormaskiner (351450 NOK, 9 ans, compte 1200), Inventar (418800 NOK, 10 ans, compte 1240). Utilisez le compte 6010 pour les charges d'amortissement et 1209 pour les amortissements cumulés. 2) Extournez les charges constatées d'avance (total 79750 NOK au compte 1700). 3) Calculez et comptabilisez la provision d'impôt (22 % du bénéfice imposable) sur compte 8700/2920. Comptabilisez chaque amortissement comme une pièce comptable séparée.",
+    "timestamp": "20260321_152505_684663",
+    "hash": "0a28a00b1bc6"
+  },
+  {
+    "prompt": "Effectuez la clôture mensuelle de mars 2026. Comptabilisez la régularisation (13600 NOK par mois du compte 1700 vers charges). Enregistrez l'amortissement mensuel d'une immobilisation avec un coût d'acquisition de 262850 NOK et une durée de vie utile de 10 ans (amortissement linéaire sur compte 6030). Vérifiez que la balance est à zéro. Comptabilisez également une provision pour salaires (débit compte de charges salariales 5000, crédit compte de salaires à payer 2900).",
+    "timestamp": "20260321_160845_163451",
+    "hash": "d74189473d70"
+  },
+  {
+    "prompt": "Utfør månedsavslutning for mars 2026. Periodiser forskuddsbetalt kostnad (7050 kr per måned fra konto 1710 til kostkonto). Bokfør månedlig avskrivning for et driftsmiddel med anskaffelseskost 102750 kr og levetid 10 år (lineær avskrivning til konto 6020). Kontroller at saldobalansen går i null. Bokfør også en lønnsavsetning (debet lønnskostnad konto 5000, kredit påløpt lønn konto 2900).",
+    "timestamp": "20260321_173700_572756",
+    "hash": "e7e1d113ab95"
+  },
+  {
+    "prompt": "Führen Sie den Monatsabschluss für März 2026 durch. Buchen Sie die Rechnungsabgrenzung (5150 NOK pro Monat von Konto 1700 auf Aufwand). Erfassen Sie die monatliche Abschreibung für eine Anlage mit Anschaffungskosten 266350 NOK und Nutzungsdauer 5 Jahre (lineare Abschreibung auf Konto 6010). Überprüfen Sie, ob die Saldenbilanz null ergibt. Buchen Sie außerdem eine Gehaltsrückstellung (Soll Gehaltsaufwand Konto 5000, Haben aufgelaufene Gehälter Konto 2900).",
+    "timestamp": "20260321_180350_597630",
+    "hash": "9cd916ecdecb"
+  },
+  {
+    "prompt": "Realize o encerramento mensal de março de 2026. Registe a reversão de acréscimos (12250 NOK por mês da conta 1710 para despesa). Registe a depreciação mensal de um ativo fixo com custo de aquisição 144950 NOK e vida útil 9 anos (depreciação linear para conta 6020). Verifique se o balancete está a zero. Registe também uma provisão salarial (débito conta de despesas salariais 5000, crédito conta de salários acumulados 2900).",
+    "timestamp": "20260321_181100_186586",
+    "hash": "374c64dd2ef6"
+  },
+  {
+    "prompt": "Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobilisations : Kjøretøy (119400 NOK, 3 ans linéaire, compte 1230), Kontormaskiner (393350 NOK, 4 ans, compte 1200), Programvare (262450 NOK, 3 ans, compte 1250). Utilisez le compte 6010 pour les charges d'amortissement et 1209 pour les amortissements cumulés. 2) Extournez les charges constatées d'avance (total 63250 NOK au compte 1700). 3) Calculez et comptabilisez la provision d'impôt (22 % du bénéfice imposable) sur compte 8700/2920. Comptabilisez chaque amortissement comme une pièce comptable séparée.",
+    "timestamp": "20260321_181112_196905",
+    "hash": "238341678708"
+  },
+  {
+    "prompt": "Realice el cierre anual simplificado de 2025: 1) Calcule y contabilice la depreciación anual de tres activos: Kjøretøy (81750 NOK, 3 años lineales, cuenta 1230), IT-utstyr (360050 NOK, 4 años, cuenta 1210), Kontormaskiner (130000 NOK, 3 años, cuenta 1200). Use cuenta 6010 para gasto de depreciación y 1209 para depreciación acumulada. 2) Revierta gastos prepagados (total 35500 NOK en cuenta 1700). 3) Calcule y contabilice la provisión de impuestos (22 % del resultado imponible) en cuenta 8700/2920. Registre cada depreciación como un comprobante separado.",
+    "timestamp": "20260321_181201_965291",
+    "hash": "5257e4f016a1"
+  },
+  {
+    "prompt": "Perform month-end closing for March 2026. Post accrual reversal (12400 NOK per month from account 1710 to expense). Record monthly depreciation for a fixed asset with acquisition cost 164250 NOK and useful life 6 years (straight-line depreciation to account 6010). Verify that the trial balance is zero. Also post a salary accrual (debit salary expense account 5000, credit accrued salary account 2900).",
+    "timestamp": "20260321_183251_180994",
+    "hash": "b91355231a99"
+  },
+  {
+    "prompt": "Gjer månavslutninga for mars 2026. Periodiser forskotsbetalt kostnad (14400 kr per månad frå konto 1710 til kostnadskonto). Bokfør månadleg avskriving for eit driftsmiddel med innkjøpskost 109500 kr og levetid 10 år (lineær avskriving til konto 6030). Kontroller at saldobalansen går i null. Bokfør også ei lønnsavsetjing (debet lønnskostnad konto 5000, kredit påløpt lønn konto 2900).",
+    "timestamp": "20260321_185427_317413",
+    "hash": "93db8f925037"
+  },
+  {
+    "prompt": "Führen Sie den Monatsabschluss für März 2026 durch. Buchen Sie die Rechnungsabgrenzung (6150 NOK pro Monat von Konto 1710 auf Aufwand). Erfassen Sie die monatliche Abschreibung für eine Anlage mit Anschaffungskosten 181400 NOK und Nutzungsdauer 3 Jahre (lineare Abschreibung auf Konto 6020). Überprüfen Sie, ob die Saldenbilanz null ergibt. Buchen Sie außerdem eine Gehaltsrückstellung (Soll Gehaltsaufwand Konto 5000, Haben aufgelaufene Gehälter Konto 2900).",
+    "timestamp": "20260322_001310_915259",
+    "hash": "120c0b9f62da"
+  },
+  {
+    "prompt": "Gjer månavslutninga for mars 2026. Periodiser forskotsbetalt kostnad (12000 kr per månad frå konto 1700 til kostnadskonto). Bokfør månadleg avskriving for eit driftsmiddel med innkjøpskost 278500 kr og levetid 4 år (lineær avskriving til konto 6020). Kontroller at saldobalansen går i null. Bokfør også ei lønnsavsetjing (debet lønnskostnad konto 5000, kredit påløpt lønn konto 2900).",
+    "timestamp": "20260322_014823_935212",
+    "hash": "9a07ab9ce3d6"
+  },
+  {
+    "prompt": "Realize o encerramento mensal de março de 2026. Registe a reversão de acréscimos (10700 NOK por mês da conta 1720 para despesa). Registe a depreciação mensal de um ativo fixo com custo de aquisição 265550 NOK e vida útil 10 anos (depreciação linear para conta 6010). Verifique se o balancete está a zero. Registe também uma provisão salarial (débito conta de despesas salariais 5000, crédito conta de salários acumulados 2900).",
+    "timestamp": "20260322_020939_695853",
+    "hash": "1b1632f28a4c"
+  },
+  {
+    "prompt": "Effectuez la clôture mensuelle de mars 2026. Comptabilisez la régularisation (13200 NOK par mois du compte 1710 vers charges). Enregistrez l'amortissement mensuel d'une immobilisation avec un coût d'acquisition de 52200 NOK et une durée de vie utile de 7 ans (amortissement linéaire sur compte 6030). Vérifiez que la balance est à zéro. Comptabilisez également une provision pour salaires (débit compte de charges salariales 5000, crédit compte de salaires à payer 2900).",
+    "timestamp": "20260322_110217_501989",
+    "hash": "d5cf2eba33b3"
+  },
+  {
+    "prompt": "Perform month-end closing for March 2026. Post accrual reversal (9200 NOK per month from account 1720 to expense). Record monthly depreciation for a fixed asset with acquisition cost 275800 NOK and useful life 3 years (straight-line depreciation to account 6030). Verify that the trial balance is zero. Also post a salary accrual (debit salary expense account 5000, credit accrued salary account 2900).",
+    "timestamp": "20260322_122452_292241",
+    "hash": "c46ddca95270"
+  }
+]

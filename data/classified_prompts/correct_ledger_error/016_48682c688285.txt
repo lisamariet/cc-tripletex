@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett en fri regnskapsdimensjon "Kostsenter" med verdiene "Innkjøp" og "Logistikk". Bokfør deretter et bilag på konto 6590 for 34250 kr, knyttet til dimensjonsverdien "Innkjøp".

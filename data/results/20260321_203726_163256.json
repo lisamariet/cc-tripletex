@@ -1,0 +1,123 @@
+{
+  "timestamp": "20260321_203726_163256",
+  "prompt": "Tenemos un nuevo empleado llamado Diego Rodríguez, nacido el 28. August 1996. Créelo como empleado con el correo diego.rodriguez@example.org y fecha de inicio 29. June 2026.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Diego",
+      "lastName": "Rodríguez",
+      "dateOfBirth": "1996-08-28",
+      "email": "diego.rodriguez@example.org",
+      "startDate": "2026-06-29"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 2116.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "count": 1,
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":739619,\"name\":\"Avdeling\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 2109.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Diego",
+        "lastName": "Rodríguez",
+        "email": "diego.rodriguez@example.org",
+        "dateOfBirth": "1996-08-28",
+        "userType": "STANDARD",
+        "department": {
+          "id": 739619
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18665126,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18665126\",\"firstName\":\"Diego\",\"lastName\":\"Rodríguez\",\"displayName\":\"Diego Rodríguez\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1996-08-28\",\"email\":\"diego.rodriguez@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":739619,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/739619\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107917108,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 1876.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18665126
+        },
+        "startDate": "2026-06-29"
+      },
+      "response_body": "{\"value\":{\"id\":2835167,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2835167\",\"employee\":{\"id\":18665126,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18665126\"},\"employmentId\":\"\",\"startDate\":\"2026-06-29\",\"endDate\":null,\"employmentEndReason\":null,\"division\":null,\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 7567.8,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18665126,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18665126",
+      "firstName": "Diego",
+      "lastName": "Rodríguez",
+      "displayName": "Diego Rodríguez",
+      "employeeNumber": "",
+      "dateOfBirth": "1996-08-28",
+      "email": "diego.rodriguez@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 739619,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/739619"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 107917108,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

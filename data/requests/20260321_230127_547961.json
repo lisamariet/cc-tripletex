@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_230127_547961",
+  "prompt": "Defina um preço fixo de 420900 NOK no projeto \"Implementação ERP\" para Horizonte Lda (org. nº 976946081). O gestor de projeto é Rafael Santos (rafael.santos@example.org). Fature ao cliente 33 % do preço fixo como pagamento por etapa.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_230118_556983",
+  "prompt": "Processe o salário de Maria Almeida (maria.almeida@example.org) para este mês. O salário base é de 33550 NOK. Adicione um bónus único de 14400 NOK além do salário base.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

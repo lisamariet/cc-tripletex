@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Fixez un prix forfaitaire de 365350 NOK sur le projet "Intégration CRM" pour Colline SARL (nº org. 894562234). Le chef de projet est Adam Thomas (adam.thomas@example.org). Facturez au client 75 % du p

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_005657_295207",
+  "prompt": "Kunden Strandvik AS (org.nr 836530462) har ein uteståande faktura på 6700 kr eksklusiv MVA for \"Nettverksteneste\". Registrer full betaling på denne fakturaen.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "timestamp": "20260320_185819_417625",
+  "prompt": "Cree una dimensión contable personalizada \"Prosjekttype\" con los valores \"Forskning\" y \"Utvikling\". Luego registre un asiento en la cuenta 7000 por 14550 NOK, vinculado al valor de dimensión \"Forskning\".",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 1.0
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 422,
+      "duration_ms": 1511.6,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"debit\",\"message\":\"Feltet eksisterer ikke i objektet.\",\"path\":null,\"rootId\":null}],\"requestId\":\"f1a365b9-f488-42f9-ae9a-9a9a7e6f2628\"}"
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 1,
+  "total_duration_ms": 7057.5,
+  "result": {
+    "status": "completed",
+    "fallback": true,
+    "calls_made": 1
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "timestamp": "20260322_091059_428182",
+  "prompt": "Gleichen Sie den Kontoauszug (beigefuegte CSV) mit den offenen Rechnungen in Tripletex ab. Ordnen Sie eingehende Zahlungen Kundenrechnungen und ausgehende Zahlungen Lieferantenrechnungen zu. Behandeln Sie Teilzahlungen korrekt.",
+  "files": [
+    {
+      "filename": "files/bankutskrift_de_01.csv",
+      "mime_type": "text/csv",
+      "content_base64": "RGF0bztGb3JrbGFyaW5nO0lubjtVdDtTYWxkbw0KMjAyNi0wMS0xNztJbm5iZXRhbGluZyBmcmEgRmlzY2hlciBHbWJIIC8gRmFrdHVyYSAxMDAxOzI5MzEyLjUwOzsxMjkzMTIuNTANCjIwMjYtMDEtMTk7SW5uYmV0YWxpbmcgZnJhIFdhZ25lciBHbWJIIC8gRmFrdHVyYSAxMDAyOzMyNzUuMDA7OzEzMjU4Ny41MA0KMjAyNi0wMS0yMDtJbm5iZXRhbGluZyBmcmEgV2FnbmVyIEdtYkggLyBGYWt0dXJhIDEwMDM7MTg2MjUuMDA7OzE1MTIxMi41MA0KMjAyNi0wMS0yMztJbm5iZXRhbGluZyBmcmEgTWV5ZXIgR21iSCAvIEZha3R1cmEgMTAwNDsyNTkzNy41MDs7MTc3MTUwLjAwDQoyMDI2LTAxLTI2O0lubmJldGFsaW5nIGZyYSBSaWNodGVyIEdtYkggLyBGYWt0dXJhIDEwMDU7MTQzNzUuMDA7OzE5MTUyNS4wMA0KMjAyNi0wMS0yODtCZXRhbGluZyBMaWVmZXJhbnQgTWV5ZXIgR21iSDs7LTExNzUwLjAwOzE3OTc3NS4wMA0KMjAyNi0wMS0zMDtCZXRhbGluZyBMaWVmZXJhbnQgQmVja2VyIEdtYkg7Oy0xMDA1MC4wMDsxNjk3MjUuMDANCjIwMjYtMDEtMzE7QmV0YWxpbmcgTGllZmVyYW50IEJlY2tlciBHbWJIOzstMTUzMDAuMDA7MTU0NDI1LjAwDQoyMDI2LTAyLTAyO1JlbnRlaW5udGVrdGVyOzExMjEuOTE7OzE1NTU0Ni45MQ0KMjAyNi0wMi0wNDtTa2F0dGV0cmVrazs7LTg2Ni45MjsxNTQ2NzkuOTkNCjIwMjYtMDItMDU7U2thdHRldHJla2s7MjU1Ljg1OzsxNTQ5MzUuODQNCg=="
+    }
+  ],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Create an invoice for the customer Windmill Ltd (org no. 926849395) with three product lines: Software License (6309) at 5600 NOK with 25% VAT, Consulting Hours (9721) at 8350 NOK with 15% VAT (food),

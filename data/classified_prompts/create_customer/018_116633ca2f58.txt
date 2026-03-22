@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Create the customer Greenfield Ltd with organization number 872154442. The address is Sjøgata 85, 7010 Trondheim. Email: post@greenfield.no.

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Nous avons un nouvel employé nommé Arthur Martin, né le 20. May 1991. Veuillez le créer en tant qu'employé avec l'e-mail arthur.martin@example.org et la date de début 9. October 2026.

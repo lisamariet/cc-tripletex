@@ -23,7 +23,3 @@ Thumbs.db
 __pycache__/
 *.pyc
 .venv/
-
-
-# Local competition data (request/result logs)
-data/

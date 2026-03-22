@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Defina um preço fixo de 420900 NOK no projeto "Implementação ERP" para Horizonte Lda (org. nº 976946081). O gestor de projeto é Rafael Santos (rafael.santos@example.org). Fature ao cliente 33 % do pre

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Wir benotigen die USB-hub-Ausgabe aus dieser Quittung in der Abteilung Lager. Verwenden Sie das richtige Aufwandskonto und stellen Sie die korrekte MwSt.-Behandlung sicher.

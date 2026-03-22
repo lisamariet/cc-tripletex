@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Create an invoice for the customer Windmill Ltd (org no. 994973150) with three product lines: System Development (6517) at 22950 NOK with 25% VAT, Maintenance (5339) at 8900 NOK with 15% VAT (food), a

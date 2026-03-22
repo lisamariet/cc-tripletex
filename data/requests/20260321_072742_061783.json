@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_072742_061783",
+  "prompt": "O cliente Rio Azul Lda (org. nº 932217643) tem uma fatura pendente de 44100 NOK sem IVA por \"Sessão de formação\". Registe o pagamento total desta fatura.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

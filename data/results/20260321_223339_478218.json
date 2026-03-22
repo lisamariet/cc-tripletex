@@ -1,0 +1,85 @@
+{
+  "timestamp": "20260321_223339_478218",
+  "prompt": "Kunden Havbris AS (org.nr 995581094) har reklamert på fakturaen for \"Programvarelisens\" (34650 kr ekskl. MVA). Opprett en fullstendig kreditnota som reverserer hele fakturaen.",
+  "parsed_task": {
+    "task_type": "create_credit_note",
+    "fields": {
+      "customerName": "Havbris AS",
+      "customerOrgNumber": "995581094",
+      "invoiceDescription": "Programvarelisens",
+      "amount": 34650,
+      "lines": [
+        {
+          "description": "Programvarelisens",
+          "quantity": 1,
+          "unitPriceExcludingVat": 34650,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 445.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"value\":{\"bankAccountReady\":true}}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 774.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "995581094",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108443423,\"name\":\"Havbris AS\",\"organizationNumber\":\"995581094\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 1171.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice",
+      "query_params": {
+        "invoiceDateFrom": "2000-01-01",
+        "invoiceDateTo": "2026-03-21",
+        "fields": "id,amount,amountCurrency,amountOutstanding,amountExcludingVat,amountExcludingVatCurrency",
+        "customerId": 108443423
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":2147645939,\"amount\":43312.5,\"amountCurrency\":43312.5,\"amountExcludingVat\":34650.0,\"amountExcludingVatCurrency\":34650.0,\"amountOutstanding\":43312.50}]}"
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147645939/:createCreditNote",
+      "status": 200,
+      "duration_ms": 3491.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/2147645939/:createCreditNote",
+      "query_params": {
+        "date": "2026-03-21",
+        "sendToCustomer": false
+      },
+      "response_body": "{\"value\":{\"id\":2147645958,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147645958\",\"invoiceNumber\":2,\"invoiceDate\":\"2026-03-21\",\"customer\":{\"id\":108443423,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108443423\"},\"creditedInvoice\":2147645939,\"isCredited\":false,\"invoiceDueDate\":\"2026-03-21\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":402042433,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402042433\"}],\"orderLines\":[{\"id\":1607579784,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607579784\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965799172,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965799172\"}],\"voucher\":{\"id\":609188993,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609188993\"},\"deliveryDate\":\"2026-03-01\",\"amount\":-43312.50,\"amountCurrency\":-43312.50,\"amountExcludingVat\":-34650.00,\"amountExcludingVatCurrency\":-34650.00,\"amountRoundoff\":0.00,\"amountRoundoffCurrency\":0.00,\"amountOutstanding\":0.00,\"amountCurrencyOutstanding\":0.00,\"amountOutstandingTotal\":0.00,\"amountCurrencyOutstandingTotal\":0.00,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":true,\"isCharged\":true,\"isApproved\":false,\"postings\":[{\"id\":3845905140,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845905140\"},{\"id\":3845905240,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845905240\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024302399}}"
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 7614.7,
+  "result": {
+    "status": "completed",
+    "taskType": "create_credit_note",
+    "invoiceId": 2147645939
+  }
+}

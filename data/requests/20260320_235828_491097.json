@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_235828_491097",
+  "prompt": "Crie uma dimensão contabilística personalizada \"Region\" com os valores \"Midt-Norge\" e \"Vestlandet\". Em seguida, lance um documento na conta 6590 por 6500 NOK, vinculado ao valor de dimensão \"Vestlandet\".",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

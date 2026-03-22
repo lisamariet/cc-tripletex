@@ -1,0 +1,261 @@
+{
+  "timestamp": "20260321_160949_268882",
+  "prompt": "Me har oppdaga feil i hovudboka for januar og februar 2026. Gå gjennom alle bilag og finn dei 4 feila: ei postering på feil konto (konto 7140 brukt i staden for 7100, beløp 2950 kr), eit duplikat bilag (konto 7300, beløp 2800 kr), ei manglande MVA-linje (konto 4500, beløp ekskl. 21250 kr manglar MVA på konto 2710), og eit feil beløp (konto 7100, 23300 kr bokført i staden for 19100 kr). Korriger alle feil med rette bilag.",
+  "parsed_task": {
+    "task_type": "correct_ledger_error",
+    "fields": {
+      "correctionDescription": "Korreksjon av feil i hovedbok for januar og februar 2026",
+      "errors": [
+        {
+          "errorType": "wrong_account",
+          "wrongAccount": 7140,
+          "correctAccount": 7100,
+          "amount": 2950,
+          "account": 7140,
+          "date": "2026-01-01"
+        },
+        {
+          "errorType": "duplicate",
+          "account": 7300,
+          "amount": 2800,
+          "date": "2026-01-01"
+        },
+        {
+          "errorType": "missing_vat",
+          "account": 4500,
+          "amount": 21250,
+          "vatAccount": 2710,
+          "date": "2026-01-01"
+        },
+        {
+          "errorType": "wrong_amount",
+          "account": 7100,
+          "amount": 23300,
+          "correctAmount": 19100,
+          "date": "2026-01-01"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 1977.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "7140"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":465581704,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465581704\",\"number\":7140,\"numberPretty\":\"7140\",\"name\":\"Reisekostnad, ikke oppgavepliktig\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"71\",\"groupingCode\":\"7165\",\"displayName\":\"7140 Reisekostnad, ikke oppgavepliktig\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/posting",
+      "status": 200,
+      "duration_ms": 296.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/posting",
+      "query_params": {
+        "accountId": "465581704",
+        "count": "100",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-01"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucher",
+      "status": 422,
+      "duration_ms": 286.9,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"'From and including' value (Thu Jan 01 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Thu Jan 01 00:00:00 CET 2026) in filter.\",\"path\":null,\"rootId\":null}],\"requestId\":\"b4773f60-0a0a-4b58-9c6d-4b87a3c897a6\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "query_params": {
+        "count": "100",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-01"
+      },
+      "response_body": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"'From and including' value (Thu Jan 01 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Thu Jan 01 00:00:00 CET 2026) in filter.\",\"path\":null,\"rootId\":null}],\"requestId\":\"b4773f60-0a0a-4b58-9c6d-4b87a3c897a6\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 323.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "7300"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":465581710,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465581710\",\"number\":7300,\"numberPretty\":\"7300\",\"name\":\"Salgskostnad\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"73\",\"groupingCode\":\"7330\",\"displayName\":\"7300 Salgskostnad\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/posting",
+      "status": 200,
+      "duration_ms": 294.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/posting",
+      "query_params": {
+        "accountId": "465581710",
+        "count": "100",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-01"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucher",
+      "status": 422,
+      "duration_ms": 314.1,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"'From and including' value (Thu Jan 01 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Thu Jan 01 00:00:00 CET 2026) in filter.\",\"path\":null,\"rootId\":null}],\"requestId\":\"2895f2b0-1001-492b-814d-da85b91f2eda\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "query_params": {
+        "count": "100",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-01"
+      },
+      "response_body": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"'From and including' value (Thu Jan 01 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Thu Jan 01 00:00:00 CET 2026) in filter.\",\"path\":null,\"rootId\":null}],\"requestId\":\"2895f2b0-1001-492b-814d-da85b91f2eda\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 286.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2710"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":465581482,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465581482\",\"number\":2710,\"numberPretty\":\"2710\",\"name\":\"Inngående merverdiavgift, høy sats\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":true,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"27\",\"groupingCode\":\"2740\",\"displayName\":\"2710 Inngående merverdiavgift, høy sats\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 250.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1920"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":465581401,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465581401\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 488.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2026-01-01",
+        "description": "Korreksjon: manglende MVA for konto 4500",
+        "postings": [
+          {
+            "account": {
+              "id": 465581482
+            },
+            "amountGross": 5312.5,
+            "amountGrossCurrency": 5312.5,
+            "row": 1
+          },
+          {
+            "account": {
+              "id": 465581401
+            },
+            "amountGross": -5312.5,
+            "amountGrossCurrency": -5312.5,
+            "row": 2
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":609024204,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609024204\",\"date\":\"2026-01-01\",\"number\":31,\"tempNumber\":0,\"year\":2026,\"description\":\"Korreksjon: manglende MVA for konto 4500\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3845462869,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845462869\",\"voucher\":{\"id\":609024204,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609024204\"},\"date\":\"2026-01-01\",\"description\":\"Korreksjon: manglende MVA for konto 4500\",\"account\":{\"id\":465581482,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465581482\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"amount\":5312.50,\"amountCurrency\":5312.50,\"amountGross\":5312.5,\"amountGrossCurrency\":5312.5,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":true,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845462872,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845462872\",\"voucher\":{\"id\":609024204,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609024204\"},\"date\":\"2026-01-01\",\"description\":\"Korreksjon: manglende MVA for konto 4500\",\"account\":{\"id\":465581401,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465581401\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 305.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "7100"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":465581702,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/465581702\",\"number\":7100,\"numberPretty\":\"7100\",\"name\":\"Bilgodtgjørelse oppgavepliktig\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"71\",\"groupingCode\":\"7155\",\"displayName\":\"7100 Bilgodtgjørelse oppgavepliktig\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/posting",
+      "status": 200,
+      "duration_ms": 275.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/posting",
+      "query_params": {
+        "accountId": "465581702",
+        "count": "100",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-01"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucher",
+      "status": 422,
+      "duration_ms": 278.2,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"'From and including' value (Thu Jan 01 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Thu Jan 01 00:00:00 CET 2026) in filter.\",\"path\":null,\"rootId\":null}],\"requestId\":\"c870b7b3-02bc-4287-93e4-96273754fde1\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "query_params": {
+        "count": "100",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-01"
+      },
+      "response_body": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":\"VALIDATION_ERROR\",\"validationMessages\":[{\"field\":null,\"message\":\"'From and including' value (Thu Jan 01 00:00:00 CET 2026) is greater than or equal 'To and excluding' value (Thu Jan 01 00:00:00 CET 2026) in filter.\",\"path\":null,\"rootId\":null}],\"requestId\":\"c870b7b3-02bc-4287-93e4-96273754fde1\"}"
+    }
+  ],
+  "total_calls": 12,
+  "error_count_4xx": 3,
+  "total_duration_ms": 20412.8,
+  "result": {
+    "status": "completed",
+    "taskType": "correct_ledger_error",
+    "errorsProcessed": 4,
+    "errorsCompleted": 1,
+    "corrections": [
+      {
+        "errorType": "wrong_account",
+        "account": 7140,
+        "amount": 2950,
+        "status": "error",
+        "message": "Could not find voucher on account 7140 with amount 2950"
+      },
+      {
+        "errorType": "duplicate",
+        "account": 7300,
+        "amount": 2800,
+        "status": "error",
+        "message": "Could not find duplicate voucher on account 7300 with amount 2800"
+      },
+      {
+        "errorType": "missing_vat",
+        "account": 4500,
+        "amount": 21250,
+        "correctionVoucherId": 609024204,
+        "vatAmount": 5312.5,
+        "status": "completed"
+      },
+      {
+        "errorType": "wrong_amount",
+        "account": 7100,
+        "amount": 23300,
+        "status": "error",
+        "message": "Could not find voucher on account 7100 with amount 23300"
+      }
+    ]
+  }
+}

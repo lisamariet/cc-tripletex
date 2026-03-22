@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create and send an invoice to the customer Ridgepoint Ltd (org no. 985190631) for 32650 NOK excluding VAT. The invoice is for Analysis Report.

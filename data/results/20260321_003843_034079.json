@@ -1,0 +1,199 @@
+{
+  "timestamp": "20260321_003843_034079",
+  "prompt": "Erstellen Sie eine Rechnung für den Kunden Eichenhof GmbH (Org.-Nr. 936374492) mit drei Produktzeilen: Wartung (2878) zu 21850 NOK mit 25 % MwSt., Cloud-Speicher (5486) zu 4400 NOK mit 15 % MwSt. (Lebensmittel), und Systementwicklung (3795) zu 10650 NOK mit 0 % MwSt. (befreit).",
+  "parsed_task": {
+    "task_type": "create_invoice",
+    "fields": {
+      "customerName": "Eichenhof GmbH",
+      "customerOrgNumber": "936374492",
+      "lines": [
+        {
+          "description": "Wartung",
+          "productNumber": "2878",
+          "quantity": 1,
+          "unitPriceExcludingVat": 21850,
+          "vatCode": "3"
+        },
+        {
+          "description": "Cloud-Speicher",
+          "productNumber": "5486",
+          "quantity": 1,
+          "unitPriceExcludingVat": 4400,
+          "vatCode": "31"
+        },
+        {
+          "description": "Systementwicklung",
+          "productNumber": "3795",
+          "quantity": 1,
+          "unitPriceExcludingVat": 10650,
+          "vatCode": "5"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2239.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 2052.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/365538341",
+      "status": 200,
+      "duration_ms": 2165.7,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/ledger/account/365538341",
+      "status": 200,
+      "duration_ms": 1911.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2204.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 2208.2,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 1967.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 2388.7,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/product",
+      "status": 200,
+      "duration_ms": 1994.1,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 2344.0,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/order/401981589/:invoice",
+      "status": 200,
+      "duration_ms": 2473.3,
+      "error": null
+    }
+  ],
+  "total_calls": 11,
+  "error_count_4xx": 0,
+  "total_duration_ms": 26454.2,
+  "result": {
+    "status": "completed",
+    "taskType": "create_invoice",
+    "created": {
+      "id": 2147559776,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147559776",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-21",
+      "customer": {
+        "id": 108306987,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108306987"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-04",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 401981589,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/401981589"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607527634,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607527634"
+        },
+        {
+          "id": 1607527636,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607527636"
+        },
+        {
+          "id": 1607527635,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607527635"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965750587,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965750587"
+        }
+      ],
+      "voucher": {
+        "id": 608881352,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608881352"
+      },
+      "deliveryDate": "2026-03-21",
+      "amount": 36900.0,
+      "amountCurrency": 36900.0,
+      "amountExcludingVat": 36900.0,
+      "amountExcludingVatCurrency": 36900.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 36900.0,
+      "amountCurrencyOutstanding": 36900.0,
+      "amountOutstandingTotal": 36900.0,
+      "amountCurrencyOutstandingTotal": 36900.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845066636,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845066636"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024184203
+    }
+  }
+}

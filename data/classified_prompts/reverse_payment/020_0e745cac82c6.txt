@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+O pagamento de Montanha Lda (org. nº 912922324) referente à fatura "Consultoria de dados" (15400 NOK sem IVA) foi devolvido pelo banco. Reverta o pagamento para que a fatura volte a mostrar o montante

@@ -1,0 +1,433 @@
+{
+  "timestamp": "20260321_164839_579026",
+  "prompt": "We need the Oppbevaringsboks expense from this receipt posted to department Lager. Use the correct expense account and ensure proper VAT treatment.",
+  "parsed_task": {
+    "task_type": "register_supplier_invoice",
+    "fields": {
+      "supplierName": "Biltema",
+      "supplierOrgNumber": "932796511",
+      "amount": 6950.0,
+      "amountExcludingVat": 5212.5,
+      "description": "Oppbevaringsboks expense for department Lager",
+      "productName": "Oppbevaringsboks",
+      "invoiceDate": "2026-01-24",
+      "vatRate": 25,
+      "vatCode": "11",
+      "expenseAccount": 6500,
+      "department": "Lager",
+      "_raw_files": [
+        {
+          "filename": "files/kvittering_en_07.pdf",
+          "content_base64": "JVBERi0xLjMKJenr8b8KMSAwIG9iago8PAovQ291bnQgMQovS2lkcyBbMyAwIFJdCi9NZWRpYUJveCBbMCAwIDU5NS4yOCA4NDEuODldCi9UeXBlIC9QYWdlcwo+PgplbmRvYmoKMiAwIG9iago8PAovT3BlbkFjdGlvbiBbMyAwIFIgL0ZpdEggbnVsbF0KL1BhZ2VMYXlvdXQgL09uZUNvbHVtbgovUGFnZXMgMSAwIFIKL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDQgMCBSCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyA3IDAgUgovVHlwZSAvUGFnZQo+PgplbmRvYmoKNCAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDM4Mwo+PgpzdHJlYW0KeJx9k91OAjEQhe99irkx0USHTrvTbrmTBAwaf6Ib7pdQcOU3ZcUn9L0s7CJlIV52c853Zk5mJTxcCGQD3xedDFo9AkpQCMjG0M22n6SRqDQYy0gGshFcdYpZ6eb5NWSftabVk2CPXUnlMgqt3bkeCz91k7zMIUlvQAuh4Gfm1l+LUQSSbDE1YFjvbS9+ggvfBquksZqJjmJPp63ehgSSqnIH/SzrvvWf7+E2jIWCUAqpmxhxwMgUFYPWChXBHFQSWHr/nsE7BI8ipBS0ESirmEHu3Z557JgD67COahA44TBIjHj1xbpRajzWIZUFqrqd1WroNrkvFpP1cDmN7UwaU47FIWqHm/pIViNVuIGkQm6cX+RlGZAxTUpMKNZJbsDq2sig5Wjp6h2W/quazuzENsGUduBsWeazsn20isDUxhptm+n/FcbhCkMVWyPAh/P5Bp4Gd+HYLtunhUViMsogny2Mw33r+ndw23lh7kZt6LiRL8blerr05d7zC4KVyggKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iago2IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKNyAwIG9iago8PAovRm9udCA8PC9GMSA1IDAgUgovRjIgNiAwIFI+PgovUHJvY1NldCBbL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSV0KPj4KZW5kb2JqCjggMCBvYmoKPDwKL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDMxODA5NDA1MFopCj4+CmVuZG9iagp4cmVmCjAgOQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDEwMiAwMDAwMCBuIAowMDAwMDAwMjA1IDAwMDAwIG4gCjAwMDAwMDAyODUgMDAwMDAgbiAKMDAwMDAwMDc0MCAwMDAwMCBuIAowMDAwMDAwODQyIDAwMDAwIG4gCjAwMDAwMDA5MzkgMDAwMDAgbiAKMDAwMDAwMTAzNiAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDkKL1Jvb3QgMiAwIFIKL0luZm8gOCAwIFIKL0lEIFs8RDZEQkFGQTY4RkNDNzBFQkY5Qjk2MTIxNDJEQ0IwRDA+PEQ2REJBRkE2OEZDQzcwRUJGOUI5NjEyMTQyRENCMEQwPl0KPj4Kc3RhcnR4cmVmCjEwOTEKJSVFT0YK",
+          "mime_type": "application/pdf"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 585.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "organizationNumber": "932796511"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "GET",
+      "path": "/supplier",
+      "status": 200,
+      "duration_ms": 261.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "query_params": {
+        "name": "Biltema"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplier",
+      "status": 201,
+      "duration_ms": 323.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplier",
+      "request_body": {
+        "name": "Biltema",
+        "isSupplier": true,
+        "organizationNumber": "932796511"
+      },
+      "response_body": "{\"value\":{\"id\":108377989,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/supplier/108377989\",\"name\":\"Biltema\",\"organizationNumber\":\"932796511\",\"supplierNumber\":20001,\"customerNumber\":0,\"isSupplier\":true,\"isCustomer\":false,\"isInactive\":false,\"email\":\"\",\"invoiceEmail\":\"\",\"overdueNoticeEmail\":\"\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"isPrivateIndividual\":false,\"showProducts\":false,\"accountManager\":null,\"postalAddress\":{\"id\":405605420,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405605420\"},\"physicalAddress\":{\"id\":405605419,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405605419\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"bankAccountPresentation\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"ledgerAccount\":{\"id\":466084814,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466084814\"},\"language\":\"NO\",\"isWholesaler\":false,\"displayName\":\"Biltema (20001)\",\"locale\":\"no_NO\",\"website\":\"\"}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 319.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "6500"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":466085021,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466085021\",\"number\":6500,\"numberPretty\":\"6500\",\"name\":\"Motordrevet verktøy\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"65\",\"groupingCode\":\"6500\",\"displayName\":\"6500 Motordrevet verktøy\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 290.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2400"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":466084814,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466084814\",\"number\":2400,\"numberPretty\":\"2400\",\"name\":\"Leverandørgjeld\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"VENDOR\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":true,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"24\",\"groupingCode\":\"2400\",\"displayName\":\"2400 Leverandørgjeld\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/466085021",
+      "status": 200,
+      "duration_ms": 314.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/466085021",
+      "response_body": "{\"value\":{\"id\":466085021,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466085021\",\"number\":6500,\"numberPretty\":\"6500\",\"name\":\"Motordrevet verktøy\",\"description\":\"\",\"type\":\"OPERATING_EXPENSES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},{\"id\":12,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/12\"},{\"id\":230,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/230\"},{\"id\":13,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/13\"},{\"id\":14,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/14\"},{\"id\":34,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/34\"},{\"id\":35,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/35\"},{\"id\":559,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/559\"},{\"id\":550,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/550\"},{\"id\":551,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/551\"},{\"id\":553,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/553\"},{\"id\":560,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/560\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/1\"},\"vatLocked\":false,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":true,\"requireReconciliation\":false,\"isInactive\":false,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"65\",\"groupingCode\":\"6500\",\"displayName\":\"6500 Motordrevet verktøy\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/voucherType",
+      "status": 200,
+      "duration_ms": 316.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucherType",
+      "query_params": {
+        "name": "Leverandørfaktura"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":11090960,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11090960\",\"name\":\"Leverandørfaktura\",\"displayName\":\"Leverandørfaktura\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/vatType",
+      "status": 200,
+      "duration_ms": 316.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/vatType",
+      "query_params": {
+        "number": "11"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":11,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\",\"name\":\"Fradrag inngående avgift, middels sats\",\"number\":\"11\",\"displayName\":\"11: (15%) Fradrag inngående avgift, middels sats\",\"percentage\":15,\"deductionPercentage\":100.0,\"parentType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 308.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "name": "Lager",
+        "count": 10
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":941321,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/941321\",\"name\":\"Lager\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Lager\",\"isInactive\":false,\"businessActivityTypeId\":0}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/supplierInvoice",
+      "status": 500,
+      "duration_ms": 338.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/supplierInvoice",
+      "request_body": {
+        "invoiceDate": "2026-01-24",
+        "supplier": {
+          "id": 108377989
+        },
+        "amountCurrency": 6950.0,
+        "currency": {
+          "id": 1
+        },
+        "voucher": {
+          "date": "2026-01-24",
+          "description": "Leverandørfaktura: Oppbevaringsboks — Oppbevaringsboks expense for department Lager",
+          "postings": [
+            {
+              "account": {
+                "id": 466085021
+              },
+              "amountGross": 6950.0,
+              "amountGrossCurrency": 6950.0,
+              "row": 1,
+              "vatType": {
+                "id": 11
+              },
+              "department": {
+                "id": 941321
+              }
+            }
+          ],
+          "voucherType": {
+            "id": 11090960
+          }
+        },
+        "invoiceDueDate": "2026-02-23"
+      },
+      "response_body": "{\"status\":500,\"code\":1002,\"message\":null,\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":null,\"requestId\":\"1e6252d0-d718-4a9d-80b9-66d11375b27e\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 460.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2026-01-24",
+        "description": "Leverandørfaktura: Oppbevaringsboks — Oppbevaringsboks expense for department Lager",
+        "postings": [
+          {
+            "account": {
+              "id": 466085021
+            },
+            "amountGross": 6950.0,
+            "amountGrossCurrency": 6950.0,
+            "row": 1,
+            "vatType": {
+              "id": 11
+            },
+            "department": {
+              "id": 941321
+            }
+          },
+          {
+            "account": {
+              "id": 466084814
+            },
+            "supplier": {
+              "id": 108377989
+            },
+            "amountGross": -6950.0,
+            "amountGrossCurrency": -6950.0,
+            "row": 2
+          }
+        ],
+        "voucherType": {
+          "id": 11090960
+        }
+      },
+      "response_body": "{\"value\":{\"id\":609040542,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040542\",\"date\":\"2026-01-24\",\"number\":1,\"tempNumber\":0,\"year\":2026,\"description\":\"Leverandørfaktura: Oppbevaringsboks — Oppbevaringsboks expense for department Lager\",\"voucherType\":{\"id\":11090960,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11090960\"},\"reverseVoucher\":null,\"postings\":[{\"id\":3845508358,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845508358\",\"voucher\":{\"id\":609040542,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040542\"},\"date\":\"2026-01-24\",\"description\":\"Leverandørfaktura: Oppbevaringsboks — Oppbevaringsboks expense for department Lager\",\"account\":{\"id\":466085021,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/466085021\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":{\"id\":941321,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/941321\"},\"vatType\":{\"id\":11,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11\"},\"amount\":6043.48,\"amountCurrency\":6043.48,\"amountGross\":6950.0,\"amountGrossCurrency\":6950.0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":false,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845508359,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845508359\",\"voucher\":{\"id\":609040542,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040542\"},\"date\":\"2026-01-24\",\"description\":\"Leverandørfaktura: Oppbevaringsboks — Oppbevar"
+    }
+  ],
+  "total_calls": 11,
+  "error_count_4xx": 0,
+  "total_duration_ms": 20293.6,
+  "result": {
+    "status": "completed",
+    "taskType": "register_supplier_invoice",
+    "created": {
+      "id": 609040542,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040542",
+      "date": "2026-01-24",
+      "number": 1,
+      "tempNumber": 0,
+      "year": 2026,
+      "description": "Leverandørfaktura: Oppbevaringsboks — Oppbevaringsboks expense for department Lager",
+      "voucherType": {
+        "id": 11090960,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucherType/11090960"
+      },
+      "reverseVoucher": null,
+      "postings": [
+        {
+          "id": 3845508358,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845508358",
+          "voucher": {
+            "id": 609040542,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040542"
+          },
+          "date": "2026-01-24",
+          "description": "Leverandørfaktura: Oppbevaringsboks — Oppbevaringsboks expense for department Lager",
+          "account": {
+            "id": 466085021,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/466085021"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": null,
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": {
+            "id": 941321,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/department/941321"
+          },
+          "vatType": {
+            "id": 11,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/11"
+          },
+          "amount": 6043.48,
+          "amountCurrency": 6043.48,
+          "amountGross": 6950.0,
+          "amountGrossCurrency": 6950.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 1,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": false,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845508359,
+          "version": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845508359",
+          "voucher": {
+            "id": 609040542,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040542"
+          },
+          "date": "2026-01-24",
+          "description": "Leverandørfaktura: Oppbevaringsboks — Oppbevaringsboks expense for department Lager",
+          "account": {
+            "id": 466084814,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/466084814"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": {
+            "id": 108377989,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/supplier/108377989"
+          },
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": -6950.0,
+          "amountCurrency": -6950.0,
+          "amountGross": -6950.0,
+          "amountGrossCurrency": -6950.0,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 2,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": false,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        },
+        {
+          "id": 3845508360,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845508360",
+          "voucher": {
+            "id": 609040542,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609040542"
+          },
+          "date": "2026-01-24",
+          "description": "Leverandørfaktura: Oppbevaringsboks — Oppbevaringsboks expense for department Lager",
+          "account": {
+            "id": 466084837,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/466084837"
+          },
+          "amortizationAccount": null,
+          "amortizationStartDate": null,
+          "amortizationEndDate": null,
+          "customer": null,
+          "supplier": null,
+          "employee": null,
+          "project": null,
+          "product": null,
+          "department": null,
+          "vatType": {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          },
+          "amount": 906.52,
+          "amountCurrency": 906.52,
+          "amountGross": 906.52,
+          "amountGrossCurrency": 906.52,
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "closeGroup": null,
+          "invoiceNumber": "",
+          "termOfPayment": null,
+          "row": 0,
+          "type": null,
+          "externalRef": "",
+          "systemGenerated": true,
+          "taxTransactionType": "(Ikke valgt)",
+          "taxTransactionTypeId": 0,
+          "matched": false,
+          "quantityAmount1": 0,
+          "quantityType1": null,
+          "quantityAmount2": 0,
+          "quantityType2": null,
+          "isVatReadonly": true,
+          "isAmountVatClosed": false,
+          "postingRuleId": 0,
+          "freeAccountingDimension1": null,
+          "freeAccountingDimension2": null,
+          "freeAccountingDimension3": null,
+          "asset": null
+        }
+      ],
+      "document": null,
+      "attachment": null,
+      "externalVoucherNumber": "",
+      "ediDocument": null,
+      "supplierVoucherType": null,
+      "wasAutoMatched": false,
+      "vendorInvoiceNumber": null,
+      "numberAsString": "1-2026"
+    }
+  }
+}

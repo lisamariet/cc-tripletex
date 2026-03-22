@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_164439_557171",
+  "prompt": "Créez une dimension comptable personnalisée \"Kostsenter\" avec les valeurs \"Produktutvikling\" et \"Salg\". Puis comptabilisez une pièce sur le compte 7300 pour 37450 NOK, liée à la valeur de dimension \"Salg\".",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

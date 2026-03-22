@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_072627_064625",
+  "prompt": "Créez une facture pour le client Rivière SARL (nº org. 909579791) avec trois lignes de produit : Maintenance (6481) à 28100 NOK avec 25 % TVA, Design web (2618) à 12600 NOK avec 15 % TVA (alimentaire), et Développement système (8754) à 1800 NOK avec 0 % TVA (exonéré).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

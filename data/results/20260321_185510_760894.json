@@ -1,0 +1,279 @@
+{
+  "timestamp": "20260321_185510_760894",
+  "prompt": "Set a fixed price of 170500 NOK on the project \"Infrastructure Upgrade\" for Brightstone Ltd (org no. 850116091). The project manager is Charlotte Walker (charlotte.walker@example.org). Invoice the customer for 33% of the fixed price as a milestone payment.",
+  "parsed_task": {
+    "task_type": "set_project_fixed_price",
+    "fields": {
+      "projectName": "Infrastructure Upgrade",
+      "customerName": "Brightstone Ltd",
+      "customerOrgNumber": "850116091",
+      "fixedPrice": 170500,
+      "projectManagerName": "Charlotte Walker",
+      "invoicePercentage": 33
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 1660.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "850116091",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108323778,\"name\":\"Brightstone Ltd\",\"organizationNumber\":\"850116091\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1508.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "firstName": "Charlotte",
+        "lastName": "Walker"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18614162,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18614162\",\"firstName\":\"Charlotte\",\"lastName\":\"Walker\",\"displayName\":\"Charlotte Walker\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"charlotte.walker@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":738292,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/738292\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107914453,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 1625.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "Infrastructure Upgrade",
+        "isInternal": false,
+        "isFixedPrice": true,
+        "fixedprice": 170500,
+        "startDate": "2026-03-21",
+        "projectManager": {
+          "id": 18614162
+        },
+        "customer": {
+          "id": 108323778
+        }
+      },
+      "response_body": "{\"value\":{\"id\":402028892,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402028892\",\"name\":\"Infrastructure Upgrade\",\"number\":\"3\",\"displayName\":\"3 Infrastructure Upgrade\",\"description\":\"\",\"projectManager\":{\"id\":18614162,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18614162\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-21\",\"endDate\":null,\"customer\":{\"id\":108323778,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108323778\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":true,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":170500,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11087576,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11087576\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15642309,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15642309\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"3 Infrastructure Upgrade\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Brightstone Ltd\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Charlotte Walker\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":170500,\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 2273.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"value\":{\"bankAccountReady\":true}}"
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 2517.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/order",
+      "request_body": {
+        "customer": {
+          "id": 108323778
+        },
+        "orderDate": "2026-03-21",
+        "deliveryDate": "2026-03-21",
+        "orderLines": [
+          {
+            "count": 1,
+            "unitPriceExcludingVatCurrency": 56265.0,
+            "description": "Delbetaling 33%"
+          }
+        ],
+        "project": {
+          "id": 402028892
+        }
+      },
+      "response_body": "{\"value\":{\"id\":402028902,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402028902\",\"customer\":{\"id\":108323778,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108323778\"},\"contact\":null,\"attn\":null,\"displayName\":\"4 Ordre\",\"receiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"number\":\"4\",\"reference\":\"\",\"department\":null,\"orderDate\":\"2026-03-21\",\"project\":{\"id\":402028892,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402028892\"},\"invoiceComment\":\"\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"isShowOpenPostsOnInvoices\":false,\"isClosed\":false,\"deliveryDate\":\"2026-03-21\",\"deliveryAddress\":null,\"deliveryComment\":\"\",\"isPrioritizeAmountsIncludingVat\":false,\"orderLineSorting\":\"PRODUCT\",\"orderGroups\":[],\"orderLines\":[],\"isSubscription\":false,\"subscriptionDuration\":0,\"subscriptionDurationType\":\"MONTHS\",\"subscriptionPeriodsOnInvoice\":0,\"subscriptionPeriodsOnInvoiceType\":\"MONTHS\",\"subscriptionInvoicingTimeInAdvanceOrArrears\":\"ADVANCE\",\"subscriptionInvoicingTime\":0,\"subscriptionInvoicingTimeType\":\"MONTHS\",\"isSubscriptionAutoInvoicing\":false,\"preliminaryInvoice\":{\"id\":2147626791,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147626791\"},\"attachment\":[],\"sendMethodDescription\":\"Faktura må sendes manuelt.\",\"invoiceOnAccountVatHigh\":false,\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceSendSMSNotification\":false,\"invoiceSMSNotificationNumber\":\"\",\"markUpOrderLines\":0,\"discountPercentage\":0.0,\"customerName\":\"Brightstone Ltd\",\"projectManagerNameAndNumber\":\"\",\"travelReports\":[],\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "PUT",
+      "path": "/order/402028902/:invoice",
+      "status": 200,
+      "duration_ms": 1941.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/order/402028902/:invoice",
+      "query_params": {
+        "invoiceDate": "2026-03-21",
+        "sendToCustomer": false
+      },
+      "response_body": "{\"value\":{\"id\":2147626791,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147626791\",\"invoiceNumber\":2,\"invoiceDate\":\"2026-03-21\",\"customer\":{\"id\":108323778,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108323778\"},\"creditedInvoice\":0,\"isCredited\":false,\"invoiceDueDate\":\"2026-04-04\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":402028902,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402028902\"}],\"orderLines\":[{\"id\":1607567358,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607567358\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965788198,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965788198\"}],\"voucher\":{\"id\":609098099,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609098099\"},\"deliveryDate\":\"2026-03-21\",\"amount\":56265.00,\"amountCurrency\":56265.00,\"amountExcludingVat\":56265.00,\"amountExcludingVatCurrency\":56265.00,\"amountRoundoff\":0,\"amountRoundoffCurrency\":0,\"amountOutstanding\":56265.00,\"amountCurrencyOutstanding\":56265.00,\"amountOutstandingTotal\":56265.00,\"amountCurrencyOutstandingTotal\":56265.00,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":false,\"isCharged\":true,\"isApproved\":true,\"postings\":[{\"id\":3845664702,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845664702\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024277734}}"
+    }
+  ],
+  "total_calls": 6,
+  "error_count_4xx": 0,
+  "total_duration_ms": 12831.7,
+  "result": {
+    "status": "completed",
+    "taskType": "set_project_fixed_price",
+    "created": {
+      "id": 402028892,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/402028892",
+      "name": "Infrastructure Upgrade",
+      "number": "3",
+      "displayName": "3 Infrastructure Upgrade",
+      "description": "",
+      "projectManager": {
+        "id": 18614162,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18614162"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-21",
+      "endDate": null,
+      "customer": {
+        "id": 108323778,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108323778"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": true,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 170500,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11087576,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11087576"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15642309,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15642309"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "3 Infrastructure Upgrade",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Brightstone Ltd",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Charlotte Walker",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 170500,
+      "accountingDimensionValues": []
+    },
+    "invoice": {
+      "id": 2147626791,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147626791",
+      "invoiceNumber": 2,
+      "invoiceDate": "2026-03-21",
+      "customer": {
+        "id": 108323778,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108323778"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-04",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 402028902,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/402028902"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607567358,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607567358"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965788198,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965788198"
+        }
+      ],
+      "voucher": {
+        "id": 609098099,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609098099"
+      },
+      "deliveryDate": "2026-03-21",
+      "amount": 56265.0,
+      "amountCurrency": 56265.0,
+      "amountExcludingVat": 56265.0,
+      "amountExcludingVatCurrency": 56265.0,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 56265.0,
+      "amountCurrencyOutstanding": 56265.0,
+      "amountOutstandingTotal": 56265.0,
+      "amountCurrencyOutstandingTotal": 56265.0,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845664702,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845664702"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024277734
+    }
+  }
+}

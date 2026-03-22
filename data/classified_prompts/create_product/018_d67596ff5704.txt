@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez le produit "Eau minérale" avec le numéro de produit 7027. Le prix est de 36750 NOK hors TVA, avec le taux de TVA pour les denrées alimentaires de 15 %.

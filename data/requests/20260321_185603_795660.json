@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_185603_795660",
+  "prompt": "Vi har en ny ansatt som heter Ingrid Johansen, født 9. November 1995. Opprett vedkommende som ansatt med e-post ingrid.johansen@example.org og startdato 13. January 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

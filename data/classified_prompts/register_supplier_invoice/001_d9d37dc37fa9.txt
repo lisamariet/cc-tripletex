@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Hemos recibido la factura INV-2026-4194 del proveedor Viento SL (org. nº 933672905) por 19350 NOK con IVA incluido. El importe corresponde a servicios de oficina (cuenta 6540). Registre la factura del

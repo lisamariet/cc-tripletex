@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+O cliente Rio Azul Lda (org. nº 932217643) tem uma fatura pendente de 44100 NOK sem IVA por "Sessão de formação". Registe o pagamento total desta fatura.

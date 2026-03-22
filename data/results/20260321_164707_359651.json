@@ -1,0 +1,27 @@
+{
+  "timestamp": "20260321_164707_359651",
+  "prompt": "En av kundene dine har en forfalt faktura. Finn den forfalte fakturaen og bokfor et purregebyr pa 50 kr. Debet kundefordringer (1500), kredit purregebyr (3400). Opprett også en faktura for purregebyret til kunden og send den. Registrer i tillegg en delbetaling på 5000 kr på den forfalte fakturaen.",
+  "parsed_task": {
+    "task_type": "create_voucher",
+    "fields": {
+      "description": "Purregebyr",
+      "postings": [
+        {
+          "debitAccount": 1500,
+          "creditAccount": 3400,
+          "amount": 50,
+          "description": "Purregebyr kunde"
+        }
+      ]
+    },
+    "confidence": 0.9
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 7647.2,
+  "result": {
+    "status": "completed",
+    "error": "'date'"
+  }
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "prompt": "Realize o encerramento anual simplificado de 2025: 1) Calcule e registe a depreciação anual de três ativos: Kontormaskiner (329750 NOK, 4 anos lineares, conta 1200), Inventar (217500 NOK, 6 anos, conta 1240), Programvare (108950 NOK, 9 anos, conta 1250). Use conta 6010 para despesa de depreciação e 1209 para depreciação acumulada. 2) Reverta despesas antecipadas (total 45900 NOK na conta 1700). 3) Calcule e registe a provisão fiscal (22 % do resultado tributável) na conta 8700/2920. Registe cada depreciação como um lançamento separado.",
+    "timestamp": "20260321_103205_955862",
+    "hash": "8f0b4c86888d"
+  },
+  {
+    "prompt": "Realice el cierre anual simplificado de 2025: 1) Calcule y contabilice la depreciación anual de tres activos: Kjøretøy (249600 NOK, 10 años lineales, cuenta 1230), IT-utstyr (292050 NOK, 9 años, cuenta 1210), Kontormaskiner (354500 NOK, 7 años, cuenta 1200). Use cuenta 6010 para gasto de depreciación y 1209 para depreciación acumulada. 2) Revierta gastos prepagados (total 45950 NOK en cuenta 1700). 3) Calcule y contabilice la provisión de impuestos (22 % del resultado imponible) en cuenta 8700/2920. Registre cada depreciación como un comprobante separado.",
+    "timestamp": "20260321_152522_993257",
+    "hash": "5861be3933b9"
+  },
+  {
+    "prompt": "Realize o encerramento anual simplificado de 2025: 1) Calcule e registe a depreciação anual de três ativos: Kontormaskiner (375600 NOK, 8 anos lineares, conta 1200), IT-utstyr (174350 NOK, 3 anos, conta 1210), Inventar (90550 NOK, 4 anos, conta 1240). Use conta 6010 para despesa de depreciação e 1209 para depreciação acumulada. 2) Reverta despesas antecipadas (total 35900 NOK na conta 1700). 3) Calcule e registe a provisão fiscal (22 % do resultado tributável) na conta 8700/2920. Registe cada depreciação como um lançamento separado.",
+    "timestamp": "20260321_202102_920089",
+    "hash": "49b0ad17ce9a"
+  },
+  {
+    "prompt": "Perform simplified year-end closing for 2025: 1) Calculate and post annual depreciation for three assets: Kontormaskiner (138450 NOK, 6 years straight-line, account 1200), Programvare (280000 NOK, 9 years, account 1250), Inventar (484650 NOK, 8 years, account 1240). Use account 6010 for depreciation expense and 1209 for accumulated depreciation. 2) Reverse prepaid expenses (total 52250 NOK on account 1700). 3) Calculate and post tax provision (22% of taxable profit) on account 8700/2920. Post each depreciation as a separate voucher.",
+    "timestamp": "20260321_210957_341235",
+    "hash": "32ae1444e0c4"
+  },
+  {
+    "prompt": "Realize o encerramento anual simplificado de 2025: 1) Calcule e registe a depreciação anual de três ativos: Kontormaskiner (189700 NOK, 8 anos lineares, conta 1200), Kjøretøy (428000 NOK, 8 anos, conta 1230), IT-utstyr (440750 NOK, 9 anos, conta 1210). Use conta 6010 para despesa de depreciação e 1209 para depreciação acumulada. 2) Reverta despesas antecipadas (total 21300 NOK na conta 1700). 3) Calcule e registe a provisão fiscal (22 % do resultado tributável) na conta 8700/2920. Registe cada depreciação como um lançamento separado.",
+    "timestamp": "20260321_224043_874457",
+    "hash": "ee06bc1d1a5e"
+  },
+  {
+    "prompt": "Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobilisations : Kontormaskiner (433350 NOK, 3 ans linéaire, compte 1200), IT-utstyr (491450 NOK, 6 ans, compte 1210), Kjøretøy (207050 NOK, 9 ans, compte 1230). Utilisez le compte 6010 pour les charges d'amortissement et 1209 pour les amortissements cumulés. 2) Extournez les charges constatées d'avance (total 63200 NOK au compte 1700). 3) Calculez et comptabilisez la provision d'impôt (22 % du bénéfice imposable) sur compte 8700/2920. Comptabilisez chaque amortissement comme une pièce comptable séparée.",
+    "timestamp": "20260322_001320_293053",
+    "hash": "2e66de50e4c6"
+  },
+  {
+    "prompt": "Führen Sie den vereinfachten Jahresabschluss für 2025 durch: 1) Berechnen und buchen Sie die jährliche Abschreibung für drei Anlagen: Kontormaskiner (221300 NOK, 9 Jahre linear, Konto 1200), Programvare (420600 NOK, 4 Jahre, Konto 1250), IT-utstyr (450650 NOK, 4 Jahre, Konto 1210). Verwenden Sie Konto 6010 für Abschreibungsaufwand und 1209 für kumulierte Abschreibungen. 2) Lösen Sie vorausbezahlte Aufwendungen auf (insgesamt 64750 NOK auf Konto 1700). 3) Berechnen und buchen Sie die Steuerrückstellung (22 % des steuerpflichtigen Gewinns) auf Konto 8700/2920. Buchen Sie jede Abschreibung als separaten Beleg.",
+    "timestamp": "20260322_021532_248399",
+    "hash": "0cf6b2b3148e"
+  },
+  {
+    "prompt": "Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobilisations : IT-utstyr (382600 NOK, 6 ans linéaire, compte 1210), Kjøretøy (178950 NOK, 9 ans, compte 1230), Inventar (444450 NOK, 9 ans, compte 1240). Utilisez le compte 6010 pour les charges d'amortissement et 1209 pour les amortissements cumulés. 2) Extournez les charges constatées d'avance (total 24200 NOK au compte 1700). 3) Calculez et comptabilisez la provision d'impôt (22 % du bénéfice imposable) sur compte 8700/2920. Comptabilisez chaque amortissement comme une pièce comptable séparée.",
+    "timestamp": "20260322_021600_979870",
+    "hash": "390c55a30cf9"
+  },
+  {
+    "prompt": "Realize o encerramento anual simplificado de 2025: 1) Calcule e registe a depreciação anual de três ativos: Programvare (376850 NOK, 3 anos lineares, conta 1250), Kjøretøy (92500 NOK, 4 anos, conta 1230), Inventar (264250 NOK, 8 anos, conta 1240). Use conta 6010 para despesa de depreciação e 1209 para depreciação acumulada. 2) Reverta despesas antecipadas (total 67700 NOK na conta 1700). 3) Calcule e registe a provisão fiscal (22 % do resultado tributável) na conta 8700/2920. Registe cada depreciação como um lançamento separado.",
+    "timestamp": "20260322_021852_179883",
+    "hash": "7cc16cac39a6"
+  },
+  {
+    "prompt": "Führen Sie den vereinfachten Jahresabschluss für 2025 durch: 1) Berechnen und buchen Sie die jährliche Abschreibung für drei Anlagen: Kontormaskiner (176000 NOK, 8 Jahre linear, Konto 1200), IT-utstyr (471400 NOK, 7 Jahre, Konto 1210), Inventar (332850 NOK, 7 Jahre, Konto 1240). Verwenden Sie Konto 6010 für Abschreibungsaufwand und 1209 für kumulierte Abschreibungen. 2) Lösen Sie vorausbezahlte Aufwendungen auf (insgesamt 73050 NOK auf Konto 1700). 3) Berechnen und buchen Sie die Steuerrückstellung (22 % des steuerpflichtigen Gewinns) auf Konto 8700/2920. Buchen Sie jede Abschreibung als separaten Beleg.",
+    "timestamp": "20260322_022305_047514",
+    "hash": "96dc5bfc4312"
+  },
+  {
+    "prompt": "Führen Sie den vereinfachten Jahresabschluss für 2025 durch: 1) Berechnen und buchen Sie die jährliche Abschreibung für drei Anlagen: IT-utstyr (366000 NOK, 10 Jahre linear, Konto 1210), Programvare (416850 NOK, 7 Jahre, Konto 1250), Kjøretøy (225550 NOK, 4 Jahre, Konto 1230). Verwenden Sie Konto 6010 für Abschreibungsaufwand und 1209 für kumulierte Abschreibungen. 2) Lösen Sie vorausbezahlte Aufwendungen auf (insgesamt 41800 NOK auf Konto 1700). 3) Berechnen und buchen Sie die Steuerrückstellung (22 % des steuerpflichtigen Gewinns) auf Konto 8700/2920. Buchen Sie jede Abschreibung als separaten Beleg.",
+    "timestamp": "20260322_080327_869479",
+    "hash": "66d96f73190b"
+  }
+]

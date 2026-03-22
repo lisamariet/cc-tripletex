@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Utfør månedsavslutning for mars 2026. Periodiser forskuddsbetalt kostnad (7050 kr per måned fra konto 1710 til kostkonto). Bokfør månedlig avskrivning for et driftsmiddel med anskaffelseskost 102750 k

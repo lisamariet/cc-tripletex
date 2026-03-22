@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Opprett prosjektet "Analyse Sjøbris" knytt til kunden Sjøbris AS (org.nr 883693329). Prosjektleiar er Steinar Berge (steinar.berge@example.org).

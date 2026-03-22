@@ -1,0 +1,32 @@
+[
+  {
+    "prompt": "Execute the complete project lifecycle for 'Cloud Migration Windmill' (Windmill Ltd, org no. 882329348): 1) The project has a budget of 470800 NOK. 2) Log time: Charlotte Williams (project manager, charlotte.williams@example.org) 73 hours and Lucy Harris (consultant, lucy.harris@example.org) 47 hours. 3) Register supplier cost of 86750 NOK from Brightstone Ltd (org no. 864309429). 4) Create a customer invoice for the project.",
+    "timestamp": "20260322_020736_650189",
+    "hash": "17093122a4b9"
+  },
+  {
+    "prompt": "Gjennomfør heile prosjektsyklusen for 'Digitalportal Strandvik' (Strandvik AS, org.nr 842328004): 1) Prosjektet har budsjett 392650 kr. 2) Registrer timar: Geir Lunde (prosjektleiar, geir.lunde@example.org) 35 timar og Gunnhild Kvamme (konsulent, gunnhild.kvamme@example.org) 88 timar. 3) Registrer leverandørkostnad 69950 kr frå Skogheim AS (org.nr 955829190). 4) Opprett kundefaktura for prosjektet.",
+    "timestamp": "20260322_020740_129758",
+    "hash": "fce8a5b0d58f"
+  },
+  {
+    "prompt": "Führen Sie den vollständigen Projektzyklus für 'Systemupgrade Brückentor' (Brückentor GmbH, Org.-Nr. 929610156) durch: 1) Das Projekt hat ein Budget von 405900 NOK. 2) Erfassen Sie Stunden: Emma Weber (Projektleiter, emma.weber@example.org) 73 Stunden und Anna Becker (Berater, anna.becker@example.org) 134 Stunden. 3) Erfassen Sie Lieferantenkosten von 55650 NOK von Silberberg GmbH (Org.-Nr. 818922248). 4) Erstellen Sie eine Kundenrechnung für das Projekt.",
+    "timestamp": "20260322_021701_858432",
+    "hash": "4a3726000b40"
+  },
+  {
+    "prompt": "Gjennomfør hele prosjektsyklusen for 'ERP-implementering Bergvik' (Bergvik AS, org.nr 886943407): 1) Prosjektet har budsjett 400950 kr. 2) Registrer timer: Ragnhild Strand (prosjektleder, ragnhild.strand@example.org) 35 timer og Silje Bakken (konsulent, silje.bakken@example.org) 79 timer. 3) Registrer leverandørkostnad 94350 kr fra Brattli AS (org.nr 810297891). 4) Opprett kundefaktura for prosjektet.",
+    "timestamp": "20260322_022115_666243",
+    "hash": "2524ab847f66"
+  },
+  {
+    "prompt": "Execute o ciclo de vida completo do projeto 'Portal Digital Estrela' (Estrela Lda, org. nº 977256828): 1) O projeto tem um orçamento de 268350 NOK. 2) Registe horas: Bruno Sousa (gestor de projeto, bruno.sousa@example.org) 38 horas e Inês Pereira (consultor, ines.pereira@example.org) 153 horas. 3) Registe custo de fornecedor de 29400 NOK de Montanha Lda (org. nº 987201940). 4) Crie uma fatura ao cliente para o projeto.",
+    "timestamp": "20260322_102936_060490",
+    "hash": "99df93cce95a"
+  },
+  {
+    "prompt": "Execute the complete project lifecycle for 'Cloud Migration Northwave' (Northwave Ltd, org no. 932075482): 1) The project has a budget of 396900 NOK. 2) Log time: Samuel Brown (project manager, samuel.brown@example.org) 74 hours and Sarah Lewis (consultant, sarah.lewis@example.org) 85 hours. 3) Register supplier cost of 56750 NOK from Clearwater Ltd (org no. 889264985). 4) Create a customer invoice for the project.",
+    "timestamp": "20260322_112608_388518",
+    "hash": "12e078697544"
+  }
+]

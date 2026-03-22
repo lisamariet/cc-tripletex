@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_142939_236175",
+  "prompt": "Gjennomfør hele prosjektsyklusen for 'Dataplattform Tindra' (Tindra AS, org.nr 925122025): 1) Prosjektet har budsjett 432000 kr. 2) Registrer timer: Astrid Hansen (prosjektleder, astrid.hansen@example.org) 42 timer og Silje Berg (konsulent, silje.berg@example.org) 145 timer. 3) Registrer leverandørkostnad 84450 kr fra Polaris AS (org.nr 947820605). 4) Opprett kundefaktura for prosjektet.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

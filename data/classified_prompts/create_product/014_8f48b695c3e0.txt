@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create the product "Textbook" with product number 9036. The price is 33950 NOK excluding VAT, using the 0% VAT rate for books.

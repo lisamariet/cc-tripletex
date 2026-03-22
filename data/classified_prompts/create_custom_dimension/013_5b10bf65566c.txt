@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create a custom accounting dimension "Marked" with the values "Offentlig" and "Privat". Then post a voucher on account 7300 for 37250 NOK, linked to the dimension value "Privat".

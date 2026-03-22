@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_022115_666243",
+  "prompt": "Gjennomfør hele prosjektsyklusen for 'ERP-implementering Bergvik' (Bergvik AS, org.nr 886943407): 1) Prosjektet har budsjett 400950 kr. 2) Registrer timer: Ragnhild Strand (prosjektleder, ragnhild.strand@example.org) 35 timer og Silje Bakken (konsulent, silje.bakken@example.org) 79 timer. 3) Registrer leverandørkostnad 94350 kr fra Brattli AS (org.nr 810297891). 4) Opprett kundefaktura for prosjektet.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

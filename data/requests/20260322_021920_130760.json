@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_021920_130760",
+  "prompt": "Crea el producto \"Mantenimiento\" con número de producto 7266. El precio es 650 NOK sin IVA, utilizando la tasa estándar del 25 %.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

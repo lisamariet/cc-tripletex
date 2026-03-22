@@ -1,0 +1,132 @@
+[
+  {
+    "prompt": "Create three departments in Tripletex: \"Utvikling\", \"Lager\", and \"Regnskap\".",
+    "timestamp": "20260320_075419_094114",
+    "hash": "0e80375fbeca"
+  },
+  {
+    "prompt": "Crie uma dimensão contabilística personalizada \"Region\" com os valores \"Sør-Norge\" e \"Nord-Norge\". Em seguida, lance um documento na conta 7140 por 23050 NOK, vinculado ao valor de dimensão \"Sør-Norge\".",
+    "timestamp": "20260320_084027_305835",
+    "hash": "7b3a6ec91bc0"
+  },
+  {
+    "prompt": "Führen Sie die Gehaltsabrechnung für Laura Schneider (laura.schneider@example.org) für diesen Monat durch. Das Grundgehalt beträgt 33000 NOK. Fügen Sie einen einmaligen Bonus von 17850 NOK zum Grundgehalt hinzu.",
+    "timestamp": "20260320_092843_639022",
+    "hash": "014076f57fce"
+  },
+  {
+    "prompt": "Créez une dimension comptable personnalisée \"Kostsenter\" avec les valeurs \"Kundeservice\" et \"Økonomi\". Puis comptabilisez une pièce sur le compte 7300 pour 10550 NOK, liée à la valeur de dimension \"Kundeservice\".",
+    "timestamp": "20260320_114805_458894",
+    "hash": "ae11e50f1598"
+  },
+  {
+    "prompt": "Erstellen Sie einen Auftrag für den Kunden Waldstein GmbH (Org.-Nr. 975687821) mit den Produkten Netzwerkdienst (4366) zu 32750 NOK und Beratungsstunden (3402) zu 17450 NOK. Wandeln Sie den Auftrag in eine Rechnung um und registrieren Sie die vollständige Zahlung.",
+    "timestamp": "20260320_115104_244907",
+    "hash": "a5c2a6c08d67"
+  },
+  {
+    "prompt": "Registe 4 horas para Maria Ferreira (maria.ferreira@example.org) na atividade \"Utvikling\" do projeto \"Desenvolvimento de app\" para Estrela Lda (org. nº 909621682). Taxa horária: 1050 NOK/h. Gere uma fatura de projeto ao cliente com base nas horas registadas.",
+    "timestamp": "20260320_131006_326145",
+    "hash": "3c9a64c3777c"
+  },
+  {
+    "prompt": "Run payroll for William Taylor (william.taylor@example.org) for this month. The base salary is 39400 NOK. Add a one-time bonus of 11800 NOK on top of the base salary. If the salary API is unavailable, you can use manual vouchers on salary accounts (5000-series) to record the payroll expense.",
+    "timestamp": "20260320_134601_342394",
+    "hash": "8bc13158593a"
+  },
+  {
+    "prompt": "Establezca un precio fijo de 152400 NOK en el proyecto \"Mejora de infraestructura\" para Estrella SL (org. nº 808166283). El director del proyecto es Rafael García (rafael.garcia@example.org). Facture al cliente el 75 % del precio fijo como pago parcial.",
+    "timestamp": "20260320_135655_200773",
+    "hash": "6fb860686a31"
+  },
+  {
+    "prompt": "Opprett en fri regnskapsdimensjon \"Produktlinje\" med verdiene \"Standard\" og \"Avansert\". Bokfør deretter et bilag på konto 7000 for 12700 kr, knyttet til dimensjonsverdien \"Standard\".",
+    "timestamp": "20260320_150936_806491",
+    "hash": "33c4f66d01c0"
+  },
+  {
+    "prompt": "Defina um preço fixo de 114250 NOK no projeto \"Implementação ERP\" para Luz do Sol Lda (org. nº 898537447). O gestor de projeto é Catarina Costa (catarina.costa@example.org). Fature ao cliente 50 % do preço fixo como pagamento por etapa.",
+    "timestamp": "20260320_151127_166788",
+    "hash": "fd0f133a1038"
+  },
+  {
+    "prompt": "Sett fastpris 430750 kr på prosjektet \"Automatiseringsprosjekt\" for Fossekraft AS (org.nr 907433498). Prosjektleiar er Solveig Eide (solveig.eide@example.org). Fakturer kunden for 50 % av fastprisen som ei delbetaling.",
+    "timestamp": "20260320_151508_952827",
+    "hash": "225b76bab5b1"
+  },
+  {
+    "prompt": "Sett fastpris 122650 kr på prosjektet \"Digital transformasjon\" for Fossekraft AS (org.nr 830330704). Prosjektleiar er Liv Brekke (liv.brekke@example.org). Fakturer kunden for 33 % av fastprisen som ei delbetaling.",
+    "timestamp": "20260320_151552_574774",
+    "hash": "06fd6715f40f"
+  },
+  {
+    "prompt": "Sett fastpris 203000 kr på prosjektet \"Digital transformasjon\" for Stormberg AS (org.nr 834028719). Prosjektleder er Hilde Hansen (hilde.hansen@example.org). Fakturer kunden for 75 % av fastprisen som en delbetaling.",
+    "timestamp": "20260320_152827_747343",
+    "hash": "0b04d93d77e7"
+  },
+  {
+    "prompt": "Cree una dimensión contable personalizada \"Kostsenter\" con los valores \"Markedsføring\" y \"Kundeservice\". Luego registre un asiento en la cuenta 7000 por 30250 NOK, vinculado al valor de dimensión \"Kundeservice\".",
+    "timestamp": "20260320_163043_063757",
+    "hash": "7fd263c9ef11"
+  },
+  {
+    "prompt": "Cree una dimensión contable personalizada \"Prosjekttype\" con los valores \"Forskning\" y \"Utvikling\". Luego registre un asiento en la cuenta 7000 por 14550 NOK, vinculado al valor de dimensión \"Forskning\".",
+    "timestamp": "20260320_163212_974358",
+    "hash": "7b2ddfd64949"
+  },
+  {
+    "prompt": "Opprett ein fri rekneskapsdimensjon \"Marked\" med verdiane \"Privat\" og \"Bedrift\". Bokfør deretter eit bilag på konto 6590 for 18700 kr, knytt til dimensjonsverdien \"Privat\".",
+    "timestamp": "20260320_224719_088493",
+    "hash": "6d70b1d52f6e"
+  },
+  {
+    "prompt": "Le client Cascade SARL (nº org. 862852745) a réclamé concernant la facture pour \"Développement système\" (15200 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.",
+    "timestamp": "20260320_225019_335934",
+    "hash": "66f907139dca"
+  },
+  {
+    "prompt": "Erstellen Sie das Produkt \"Softwarelizenz\" mit der Produktnummer 7986. Der Preis beträgt 24900 NOK ohne MwSt., mit dem Standardsatz von 25 %.",
+    "timestamp": "20260320_225040_304305",
+    "hash": "f4db2b79ba93"
+  },
+  {
+    "prompt": "Crie três departamentos no Tripletex: \"IT\", \"Kvalitetskontroll\" e \"Regnskap\".",
+    "timestamp": "20260320_231217_482587",
+    "hash": "84687957bd77"
+  },
+  {
+    "prompt": "Registre una nota de gastos de viaje para Laura López (laura.lopez@example.org) por \"Visita cliente Oslo\". El viaje duró 2 días con dietas (tarifa diaria 800 NOK). Gastos: billete de avión 3700 NOK y taxi 200 NOK.",
+    "timestamp": "20260321_002936_711971",
+    "hash": "4f6717b0ca98"
+  },
+  {
+    "prompt": "Du har motteke ein leverandorfaktura (sjaa vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren viss den ikkje finst. Bruk rett utgiftskonto og inngaaande MVA.",
+    "timestamp": "20260321_092444_625097",
+    "hash": "c5aa9f43025c"
+  },
+  {
+    "prompt": "Realice el cierre mensual de marzo de 2026. Registre la periodificación (12500 NOK por mes de la cuenta 1720 a gasto). Contabilice la depreciación mensual de un activo fijo con costo de adquisición 61400 NOK y vida útil 10 años (depreciación lineal a cuenta 6020). Verifique que el balance de saldos sea cero. También registre una provisión salarial (débito cuenta de gastos salariales 5000, crédito cuenta de salarios acumulados 2900).",
+    "timestamp": "20260321_094829_085944",
+    "hash": "912019a9a648"
+  },
+  {
+    "prompt": "Precisamos da despesa de Oppbevaringsboks deste recibo registada no departamento Markedsføring. Use a conta de despesas correta e garanta o tratamento correto do IVA.",
+    "timestamp": "20260321_102550_009708",
+    "hash": "e7c09f205016"
+  },
+  {
+    "prompt": "Die Gesamtkosten sind von Januar bis Februar 2026 deutlich gestiegen. Analysieren Sie das Hauptbuch und identifizieren Sie die drei Aufwandskonten mit dem größten Anstieg. Erstellen Sie für jedes der drei Konten ein internes Projekt mit dem Kontonamen. Erstellen Sie außerdem eine Aktivität für jedes Projekt.",
+    "timestamp": "20260321_103037_098754",
+    "hash": "bedf59aca7d2"
+  },
+  {
+    "prompt": "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 6500 utilisé au lieu de 6540, montant 6800 NOK), une pièce en double (compte 7000, montant 1300 NOK), une ligne de TVA manquante (compte 4300, montant HT 17300 NOK, TVA manquante sur compte 2710), et un montant incorrect (compte 6300, 10150 NOK comptabilisé au lieu de 7450 NOK). Corrigez toutes les erreurs avec des écritures correctives.",
+    "timestamp": "20260321_103715_223934",
+    "hash": "e7527db95c2e"
+  },
+  {
+    "prompt": "Nous avons besoin de la depense Skrivebordlampe de ce recu enregistree au departement Kvalitetskontroll. Utilisez le bon compte de charges et assurez le traitement correct de la TVA.",
+    "timestamp": "20260321_160901_803760",
+    "hash": "ed04c22013b4"
+  }
+]

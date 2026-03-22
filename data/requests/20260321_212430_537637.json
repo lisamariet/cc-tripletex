@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_212430_537637",
+  "prompt": "Vi sendte en faktura på 18391 EUR til Lysgård AS (org.nr 909018005) da kursen var 11.50 NOK/EUR. Kunden har nå betalt, men kursen er 12.24 NOK/EUR. Registrer betalingen og bokfør valutadifferansen (agio) på korrekt konto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

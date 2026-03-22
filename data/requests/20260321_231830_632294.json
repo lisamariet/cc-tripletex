@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_231830_632294",
+  "prompt": "Opprett og send en faktura til kunden Havbris AS (org.nr 808525410) på 22550 kr eksklusiv MVA. Fakturaen gjelder Datarådgivning.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

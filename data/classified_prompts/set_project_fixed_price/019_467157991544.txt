@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Sett fastpris 352200 kr på prosjektet "Automatiseringsprosjekt" for Nordhav AS (org.nr 940514584). Prosjektleder er Thea Nilsen (thea.nilsen@example.org). Fakturer kunden for 75 % av fastprisen som en

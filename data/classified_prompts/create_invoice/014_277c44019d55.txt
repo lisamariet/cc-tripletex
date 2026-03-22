@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Create and send an invoice to the customer Blueshore Ltd (org no. 987928921) for 40600 NOK excluding VAT. The invoice is for Maintenance.

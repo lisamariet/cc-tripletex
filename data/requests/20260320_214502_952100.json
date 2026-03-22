@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_214502_952100",
+  "prompt": "Registrer 7 timer for Tor Johansen (tor.johansen@example.org) på aktiviteten \"Design\" i prosjektet \"Plattformintegrasjon\" for Tindra AS (org.nr 877235882). Timesats: 1650 kr/t. Generer en prosjektfaktura til kunden basert på de registrerte timene.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

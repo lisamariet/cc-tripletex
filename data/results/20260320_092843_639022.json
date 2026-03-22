@@ -1,0 +1,17 @@
+{
+  "timestamp": "20260320_092843_639022",
+  "prompt": "Führen Sie die Gehaltsabrechnung für Laura Schneider (laura.schneider@example.org) für diesen Monat durch. Das Grundgehalt beträgt 33000 NOK. Fügen Sie einen einmaligen Bonus von 17850 NOK zum Grundgehalt hinzu.",
+  "parsed_task": {
+    "task_type": "unknown",
+    "fields": {},
+    "confidence": 0.2
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 8337.0,
+  "result": {
+    "status": "completed",
+    "note": "Fallback JSON parse error: Expecting value: line 1 column 1 (char 0)"
+  }
+}

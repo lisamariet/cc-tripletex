@@ -1,0 +1,102 @@
+[
+  {
+    "prompt": "Die Zahlung von Nordlicht GmbH (Org.-Nr. 853417556) für die Rechnung \"Netzwerkdienst\" (38800 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
+    "timestamp": "20260320_151339_406464",
+    "hash": "bde0f36c77aa"
+  },
+  {
+    "prompt": "Die Zahlung von Silberberg GmbH (Org.-Nr. 857736672) für die Rechnung \"Systementwicklung\" (22350 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
+    "timestamp": "20260320_151341_364615",
+    "hash": "748f66791fa7"
+  },
+  {
+    "prompt": "Die Zahlung von Nordlicht GmbH (Org.-Nr. 985405077) für die Rechnung \"Wartung\" (42200 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
+    "timestamp": "20260320_151400_335857",
+    "hash": "5bbd6898a339"
+  },
+  {
+    "prompt": "El pago de Costa Brava SL (org. nº 866888426) por la factura \"Mantenimiento\" (39250 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.",
+    "timestamp": "20260320_152853_174045",
+    "hash": "bfc50986e6d5"
+  },
+  {
+    "prompt": "Betalinga frå Vestfjord AS (org.nr 805747536) for fakturaen \"Systemutvikling\" (46850 kr ekskl. MVA) vart returnert av banken. Reverser betalinga slik at fakturaen igjen viser uteståande beløp.",
+    "timestamp": "20260320_163524_486187",
+    "hash": "15f468fa3fbb"
+  },
+  {
+    "prompt": "Die Zahlung von Grünfeld GmbH (Org.-Nr. 808603152) für die Rechnung \"Netzwerkdienst\" (44300 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
+    "timestamp": "20260320_183539_202116",
+    "hash": "df2e8e4e5d1e"
+  },
+  {
+    "prompt": "Le paiement de Forêt SARL (nº org. 893396128) pour la facture \"Maintenance\" (44250 NOK HT) a été retourné par la banque. Annulez le paiement afin que la facture affiche à nouveau le montant impayé.",
+    "timestamp": "20260320_183642_725220",
+    "hash": "10aa6371f289"
+  },
+  {
+    "prompt": "Die Zahlung von Windkraft GmbH (Org.-Nr. 823566441) für die Rechnung \"Wartung\" (29500 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
+    "timestamp": "20260320_185414_275751",
+    "hash": "d0ac3f913853"
+  },
+  {
+    "prompt": "O pagamento de Luz do Sol Lda (org. nº 856642402) referente à fatura \"Horas de consultoria\" (9000 NOK sem IVA) foi devolvido pelo banco. Reverta o pagamento para que a fatura volte a mostrar o montante em aberto.",
+    "timestamp": "20260320_215622_038367",
+    "hash": "4ea98df97c76"
+  },
+  {
+    "prompt": "El pago de Solmar SL (org. nº 836598741) por la factura \"Licencia de software\" (8000 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.",
+    "timestamp": "20260320_225253_963182",
+    "hash": "7b8a862f9b8f"
+  },
+  {
+    "prompt": "Die Zahlung von Brückentor GmbH (Org.-Nr. 944848479) für die Rechnung \"Wartung\" (42200 NOK ohne MwSt.) wurde von der Bank zurückgebucht. Stornieren Sie die Zahlung, damit die Rechnung wieder den offenen Betrag anzeigt.",
+    "timestamp": "20260321_000905_044056",
+    "hash": "f8b86e0731a8"
+  },
+  {
+    "prompt": "O pagamento de Porto Alegre Lda (org. nº 957867227) referente à fatura \"Armazenamento na nuvem\" (48300 NOK sem IVA) foi devolvido pelo banco. Reverta o pagamento para que a fatura volte a mostrar o montante em aberto.",
+    "timestamp": "20260321_002751_511278",
+    "hash": "df55e16a478a"
+  },
+  {
+    "prompt": "El pago de Olivares SL (org. nº 921296819) por la factura \"Almacenamiento en la nube\" (46300 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.",
+    "timestamp": "20260321_221649_054649",
+    "hash": "9118cca25c0f"
+  },
+  {
+    "prompt": "Betalingen fra Havbris AS (org.nr 998536561) for fakturaen \"Programvarelisens\" (32350 kr ekskl. MVA) ble returnert av banken. Reverser betalingen slik at fakturaen igjen viser utestående beløp.",
+    "timestamp": "20260321_230236_308449",
+    "hash": "dabbb560eeda"
+  },
+  {
+    "prompt": "The payment from Windmill Ltd (org no. 858237033) for the invoice \"Consulting Hours\" (25500 NOK excl. VAT) was returned by the bank. Reverse the payment so the invoice shows the outstanding amount again.",
+    "timestamp": "20260321_231725_642486",
+    "hash": "c2a8f681594d"
+  },
+  {
+    "prompt": "The payment from Blueshore Ltd (org no. 987904135) for the invoice \"System Development\" (13100 NOK excl. VAT) was returned by the bank. Reverse the payment so the invoice shows the outstanding amount again.",
+    "timestamp": "20260321_231741_256119",
+    "hash": "d2a26b348078"
+  },
+  {
+    "prompt": "Betalingen fra Polaris AS (org.nr 896496468) for fakturaen \"Skylagring\" (17200 kr ekskl. MVA) ble returnert av banken. Reverser betalingen slik at fakturaen igjen viser utestående beløp.",
+    "timestamp": "20260321_231942_543068",
+    "hash": "9a61ad04bcbd"
+  },
+  {
+    "prompt": "O pagamento de Montanha Lda (org. nº 912922324) referente à fatura \"Consultoria de dados\" (15400 NOK sem IVA) foi devolvido pelo banco. Reverta o pagamento para que a fatura volte a mostrar o montante em aberto.",
+    "timestamp": "20260322_083431_754415",
+    "hash": "0e745cac82c6"
+  },
+  {
+    "prompt": "El pago de Dorada SL (org. nº 849807021) por la factura \"Mantenimiento\" (8900 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.",
+    "timestamp": "20260322_093249_767849",
+    "hash": "5c663da3318b"
+  },
+  {
+    "prompt": "The payment from Blueshore Ltd (org no. 989902121) for the invoice \"Software License\" (39700 NOK excl. VAT) was returned by the bank. Reverse the payment so the invoice shows the outstanding amount again.",
+    "timestamp": "20260322_110417_211291",
+    "hash": "61fcc8ff70c9"
+  }
+]

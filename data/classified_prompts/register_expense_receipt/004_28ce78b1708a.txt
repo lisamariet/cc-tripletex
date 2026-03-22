@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+We need the Oppbevaringsboks expense from this receipt posted to department Lager. Use the correct expense account and ensure proper VAT treatment.

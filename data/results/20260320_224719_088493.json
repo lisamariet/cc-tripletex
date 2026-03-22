@@ -1,0 +1,13 @@
+{
+  "timestamp": "20260320_224719_088493",
+  "prompt": "Opprett ein fri rekneskapsdimensjon \"Marked\" med verdiane \"Privat\" og \"Bedrift\". Bokfør deretter eit bilag på konto 6590 for 18700 kr, knytt til dimensjonsverdien \"Privat\".",
+  "parsed_task": null,
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 12909.2,
+  "result": {
+    "status": "completed",
+    "error": "\"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_222505_073865",
+  "prompt": "Me har ein ny tilsett som heiter Torbjørn Neset, fødd 14. November 1991. Opprett vedkomande som tilsett med e-post torbjrn.neset@example.org og startdato 11. February 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "timestamp": "20260321_223955_671761",
+  "prompt": "Recebemos a fatura INV-2026-6556 do fornecedor Solmar Lda (org. nº 974178680) no valor de 50750 NOK com IVA incluído. O montante refere-se a serviços de escritório (conta 6500). Registe a fatura do fornecedor com o IVA dedutível correto (25 %).",
+  "parsed_task": {
+    "task_type": "create_supplier",
+    "fields": {
+      "supplierName": "Solmar Lda",
+      "supplierOrgNumber": "974178680",
+      "amount": 50750,
+      "description": "serviços de escritório",
+      "invoiceNumber": "INV-2026-6556",
+      "expenseAccount": 6500,
+      "vatRate": 25,
+      "vatCode": "11"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [],
+  "total_calls": 0,
+  "error_count_4xx": 0,
+  "total_duration_ms": 1945.9,
+  "result": {
+    "status": "completed",
+    "error": "'name'"
+  }
+}

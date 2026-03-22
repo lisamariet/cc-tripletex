@@ -1,0 +1,104 @@
+{
+  "timestamp": "20260321_221649_054649",
+  "prompt": "El pago de Olivares SL (org. nº 921296819) por la factura \"Almacenamiento en la nube\" (46300 NOK sin IVA) fue devuelto por el banco. Revierta el pago para que la factura vuelva a mostrar el importe pendiente.",
+  "parsed_task": {
+    "task_type": "reverse_payment",
+    "fields": {
+      "customerName": "Olivares SL",
+      "customerOrgNumber": "921296819",
+      "amount": 46300,
+      "invoiceDescription": "Almacenamiento en la nube",
+      "lines": [
+        {
+          "description": "Almacenamiento en la nube",
+          "quantity": 1,
+          "unitPriceExcludingVat": 46300,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 3922.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"value\":{\"bankAccountReady\":true}}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 3871.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "921296819",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108325306,\"name\":\"Olivares SL\",\"organizationNumber\":\"921296819\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 4086.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice",
+      "query_params": {
+        "invoiceDateFrom": "2000-01-01",
+        "invoiceDateTo": "2026-03-21",
+        "fields": "id,amount,amountCurrency,amountOutstanding,amountExcludingVat,amountExcludingVatCurrency",
+        "customerId": 108325306
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":2147572788,\"amount\":57875.0,\"amountCurrency\":57875.0,\"amountExcludingVat\":46300.0,\"amountExcludingVatCurrency\":46300.0,\"amountOutstanding\":0.00}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/2147572788",
+      "status": 200,
+      "duration_ms": 4771.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/2147572788",
+      "response_body": "{\"value\":{\"id\":2147572788,\"version\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147572788\",\"invoiceNumber\":1,\"invoiceDate\":\"2026-03-01\",\"customer\":{\"id\":108325306,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108325306\"},\"creditedInvoice\":0,\"isCredited\":false,\"invoiceDueDate\":\"2026-03-31\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":401992188,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/401992188\"}],\"orderLines\":[{\"id\":1607535314,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607535314\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965757824,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965757824\"}],\"voucher\":{\"id\":608890837,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608890837\"},\"deliveryDate\":\"2026-03-01\",\"amount\":57875.0,\"amountCurrency\":57875.0,\"amountExcludingVat\":46300.0,\"amountExcludingVatCurrency\":46300.0,\"amountRoundoff\":0.0,\"amountRoundoffCurrency\":0.0,\"amountOutstanding\":0.00,\"amountCurrencyOutstanding\":0.00,\"amountOutstandingTotal\":0.00,\"amountCurrencyOutstandingTotal\":0.00,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":false,\"isCharged\":true,\"isApproved\":false,\"postings\":[{\"id\":3845092442,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845092442\"},{\"id\":3845092459,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845092459\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024204534}}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/paymentType",
+      "status": 200,
+      "duration_ms": 4135.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/paymentType",
+      "response_body": "{\"fullResultSize\":2,\"from\":0,\"count\":2,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":28223623,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/paymentType/28223623\",\"description\":\"Kontant\",\"displayName\":\"Kontant\",\"debitAccount\":{\"id\":374634493,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/374634493\"},\"creditAccount\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"sequence\":1,\"customer\":null,\"supplier\":null,\"currencyId\":1,\"currencyCode\":\"NOK\"},{\"id\":28223624,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/paymentType/28223624\",\"description\":\"Betalt til bank\",\"displayName\":\"Betalt til bank\",\"debitAccount\":{\"id\":374634496,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/374634496\"},\"creditAccount\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"sequence\":2,\"customer\":null,\"supplier\":null,\"currencyId\":1,\"currencyCode\":\"NOK\"}]}"
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147572788/:payment",
+      "status": 200,
+      "duration_ms": 4666.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/2147572788/:payment",
+      "query_params": {
+        "paymentDate": "2026-03-21",
+        "paymentTypeId": 28223624,
+        "paidAmount": -57875.0
+      },
+      "response_body": "{\"value\":{\"id\":2147572788,\"version\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147572788\",\"invoiceNumber\":1,\"invoiceDate\":\"2026-03-01\",\"customer\":{\"id\":108325306,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108325306\"},\"creditedInvoice\":0,\"isCredited\":false,\"invoiceDueDate\":\"2026-03-31\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":401992188,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/401992188\"}],\"orderLines\":[{\"id\":1607535314,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607535314\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965757824,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965757824\"}],\"voucher\":{\"id\":608890837,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608890837\"},\"deliveryDate\":\"2026-03-01\",\"amount\":57875.0,\"amountCurrency\":57875.0,\"amountExcludingVat\":46300.0,\"amountExcludingVatCurrency\":46300.0,\"amountRoundoff\":0.0,\"amountRoundoffCurrency\":0.0,\"amountOutstanding\":57875.00,\"amountCurrencyOutstanding\":57875.00,\"amountOutstandingTotal\":57875.00,\"amountCurrencyOutstandingTotal\":57875.00,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":false,\"isCharged\":true,\"isApproved\":false,\"postings\":[{\"id\":3845092442,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845092442\"},{\"id\":3845092459,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845092459\"},{\"id\":3845886301,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845886301\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024204534}}"
+    }
+  ],
+  "total_calls": 6,
+  "error_count_4xx": 0,
+  "total_duration_ms": 27615.9,
+  "result": {
+    "status": "completed",
+    "taskType": "reverse_payment",
+    "invoiceId": 2147572788
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez une dimension comptable personnalisée "Kostsenter" avec les valeurs "Produktutvikling" et "Salg". Puis comptabilisez une pièce sur le compte 7300 pour 37450 NOK, liée à la valeur de dimension "S

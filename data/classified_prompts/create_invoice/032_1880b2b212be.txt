@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crie e envie uma fatura ao cliente Rio Azul Lda (org. nº 959230277) por 27900 NOK sem IVA. A fatura refere-se a Relatório de análise.

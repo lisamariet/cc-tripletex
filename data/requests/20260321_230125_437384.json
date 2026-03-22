@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_230125_437384",
+  "prompt": "Registrer ei reiserekning for Svein Berge (svein.berge@example.org) for \"Kundebesøk Trondheim\". Reisa varte 5 dagar med diett (dagssats 800 kr). Utlegg: flybillett 2850 kr og taxi 200 kr.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

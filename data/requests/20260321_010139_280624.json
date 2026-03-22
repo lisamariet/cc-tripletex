@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_010139_280624",
+  "prompt": "Registrer 13 timar for Sigrid Neset (sigrid.neset@example.org) på aktiviteten \"Rådgivning\" i prosjektet \"Systemoppgradering\" for Nordlys AS (org.nr 836112784). Timesats: 1150 kr/t. Generer ein prosjektfaktura til kunden basert på dei registrerte timane.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

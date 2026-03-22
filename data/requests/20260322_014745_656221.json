@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_014745_656221",
+  "prompt": "Establezca un precio fijo de 261700 NOK en el proyecto \"Integración CRM\" para Luna SL (org. nº 847950021). El director del proyecto es Andrés López (andres.lopez@example.org). Facture al cliente el 75 % del precio fijo como pago parcial.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

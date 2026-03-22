@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Crie uma fatura para o cliente Montanha Lda (org. nº 970481389) com três linhas de produto: Horas de consultoria (8659) a 21850 NOK com 25 % IVA, Relatório de análise (2341) a 11250 NOK com 15 % IVA (

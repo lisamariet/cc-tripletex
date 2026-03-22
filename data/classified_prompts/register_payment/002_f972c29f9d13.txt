@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+O cliente Luz do Sol Lda (org. nº 939210970) tem uma fatura pendente de 23900 NOK sem IVA por "Manutenção". Registe o pagamento total desta fatura.

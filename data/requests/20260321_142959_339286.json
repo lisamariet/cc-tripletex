@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_142959_339286",
+  "prompt": "Registre el proveedor Costa Brava SL con número de organización 936616224. Correo electrónico: faktura@costabravasl.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

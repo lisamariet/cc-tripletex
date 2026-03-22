@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Kunden Skogheim AS (org.nr 900506902) har ein uteståande faktura på 12000 kr eksklusiv MVA for "Systemutvikling". Registrer full betaling på denne fakturaen.

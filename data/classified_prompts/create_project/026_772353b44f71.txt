@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crie o projeto "Análise Porto" vinculado ao cliente Porto Alegre Lda (org. nº 996943305). O gerente de projeto é Lucas Oliveira (lucas.oliveira@example.org).

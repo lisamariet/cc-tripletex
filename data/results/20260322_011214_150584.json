@@ -1,0 +1,409 @@
+{
+  "timestamp": "20260322_011214_150584",
+  "prompt": "Total costs increased significantly from January to February 2026. Analyze the general ledger and identify the three expense accounts with the largest increase in amount. Create an internal project for each of the three accounts using the account name. Also create an activity for each project.",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "analyzeTopCosts": true,
+      "projectCount": 3,
+      "isInternal": true,
+      "period": "2026-01-01/2026-02-28",
+      "createActivity": true
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/posting",
+      "status": 200,
+      "duration_ms": 729.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/posting",
+      "query_params": {
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-02-28",
+        "accountNumberFrom": "4000",
+        "accountNumberTo": "7999",
+        "from": 0,
+        "count": 1000,
+        "fields": "id,amount,account(number,name)"
+      },
+      "response_body": "{\"fullResultSize\":14,\"from\":0,\"count\":14,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":3846080579,\"account\":{\"number\":5000,\"name\":\"Lønn til ansatte\"},\"amount\":150000.0},{\"id\":3846080607,\"account\":{\"number\":6300,\"name\":\"Leie lokale\"},\"amount\":4000.0},{\"id\":3846080664,\"account\":{\"number\":6500,\"name\":\"Motordrevet verktøy\"},\"amount\":2400.0},{\"id\":3846080682,\"account\":{\"number\":6300,\"name\":\"Leie lokale\"},\"amount\":12000.0},{\"id\":3846080696,\"account\":{\"number\":7100,\"name\":\"Bilgodtgjørelse oppgavepliktig\"},\"amount\":5000.0},{\"id\":3846080738,\"account\":{\"number\":7300,\"name\":\"Salgskostnad\"},\"amount\":6400.0},{\"id\":3846080762,\"account\":{\"number\":7400,\"name\":\"Kontingent, fradragsberettiget\"},\"amount\":4800.0},{\"id\":3846080862,\"account\":{\"number\":5000,\"name\":\"Lønn til ansatte\"},\"amount\":155000.0},{\"id\":3846080882,\"account\":{\"number\":6300,\"name\":\"Leie lokale\"},\"amount\":4500.0},{\"id\":3846080916,\"account\":{\"number\":6500,\"name\":\"Motordrevet verktøy\"},\"amount\":8000.0},{\"id\":3846080937,\"account\":{\"number\":6300,\"name\":\"Leie lokale\"},\"amount\":12000.0},{\"id\":3846080952,\"account\":{\"number\":7100,\"name\":\"Bilgodtgjørelse oppgavepliktig\"},\"amount\":12000.0},{\"id\":3846080988,\"account\":{\"number\":7300,\"name\":\"Salgskostnad\"},\"amount\":9600.0},{\"id\":3846081019,\"account\":{\"number\":7400,\"name\":\"Kontingent, fradragsberettiget\"},\"amount\":5200.0}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 901.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "count": 1,
+        "fields": "id,firstName,lastName"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18715879,\"firstName\":\"Admin\",\"lastName\":\"NM\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 1189.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "5000 Lønn til ansatte",
+        "isInternal": true,
+        "startDate": "2026-03-22",
+        "number": "5000",
+        "projectManager": {
+          "id": 18715879
+        }
+      },
+      "response_body": "{\"value\":{\"id\":402053698,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402053698\",\"name\":\"5000 Lønn til ansatte\",\"number\":\"5000\",\"displayName\":\"5000 5000 Lønn til ansatte\",\"description\":\"\",\"projectManager\":{\"id\":18715879,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18715879\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-22\",\"endDate\":null,\"customer\":null,\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":true,\"isOffer\":false,\"isFixedPrice\":false,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11094543,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11094543\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15649637,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15649637\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"5000 5000 Lønn til ansatte\",\"invoiceDueDate\":0,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Admin NM\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":0,\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "POST",
+      "path": "/activity",
+      "status": 422,
+      "duration_ms": 765.9,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"activityType\",\"message\":\"Kan ikke være null.\",\"path\":\"null.activityType\",\"rootId\":null}],\"requestId\":\"698fe144-f95c-413d-92f4-2e3e1b459691\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity",
+      "request_body": {
+        "name": "Lønn til ansatte",
+        "isProjectActivity": true,
+        "isGeneral": false
+      },
+      "response_body": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"activityType\",\"message\":\"Kan ikke være null.\",\"path\":\"null.activityType\",\"rootId\":null}],\"requestId\":\"698fe144-f95c-413d-92f4-2e3e1b459691\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 849.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "6300 Leie lokale",
+        "isInternal": true,
+        "startDate": "2026-03-22",
+        "number": "6300",
+        "projectManager": {
+          "id": 18715879
+        }
+      },
+      "response_body": "{\"value\":{\"id\":402053700,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402053700\",\"name\":\"6300 Leie lokale\",\"number\":\"6300\",\"displayName\":\"6300 6300 Leie lokale\",\"description\":\"\",\"projectManager\":{\"id\":18715879,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18715879\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-22\",\"endDate\":null,\"customer\":null,\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":true,\"isOffer\":false,\"isFixedPrice\":false,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11094544,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11094544\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15649638,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15649638\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"6300 6300 Leie lokale\",\"invoiceDueDate\":0,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Admin NM\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":0,\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "POST",
+      "path": "/activity",
+      "status": 422,
+      "duration_ms": 747.0,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"activityType\",\"message\":\"Kan ikke være null.\",\"path\":\"null.activityType\",\"rootId\":null}],\"requestId\":\"6a6f5f78-9b4f-461c-90ee-29636b9c4110\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity",
+      "request_body": {
+        "name": "Leie lokale",
+        "isProjectActivity": true,
+        "isGeneral": false
+      },
+      "response_body": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"activityType\",\"message\":\"Kan ikke være null.\",\"path\":\"null.activityType\",\"rootId\":null}],\"requestId\":\"6a6f5f78-9b4f-461c-90ee-29636b9c4110\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 887.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "7100 Bilgodtgjørelse oppgavepliktig",
+        "isInternal": true,
+        "startDate": "2026-03-22",
+        "number": "7100",
+        "projectManager": {
+          "id": 18715879
+        }
+      },
+      "response_body": "{\"value\":{\"id\":402053701,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402053701\",\"name\":\"7100 Bilgodtgjørelse oppgavepliktig\",\"number\":\"7100\",\"displayName\":\"7100 7100 Bilgodtgjørelse oppgavepliktig\",\"description\":\"\",\"projectManager\":{\"id\":18715879,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18715879\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-22\",\"endDate\":null,\"customer\":null,\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":true,\"isOffer\":false,\"isFixedPrice\":false,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11094545,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11094545\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15649639,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15649639\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"7100 7100 Bilgodtgjørelse oppgavepliktig\",\"invoiceDueDate\":0,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Admin NM\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":0,\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "POST",
+      "path": "/activity",
+      "status": 422,
+      "duration_ms": 681.2,
+      "error": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"activityType\",\"message\":\"Kan ikke være null.\",\"path\":\"null.activityType\",\"rootId\":null}],\"requestId\":\"092ed142-0971-48de-a591-c1a8e2980293\"}",
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/activity",
+      "request_body": {
+        "name": "Bilgodtgjørelse oppgavepliktig",
+        "isProjectActivity": true,
+        "isGeneral": false
+      },
+      "response_body": "{\"status\":422,\"code\":18000,\"message\":\"Validering feilet.\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"activityType\",\"message\":\"Kan ikke være null.\",\"path\":\"null.activityType\",\"rootId\":null}],\"requestId\":\"092ed142-0971-48de-a591-c1a8e2980293\"}"
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 3,
+  "total_duration_ms": 10205.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "mode": "analyzeTopCosts",
+    "created": [
+      {
+        "account": "5000",
+        "project": {
+          "id": 402053698,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/402053698",
+          "name": "5000 Lønn til ansatte",
+          "number": "5000",
+          "displayName": "5000 5000 Lønn til ansatte",
+          "description": "",
+          "projectManager": {
+            "id": 18715879,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18715879"
+          },
+          "department": null,
+          "mainProject": null,
+          "startDate": "2026-03-22",
+          "endDate": null,
+          "customer": null,
+          "isClosed": false,
+          "isReadyForInvoicing": false,
+          "isInternal": true,
+          "isOffer": false,
+          "isFixedPrice": false,
+          "projectCategory": null,
+          "deliveryAddress": null,
+          "boligmappaAddress": null,
+          "displayNameFormat": "NAME_STANDARD",
+          "reference": "",
+          "externalAccountsNumber": "",
+          "discountPercentage": 0,
+          "vatType": {
+            "id": 3,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+          },
+          "fixedprice": 0,
+          "contributionMarginPercent": 0,
+          "numberOfSubProjects": 0,
+          "numberOfProjectParticipants": 1,
+          "orderLines": [],
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "markUpOrderLines": 0,
+          "markUpFeesEarned": 0,
+          "isPriceCeiling": false,
+          "priceCeilingAmount": 0,
+          "projectHourlyRates": [
+            {
+              "id": 11094543,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11094543"
+            }
+          ],
+          "forParticipantsOnly": false,
+          "participants": [
+            {
+              "id": 15649637,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15649637"
+            }
+          ],
+          "contact": null,
+          "attention": null,
+          "invoiceComment": "",
+          "invoicingPlan": [],
+          "preliminaryInvoice": null,
+          "generalProjectActivitiesPerProjectOnly": false,
+          "projectActivities": [],
+          "hierarchyNameAndNumber": "5000 5000 Lønn til ansatte",
+          "invoiceDueDate": 0,
+          "invoiceDueDateType": "DAYS",
+          "invoiceReceiverEmail": "",
+          "overdueNoticeEmail": "",
+          "accessType": "WRITE",
+          "useProductNetPrice": false,
+          "ignoreCompanyProductDiscountAgreement": false,
+          "customerName": "",
+          "hierarchyLevel": 0,
+          "projectManagerNameAndNumber": "Admin NM",
+          "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+          "invoiceOnAccountVatHigh": false,
+          "invoiceReserveTotalAmountCurrency": 0,
+          "accountingDimensionValues": []
+        }
+      },
+      {
+        "account": "6300",
+        "project": {
+          "id": 402053700,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/402053700",
+          "name": "6300 Leie lokale",
+          "number": "6300",
+          "displayName": "6300 6300 Leie lokale",
+          "description": "",
+          "projectManager": {
+            "id": 18715879,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18715879"
+          },
+          "department": null,
+          "mainProject": null,
+          "startDate": "2026-03-22",
+          "endDate": null,
+          "customer": null,
+          "isClosed": false,
+          "isReadyForInvoicing": false,
+          "isInternal": true,
+          "isOffer": false,
+          "isFixedPrice": false,
+          "projectCategory": null,
+          "deliveryAddress": null,
+          "boligmappaAddress": null,
+          "displayNameFormat": "NAME_STANDARD",
+          "reference": "",
+          "externalAccountsNumber": "",
+          "discountPercentage": 0,
+          "vatType": {
+            "id": 3,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+          },
+          "fixedprice": 0,
+          "contributionMarginPercent": 0,
+          "numberOfSubProjects": 0,
+          "numberOfProjectParticipants": 1,
+          "orderLines": [],
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "markUpOrderLines": 0,
+          "markUpFeesEarned": 0,
+          "isPriceCeiling": false,
+          "priceCeilingAmount": 0,
+          "projectHourlyRates": [
+            {
+              "id": 11094544,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11094544"
+            }
+          ],
+          "forParticipantsOnly": false,
+          "participants": [
+            {
+              "id": 15649638,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15649638"
+            }
+          ],
+          "contact": null,
+          "attention": null,
+          "invoiceComment": "",
+          "invoicingPlan": [],
+          "preliminaryInvoice": null,
+          "generalProjectActivitiesPerProjectOnly": false,
+          "projectActivities": [],
+          "hierarchyNameAndNumber": "6300 6300 Leie lokale",
+          "invoiceDueDate": 0,
+          "invoiceDueDateType": "DAYS",
+          "invoiceReceiverEmail": "",
+          "overdueNoticeEmail": "",
+          "accessType": "WRITE",
+          "useProductNetPrice": false,
+          "ignoreCompanyProductDiscountAgreement": false,
+          "customerName": "",
+          "hierarchyLevel": 0,
+          "projectManagerNameAndNumber": "Admin NM",
+          "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+          "invoiceOnAccountVatHigh": false,
+          "invoiceReserveTotalAmountCurrency": 0,
+          "accountingDimensionValues": []
+        }
+      },
+      {
+        "account": "7100",
+        "project": {
+          "id": 402053701,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/402053701",
+          "name": "7100 Bilgodtgjørelse oppgavepliktig",
+          "number": "7100",
+          "displayName": "7100 7100 Bilgodtgjørelse oppgavepliktig",
+          "description": "",
+          "projectManager": {
+            "id": 18715879,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18715879"
+          },
+          "department": null,
+          "mainProject": null,
+          "startDate": "2026-03-22",
+          "endDate": null,
+          "customer": null,
+          "isClosed": false,
+          "isReadyForInvoicing": false,
+          "isInternal": true,
+          "isOffer": false,
+          "isFixedPrice": false,
+          "projectCategory": null,
+          "deliveryAddress": null,
+          "boligmappaAddress": null,
+          "displayNameFormat": "NAME_STANDARD",
+          "reference": "",
+          "externalAccountsNumber": "",
+          "discountPercentage": 0,
+          "vatType": {
+            "id": 3,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+          },
+          "fixedprice": 0,
+          "contributionMarginPercent": 0,
+          "numberOfSubProjects": 0,
+          "numberOfProjectParticipants": 1,
+          "orderLines": [],
+          "currency": {
+            "id": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+          },
+          "markUpOrderLines": 0,
+          "markUpFeesEarned": 0,
+          "isPriceCeiling": false,
+          "priceCeilingAmount": 0,
+          "projectHourlyRates": [
+            {
+              "id": 11094545,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11094545"
+            }
+          ],
+          "forParticipantsOnly": false,
+          "participants": [
+            {
+              "id": 15649639,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15649639"
+            }
+          ],
+          "contact": null,
+          "attention": null,
+          "invoiceComment": "",
+          "invoicingPlan": [],
+          "preliminaryInvoice": null,
+          "generalProjectActivitiesPerProjectOnly": false,
+          "projectActivities": [],
+          "hierarchyNameAndNumber": "7100 7100 Bilgodtgjørelse oppgavepliktig",
+          "invoiceDueDate": 0,
+          "invoiceDueDateType": "DAYS",
+          "invoiceReceiverEmail": "",
+          "overdueNoticeEmail": "",
+          "accessType": "WRITE",
+          "useProductNetPrice": false,
+          "ignoreCompanyProductDiscountAgreement": false,
+          "customerName": "",
+          "hierarchyLevel": 0,
+          "projectManagerNameAndNumber": "Admin NM",
+          "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+          "invoiceOnAccountVatHigh": false,
+          "invoiceReserveTotalAmountCurrency": 0,
+          "accountingDimensionValues": []
+        }
+      }
+    ]
+  }
+}

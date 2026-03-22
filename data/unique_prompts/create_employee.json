@@ -1,0 +1,167 @@
+[
+  {
+    "prompt": "Nous avons un nouvel employé nommé Sarah Richard, né le 15. August 1980. Veuillez le créer en tant qu'employé avec l'e-mail sarah.richard@example.org et la date de début 29. June 2026.",
+    "timestamp": "20260320_000515_044491",
+    "hash": "069cc9d8fea2"
+  },
+  {
+    "prompt": "Nous avons un nouvel employé nommé Jules Richard, né le 2. August 1986. Veuillez le créer en tant qu'employé avec l'e-mail jules.richard@example.org et la date de début 28. July 2026.",
+    "timestamp": "20260320_135434_409839",
+    "hash": "dcf5dedef308"
+  },
+  {
+    "prompt": "Nous avons un nouvel employé nommé Jules Bernard, né le 8. December 1982. Veuillez le créer en tant qu'employé avec l'e-mail jules.bernard@example.org et la date de début 27. December 2026.",
+    "timestamp": "20260320_135522_496754",
+    "hash": "0d4cb770d401"
+  },
+  {
+    "prompt": "Me har ein ny tilsett som heiter Geir Neset, fødd 24. June 1997. Opprett vedkomande som tilsett med e-post geir.neset@example.org og startdato 15. October 2026.",
+    "timestamp": "20260320_152834_347300",
+    "hash": "b43c16a7a6d7"
+  },
+  {
+    "prompt": "Me har ein ny tilsett som heiter Gunnhild Eide, fødd 21. June 1997. Opprett vedkomande som tilsett med e-post gunnhild.eide@example.org og startdato 28. June 2026.",
+    "timestamp": "20260320_183440_089949",
+    "hash": "e903d0cb24c9"
+  },
+  {
+    "prompt": "Wir haben einen neuen Mitarbeiter namens Sophia Hoffmann, geboren am 7. January 1995. Bitte legen Sie ihn als Mitarbeiter mit der E-Mail sophia.hoffmann@example.org und dem Startdatum 3. June 2026 an.",
+    "timestamp": "20260320_183511_368567",
+    "hash": "13f4ab33a0a0"
+  },
+  {
+    "prompt": "We have a new employee named Henry Smith, born 2. December 1988. Please create them as an employee with email henry.smith@example.org and start date 1. November 2026.",
+    "timestamp": "20260320_185150_763575",
+    "hash": "8b83c31bf591"
+  },
+  {
+    "prompt": "Tenemos un nuevo empleado llamado Miguel Sánchez, nacido el 20. April 1991. Créelo como empleado con el correo miguel.sanchez@example.org y fecha de inicio 12. August 2026.",
+    "timestamp": "20260320_192632_810506",
+    "hash": "9363d59ee93b"
+  },
+  {
+    "prompt": "Vi har en ny ansatt som heter Solveig Johansen, født 15. May 1993. Opprett vedkommende som ansatt med e-post solveig.johansen@example.org og startdato 18. January 2026.",
+    "timestamp": "20260320_215548_992040",
+    "hash": "42aaea99ac14"
+  },
+  {
+    "prompt": "Nous avons un nouvel employé nommé Léa Thomas, né le 30. June 2000. Veuillez le créer en tant qu'employé avec l'e-mail lea.thomas@example.org et la date de début 8. October 2026.",
+    "timestamp": "20260320_231249_756892",
+    "hash": "988544e06ee0"
+  },
+  {
+    "prompt": "Tenemos un nuevo empleado llamado Lucía Hernández, nacido el 14. March 1986. Créelo como empleado con el correo lucia.hernandez@example.org y fecha de inicio 17. January 2026.",
+    "timestamp": "20260321_002729_425077",
+    "hash": "06b8978d7568"
+  },
+  {
+    "prompt": "Has recibido un contrato de trabajo (ver PDF adjunto). Crea el empleado en Tripletex con todos los datos del contrato: numero de identidad, fecha de nacimiento, departamento, codigo de ocupacion, salario, porcentaje de empleo y fecha de inicio.",
+    "timestamp": "20260321_102821_437640",
+    "hash": "c3f3ab2136b9"
+  },
+  {
+    "prompt": "Du har motteke eit tilbodsbrev (sjaa vedlagt PDF) for ein ny tilsett. Utfor komplett onboarding: opprett den tilsette, tilknytt rett avdeling, set opp tilsetjingsforhold med stillingsprosent og arslonn, og konfigurer standard arbeidstid.",
+    "timestamp": "20260321_142926_124903",
+    "hash": "e7322cfe48a4"
+  },
+  {
+    "prompt": "Sie haben ein Angebotsschreiben erhalten (siehe beigefugte PDF) fuer einen neuen Mitarbeiter. Fuehren Sie das vollstaendige Onboarding durch: erstellen Sie den Mitarbeiter, weisen Sie die richtige Abteilung zu, richten Sie die Beschaeftigungsdetails mit Prozentsatz und Jahresgehalt ein, und konfigurieren Sie die Standardarbeitszeit.",
+    "timestamp": "20260321_143007_612878",
+    "hash": "9ac2c15ed290"
+  },
+  {
+    "prompt": "Has recibido una carta de oferta (ver PDF adjunto) para un nuevo empleado. Completa la incorporacion: crea el empleado, asigna el departamento correcto, configura los detalles de empleo con porcentaje y salario anual, y configura las horas de trabajo estandar.",
+    "timestamp": "20260321_152318_443172",
+    "hash": "66bf0b67f90e"
+  },
+  {
+    "prompt": "Vous avez recu un contrat de travail (voir PDF ci-joint). Creez l'employe dans Tripletex avec tous les details du contrat : numero d'identite nationale, date de naissance, departement, code de profession, salaire, pourcentage d'emploi et date de debut.",
+    "timestamp": "20260321_152553_097945",
+    "hash": "63d387e8a47e"
+  },
+  {
+    "prompt": "Du har mottatt et tilbudsbrev (se vedlagt PDF) for en ny ansatt. Utfor komplett onboarding: opprett den ansatte, tilknytt riktig avdeling, sett opp ansettelsesforhold med stillingsprosent og arslonn, og konfigurer standard arbeidstid.",
+    "timestamp": "20260321_160817_605612",
+    "hash": "79418fe1eb64"
+  },
+  {
+    "prompt": "Du har motteke ein arbeidskontrakt (sjaa vedlagt PDF). Opprett den tilsette i Tripletex med alle detaljar fraa kontrakten: personnummer, fodselsdato, avdeling, stillingskode, lonn, stillingsprosent og startdato.",
+    "timestamp": "20260321_164500_874420",
+    "hash": "62b909d45d09"
+  },
+  {
+    "prompt": "Du har mottatt en arbeidskontrakt (se vedlagt PDF). Opprett den ansatte i Tripletex med alle detaljer fra kontrakten: personnummer, fodselsdato, avdeling, stillingskode, lonn, stillingsprosent og startdato.",
+    "timestamp": "20260321_180540_572118",
+    "hash": "da1e28105402"
+  },
+  {
+    "prompt": "You received an offer letter (see attached PDF) for a new employee. Complete the onboarding: create the employee, assign the correct department, set up employment details with percentage and annual salary, and configure standard working hours.",
+    "timestamp": "20260321_181437_509079",
+    "hash": "37c3bb28bf32"
+  },
+  {
+    "prompt": "Vi har en ny ansatt som heter Ingrid Johansen, født 9. November 1995. Opprett vedkommende som ansatt med e-post ingrid.johansen@example.org og startdato 13. January 2026.",
+    "timestamp": "20260321_185603_795660",
+    "hash": "ecfe0f7d267b"
+  },
+  {
+    "prompt": "Nous avons un nouvel employé nommé Arthur Martin, né le 20. May 1991. Veuillez le créer en tant qu'employé avec l'e-mail arthur.martin@example.org et la date de début 9. October 2026.",
+    "timestamp": "20260321_202358_258319",
+    "hash": "7f5229985de3"
+  },
+  {
+    "prompt": "Tenemos un nuevo empleado llamado Diego Rodríguez, nacido el 28. August 1996. Créelo como empleado con el correo diego.rodriguez@example.org y fecha de inicio 29. June 2026.",
+    "timestamp": "20260321_203726_163256",
+    "hash": "05d13ceef55f"
+  },
+  {
+    "prompt": "Tenemos un nuevo empleado llamado Lucía García, nacido el 18. March 1997. Créelo como empleado con el correo lucia.garcia@example.org y fecha de inicio 30. August 2026.",
+    "timestamp": "20260321_214740_729376",
+    "hash": "33f3e410d002"
+  },
+  {
+    "prompt": "Sie haben einen Arbeitsvertrag erhalten (siehe beigefugte PDF). Erstellen Sie den Mitarbeiter in Tripletex mit allen Details aus dem Vertrag: Personalnummer, Geburtsdatum, Abteilung, Berufsschluessel, Gehalt, Beschaeftigungsprozentsatz und Startdatum.",
+    "timestamp": "20260321_215408_703700",
+    "hash": "4697d5e6808d"
+  },
+  {
+    "prompt": "Vous avez recu une lettre d'offre (voir PDF ci-joint) pour un nouvel employe. Effectuez l'integration complete : creez l'employe, attribuez le bon departement, configurez les details d'emploi avec le pourcentage et le salaire annuel, et configurez les heures de travail standard.",
+    "timestamp": "20260321_220722_361769",
+    "hash": "df2a94379015"
+  },
+  {
+    "prompt": "Tenemos un nuevo empleado llamado Lucía Rodríguez, nacido el 30. April 1996. Créelo como empleado con el correo lucia.rodriguez@example.org y fecha de inicio 22. April 2026.",
+    "timestamp": "20260321_222302_977784",
+    "hash": "52a7739f85a1"
+  },
+  {
+    "prompt": "Me har ein ny tilsett som heiter Torbjørn Neset, fødd 14. November 1991. Opprett vedkomande som tilsett med e-post torbjrn.neset@example.org og startdato 11. February 2026.",
+    "timestamp": "20260321_222505_073865",
+    "hash": "9ebe05af0eef"
+  },
+  {
+    "prompt": "We have a new employee named Charles Taylor, born 21. October 1994. Please create them as an employee with email charles.taylor@example.org and start date 3. June 2026.",
+    "timestamp": "20260322_021742_530211",
+    "hash": "48cf2634d6a5"
+  },
+  {
+    "prompt": "Voce recebeu um contrato de trabalho (ver PDF anexo). Crie o funcionario no Tripletex com todos os detalhes do contrato: numero de identidade nacional, data de nascimento, departamento, codigo de ocupacao, salario, percentagem de emprego e data de inicio.",
+    "timestamp": "20260322_022314_199793",
+    "hash": "6d552cf6a632"
+  },
+  {
+    "prompt": "You received an employment contract (see attached PDF). Create the employee in Tripletex with all details from the contract: national identity number, date of birth, department, occupation code, salary, employment percentage, and start date.",
+    "timestamp": "20260322_080016_867749",
+    "hash": "53a4ffda2a24"
+  },
+  {
+    "prompt": "Voce recebeu uma carta de oferta (ver PDF anexo) para um novo funcionario. Complete a integracao: crie o funcionario, atribua o departamento correto, configure os detalhes de emprego com percentagem e salario anual, e configure as horas de trabalho padrao.",
+    "timestamp": "20260322_101137_812992",
+    "hash": "e6912b1cfdd0"
+  },
+  {
+    "prompt": "Vi har en ny ansatt som heter Lars Bakken, født 1. October 1983. Opprett vedkommende som ansatt med e-post lars.bakken@example.org og startdato 4. August 2026.",
+    "timestamp": "20260322_102106_398974",
+    "hash": "1100933525b4"
+  }
+]

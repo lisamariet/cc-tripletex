@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Créez une facture pour le client Rivière SARL (nº org. 909579791) avec trois lignes de produit : Maintenance (6481) à 28100 NOK avec 25 % TVA, Design web (2618) à 12600 NOK avec 15 % TVA (alimentaire)

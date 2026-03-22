@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_230216_133276",
+  "prompt": "Kjør lønn for Jonas Hansen (jonas.hansen@example.org) for denne måneden. Grunnlønn er 40000 kr. Legg til en engangsbonus på 10600 kr i tillegg til grunnlønnen. Dersom lønns-API-et ikke fungerer, kan du bruke manuelle bilag på lønnskontoer (5000-serien) for å registrere lønnskostnaden.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

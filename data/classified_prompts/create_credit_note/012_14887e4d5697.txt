@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+The customer Brightstone Ltd (org no. 846305157) has complained about the invoice for "Data Advisory" (38000 NOK excl. VAT). Issue a full credit note that reverses the entire invoice.

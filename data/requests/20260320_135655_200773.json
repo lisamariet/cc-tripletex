@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_135655_200773",
+  "prompt": "Establezca un precio fijo de 152400 NOK en el proyecto \"Mejora de infraestructura\" para Estrella SL (org. nº 808166283). El director del proyecto es Rafael García (rafael.garcia@example.org). Facture al cliente el 75 % del precio fijo como pago parcial.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

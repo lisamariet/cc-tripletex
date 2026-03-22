@@ -1,0 +1,45 @@
+{
+  "timestamp": "20260320_151147_739313",
+  "prompt": "Køyr løn for Brita Berge (brita.berge@example.org) for denne månaden. Grunnløn er 36800 kr. Legg til ein eingongsbonus på 14100 kr i tillegg til grunnløna.",
+  "parsed_task": {
+    "task_type": "run_payroll",
+    "fields": {
+      "employeeName": "Brita Berge",
+      "employeeEmail": "brita.berge@example.org",
+      "baseSalary": 36800,
+      "bonus": 14100
+    },
+    "confidence": 0.96
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 1436.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/salary/transaction",
+      "status": 422,
+      "duration_ms": 1272.2,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"employee\",\"message\":\"Feltet eksisterer ikke i objektet.\",\"path\":null,\"rootId\":null}],\"requestId\":\"3a59b4d1-6410-42cb-a663-08d8d36229e6\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/salary/payslip",
+      "status": 422,
+      "duration_ms": 1394.0,
+      "error": "{\"status\":422,\"code\":16000,\"message\":\"Request mapping failed\",\"link\":\"https://tripletex.no/v2-docs/\",\"developerMessage\":null,\"validationMessages\":[{\"field\":\"employee.id\",\"message\":\"Verdien er ikke av korrekt type for dette feltet.\",\"path\":\"employee.id\",\"rootId\":null}],\"requestId\":\"81b90b96-d8ad-4d63-be3f-130b17d571f7\"}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 2,
+  "total_duration_ms": 7734.5,
+  "result": {
+    "status": "completed",
+    "fallback": true,
+    "calls_made": 3
+  }
+}

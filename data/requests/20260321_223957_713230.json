@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_223957_713230",
+  "prompt": "Créez une commande pour le client Océan SARL (nº org. 859049788) avec les produits Session de formation (3206) à 4950 NOK et Conseil en données (9191) à 7700 NOK. Convertissez la commande en facture et enregistrez le paiement intégral.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

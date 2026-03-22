@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_090829_749072",
+  "prompt": "Erstellen Sie den Kunden Sonnental GmbH mit der Organisationsnummer 929940016. Die Adresse ist Solveien 21, 9008 Tromsø. E-Mail: post@sonnental.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

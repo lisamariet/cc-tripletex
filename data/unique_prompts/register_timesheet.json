@@ -1,0 +1,112 @@
+[
+  {
+    "prompt": "Registrer 7 timer for Tor Johansen (tor.johansen@example.org) på aktiviteten \"Design\" i prosjektet \"Plattformintegrasjon\" for Tindra AS (org.nr 877235882). Timesats: 1650 kr/t. Generer en prosjektfaktura til kunden basert på de registrerte timene.",
+    "timestamp": "20260320_214502_952100",
+    "hash": "0e14b4405cad"
+  },
+  {
+    "prompt": "Erfassen Sie 14 Stunden für Anna Wagner (anna.wagner@example.org) auf der Aktivität \"Analyse\" im Projekt \"Sicherheitsaudit\" für Waldstein GmbH (Org.-Nr. 948366207). Stundensatz: 1150 NOK/h. Erstellen Sie eine Projektrechnung an den Kunden basierend auf den erfassten Stunden.",
+    "timestamp": "20260320_231742_622107",
+    "hash": "81572ff10aa2"
+  },
+  {
+    "prompt": "Registrer 19 timer for Thea Ødegård (thea.degard@example.org) på aktiviteten \"Design\" i prosjektet \"Datamigrering\" for Tindra AS (org.nr 812877895). Timesats: 1600 kr/t. Generer en prosjektfaktura til kunden basert på de registrerte timene.",
+    "timestamp": "20260320_232931_954088",
+    "hash": "9213c348c5cc"
+  },
+  {
+    "prompt": "Registre 39 horas para Miguel Sánchez (miguel.sanchez@example.org) en la actividad \"Analyse\" del proyecto \"Migración de datos\" para Montaña SL (org. nº 802639244). Tarifa por hora: 1000 NOK/h. Genere una factura de proyecto al cliente basada en las horas registradas.",
+    "timestamp": "20260321_005834_039234",
+    "hash": "6e0ecead849a"
+  },
+  {
+    "prompt": "Registrer 30 timar for Gunnhild Eide (gunnhild.eide@example.org) på aktiviteten \"Rådgivning\" i prosjektet \"Nettbutikk-utvikling\" for Sjøbris AS (org.nr 801323847). Timesats: 1100 kr/t. Generer ein prosjektfaktura til kunden basert på dei registrerte timane.",
+    "timestamp": "20260321_005938_191940",
+    "hash": "c208c9ad7d71"
+  },
+  {
+    "prompt": "Registrer 13 timar for Sigrid Neset (sigrid.neset@example.org) på aktiviteten \"Rådgivning\" i prosjektet \"Systemoppgradering\" for Nordlys AS (org.nr 836112784). Timesats: 1150 kr/t. Generer ein prosjektfaktura til kunden basert på dei registrerte timane.",
+    "timestamp": "20260321_010139_280624",
+    "hash": "e3b8f008f11f"
+  },
+  {
+    "prompt": "Registrer 30 timar for Randi Lunde (randi.lunde@example.org) på aktiviteten \"Analyse\" i prosjektet \"Sikkerheitsrevisjon\" for Dalheim AS (org.nr 950103175). Timesats: 850 kr/t. Generer ein prosjektfaktura til kunden basert på dei registrerte timane.",
+    "timestamp": "20260321_072549_303500",
+    "hash": "84a41046a762"
+  },
+  {
+    "prompt": "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Dorada' (Dorada SL, org. nº 888398554): 1) El proyecto tiene un presupuesto de 460950 NOK. 2) Registre horas: Carlos García (director de proyecto, carlos.garcia@example.org) 40 horas y Rafael García (consultor, rafael.garcia@example.org) 47 horas. 3) Registre costo de proveedor de 41650 NOK de Estrella SL (org. nº 913385853). 4) Cree una factura al cliente por el proyecto.",
+    "timestamp": "20260321_102717_731848",
+    "hash": "c4eb0ccb6133"
+  },
+  {
+    "prompt": "Gjennomfør hele prosjektsyklusen for 'Dataplattform Tindra' (Tindra AS, org.nr 925122025): 1) Prosjektet har budsjett 432000 kr. 2) Registrer timer: Astrid Hansen (prosjektleder, astrid.hansen@example.org) 42 timer og Silje Berg (konsulent, silje.berg@example.org) 145 timer. 3) Registrer leverandørkostnad 84450 kr fra Polaris AS (org.nr 947820605). 4) Opprett kundefaktura for prosjektet.",
+    "timestamp": "20260321_142939_236175",
+    "hash": "3d37cac6feef"
+  },
+  {
+    "prompt": "Log 5 hours for Emily Johnson (emily.johnson@example.org) on the activity \"Utvikling\" in the project \"Security Audit\" for Clearwater Ltd (org no. 874828955). Hourly rate: 1600 NOK/h. Generate a project invoice to the customer based on the logged hours.",
+    "timestamp": "20260321_164524_103633",
+    "hash": "29b949099136"
+  },
+  {
+    "prompt": "Execute the complete project lifecycle for 'ERP Implementation Silveroak' (Silveroak Ltd, org no. 814740536): 1) The project has a budget of 364650 NOK. 2) Log time: Henry Harris (project manager, henry.harris@example.org) 61 hours and Sarah Smith (consultant, sarah.smith@example.org) 108 hours. 3) Register supplier cost of 34850 NOK from Northwave Ltd (org no. 938190984). 4) Create a customer invoice for the project.",
+    "timestamp": "20260321_164740_606949",
+    "hash": "c052aaa9dda2"
+  },
+  {
+    "prompt": "Exécutez le cycle de vie complet du projet 'Migration Cloud Montagne' (Montagne SARL, nº org. 815119924) : 1) Le projet a un budget de 489850 NOK. 2) Enregistrez le temps : Louis Moreau (chef de projet, louis.moreau@example.org) 33 heures et Louis Dubois (consultant, louis.dubois@example.org) 108 heures. 3) Enregistrez un coût fournisseur de 48850 NOK de Soleil SARL (nº org. 981965965). 4) Créez une facture client pour le projet.",
+    "timestamp": "20260321_173240_695287",
+    "hash": "2f06b905b57a"
+  },
+  {
+    "prompt": "Exécutez le cycle de vie complet du projet 'Mise à Niveau Système Soleil' (Soleil SARL, nº org. 869871079) : 1) Le projet a un budget de 475350 NOK. 2) Enregistrez le temps : Gabriel Richard (chef de projet, gabriel.richard@example.org) 25 heures et Chloé Richard (consultant, chloe.richard@example.org) 96 heures. 3) Enregistrez un coût fournisseur de 93950 NOK de Forêt SARL (nº org. 967857920). 4) Créez une facture client pour le projet.",
+    "timestamp": "20260321_173513_104713",
+    "hash": "ef3fcd1a6050"
+  },
+  {
+    "prompt": "Registrer 15 timer for Solveig Bakken (solveig.bakken@example.org) på aktiviteten \"Testing\" i prosjektet \"Systemoppgradering\" for Stormberg AS (org.nr 963903359). Timesats: 1900 kr/t. Generer en prosjektfaktura til kunden basert på de registrerte timene.",
+    "timestamp": "20260321_185331_039966",
+    "hash": "6e3380b6ac9d"
+  },
+  {
+    "prompt": "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Viento' (Viento SL, org. nº 828947818): 1) El proyecto tiene un presupuesto de 225650 NOK. 2) Registre horas: Andrés Hernández (director de proyecto, andres.hernandez@example.org) 72 horas y Javier Rodríguez (consultor, javier.rodriguez@example.org) 60 horas. 3) Registre costo de proveedor de 34650 NOK de Río Verde SL (org. nº 900901666). 4) Cree una factura al cliente por el proyecto.",
+    "timestamp": "20260321_205257_962330",
+    "hash": "2fbbe21272e8"
+  },
+  {
+    "prompt": "Erfassen Sie 18 Stunden für Sophia Schmidt (sophia.schmidt@example.org) auf der Aktivität \"Design\" im Projekt \"Sicherheitsaudit\" für Windkraft GmbH (Org.-Nr. 882984826). Stundensatz: 950 NOK/h. Erstellen Sie eine Projektrechnung an den Kunden basierend auf den erfassten Stunden.",
+    "timestamp": "20260321_205657_876166",
+    "hash": "1bb070bd3c2d"
+  },
+  {
+    "prompt": "Gjennomfør hele prosjektsyklusen for 'Dataplattform Brattli' (Brattli AS, org.nr 937190808): 1) Prosjektet har budsjett 349100 kr. 2) Registrer timer: Hilde Ødegård (prosjektleder, hilde.degard@example.org) 21 timer og Lars Johansen (konsulent, lars.johansen@example.org) 141 timer. 3) Registrer leverandørkostnad 71800 kr fra Lysgård AS (org.nr 898870936). 4) Opprett kundefaktura for prosjektet.",
+    "timestamp": "20260321_222419_829249",
+    "hash": "410253c4b66b"
+  },
+  {
+    "prompt": "Ejecute el ciclo de vida completo del proyecto 'Migración Cloud Río' (Río Verde SL, org. nº 904714364): 1) El proyecto tiene un presupuesto de 212950 NOK. 2) Registre horas: Pablo González (director de proyecto, pablo.gonzalez@example.org) 63 horas y Diego López (consultor, diego.lopez@example.org) 160 horas. 3) Registre costo de proveedor de 44550 NOK de Solmar SL (org. nº 855062305). 4) Cree una factura al cliente por el proyecto.",
+    "timestamp": "20260321_222827_833136",
+    "hash": "84a9696beeed"
+  },
+  {
+    "prompt": "Gjennomfør hele prosjektsyklusen for 'Systemoppgradering Brattli' (Brattli AS, org.nr 960456300): 1) Prosjektet har budsjett 244200 kr. 2) Registrer timer: Marte Johansen (prosjektleder, marte.johansen@example.org) 75 timer og Sigurd Nilsen (konsulent, sigurd.nilsen@example.org) 124 timer. 3) Registrer leverandørkostnad 38950 kr fra Tindra AS (org.nr 902214186). 4) Opprett kundefaktura for prosjektet.",
+    "timestamp": "20260321_225652_500871",
+    "hash": "543af362805b"
+  },
+  {
+    "prompt": "Registre 39 horas para Diego Sánchez (diego.sanchez@example.org) en la actividad \"Analyse\" del proyecto \"Desarrollo de app\" para Olivares SL (org. nº 980551709). Tarifa por hora: 1450 NOK/h. Genere una factura de proyecto al cliente basada en las horas registradas.",
+    "timestamp": "20260322_020925_528691",
+    "hash": "4c6309a109bf"
+  },
+  {
+    "prompt": "Log 15 hours for Samuel Williams (samuel.williams@example.org) on the activity \"Analyse\" in the project \"Website Redesign\" for Windmill Ltd (org no. 898523942). Hourly rate: 1950 NOK/h. Generate a project invoice to the customer based on the logged hours.",
+    "timestamp": "20260322_022242_468361",
+    "hash": "385537fdeff0"
+  },
+  {
+    "prompt": "Registre 15 horas para Miguel Torres (miguel.torres@example.org) en la actividad \"Design\" del proyecto \"Rediseño web\" para Viento SL (org. nº 980164454). Tarifa por hora: 1800 NOK/h. Genere una factura de proyecto al cliente basada en las horas registradas.",
+    "timestamp": "20260322_100246_307025",
+    "hash": "07aa6a3d510b"
+  }
+]

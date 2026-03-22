@@ -1,0 +1,242 @@
+{
+  "timestamp": "20260321_000051_922640",
+  "prompt": "Crie uma dimensão contabilística personalizada \"Marked\" com os valores \"Offentlig\" e \"Bedrift\". Em seguida, lance um documento na conta 6540 por 44100 NOK, vinculado ao valor de dimensão \"Offentlig\".",
+  "parsed_task": {
+    "task_type": "create_custom_dimension",
+    "fields": {
+      "dimensionName": "Marked",
+      "values": [
+        "Offentlig",
+        "Bedrift"
+      ],
+      "voucherDate": "2026-03-20",
+      "voucherDescription": "Voucher linked to dimension Offentlig",
+      "accountNumber": 6540,
+      "amount": 44100,
+      "dimensionValue": "Offentlig"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/accountingDimensionName",
+      "status": 200,
+      "duration_ms": 219.2,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionName",
+      "status": 201,
+      "duration_ms": 226.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/accountingDimensionValue/search",
+      "status": 200,
+      "duration_ms": 204.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionValue",
+      "status": 201,
+      "duration_ms": 241.8,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/accountingDimensionValue",
+      "status": 201,
+      "duration_ms": 232.8,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 239.6,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 215.1,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 438.2,
+      "error": null
+    }
+  ],
+  "total_calls": 8,
+  "error_count_4xx": 0,
+  "total_duration_ms": 3519.1,
+  "result": {
+    "status": "completed",
+    "taskType": "create_custom_dimension",
+    "dimension": {
+      "id": 1656,
+      "name": "Marked",
+      "index": 1
+    },
+    "values": [
+      {
+        "id": 17002,
+        "name": "Offentlig"
+      },
+      {
+        "id": 17003,
+        "name": "Bedrift"
+      }
+    ],
+    "voucher": {
+      "status": "completed",
+      "created": {
+        "id": 608879294,
+        "version": 5,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879294",
+        "date": "2026-03-20",
+        "number": 1,
+        "tempNumber": 0,
+        "year": 2026,
+        "description": "Voucher linked to dimension Offentlig",
+        "voucherType": null,
+        "reverseVoucher": null,
+        "postings": [
+          {
+            "id": 3845061082,
+            "version": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845061082",
+            "voucher": {
+              "id": 608879294,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879294"
+            },
+            "date": "2026-03-20",
+            "description": "Voucher linked to dimension Offentlig",
+            "account": {
+              "id": 461708708,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/461708708"
+            },
+            "amortizationAccount": null,
+            "amortizationStartDate": null,
+            "amortizationEndDate": null,
+            "customer": null,
+            "supplier": null,
+            "employee": null,
+            "project": null,
+            "product": null,
+            "department": null,
+            "vatType": {
+              "id": 0,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+            },
+            "amount": 44100.0,
+            "amountCurrency": 44100.0,
+            "amountGross": 44100,
+            "amountGrossCurrency": 44100,
+            "currency": {
+              "id": 1,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+            },
+            "closeGroup": null,
+            "invoiceNumber": "",
+            "termOfPayment": null,
+            "row": 1,
+            "type": null,
+            "externalRef": "",
+            "systemGenerated": false,
+            "taxTransactionType": "(Ikke valgt)",
+            "taxTransactionTypeId": 0,
+            "matched": false,
+            "quantityAmount1": 0,
+            "quantityType1": null,
+            "quantityAmount2": 0,
+            "quantityType2": null,
+            "isVatReadonly": false,
+            "isAmountVatClosed": false,
+            "postingRuleId": 0,
+            "freeAccountingDimension1": {
+              "id": 17002,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/accountingDimensionValue/17002"
+            },
+            "freeAccountingDimension2": null,
+            "freeAccountingDimension3": null,
+            "asset": null
+          },
+          {
+            "id": 3845061083,
+            "version": 1,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845061083",
+            "voucher": {
+              "id": 608879294,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/608879294"
+            },
+            "date": "2026-03-20",
+            "description": "Voucher linked to dimension Offentlig",
+            "account": {
+              "id": 461708438,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/461708438"
+            },
+            "amortizationAccount": null,
+            "amortizationStartDate": null,
+            "amortizationEndDate": null,
+            "customer": null,
+            "supplier": null,
+            "employee": null,
+            "project": null,
+            "product": null,
+            "department": null,
+            "vatType": {
+              "id": 0,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+            },
+            "amount": -44100.0,
+            "amountCurrency": -44100.0,
+            "amountGross": -44100.0,
+            "amountGrossCurrency": -44100.0,
+            "currency": {
+              "id": 1,
+              "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+            },
+            "closeGroup": null,
+            "invoiceNumber": "",
+            "termOfPayment": null,
+            "row": 2,
+            "type": null,
+            "externalRef": "",
+            "systemGenerated": false,
+            "taxTransactionType": "(Ikke valgt)",
+            "taxTransactionTypeId": 0,
+            "matched": false,
+            "quantityAmount1": 0,
+            "quantityType1": null,
+            "quantityAmount2": 0,
+            "quantityType2": null,
+            "isVatReadonly": true,
+            "isAmountVatClosed": false,
+            "postingRuleId": 0,
+            "freeAccountingDimension1": null,
+            "freeAccountingDimension2": null,
+            "freeAccountingDimension3": null,
+            "asset": null
+          }
+        ],
+        "document": null,
+        "attachment": null,
+        "externalVoucherNumber": "",
+        "ediDocument": null,
+        "supplierVoucherType": null,
+        "wasAutoMatched": false,
+        "vendorInvoiceNumber": null,
+        "numberAsString": "1-2026"
+      }
+    }
+  }
+}

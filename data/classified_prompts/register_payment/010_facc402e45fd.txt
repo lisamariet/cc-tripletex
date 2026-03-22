@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+El cliente Solmar SL (org. nº 866440034) tiene una factura pendiente de 30000 NOK sin IVA por "Almacenamiento en la nube". Registre el pago completo de esta factura.

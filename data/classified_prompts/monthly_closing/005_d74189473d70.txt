@@ -1,0 +1,3 @@
+Confidence: 0.93
+
+Effectuez la clôture mensuelle de mars 2026. Comptabilisez la régularisation (13600 NOK par mois du compte 1700 vers charges). Enregistrez l'amortissement mensuel d'une immobilisation avec un coût d'a

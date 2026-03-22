@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez une commande pour le client Océan SARL (nº org. 984524706) avec les produits Licence logicielle (7127) à 6750 NOK et Stockage cloud (8796) à 9700 NOK. Convertissez la commande en facture et enre

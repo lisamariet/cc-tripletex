@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_134922_448324",
+  "prompt": "Opprett prosjektet \"Analyse Fjordkraft\" knyttet til kunden Fjordkraft AS (org.nr 944845712). Prosjektleder er Hilde Johansen (hilde.johansen@example.org).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

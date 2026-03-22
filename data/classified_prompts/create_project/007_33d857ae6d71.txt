@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Create the project "Upgrade Greenfield" linked to the customer Greenfield Ltd (org no. 918986197). The project manager is Emily Walker (emily.walker@example.org).

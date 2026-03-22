@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Opprett en faktura til kunden Tindra AS (org.nr 967636665) med tre produktlinjer: Skylagring (2186) til 25500 kr med 25 % MVA, Datarådgivning (9108) til 11100 kr med 15 % MVA (næringsmiddel), og Opplæ

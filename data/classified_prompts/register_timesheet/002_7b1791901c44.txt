@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erfassen Sie 33 Stunden für Paul Müller (paul.muller@example.org) auf der Aktivität "Testing" im Projekt "Datenmigration" für Sonnental GmbH (Org.-Nr. 839389701). Stundensatz: 900 NOK/h. Erstellen Sie

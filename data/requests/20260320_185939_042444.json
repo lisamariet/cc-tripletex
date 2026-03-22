@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_185939_042444",
+  "prompt": "Kunden Fjelltopp AS (org.nr 950710241) har reklamert på fakturaen for \"Nettverksteneste\" (28100 kr ekskl. MVA). Opprett ei fullstendig kreditnota som reverserer heile fakturaen.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

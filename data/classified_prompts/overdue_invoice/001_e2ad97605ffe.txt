@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Um dos seus clientes tem uma fatura vencida. Encontre a fatura vencida e registe uma taxa de lembrete de 70 NOK. Debito contas a receber (1500), credito receitas de lembrete (3400). Também crie uma fa

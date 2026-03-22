@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_001425_333279",
+  "prompt": "Nous avons envoyé une facture de 12689 EUR à Océan SARL (nº org. 863081793) lorsque le taux de change était de 11.28 NOK/EUR. Le client a maintenant payé, mais le taux est de 10.71 NOK/EUR. Enregistrez le paiement et comptabilisez l'écart de change (disagio) sur le bon compte.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "timestamp": "20260321_180536_948270",
+  "prompt": "We have discovered errors in the general ledger for January and February 2026. Review all vouchers and find the 4 errors: a posting to the wrong account (account 7300 used instead of 7000, amount 1650 NOK), a duplicate voucher (account 6500, amount 3100 NOK), a missing VAT line (account 6540, amount excl. 20950 NOK missing VAT on account 2710), and an incorrect amount (account 6340, 18100 NOK posted instead of 6050 NOK). Correct all errors with appropriate correction vouchers.",
+  "parsed_task": {
+    "task_type": "correct_ledger_error",
+    "fields": {
+      "errors": [
+        {
+          "errorType": "wrong_account",
+          "wrongAccount": 7300,
+          "correctAccount": 7000,
+          "amount": 1650
+        },
+        {
+          "errorType": "duplicate",
+          "account": 6500,
+          "amount": 3100
+        },
+        {
+          "errorType": "missing_vat",
+          "account": 6540,
+          "amount": 20950,
+          "vatAccount": 2710
+        },
+        {
+          "errorType": "wrong_amount",
+          "account": 6340,
+          "amount": 18100,
+          "correctAmount": 6050
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 4883.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "2710"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":467131190,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/467131190\",\"number\":2710,\"numberPretty\":\"2710\",\"name\":\"Inngående merverdiavgift, høy sats\",\"description\":\"\",\"type\":\"LIABILITIES\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":null,\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":false,\"isInactive\":true,\"isBankAccount\":false,\"isInvoiceAccount\":false,\"bankAccountNumber\":\"\",\"bankAccountCountry\":null,\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"27\",\"groupingCode\":\"2740\",\"displayName\":\"2710 Inngående merverdiavgift, høy sats\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 710.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1920"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":467131109,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/467131109\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":true,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/ledger/voucher",
+      "status": 201,
+      "duration_ms": 6123.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/voucher",
+      "request_body": {
+        "date": "2026-03-21",
+        "description": "Korreksjon: manglende MVA for konto 6540",
+        "postings": [
+          {
+            "account": {
+              "id": 467131190
+            },
+            "amountGross": 5237.5,
+            "amountGrossCurrency": 5237.5,
+            "row": 1
+          },
+          {
+            "account": {
+              "id": 467131109
+            },
+            "amountGross": -5237.5,
+            "amountGrossCurrency": -5237.5,
+            "row": 2
+          }
+        ]
+      },
+      "response_body": "{\"value\":{\"id\":609076011,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609076011\",\"date\":\"2026-03-21\",\"number\":31,\"tempNumber\":0,\"year\":2026,\"description\":\"Korreksjon: manglende MVA for konto 6540\",\"voucherType\":null,\"reverseVoucher\":null,\"postings\":[{\"id\":3845605179,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845605179\",\"voucher\":{\"id\":609076011,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609076011\"},\"date\":\"2026-03-21\",\"description\":\"Korreksjon: manglende MVA for konto 6540\",\"account\":{\"id\":467131190,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/467131190\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,\"product\":null,\"department\":null,\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"amount\":5237.50,\"amountCurrency\":5237.50,\"amountGross\":5237.5,\"amountGrossCurrency\":5237.5,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"closeGroup\":null,\"invoiceNumber\":\"\",\"termOfPayment\":null,\"row\":1,\"type\":null,\"externalRef\":\"\",\"systemGenerated\":false,\"taxTransactionType\":\"(Ikke valgt)\",\"taxTransactionTypeId\":0,\"matched\":false,\"quantityAmount1\":0,\"quantityType1\":null,\"quantityAmount2\":0,\"quantityType2\":null,\"isVatReadonly\":true,\"isAmountVatClosed\":false,\"postingRuleId\":0,\"freeAccountingDimension1\":null,\"freeAccountingDimension2\":null,\"freeAccountingDimension3\":null,\"asset\":null},{\"id\":3845605181,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845605181\",\"voucher\":{\"id\":609076011,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609076011\"},\"date\":\"2026-03-21\",\"description\":\"Korreksjon: manglende MVA for konto 6540\",\"account\":{\"id\":467131109,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/467131109\"},\"amortizationAccount\":null,\"amortizationStartDate\":null,\"amortizationEndDate\":null,\"customer\":null,\"supplier\":null,\"employee\":null,\"project\":null,"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 15334.1,
+  "result": {
+    "status": "completed",
+    "taskType": "correct_ledger_error",
+    "errorsProcessed": 4,
+    "errorsCompleted": 1,
+    "corrections": [
+      {
+        "errorType": "wrong_account",
+        "account": 7300,
+        "amount": 1650,
+        "status": "error",
+        "message": "Could not find voucher on account 7300 with amount 1650"
+      },
+      {
+        "errorType": "duplicate",
+        "account": 6500,
+        "amount": 3100,
+        "status": "error",
+        "message": "Could not find duplicate voucher on account 6500 with amount 3100"
+      },
+      {
+        "errorType": "missing_vat",
+        "account": 6540,
+        "amount": 20950,
+        "correctionVoucherId": 609076011,
+        "vatAmount": 5237.5,
+        "status": "completed"
+      },
+      {
+        "errorType": "wrong_amount",
+        "account": 6340,
+        "amount": 18100,
+        "status": "error",
+        "message": "Could not find voucher on account 6340 with amount 18100"
+      }
+    ]
+  }
+}

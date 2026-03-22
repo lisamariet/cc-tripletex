@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Kjør lønn for Jonas Hansen (jonas.hansen@example.org) for denne måneden. Grunnlønn er 40000 kr. Legg til en engangsbonus på 10600 kr i tillegg til grunnlønnen. Dersom lønns-API-et ikke fungerer, kan d

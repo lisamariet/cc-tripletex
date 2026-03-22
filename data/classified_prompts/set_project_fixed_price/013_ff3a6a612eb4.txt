@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Set a fixed price of 433600 NOK on the project "Automation Project" for Clearwater Ltd (org no. 934928199). The project manager is James Brown (james.brown@example.org). Invoice the customer for 25% o

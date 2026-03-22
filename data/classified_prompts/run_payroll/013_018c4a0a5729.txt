@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Ejecute la nómina de Fernando García (fernando.garcia@example.org) para este mes. El salario base es de 55350 NOK. Añada una bonificación única de 14600 NOK además del salario base.

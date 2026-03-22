@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Registre una nota de gastos de viaje para Laura López (laura.lopez@example.org) por "Visita cliente Oslo". El viaje duró 2 días con dietas (tarifa diaria 800 NOK). Gastos: billete de avión 3700 NOK y 

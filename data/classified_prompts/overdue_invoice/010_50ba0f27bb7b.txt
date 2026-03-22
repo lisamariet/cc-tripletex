@@ -1,0 +1,3 @@
+Confidence: 0.96
+
+Ein av kundane dine har ein forfallen faktura. Finn den forfalne fakturaen og bokfor eit purregebyr pa 55 kr. Debet kundefordringar (1500), kredit purregebyr (3400). Opprett også ein faktura for purre

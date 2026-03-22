@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea el proyecto "Actualización Dorada" vinculado al cliente Dorada SL (org. nº 800043328). El director del proyecto es Carmen Rodríguez (carmen.rodriguez@example.org).

@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_132307_860768",
+  "revision": "tripletex-agent-00136-rsk",
+  "prompt": "Opprett ein faktura til kunden Elvdal AS (org.nr 810713909) med tre produktlinjer: Nettverksteneste (7765) til 13150 kr med 25 % MVA, Konsulenttimar (4369) til 11800 kr med 15 % MVA (næringsmiddel), og Vedlikehald (5331) til 8700 kr med 0 % MVA (avgiftsfri).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

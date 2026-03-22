@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Der Kunde Sonnental GmbH (Org.-Nr. 809303829) hat die Rechnung für "Systementwicklung" (10400 NOK ohne MwSt.) reklamiert. Erstellen Sie eine vollständige Gutschrift, die die gesamte Rechnung storniert

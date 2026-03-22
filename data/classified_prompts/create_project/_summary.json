@@ -1,0 +1,137 @@
+[
+  {
+    "prompt": "Opprett prosjektet \"Migrasjon Vestfjord\" knytt til kunden Vestfjord AS (org.nr 887727872). Prosjektleiar er Liv Stølsvik (liv.stlsvik@example.org).",
+    "confidence": 0.98,
+    "hash": "f4c2476a6600"
+  },
+  {
+    "prompt": "Create the project \"Integration Northwave\" linked to the customer Northwave Ltd (org no. 950072652). The project manager is James Johnson (james.johnson@example.org).",
+    "confidence": 0.95,
+    "hash": "828c0662acf1"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Analyse Fjordkraft\" knyttet til kunden Fjordkraft AS (org.nr 944845712). Prosjektleder er Hilde Johansen (hilde.johansen@example.org).",
+    "confidence": 0.98,
+    "hash": "9dbd60b8904c"
+  },
+  {
+    "prompt": "Erstellen Sie das Projekt \"Integration Windkraft\" verknüpft mit dem Kunden Windkraft GmbH (Org.-Nr. 964854629). Projektleiter ist Sophia Meyer (sophia.meyer@example.org).",
+    "confidence": 0.95,
+    "hash": "65dec0e6d949"
+  },
+  {
+    "prompt": "Créez le projet \"Intégration Montagne\" lié au client Montagne SARL (nº org. 975615766). Le chef de projet est Jules Robert (jules.robert@example.org).",
+    "confidence": 0.95,
+    "hash": "77ec4c83a5e9"
+  },
+  {
+    "prompt": "Erstellen Sie das Projekt \"Integration Windkraft\" verknüpft mit dem Kunden Windkraft GmbH (Org.-Nr. 804172807). Projektleiter ist Hannah Weber (hannah.weber@example.org).",
+    "confidence": 0.95,
+    "hash": "6e9bd9260af6"
+  },
+  {
+    "prompt": "Create the project \"Upgrade Greenfield\" linked to the customer Greenfield Ltd (org no. 918986197). The project manager is Emily Walker (emily.walker@example.org).",
+    "confidence": 0.98,
+    "hash": "33d857ae6d71"
+  },
+  {
+    "prompt": "Create the project \"Analysis Oakwood\" linked to the customer Oakwood Ltd (org no. 849612913). The project manager is Lucy Taylor (lucy.taylor@example.org).",
+    "confidence": 0.98,
+    "hash": "1484085a8015"
+  },
+  {
+    "prompt": "Crea el proyecto \"Actualización Dorada\" vinculado al cliente Dorada SL (org. nº 800043328). El director del proyecto es Carmen Rodríguez (carmen.rodriguez@example.org).",
+    "confidence": 0.95,
+    "hash": "9c29bfac0884"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Analyse Sjøbris\" knytt til kunden Sjøbris AS (org.nr 883693329). Prosjektleiar er Steinar Berge (steinar.berge@example.org).",
+    "confidence": 0.98,
+    "hash": "b21452cc4192"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Migrasjon Elvdal\" knytt til kunden Elvdal AS (org.nr 877501906). Prosjektleiar er Liv Haugen (liv.haugen@example.org).",
+    "confidence": 0.98,
+    "hash": "c65833f3bfc8"
+  },
+  {
+    "prompt": "Die Gesamtkosten sind von Januar bis Februar 2026 deutlich gestiegen. Analysieren Sie das Hauptbuch und identifizieren Sie die drei Aufwandskonten mit dem größten Anstieg. Erstellen Sie für jedes der ",
+    "confidence": 0.95,
+    "hash": "bedf59aca7d2"
+  },
+  {
+    "prompt": "Totalkostnadene auka monaleg frå januar til februar 2026. Analyser hovudboka og finn dei tre kostnadskontoane med størst auke i beløp. Opprett eit internt prosjekt for kvar av dei tre kontoane med kon",
+    "confidence": 0.88,
+    "hash": "2493dc77924d"
+  },
+  {
+    "prompt": "Totalkostnadene økte betydelig fra januar til februar 2026. Analyser hovedboken og finn de tre kostnadskontoene med størst økning i beløp. Opprett et internt prosjekt for hver av de tre kontoene med k",
+    "confidence": 0.95,
+    "hash": "d7a03d1bccf9"
+  },
+  {
+    "prompt": "Totalkostnadene økte betydelig fra januar til februar 2026. Analyser hovedboken og finn de tre kostnadskontoene med størst økning i beløp. Opprett et internt prosjekt for hver av de tre kontoene med k",
+    "confidence": 0.95,
+    "hash": "94b3e50a278e"
+  },
+  {
+    "prompt": "Crea el proyecto \"Migración Viento\" vinculado al cliente Viento SL (org. nº 857047575). El director del proyecto es Carlos Romero (carlos.romero@example.org).",
+    "confidence": 0.95,
+    "hash": "e1c1a84dde6b"
+  },
+  {
+    "prompt": "Create the project \"Upgrade Windmill\" linked to the customer Windmill Ltd (org no. 978017681). The project manager is Grace Lewis (grace.lewis@example.org).",
+    "confidence": 0.98,
+    "hash": "fde91b44131c"
+  },
+  {
+    "prompt": "Les coûts totaux ont augmenté de manière significative de janvier à février 2026. Analysez le grand livre et identifiez les trois comptes de charges avec la plus forte augmentation. Créez un projet in",
+    "confidence": 0.88,
+    "hash": "27651763cd60"
+  },
+  {
+    "prompt": "Los costos totales aumentaron significativamente de enero a febrero de 2026. Analice el libro mayor e identifique las tres cuentas de gastos con el mayor incremento en monto. Cree un proyecto interno ",
+    "confidence": 0.95,
+    "hash": "be679db71249"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Integrasjon Havbris\" knyttet til kunden Havbris AS (org.nr 999148387). Prosjektleder er Henrik Ødegård (henrik.degard@example.org).",
+    "confidence": 0.98,
+    "hash": "022f85f8563b"
+  },
+  {
+    "prompt": "Crie o projeto \"Integração Porto\" vinculado ao cliente Porto Alegre Lda (org. nº 884811686). O gerente de projeto é Lucas Silva (lucas.silva@example.org).",
+    "confidence": 0.95,
+    "hash": "589dc3257010"
+  },
+  {
+    "prompt": "Create the project \"Upgrade Silveroak\" linked to the customer Silveroak Ltd (org no. 937657250). The project manager is Alice Smith (alice.smith@example.org).",
+    "confidence": 0.98,
+    "hash": "12dc394b8432"
+  },
+  {
+    "prompt": "Os custos totais aumentaram significativamente de janeiro a fevereiro de 2026. Analise o livro razão e identifique as três contas de despesa com o maior aumento em valor. Crie um projeto interno para ",
+    "confidence": 0.88,
+    "hash": "6bae1eea33f6"
+  },
+  {
+    "prompt": "Total costs increased significantly from January to February 2026. Analyze the general ledger and identify the three expense accounts with the largest increase in amount. Create an internal project fo",
+    "confidence": 0.95,
+    "hash": "c2ad3d51333d"
+  },
+  {
+    "prompt": "Créez le projet \"Analyse Lumière\" lié au client Lumière SARL (nº org. 929902688). Le chef de projet est Léo Dubois (leo.dubois@example.org).",
+    "confidence": 0.98,
+    "hash": "46b0f4eadab2"
+  },
+  {
+    "prompt": "Crie o projeto \"Análise Porto\" vinculado ao cliente Porto Alegre Lda (org. nº 996943305). O gerente de projeto é Lucas Oliveira (lucas.oliveira@example.org).",
+    "confidence": 0.95,
+    "hash": "772353b44f71"
+  },
+  {
+    "prompt": "Opprett prosjektet \"Integrasjon Tindra\" knyttet til kunden Tindra AS (org.nr 887870462). Prosjektleder er Lars Johansen (lars.johansen@example.org).",
+    "confidence": 0.98,
+    "hash": "e4673eea49fe"
+  }
+]

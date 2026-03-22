@@ -1,0 +1,181 @@
+{
+  "timestamp": "20260321_161023_049100",
+  "prompt": "Has recibido un contrato de trabajo (ver PDF adjunto). Crea el empleado en Tripletex con todos los datos del contrato: numero de identidad, fecha de nacimiento, departamento, codigo de ocupacion, salario, porcentaje de empleo y fecha de inicio.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Carmen",
+      "lastName": "Pérez",
+      "email": "carmen.perez@example.org",
+      "dateOfBirth": "1980-02-12",
+      "startDate": "2026-11-15",
+      "nationalIdentityNumber": "12028008412",
+      "bankAccountNumber": "49515880223",
+      "department": "Regnskap",
+      "occupationCode": "2411",
+      "employmentPercentage": 100,
+      "annualSalary": 1000000
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 2777.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "name": "Regnskap",
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":0,\"from\":0,\"count\":0,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[]}"
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 3928.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "request_body": {
+        "name": "Regnskap"
+      },
+      "response_body": "{\"value\":{\"id\":939578,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/939578\",\"name\":\"Regnskap\",\"departmentNumber\":\"\",\"departmentManager\":null,\"displayName\":\"Regnskap\",\"isInactive\":false,\"businessActivityTypeId\":0}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 3372.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Carmen",
+        "lastName": "Pérez",
+        "email": "carmen.perez@example.org",
+        "dateOfBirth": "1980-02-12",
+        "nationalIdentityNumber": "12028008412",
+        "bankAccountNumber": "49515880223",
+        "userType": "STANDARD",
+        "department": {
+          "id": 939578
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18636978,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18636978\",\"firstName\":\"Carmen\",\"lastName\":\"Pérez\",\"displayName\":\"Carmen Pérez\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1980-02-12\",\"email\":\"carmen.perez@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"12028008412\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"49515880223\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":939578,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/939578\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107854447,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 2901.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18636978
+        },
+        "startDate": "2026-11-15"
+      },
+      "response_body": "{\"value\":{\"id\":2821564,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2821564\",\"employee\":{\"id\":18636978,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18636978\"},\"employmentId\":\"\",\"startDate\":\"2026-11-15\",\"endDate\":null,\"employmentEndReason\":null,\"division\":null,\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee/employment/occupationCode",
+      "status": 200,
+      "duration_ms": 2316.9,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment/occupationCode",
+      "query_params": {
+        "nameAndCode": "2411",
+        "count": 1
+      },
+      "response_body": "{\"fullResultSize\":2,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":1,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/occupationCode/1\",\"nameNO\":\"1.NESTLEDER (ARBEIDSGIVER-/ARBEIDSTAKERORG.)\",\"code\":\"1142109\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment/details",
+      "status": 201,
+      "duration_ms": 2773.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment/details",
+      "request_body": {
+        "employment": {
+          "id": 2821564
+        },
+        "date": "2026-11-15",
+        "employmentType": "ORDINARY",
+        "employmentForm": "PERMANENT",
+        "remunerationType": "MONTHLY_WAGE",
+        "workingHoursScheme": "NOT_SHIFT",
+        "percentageOfFullTimeEquivalent": 100,
+        "occupationCode": {
+          "id": 1
+        },
+        "annualSalary": 1000000,
+        "monthlySalary": 83333.33
+      },
+      "response_body": "{\"value\":{\"id\":3720785,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/details/3720785\",\"employment\":{\"id\":2821564,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2821564\"},\"date\":\"2026-11-15\",\"employmentType\":\"ORDINARY\",\"employmentForm\":\"PERMANENT\",\"remunerationType\":\"MONTHLY_WAGE\",\"workingHoursScheme\":\"NOT_SHIFT\",\"shiftDurationHours\":0,\"occupationCode\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/occupationCode/1\"},\"percentageOfFullTimeEquivalent\":100,\"annualSalary\":1000000,\"hourlyWage\":513,\"payrollTaxMunicipalityId\":null,\"monthlySalary\":83333.33}}"
+    }
+  ],
+  "total_calls": 6,
+  "error_count_4xx": 0,
+  "total_duration_ms": 24530.6,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18636978,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18636978",
+      "firstName": "Carmen",
+      "lastName": "Pérez",
+      "displayName": "Carmen Pérez",
+      "employeeNumber": "",
+      "dateOfBirth": "1980-02-12",
+      "email": "carmen.perez@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "12028008412",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "49515880223",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 939578,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/939578"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 107854447,
+      "vismaConnect2FAactive": false
+    }
+  }
+}

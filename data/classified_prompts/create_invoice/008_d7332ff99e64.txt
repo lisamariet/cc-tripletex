@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Créez une facture pour le client Océan SARL (nº org. 974909103) avec trois lignes de produit : Développement système (9068) à 11000 NOK avec 25 % TVA, Licence logicielle (3111) à 7350 NOK avec 15 % TV

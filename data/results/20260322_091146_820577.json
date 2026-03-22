@@ -1,0 +1,155 @@
+{
+  "timestamp": "20260322_091146_820577",
+  "prompt": "Opprett prosjektet \"Integrasjon Tindra\" knyttet til kunden Tindra AS (org.nr 887870462). Prosjektleder er Lars Johansen (lars.johansen@example.org).",
+  "parsed_task": {
+    "task_type": "create_project",
+    "fields": {
+      "name": "Integrasjon Tindra",
+      "customerName": "Tindra AS",
+      "customerOrgNumber": "887870462",
+      "projectManagerName": "Lars Johansen",
+      "projectManagerEmail": "lars.johansen@example.org"
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 510.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "email": "lars.johansen@example.org",
+        "fields": "id,firstName,lastName,email"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18774041,\"firstName\":\"Lars\",\"lastName\":\"Johansen\",\"email\":\"lars.johansen@example.org\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 424.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "887870462",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108566968,\"name\":\"Tindra AS\",\"organizationNumber\":\"887870462\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 540.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "Integrasjon Tindra",
+        "isInternal": false,
+        "projectManager": {
+          "id": 18774041
+        },
+        "customer": {
+          "id": 108566968
+        },
+        "startDate": "2026-03-22"
+      },
+      "response_body": "{\"value\":{\"id\":402071603,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402071603\",\"name\":\"Integrasjon Tindra\",\"number\":\"1\",\"displayName\":\"1 Integrasjon Tindra\",\"description\":\"\",\"projectManager\":{\"id\":18774041,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18774041\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-22\",\"endDate\":null,\"customer\":{\"id\":108566968,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108566968\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":false,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":0,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11099496,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11099496\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15654700,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15654700\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"1 Integrasjon Tindra\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Tindra AS\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Lars Johansen\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":0,\"accountingDimensionValues\":[]}}"
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 2965.7,
+  "result": {
+    "status": "completed",
+    "taskType": "create_project",
+    "created": {
+      "id": 402071603,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/402071603",
+      "name": "Integrasjon Tindra",
+      "number": "1",
+      "displayName": "1 Integrasjon Tindra",
+      "description": "",
+      "projectManager": {
+        "id": 18774041,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18774041"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-22",
+      "endDate": null,
+      "customer": {
+        "id": 108566968,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108566968"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": false,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 0,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11099496,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11099496"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15654700,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15654700"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "1 Integrasjon Tindra",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Tindra AS",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Lars Johansen",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 0,
+      "accountingDimensionValues": []
+    }
+  }
+}

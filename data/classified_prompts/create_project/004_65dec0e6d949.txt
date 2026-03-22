@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erstellen Sie das Projekt "Integration Windkraft" verknüpft mit dem Kunden Windkraft GmbH (Org.-Nr. 964854629). Projektleiter ist Sophia Meyer (sophia.meyer@example.org).

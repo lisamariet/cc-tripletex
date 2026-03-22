@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+O pagamento de Luz do Sol Lda (org. nº 856642402) referente à fatura "Horas de consultoria" (9000 NOK sem IVA) foi devolvido pelo banco. Reverta o pagamento para que a fatura volte a mostrar o montant

@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_163113_037210",
+  "prompt": "Registrer en reiseregning for Ragnhild Bakken (ragnhild.bakken@example.org) for \"Kundebesøk Kristiansand\". Reisen varte 4 dager med diett (dagsats 800 kr). Utlegg: flybillett 5450 kr og taxi 550 kr.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

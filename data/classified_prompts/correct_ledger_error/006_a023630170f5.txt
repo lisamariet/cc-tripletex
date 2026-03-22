@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Hemos descubierto errores en el libro mayor de enero y febrero de 2026. Revise todos los comprobantes y encuentre los 4 errores: un asiento en la cuenta incorrecta (cuenta 6540 usada en lugar de 6860,

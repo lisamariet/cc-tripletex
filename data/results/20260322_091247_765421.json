@@ -1,0 +1,150 @@
+{
+  "timestamp": "20260322_091247_765421",
+  "prompt": "Crea el cliente Dorada SL con número de organización 823073917. La dirección es Kirkegata 46, 4006 Stavanger. Correo: post@dorada.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Dorada SL",
+      "organizationNumber": "823073917",
+      "email": "post@dorada.no",
+      "invoiceEmail": "post@dorada.no",
+      "address": {
+        "addressLine1": "Kirkegata 46",
+        "postalCode": "4006",
+        "city": "Stavanger"
+      },
+      "overdueNoticeEmail": "post@dorada.no"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 563.2,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "request_body": {
+        "name": "Dorada SL",
+        "isCustomer": true,
+        "organizationNumber": "823073917",
+        "email": "post@dorada.no",
+        "invoiceEmail": "post@dorada.no",
+        "overdueNoticeEmail": "post@dorada.no",
+        "postalAddress": {
+          "addressLine1": "Kirkegata 46",
+          "postalCode": "4006",
+          "city": "Stavanger"
+        },
+        "physicalAddress": {
+          "addressLine1": "Kirkegata 46",
+          "postalCode": "4006",
+          "city": "Stavanger"
+        }
+      },
+      "response_body": "{\"value\":{\"id\":108567256,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108567256\",\"name\":\"Dorada SL\",\"organizationNumber\":\"823073917\",\"globalLocationNumber\":0,\"supplierNumber\":0,\"customerNumber\":10001,\"isSupplier\":false,\"isCustomer\":true,\"isInactive\":false,\"accountManager\":null,\"department\":null,\"email\":\"post@dorada.no\",\"invoiceEmail\":\"post@dorada.no\",\"overdueNoticeEmail\":\"post@dorada.no\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"language\":\"NO\",\"displayName\":\"Dorada SL (10001)\",\"isPrivateIndividual\":false,\"singleCustomerInvoice\":false,\"invoiceSendMethod\":\"EMAIL\",\"emailAttachmentType\":\"ATTACHMENT\",\"postalAddress\":{\"id\":405980150,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405980150\",\"addressLine1\":\"Kirkegata 46\",\"addressLine2\":\"\",\"postalCode\":\"4006\",\"city\":\"Stavanger\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Dorada SL, Kirkegata 46, 4006 Stavanger, Norge\",\"addressAsString\":\"Kirkegata 46, 4006 Stavanger, Norge\",\"displayNameInklMatrikkel\":\"Dorada SL, Kirkegata 46, 4006 Stavanger, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"physicalAddress\":{\"id\":405980149,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405980149\",\"addressLine1\":\"Kirkegata 46\",\"addressLine2\":\"\",\"postalCode\":\"4006\",\"city\":\"Stavanger\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Dorada SL, Kirkegata 46, 4006 Stavanger, Norge\",\"addressAsString\":\"Kirkegata 46, 4006 Stavanger, Norge\",\"displayNameInklMatrikkel\":\"Dorada SL, Kirkegata 46, 4006 Stavanger, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"bankAccountPresentation\":[],\"ledgerAccount\":{\"id\":496594166,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/496594166\"},\"isFactoring\":fals"
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 2379.8,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108567256,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108567256",
+      "name": "Dorada SL",
+      "organizationNumber": "823073917",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@dorada.no",
+      "invoiceEmail": "post@dorada.no",
+      "overdueNoticeEmail": "post@dorada.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Dorada SL (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405980150,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405980150",
+        "addressLine1": "Kirkegata 46",
+        "addressLine2": "",
+        "postalCode": "4006",
+        "city": "Stavanger",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Dorada SL, Kirkegata 46, 4006 Stavanger, Norge",
+        "addressAsString": "Kirkegata 46, 4006 Stavanger, Norge",
+        "displayNameInklMatrikkel": "Dorada SL, Kirkegata 46, 4006 Stavanger, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "physicalAddress": {
+        "id": 405980149,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405980149",
+        "addressLine1": "Kirkegata 46",
+        "addressLine2": "",
+        "postalCode": "4006",
+        "city": "Stavanger",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Dorada SL, Kirkegata 46, 4006 Stavanger, Norge",
+        "addressAsString": "Kirkegata 46, 4006 Stavanger, Norge",
+        "displayNameInklMatrikkel": "Dorada SL, Kirkegata 46, 4006 Stavanger, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 496594166,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/496594166"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}

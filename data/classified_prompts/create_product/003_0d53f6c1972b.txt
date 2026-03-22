@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea el producto "Mantenimiento" con número de producto 4508. El precio es 41500 NOK sin IVA, utilizando la tasa estándar del 25 %.

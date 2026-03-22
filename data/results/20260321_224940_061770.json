@@ -1,0 +1,364 @@
+{
+  "timestamp": "20260321_224940_061770",
+  "prompt": "Legen Sie einen Festpreis von 305450 NOK für das Projekt \"Infrastruktur-Upgrade\" für Sonnental GmbH (Org.-Nr. 967604178) fest. Projektleiter ist Hannah Schneider (hannah.schneider@example.org). Stellen Sie dem Kunden 33 % des Festpreises als Meilensteinzahlung in Rechnung.",
+  "parsed_task": {
+    "task_type": "set_project_fixed_price",
+    "fields": {
+      "projectName": "Infrastruktur-Upgrade",
+      "customerName": "Sonnental GmbH",
+      "customerOrgNumber": "967604178",
+      "fixedPrice": 305450,
+      "projectManagerName": "Hannah Schneider",
+      "invoicePercentage": 33
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 502.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "967604178",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108447471,\"name\":\"Sonnental GmbH\",\"organizationNumber\":\"967604178\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/employee",
+      "status": 200,
+      "duration_ms": 489.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "query_params": {
+        "firstName": "Hannah",
+        "lastName": "Schneider"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"Checksum not yet supported for this endpoint\",\"values\":[{\"id\":18684027,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18684027\",\"firstName\":\"Hannah\",\"lastName\":\"Schneider\",\"displayName\":\"Hannah Schneider\",\"employeeNumber\":\"\",\"dateOfBirth\":null,\"email\":\"hannah.schneider@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":967289,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/967289\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0.0,\"basis\":0.0,\"amountExtraHolidayWeek\":0.0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":108447413,\"vismaConnect2FAactive\":false}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/project",
+      "status": 201,
+      "duration_ms": 1159.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/project",
+      "request_body": {
+        "name": "Infrastruktur-Upgrade",
+        "isInternal": false,
+        "isFixedPrice": true,
+        "fixedprice": 305450,
+        "startDate": "2026-03-21",
+        "projectManager": {
+          "id": 18684027
+        },
+        "customer": {
+          "id": 108447471
+        }
+      },
+      "response_body": "{\"value\":{\"id\":402043511,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402043511\",\"name\":\"Infrastruktur-Upgrade\",\"number\":\"2\",\"displayName\":\"2 Infrastruktur-Upgrade\",\"description\":\"\",\"projectManager\":{\"id\":18684027,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18684027\"},\"department\":null,\"mainProject\":null,\"startDate\":\"2026-03-21\",\"endDate\":null,\"customer\":{\"id\":108447471,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108447471\"},\"isClosed\":false,\"isReadyForInvoicing\":false,\"isInternal\":false,\"isOffer\":false,\"isFixedPrice\":true,\"projectCategory\":null,\"deliveryAddress\":null,\"boligmappaAddress\":null,\"displayNameFormat\":\"NAME_STANDARD\",\"reference\":\"\",\"externalAccountsNumber\":\"\",\"discountPercentage\":0,\"vatType\":{\"id\":3,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3\"},\"fixedprice\":305450,\"contributionMarginPercent\":0,\"numberOfSubProjects\":0,\"numberOfProjectParticipants\":1,\"orderLines\":[],\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"markUpOrderLines\":0,\"markUpFeesEarned\":0,\"isPriceCeiling\":false,\"priceCeilingAmount\":0,\"projectHourlyRates\":[{\"id\":11091561,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11091561\"}],\"forParticipantsOnly\":false,\"participants\":[{\"id\":15646453,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/participant/15646453\"}],\"contact\":null,\"attention\":null,\"invoiceComment\":\"\",\"invoicingPlan\":[],\"preliminaryInvoice\":null,\"generalProjectActivitiesPerProjectOnly\":false,\"projectActivities\":[],\"hierarchyNameAndNumber\":\"2 Infrastruktur-Upgrade\",\"invoiceDueDate\":14,\"invoiceDueDateType\":\"DAYS\",\"invoiceReceiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"accessType\":\"WRITE\",\"useProductNetPrice\":false,\"ignoreCompanyProductDiscountAgreement\":false,\"customerName\":\"Sonnental GmbH\",\"hierarchyLevel\":0,\"projectManagerNameAndNumber\":\"Hannah Schneider\",\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceOnAccountVatHigh\":false,\"invoiceReserveTotalAmountCurrency\":305450,\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 445.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"value\":{\"bankAccountReady\":false}}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account",
+      "status": 200,
+      "duration_ms": 400.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account",
+      "query_params": {
+        "number": "1920",
+        "fields": "id,bankAccountNumber,isBankAccount,isInvoiceAccount"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":476093886,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger/account/476093886",
+      "status": 200,
+      "duration_ms": 432.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/476093886",
+      "response_body": "{\"value\":{\"id\":476093886,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/476093886\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "PUT",
+      "path": "/ledger/account/476093886",
+      "status": 200,
+      "duration_ms": 537.8,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/ledger/account/476093886",
+      "request_body": {
+        "id": 476093886,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/476093886",
+        "number": 1920,
+        "numberPretty": "1920",
+        "name": "Bankinnskudd",
+        "description": "",
+        "type": "ASSETS",
+        "legalVatTypes": [
+          {
+            "id": 0,
+            "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+          }
+        ],
+        "ledgerType": "GENERAL",
+        "balanceGroup": "Ikke i en saldogruppe.",
+        "vatType": {
+          "id": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0"
+        },
+        "vatLocked": true,
+        "currency": {
+          "id": 1,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+        },
+        "isCloseable": false,
+        "isApplicableForSupplierInvoice": false,
+        "requireReconciliation": true,
+        "isInactive": false,
+        "isBankAccount": true,
+        "isInvoiceAccount": true,
+        "bankAccountNumber": "12345678903",
+        "bankAccountCountry": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "bankName": "",
+        "bankAccountIBAN": "",
+        "bankAccountSWIFT": "",
+        "saftCode": "19",
+        "groupingCode": "1920",
+        "displayName": "1920 Bankinnskudd",
+        "requiresDepartment": false,
+        "requiresProject": false,
+        "invoicingDepartment": null,
+        "isPostingsExist": false,
+        "quantityType1": null,
+        "quantityType2": null,
+        "department": null
+      },
+      "response_body": "{\"value\":{\"id\":476093886,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/476093886\",\"number\":1920,\"numberPretty\":\"1920\",\"name\":\"Bankinnskudd\",\"description\":\"\",\"type\":\"ASSETS\",\"legalVatTypes\":[{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"}],\"ledgerType\":\"GENERAL\",\"balanceGroup\":\"Ikke i en saldogruppe.\",\"vatType\":{\"id\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/0\"},\"vatLocked\":true,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCloseable\":false,\"isApplicableForSupplierInvoice\":false,\"requireReconciliation\":true,\"isInactive\":false,\"isBankAccount\":true,\"isInvoiceAccount\":true,\"bankAccountNumber\":\"12345678903\",\"bankAccountCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"bankName\":\"\",\"bankAccountIBAN\":\"\",\"bankAccountSWIFT\":\"\",\"saftCode\":\"19\",\"groupingCode\":\"1920\",\"displayName\":\"1920 Bankinnskudd\",\"requiresDepartment\":false,\"requiresProject\":false,\"invoicingDepartment\":null,\"isPostingsExist\":false,\"quantityType1\":null,\"quantityType2\":null,\"department\":null}}"
+    },
+    {
+      "method": "POST",
+      "path": "/order",
+      "status": 201,
+      "duration_ms": 646.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/order",
+      "request_body": {
+        "customer": {
+          "id": 108447471
+        },
+        "orderDate": "2026-03-21",
+        "deliveryDate": "2026-03-21",
+        "orderLines": [
+          {
+            "count": 1,
+            "unitPriceExcludingVatCurrency": 100798.5,
+            "description": "Delbetaling 33%",
+            "vatType": {
+              "id": 3
+            }
+          }
+        ],
+        "project": {
+          "id": 402043511
+        }
+      },
+      "response_body": "{\"value\":{\"id\":402043515,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402043515\",\"customer\":{\"id\":108447471,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108447471\"},\"contact\":null,\"attn\":null,\"displayName\":\"3 Ordre\",\"receiverEmail\":\"\",\"overdueNoticeEmail\":\"\",\"number\":\"3\",\"reference\":\"\",\"department\":null,\"orderDate\":\"2026-03-21\",\"project\":{\"id\":402043511,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/project/402043511\"},\"invoiceComment\":\"\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"isShowOpenPostsOnInvoices\":false,\"isClosed\":false,\"deliveryDate\":\"2026-03-21\",\"deliveryAddress\":null,\"deliveryComment\":\"\",\"isPrioritizeAmountsIncludingVat\":false,\"orderLineSorting\":\"PRODUCT\",\"orderGroups\":[],\"orderLines\":[],\"isSubscription\":false,\"subscriptionDuration\":0,\"subscriptionDurationType\":\"MONTHS\",\"subscriptionPeriodsOnInvoice\":0,\"subscriptionPeriodsOnInvoiceType\":\"MONTHS\",\"subscriptionInvoicingTimeInAdvanceOrArrears\":\"ADVANCE\",\"subscriptionInvoicingTime\":0,\"subscriptionInvoicingTimeType\":\"MONTHS\",\"isSubscriptionAutoInvoicing\":false,\"preliminaryInvoice\":{\"id\":2147647537,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147647537\"},\"attachment\":[],\"sendMethodDescription\":\"Faktura må sendes manuelt.\",\"invoiceOnAccountVatHigh\":false,\"totalInvoicedOnAccountAmountAbsoluteCurrency\":0.00,\"invoiceSendSMSNotification\":false,\"invoiceSMSNotificationNumber\":\"\",\"markUpOrderLines\":0,\"discountPercentage\":0.0,\"customerName\":\"Sonnental GmbH\",\"projectManagerNameAndNumber\":\"\",\"travelReports\":[],\"accountingDimensionValues\":[]}}"
+    },
+    {
+      "method": "PUT",
+      "path": "/order/402043515/:invoice",
+      "status": 200,
+      "duration_ms": 947.4,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/order/402043515/:invoice",
+      "query_params": {
+        "invoiceDate": "2026-03-21",
+        "sendToCustomer": false
+      },
+      "response_body": "{\"value\":{\"id\":2147647537,\"version\":5,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147647537\",\"invoiceNumber\":1,\"invoiceDate\":\"2026-03-21\",\"customer\":{\"id\":108447471,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108447471\"},\"creditedInvoice\":0,\"isCredited\":false,\"invoiceDueDate\":\"2026-04-04\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":402043515,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402043515\"}],\"orderLines\":[{\"id\":1607580799,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607580799\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965800035,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965800035\"}],\"voucher\":{\"id\":609195672,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609195672\"},\"deliveryDate\":\"2026-03-21\",\"amount\":125998.13,\"amountCurrency\":125998.13,\"amountExcludingVat\":100798.50,\"amountExcludingVatCurrency\":100798.50,\"amountRoundoff\":0,\"amountRoundoffCurrency\":0,\"amountOutstanding\":125998.13,\"amountCurrencyOutstanding\":125998.13,\"amountOutstandingTotal\":125998.13,\"amountCurrencyOutstandingTotal\":125998.13,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":false,\"isCharged\":true,\"isApproved\":true,\"postings\":[{\"id\":3845923120,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845923120\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024304654}}"
+    }
+  ],
+  "total_calls": 9,
+  "error_count_4xx": 0,
+  "total_duration_ms": 6913.2,
+  "result": {
+    "status": "completed",
+    "taskType": "set_project_fixed_price",
+    "created": {
+      "id": 402043511,
+      "version": 0,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/project/402043511",
+      "name": "Infrastruktur-Upgrade",
+      "number": "2",
+      "displayName": "2 Infrastruktur-Upgrade",
+      "description": "",
+      "projectManager": {
+        "id": 18684027,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18684027"
+      },
+      "department": null,
+      "mainProject": null,
+      "startDate": "2026-03-21",
+      "endDate": null,
+      "customer": {
+        "id": 108447471,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108447471"
+      },
+      "isClosed": false,
+      "isReadyForInvoicing": false,
+      "isInternal": false,
+      "isOffer": false,
+      "isFixedPrice": true,
+      "projectCategory": null,
+      "deliveryAddress": null,
+      "boligmappaAddress": null,
+      "displayNameFormat": "NAME_STANDARD",
+      "reference": "",
+      "externalAccountsNumber": "",
+      "discountPercentage": 0,
+      "vatType": {
+        "id": 3,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/vatType/3"
+      },
+      "fixedprice": 305450,
+      "contributionMarginPercent": 0,
+      "numberOfSubProjects": 0,
+      "numberOfProjectParticipants": 1,
+      "orderLines": [],
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "markUpOrderLines": 0,
+      "markUpFeesEarned": 0,
+      "isPriceCeiling": false,
+      "priceCeilingAmount": 0,
+      "projectHourlyRates": [
+        {
+          "id": 11091561,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/hourlyRates/11091561"
+        }
+      ],
+      "forParticipantsOnly": false,
+      "participants": [
+        {
+          "id": 15646453,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/project/participant/15646453"
+        }
+      ],
+      "contact": null,
+      "attention": null,
+      "invoiceComment": "",
+      "invoicingPlan": [],
+      "preliminaryInvoice": null,
+      "generalProjectActivitiesPerProjectOnly": false,
+      "projectActivities": [],
+      "hierarchyNameAndNumber": "2 Infrastruktur-Upgrade",
+      "invoiceDueDate": 14,
+      "invoiceDueDateType": "DAYS",
+      "invoiceReceiverEmail": "",
+      "overdueNoticeEmail": "",
+      "accessType": "WRITE",
+      "useProductNetPrice": false,
+      "ignoreCompanyProductDiscountAgreement": false,
+      "customerName": "Sonnental GmbH",
+      "hierarchyLevel": 0,
+      "projectManagerNameAndNumber": "Hannah Schneider",
+      "totalInvoicedOnAccountAmountAbsoluteCurrency": 0.0,
+      "invoiceOnAccountVatHigh": false,
+      "invoiceReserveTotalAmountCurrency": 305450,
+      "accountingDimensionValues": []
+    },
+    "invoice": {
+      "id": 2147647537,
+      "version": 5,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/2147647537",
+      "invoiceNumber": 1,
+      "invoiceDate": "2026-03-21",
+      "customer": {
+        "id": 108447471,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108447471"
+      },
+      "creditedInvoice": 0,
+      "isCredited": false,
+      "invoiceDueDate": "2026-04-04",
+      "kid": "",
+      "invoiceComment": "",
+      "comment": "",
+      "orders": [
+        {
+          "id": 402043515,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/402043515"
+        }
+      ],
+      "orderLines": [
+        {
+          "id": 1607580799,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607580799"
+        }
+      ],
+      "travelReports": [],
+      "projectInvoiceDetails": [
+        {
+          "id": 1965800035,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965800035"
+        }
+      ],
+      "voucher": {
+        "id": 609195672,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609195672"
+      },
+      "deliveryDate": "2026-03-21",
+      "amount": 125998.13,
+      "amountCurrency": 125998.13,
+      "amountExcludingVat": 100798.5,
+      "amountExcludingVatCurrency": 100798.5,
+      "amountRoundoff": 0,
+      "amountRoundoffCurrency": 0,
+      "amountOutstanding": 125998.13,
+      "amountCurrencyOutstanding": 125998.13,
+      "amountOutstandingTotal": 125998.13,
+      "amountCurrencyOutstandingTotal": 125998.13,
+      "sumRemits": 0,
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "isCreditNote": false,
+      "isCharged": true,
+      "isApproved": true,
+      "postings": [
+        {
+          "id": 3845923120,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3845923120"
+        }
+      ],
+      "reminders": [],
+      "invoiceRemarks": "",
+      "invoiceRemark": null,
+      "isPeriodizationPossible": true,
+      "documentId": 1024304654
+    }
+  }
+}

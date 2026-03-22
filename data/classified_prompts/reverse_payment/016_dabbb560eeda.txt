@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Betalingen fra Havbris AS (org.nr 998536561) for fakturaen "Programvarelisens" (32350 kr ekskl. MVA) ble returnert av banken. Reverser betalingen slik at fakturaen igjen viser utestående beløp.

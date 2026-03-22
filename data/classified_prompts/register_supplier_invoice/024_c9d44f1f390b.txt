@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Hemos recibido la factura INV-2026-1515 del proveedor Costa Brava SL (org. nº 886379250) por 47650 NOK con IVA incluido. El importe corresponde a servicios de oficina (cuenta 7100). Registre la factur

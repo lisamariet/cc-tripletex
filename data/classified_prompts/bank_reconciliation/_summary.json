@@ -1,0 +1,32 @@
+[
+  {
+    "prompt": "Reconcile the bank statement (attached CSV) against open invoices in Tripletex. Match incoming payments to customer invoices and outgoing payments to supplier invoices. Handle partial payments correct",
+    "confidence": 0.98,
+    "hash": "16c1450c01cc"
+  },
+  {
+    "prompt": "Avstem bankutskriften (vedlagt CSV) mot apne fakturaer i Tripletex. Match innbetalinger til kundefakturaer og utbetalinger til leverandorfakturaer. Handter delbetalinger korrekt.",
+    "confidence": 0.95,
+    "hash": "be39269a12f8"
+  },
+  {
+    "prompt": "Reconcilie o extrato bancario (CSV anexo) com as faturas em aberto no Tripletex. Relacione os pagamentos recebidos com as faturas de clientes e os pagamentos efetuados com as faturas de fornecedores. ",
+    "confidence": 0.95,
+    "hash": "0a1d5bc39ad5"
+  },
+  {
+    "prompt": "Rapprochez le releve bancaire (CSV ci-joint) avec les factures ouvertes dans Tripletex. Associez les paiements entrants aux factures clients et les paiements sortants aux factures fournisseurs. Gerez ",
+    "confidence": 0.98,
+    "hash": "f550afbd14bc"
+  },
+  {
+    "prompt": "Concilia el extracto bancario (CSV adjunto) con las facturas abiertas en Tripletex. Relaciona los pagos entrantes con las facturas de clientes y los pagos salientes con las facturas de proveedores. Ma",
+    "confidence": 0.98,
+    "hash": "af0939fd3f8e"
+  },
+  {
+    "prompt": "Gleichen Sie den Kontoauszug (beigefuegte CSV) mit den offenen Rechnungen in Tripletex ab. Ordnen Sie eingehende Zahlungen Kundenrechnungen und ausgehende Zahlungen Lieferantenrechnungen zu. Behandeln",
+    "confidence": 0.95,
+    "hash": "a6479a12571c"
+  }
+]

@@ -1,0 +1,97 @@
+[
+  {
+    "prompt": "Opprett en fri regnskapsdimensjon \"Produktlinje\" med verdiene \"Standard\" og \"Avansert\". Bokfør deretter et bilag på konto 7000 for 12700 kr, knyttet til dimensjonsverdien \"Standard\".",
+    "confidence": 0.95,
+    "hash": "33c4f66d01c0"
+  },
+  {
+    "prompt": "Opprett ein fri rekneskapsdimensjon \"Marked\" med verdiane \"Privat\" og \"Bedrift\". Bokfør deretter eit bilag på konto 6590 for 18700 kr, knytt til dimensjonsverdien \"Privat\".",
+    "confidence": 0.95,
+    "hash": "6d70b1d52f6e"
+  },
+  {
+    "prompt": "Opprett en fri regnskapsdimensjon \"Prosjekttype\" med verdiene \"Forskning\" og \"Utvikling\". Bokfør deretter et bilag på konto 6590 for 10800 kr, knyttet til dimensjonsverdien \"Forskning\".",
+    "confidence": 0.95,
+    "hash": "79cf6cc995b8"
+  },
+  {
+    "prompt": "Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering på feil konto (konto 6540 brukt i stedet for 6860, beløp 4200 kr), et duplisert b",
+    "confidence": 0.95,
+    "hash": "72da6583573a"
+  },
+  {
+    "prompt": "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 6500 utilisé au lieu d",
+    "confidence": 0.95,
+    "hash": "e7527db95c2e"
+  },
+  {
+    "prompt": "Hemos descubierto errores en el libro mayor de enero y febrero de 2026. Revise todos los comprobantes y encuentre los 4 errores: un asiento en la cuenta incorrecta (cuenta 6540 usada en lugar de 6860,",
+    "confidence": 0.95,
+    "hash": "a023630170f5"
+  },
+  {
+    "prompt": "Me har oppdaga feil i hovudboka for januar og februar 2026. Gå gjennom alle bilag og finn dei 4 feila: ei postering på feil konto (konto 7140 brukt i staden for 7100, beløp 2950 kr), eit duplikat bila",
+    "confidence": 0.95,
+    "hash": "85e170218eb8"
+  },
+  {
+    "prompt": "We have discovered errors in the general ledger for January and February 2026. Review all vouchers and find the 4 errors: a posting to the wrong account (account 6540 used instead of 6860, amount 4800",
+    "confidence": 0.95,
+    "hash": "67dbf77ab20b"
+  },
+  {
+    "prompt": "Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering på feil konto (konto 6340 brukt i stedet for 6390, beløp 2300 kr), et duplisert b",
+    "confidence": 0.95,
+    "hash": "32b69a18bb6f"
+  },
+  {
+    "prompt": "We have discovered errors in the general ledger for January and February 2026. Review all vouchers and find the 4 errors: a posting to the wrong account (account 7300 used instead of 7000, amount 1650",
+    "confidence": 0.95,
+    "hash": "2b9787796fbf"
+  },
+  {
+    "prompt": "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 7100 utilisé au lieu d",
+    "confidence": 0.95,
+    "hash": "4a1a3ac7364c"
+  },
+  {
+    "prompt": "Wir haben Fehler im Hauptbuch für Januar und Februar 2026 entdeckt. Überprüfen Sie alle Belege und finden Sie die 4 Fehler: eine Buchung auf das falsche Konto (Konto 6500 statt 6540, Betrag 3000 NOK),",
+    "confidence": 0.95,
+    "hash": "14d2a3beb6bf"
+  },
+  {
+    "prompt": "Wir haben Fehler im Hauptbuch für Januar und Februar 2026 entdeckt. Überprüfen Sie alle Belege und finden Sie die 4 Fehler: eine Buchung auf das falsche Konto (Konto 7300 statt 7000, Betrag 4900 NOK),",
+    "confidence": 0.95,
+    "hash": "da7a8ea5b871"
+  },
+  {
+    "prompt": "Me har oppdaga feil i hovudboka for januar og februar 2026. Gå gjennom alle bilag og finn dei 4 feila: ei postering på feil konto (konto 6540 brukt i staden for 6860, beløp 4600 kr), eit duplikat bila",
+    "confidence": 0.95,
+    "hash": "b75fed71a8ce"
+  },
+  {
+    "prompt": "Descobrimos erros no livro razão de janeiro e fevereiro de 2026. Revise todos os vouchers e encontre os 4 erros: um lançamento na conta errada (conta 6300 usada em vez de 7100, valor 5600 NOK), um vou",
+    "confidence": 0.95,
+    "hash": "fa7575d84de1"
+  },
+  {
+    "prompt": "Opprett en fri regnskapsdimensjon \"Kostsenter\" med verdiene \"Innkjøp\" og \"Logistikk\". Bokfør deretter et bilag på konto 6590 for 34250 kr, knyttet til dimensjonsverdien \"Innkjøp\".",
+    "confidence": 0.95,
+    "hash": "48682c688285"
+  },
+  {
+    "prompt": "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 6540 utilisé au lieu d",
+    "confidence": 0.95,
+    "hash": "19e4680f84c8"
+  },
+  {
+    "prompt": "Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering på feil konto (konto 7140 brukt i stedet for 7100, beløp 5850 kr), et duplisert b",
+    "confidence": 0.95,
+    "hash": "3e423ce79f9d"
+  },
+  {
+    "prompt": "Descobrimos erros no livro razão de janeiro e fevereiro de 2026. Revise todos os vouchers e encontre os 4 erros: um lançamento na conta errada (conta 6300 usada em vez de 7100, valor 3650 NOK), um vou",
+    "confidence": 0.95,
+    "hash": "2c10d104592e"
+  }
+]

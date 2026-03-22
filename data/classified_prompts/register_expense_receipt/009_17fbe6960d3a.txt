@@ -1,0 +1,3 @@
+Confidence: 0.90
+
+We need the Kontorstoler expense from this receipt posted to department Kundeservice. Use the correct expense account and ensure proper VAT treatment.

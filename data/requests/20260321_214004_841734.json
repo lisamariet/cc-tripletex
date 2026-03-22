@@ -1,0 +1,15 @@
+{
+  "timestamp": "20260321_214004_841734",
+  "prompt": "Reconcilie o extrato bancario (CSV anexo) com as faturas em aberto no Tripletex. Relacione os pagamentos recebidos com as faturas de clientes e os pagamentos efetuados com as faturas de fornecedores. Trate os pagamentos parciais corretamente.",
+  "files": [
+    {
+      "filename": "files/bankutskrift_pt_03.csv",
+      "mime_type": "text/csv",
+      "content_base64": "RGF0bztGb3JrbGFyaW5nO0lubjtVdDtTYWxkbw0KMjAyNi0wMS0xODtJbm5iZXRhbGluZyBmcmEgT2xpdmVpcmEgTGRhIC8gRmFrdHVyYSAxMDAxOzE5MzEyLjUwOzsxMTkzMTIuNTANCjIwMjYtMDEtMjA7SW5uYmV0YWxpbmcgZnJhIFNhbnRvcyBMZGEgLyBGYWt0dXJhIDEwMDI7MTY4NzUuMDA7OzEzNjE4Ny41MA0KMjAyNi0wMS0yMztJbm5iZXRhbGluZyBmcmEgQWxtZWlkYSBMZGEgLyBGYWt0dXJhIDEwMDM7Mjk1NjIuNTA7OzE2NTc1MC4wMA0KMjAyNi0wMS0yNTtJbm5iZXRhbGluZyBmcmEgQWxtZWlkYSBMZGEgLyBGYWt0dXJhIDEwMDQ7MTA0MjUuMDA7OzE3NjE3NS4wMA0KMjAyNi0wMS0yNztJbm5iZXRhbGluZyBmcmEgT2xpdmVpcmEgTGRhIC8gRmFrdHVyYSAxMDA1OzMwMDYyLjUwOzsyMDYyMzcuNTANCjIwMjYtMDEtMjk7QmV0YWxpbmcgRm9ybmVjZWRvciBSb2RyaWd1ZXMgTGRhOzstMTY4NTAuMDA7MTg5Mzg3LjUwDQoyMDI2LTAxLTMxO0JldGFsaW5nIEZvcm5lY2Vkb3IgQ29zdGEgTGRhOzstNjQwMC4wMDsxODI5ODcuNTANCjIwMjYtMDItMDE7QmV0YWxpbmcgRm9ybmVjZWRvciBBbG1laWRhIExkYTs7LTE3MjAwLjAwOzE2NTc4Ny41MA0KMjAyNi0wMi0wMztTa2F0dGV0cmVrazsyMjEuMjM7OzE2NjAwOC43Mw0KMjAyNi0wMi0wNTtTa2F0dGV0cmVrazsyNTEuMDY7OzE2NjI1OS43OQ0KMjAyNi0wMi0wNjtTa2F0dGV0cmVrazsxNDIyLjY1OzsxNjc2ODIuNDQNCg=="
+    }
+  ],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Cree una dimensión contable personalizada "Kostsenter" con los valores "Markedsføring" y "Kundeservice". Luego registre un asiento en la cuenta 7000 por 30250 NOK, vinculado al valor de dimensión "Kun

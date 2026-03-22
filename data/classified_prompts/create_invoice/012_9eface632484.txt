@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea y envía una factura al cliente Río Verde SL (org. nº 894012358) por 29100 NOK sin IVA. La factura es por Sesión de formación.

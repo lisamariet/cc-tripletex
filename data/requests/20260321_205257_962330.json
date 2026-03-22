@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_205257_962330",
+  "prompt": "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Viento' (Viento SL, org. nº 828947818): 1) El proyecto tiene un presupuesto de 225650 NOK. 2) Registre horas: Andrés Hernández (director de proyecto, andres.hernandez@example.org) 72 horas y Javier Rodríguez (consultor, javier.rodriguez@example.org) 60 horas. 3) Registre costo de proveedor de 34650 NOK de Río Verde SL (org. nº 900901666). 4) Cree una factura al cliente por el proyecto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

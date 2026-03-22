@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Registe uma despesa de viagem para Maria Martins (maria.martins@example.org) referente a "Visita cliente Trondheim". A viagem durou 2 dias com ajudas de custo (taxa diária 800 NOK). Despesas: bilhete 

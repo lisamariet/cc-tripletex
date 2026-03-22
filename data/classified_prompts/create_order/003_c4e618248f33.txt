@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea un pedido para el cliente Viento SL (org. nº 924480505) con los productos Sesión de formación (8488) a 5700 NOK y Horas de consultoría (3787) a 14750 NOK. Convierte el pedido en factura y registr

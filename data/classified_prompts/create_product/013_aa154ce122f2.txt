@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Créez le produit "Stockage cloud" avec le numéro de produit 9433. Le prix est de 7550 NOK hors TVA, avec le taux standard de 25 %.

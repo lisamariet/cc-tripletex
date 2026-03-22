@@ -1,0 +1,85 @@
+{
+  "timestamp": "20260322_090936_802358",
+  "prompt": "Le client Colline SARL (nº org. 879532124) a réclamé concernant la facture pour \"Conseil en données\" (28600 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.",
+  "parsed_task": {
+    "task_type": "create_credit_note",
+    "fields": {
+      "customerName": "Colline SARL",
+      "customerOrgNumber": "879532124",
+      "invoiceDescription": "Conseil en données",
+      "amount": 28600,
+      "lines": [
+        {
+          "description": "Conseil en données",
+          "quantity": 1,
+          "unitPriceExcludingVat": 28600,
+          "vatCode": "3"
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/invoice/settings",
+      "status": 200,
+      "duration_ms": 596.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/settings",
+      "query_params": {
+        "fields": "bankAccountReady"
+      },
+      "response_body": "{\"value\":{\"bankAccountReady\":true}}"
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "status": 200,
+      "duration_ms": 475.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "query_params": {
+        "organizationNumber": "879532124",
+        "fields": "id,name,organizationNumber"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":108566356,\"name\":\"Colline SARL\",\"organizationNumber\":\"879532124\"}]}"
+    },
+    {
+      "method": "GET",
+      "path": "/invoice",
+      "status": 200,
+      "duration_ms": 483.3,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice",
+      "query_params": {
+        "invoiceDateFrom": "2000-01-01",
+        "invoiceDateTo": "2026-03-22",
+        "fields": "id,amount,amountCurrency,amountOutstanding,amountExcludingVat,amountExcludingVatCurrency",
+        "customerId": 108566356
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":2147687157,\"amount\":35750.0,\"amountCurrency\":35750.0,\"amountExcludingVat\":28600.0,\"amountExcludingVatCurrency\":28600.0,\"amountOutstanding\":35750.00}]}"
+    },
+    {
+      "method": "PUT",
+      "path": "/invoice/2147687157/:createCreditNote",
+      "status": 200,
+      "duration_ms": 813.6,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/invoice/2147687157/:createCreditNote",
+      "query_params": {
+        "date": "2026-03-22",
+        "sendToCustomer": false
+      },
+      "response_body": "{\"value\":{\"id\":2147687167,\"version\":2,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/2147687167\",\"invoiceNumber\":2,\"invoiceDate\":\"2026-03-22\",\"customer\":{\"id\":108566356,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108566356\"},\"creditedInvoice\":2147687157,\"isCredited\":false,\"invoiceDueDate\":\"2026-03-22\",\"kid\":\"\",\"invoiceComment\":\"\",\"comment\":\"\",\"orders\":[{\"id\":402071437,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/402071437\"}],\"orderLines\":[{\"id\":1607606136,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/order/orderline/1607606136\"}],\"travelReports\":[],\"projectInvoiceDetails\":[{\"id\":1965822246,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/invoice/details/1965822246\"}],\"voucher\":{\"id\":609367621,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/voucher/609367621\"},\"deliveryDate\":\"2026-03-01\",\"amount\":-35750.00,\"amountCurrency\":-35750.00,\"amountExcludingVat\":-28600.00,\"amountExcludingVatCurrency\":-28600.00,\"amountRoundoff\":0.00,\"amountRoundoffCurrency\":0.00,\"amountOutstanding\":0.00,\"amountCurrencyOutstanding\":0.00,\"amountOutstandingTotal\":0.00,\"amountCurrencyOutstandingTotal\":0.00,\"sumRemits\":0,\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"isCreditNote\":true,\"isCharged\":true,\"isApproved\":false,\"postings\":[{\"id\":3846374094,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846374094\"},{\"id\":3846374183,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/posting/3846374183\"}],\"reminders\":[],\"invoiceRemarks\":\"\",\"invoiceRemark\":null,\"isPeriodizationPossible\":true,\"documentId\":1024358780}}"
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 4361.5,
+  "result": {
+    "status": "completed",
+    "taskType": "create_credit_note",
+    "invoiceId": 2147687157
+  }
+}

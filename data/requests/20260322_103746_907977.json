@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_103746_907977",
+  "revision": "tripletex-agent-00126-9hz",
+  "prompt": "Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering på feil konto (konto 7140 brukt i stedet for 7100, beløp 5850 kr), et duplisert bilag (konto 7300, beløp 1200 kr), en manglende MVA-linje (konto 6540, beløp ekskl. 13000 kr mangler MVA på konto 2710), og et feil beløp (konto 7100, 19050 kr bokført i stedet for 7100 kr). Korriger alle feil med riktige bilag.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

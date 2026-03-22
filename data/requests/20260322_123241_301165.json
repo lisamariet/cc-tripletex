@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_123241_301165",
+  "revision": "tripletex-agent-00134-q96",
+  "prompt": "We sent an invoice for 11671 EUR to Ironbridge Ltd (org no. 915238106) when the exchange rate was 11.22 NOK/EUR. The customer has now paid, but the rate is 11.71 NOK/EUR. Register the payment and post the exchange rate difference (agio) to the correct account.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

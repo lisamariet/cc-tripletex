@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea el producto "Servicio de red" con número de producto 6866. El precio es 19100 NOK sin IVA, utilizando la tasa estándar del 25 %.

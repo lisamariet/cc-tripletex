@@ -1,0 +1,77 @@
+[
+  {
+    "prompt": "Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering på feil konto (konto 6540 brukt i stedet for 6860, beløp 4200 kr), et duplisert bilag (konto 6860, beløp 1250 kr), en manglende MVA-linje (konto 6540, beløp ekskl. 10200 kr mangler MVA på konto 2710), og et feil beløp (konto 6540, 16800 kr bokført i stedet for 15550 kr). Korriger alle feil med riktige bilag.",
+    "timestamp": "20260321_102944_272829",
+    "hash": "72da6583573a"
+  },
+  {
+    "prompt": "Hemos descubierto errores en el libro mayor de enero y febrero de 2026. Revise todos los comprobantes y encuentre los 4 errores: un asiento en la cuenta incorrecta (cuenta 6540 usada en lugar de 6860, importe 7600 NOK), un comprobante duplicado (cuenta 6540, importe 2350 NOK), una línea de IVA faltante (cuenta 6540, importe sin IVA 8850 NOK falta IVA en cuenta 2710), y un importe incorrecto (cuenta 7100, 12650 NOK registrado en lugar de 5800 NOK). Corrija todos los errores con asientos correctivos.",
+    "timestamp": "20260321_143018_581011",
+    "hash": "a023630170f5"
+  },
+  {
+    "prompt": "Me har oppdaga feil i hovudboka for januar og februar 2026. Gå gjennom alle bilag og finn dei 4 feila: ei postering på feil konto (konto 7140 brukt i staden for 7100, beløp 2950 kr), eit duplikat bilag (konto 7300, beløp 2800 kr), ei manglande MVA-linje (konto 4500, beløp ekskl. 21250 kr manglar MVA på konto 2710), og eit feil beløp (konto 7100, 23300 kr bokført i staden for 19100 kr). Korriger alle feil med rette bilag.",
+    "timestamp": "20260321_160949_268882",
+    "hash": "85e170218eb8"
+  },
+  {
+    "prompt": "We have discovered errors in the general ledger for January and February 2026. Review all vouchers and find the 4 errors: a posting to the wrong account (account 6540 used instead of 6860, amount 4800 NOK), a duplicate voucher (account 6500, amount 1050 NOK), a missing VAT line (account 7000, amount excl. 6750 NOK missing VAT on account 2710), and an incorrect amount (account 6500, 15700 NOK posted instead of 8100 NOK). Correct all errors with appropriate correction vouchers.",
+    "timestamp": "20260321_164718_597903",
+    "hash": "67dbf77ab20b"
+  },
+  {
+    "prompt": "Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering på feil konto (konto 6340 brukt i stedet for 6390, beløp 2300 kr), et duplisert bilag (konto 6860, beløp 3150 kr), en manglende MVA-linje (konto 4300, beløp ekskl. 16550 kr mangler MVA på konto 2710), og et feil beløp (konto 6300, 17800 kr bokført i stedet for 8900 kr). Korriger alle feil med riktige bilag.",
+    "timestamp": "20260321_173904_893753",
+    "hash": "32b69a18bb6f"
+  },
+  {
+    "prompt": "We have discovered errors in the general ledger for January and February 2026. Review all vouchers and find the 4 errors: a posting to the wrong account (account 7300 used instead of 7000, amount 1650 NOK), a duplicate voucher (account 6500, amount 3100 NOK), a missing VAT line (account 6540, amount excl. 20950 NOK missing VAT on account 2710), and an incorrect amount (account 6340, 18100 NOK posted instead of 6050 NOK). Correct all errors with appropriate correction vouchers.",
+    "timestamp": "20260321_180536_948270",
+    "hash": "2b9787796fbf"
+  },
+  {
+    "prompt": "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 7100 utilisé au lieu de 7140, montant 7900 NOK), une pièce en double (compte 6300, montant 3250 NOK), une ligne de TVA manquante (compte 4500, montant HT 16800 NOK, TVA manquante sur compte 2710), et un montant incorrect (compte 6590, 10000 NOK comptabilisé au lieu de 7200 NOK). Corrigez toutes les erreurs avec des écritures correctives.",
+    "timestamp": "20260321_180653_453044",
+    "hash": "4a1a3ac7364c"
+  },
+  {
+    "prompt": "Wir haben Fehler im Hauptbuch für Januar und Februar 2026 entdeckt. Überprüfen Sie alle Belege und finden Sie die 4 Fehler: eine Buchung auf das falsche Konto (Konto 6500 statt 6540, Betrag 3000 NOK), ein doppelter Beleg (Konto 6540, Betrag 2600 NOK), eine fehlende MwSt.-Zeile (Konto 7000, Betrag ohne MwSt. 7100 NOK, fehlende MwSt. auf Konto 2710), und ein falscher Betrag (Konto 6540, 8350 NOK gebucht statt 7000 NOK). Korrigieren Sie alle Fehler mit entsprechenden Korrekturbuchungen.",
+    "timestamp": "20260321_203837_631125",
+    "hash": "14d2a3beb6bf"
+  },
+  {
+    "prompt": "Wir haben Fehler im Hauptbuch für Januar und Februar 2026 entdeckt. Überprüfen Sie alle Belege und finden Sie die 4 Fehler: eine Buchung auf das falsche Konto (Konto 7300 statt 7000, Betrag 4900 NOK), ein doppelter Beleg (Konto 6540, Betrag 4000 NOK), eine fehlende MwSt.-Zeile (Konto 6500, Betrag ohne MwSt. 23850 NOK, fehlende MwSt. auf Konto 2710), und ein falscher Betrag (Konto 7100, 22300 NOK gebucht statt 19050 NOK). Korrigieren Sie alle Fehler mit entsprechenden Korrekturbuchungen.",
+    "timestamp": "20260322_015029_629103",
+    "hash": "da7a8ea5b871"
+  },
+  {
+    "prompt": "Me har oppdaga feil i hovudboka for januar og februar 2026. Gå gjennom alle bilag og finn dei 4 feila: ei postering på feil konto (konto 6540 brukt i staden for 6860, beløp 4600 kr), eit duplikat bilag (konto 6860, beløp 4150 kr), ei manglande MVA-linje (konto 7000, beløp ekskl. 24100 kr manglar MVA på konto 2710), og eit feil beløp (konto 6300, 21800 kr bokført i staden for 16250 kr). Korriger alle feil med rette bilag.",
+    "timestamp": "20260322_015202_403168",
+    "hash": "b75fed71a8ce"
+  },
+  {
+    "prompt": "Descobrimos erros no livro razão de janeiro e fevereiro de 2026. Revise todos os vouchers e encontre os 4 erros: um lançamento na conta errada (conta 6300 usada em vez de 7100, valor 5600 NOK), um voucher duplicado (conta 6590, valor 1500 NOK), uma linha de IVA em falta (conta 7300, valor sem IVA 5900 NOK falta IVA na conta 2710), e um valor incorreto (conta 6540, 12050 NOK registado em vez de 10600 NOK). Corrija todos os erros com lançamentos corretivos.",
+    "timestamp": "20260322_021522_218683",
+    "hash": "fa7575d84de1"
+  },
+  {
+    "prompt": "Opprett en fri regnskapsdimensjon \"Kostsenter\" med verdiene \"Innkjøp\" og \"Logistikk\". Bokfør deretter et bilag på konto 6590 for 34250 kr, knyttet til dimensjonsverdien \"Innkjøp\".",
+    "timestamp": "20260322_022158_888223",
+    "hash": "48682c688285"
+  },
+  {
+    "prompt": "Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez les 4 erreurs : une écriture sur le mauvais compte (compte 6540 utilisé au lieu de 6860, montant 4800 NOK), une pièce en double (compte 7100, montant 2000 NOK), une ligne de TVA manquante (compte 4500, montant HT 14500 NOK, TVA manquante sur compte 2710), et un montant incorrect (compte 7100, 21650 NOK comptabilisé au lieu de 17900 NOK). Corrigez toutes les erreurs avec des écritures correctives.",
+    "timestamp": "20260322_083339_666619",
+    "hash": "19e4680f84c8"
+  },
+  {
+    "prompt": "Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering på feil konto (konto 7140 brukt i stedet for 7100, beløp 5850 kr), et duplisert bilag (konto 7300, beløp 1200 kr), en manglende MVA-linje (konto 6540, beløp ekskl. 13000 kr mangler MVA på konto 2710), og et feil beløp (konto 7100, 19050 kr bokført i stedet for 7100 kr). Korriger alle feil med riktige bilag.",
+    "timestamp": "20260322_103746_907977",
+    "hash": "3e423ce79f9d"
+  },
+  {
+    "prompt": "Descobrimos erros no livro razão de janeiro e fevereiro de 2026. Revise todos os vouchers e encontre os 4 erros: um lançamento na conta errada (conta 6300 usada em vez de 7100, valor 3650 NOK), um voucher duplicado (conta 6300, valor 3700 NOK), uma linha de IVA em falta (conta 6300, valor sem IVA 23350 NOK falta IVA na conta 2710), e um valor incorreto (conta 6340, 23800 NOK registado em vez de 21350 NOK). Corrija todos os erros com lançamentos corretivos.",
+    "timestamp": "20260322_113108_728177",
+    "hash": "2c10d104592e"
+  }
+]

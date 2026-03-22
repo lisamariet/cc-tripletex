@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crie o projeto "Integração Porto" vinculado ao cliente Porto Alegre Lda (org. nº 884811686). O gerente de projeto é Lucas Silva (lucas.silva@example.org).

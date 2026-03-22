@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_185844_915801",
+  "prompt": "Créez une commande pour le client Cascade SARL (nº org. 804781943) avec les produits Développement système (1393) à 13950 NOK et Rapport d'analyse (5377) à 22000 NOK. Convertissez la commande en facture et enregistrez le paiement intégral.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Kunden Brattli AS (org.nr 909268265) har en utestående faktura på 31300 kr eksklusiv MVA for "Konsulenttimer". Registrer full betaling på denne fakturaen.

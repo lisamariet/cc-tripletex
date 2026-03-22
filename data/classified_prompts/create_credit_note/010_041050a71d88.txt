@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Kunden Nordhav AS (org.nr 996887898) har reklamert på fakturaen for "Vedlikehold" (19200 kr ekskl. MVA). Opprett en fullstendig kreditnota som reverserer hele fakturaen.

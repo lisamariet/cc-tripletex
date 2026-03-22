@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_224912_888484",
+  "prompt": "Create the customer Greenfield Ltd with organization number 872154442. The address is Sjøgata 85, 7010 Trondheim. Email: post@greenfield.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

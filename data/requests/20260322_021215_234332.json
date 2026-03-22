@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_021215_234332",
+  "prompt": "Opprett kunden Skogheim AS med organisasjonsnummer 855954346. Adressa er Parkveien 17, 4611 Kristiansand. E-post: post@skogheim.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

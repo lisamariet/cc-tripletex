@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_231711_729793",
+  "prompt": "Tenemos un nuevo empleado llamado Miguel Sánchez, nacido el 20. April 1991. Créelo como empleado con el correo miguel.sanchez@example.org y fecha de inicio 12. August 2026.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

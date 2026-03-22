@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_233623_123168",
+  "prompt": "Create the customer Silveroak Ltd with organization number 993297909. The address is Solveien 1, 8006 Bodø. Email: post@silveroak.no.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

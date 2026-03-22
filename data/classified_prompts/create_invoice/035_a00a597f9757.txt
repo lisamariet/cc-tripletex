@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Crea y envía una factura al cliente Luna SL (org. nº 844920520) por 20200 NOK sin IVA. La factura es por Servicio de red.

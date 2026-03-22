@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erstellen und senden Sie eine Rechnung an den Kunden Bergwerk GmbH (Org.-Nr. 981122011) über 45150 NOK ohne MwSt. Die Rechnung betrifft Datenberatung.

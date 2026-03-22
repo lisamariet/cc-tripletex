@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Execute the complete project lifecycle for 'System Upgrade Greenfield' (Greenfield Ltd, org no. 873288949): 1) The project has a budget of 206300 NOK. 2) Log time: Oliver Wilson (project manager, oliv

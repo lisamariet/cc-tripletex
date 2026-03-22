@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Erstellen Sie das Projekt "Integration Windkraft" verknüpft mit dem Kunden Windkraft GmbH (Org.-Nr. 804172807). Projektleiter ist Hannah Weber (hannah.weber@example.org).

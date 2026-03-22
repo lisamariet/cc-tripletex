@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260320_220823_009511",
+  "prompt": "Register a travel expense for Charlotte Williams (charlotte.williams@example.org) for \"Client visit Bodø\". The trip lasted 3 days with per diem (daily rate 800 NOK). Expenses: flight ticket 6200 NOK and taxi 400 NOK.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Nous avons un nouvel employé nommé Jules Bernard, né le 8. December 1982. Veuillez le créer en tant qu'employé avec l'e-mail jules.bernard@example.org et la date de début 27. December 2026.

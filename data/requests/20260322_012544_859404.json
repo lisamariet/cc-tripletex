@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260322_012544_859404",
+  "prompt": "Nous avons reçu la facture INV-2026-6571 du fournisseur Prairie SARL (nº org. 965215727) de 30100 NOK TTC. Le montant concerne des services de bureau (compte 6340). Enregistrez la facture fournisseur avec la TVA déductible correcte (25 %).",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

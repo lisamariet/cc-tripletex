@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Opprett og send en faktura til kunden Bergvik AS (org.nr 890733751) på 28900 kr eksklusiv MVA. Fakturaen gjelder Systemutvikling.

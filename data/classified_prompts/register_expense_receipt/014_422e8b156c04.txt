@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+We need the Kontorrekvisita expense from this receipt posted to department Markedsføring. Use the correct expense account and ensure proper VAT treatment.

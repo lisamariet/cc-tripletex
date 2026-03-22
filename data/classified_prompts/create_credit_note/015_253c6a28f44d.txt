@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Der Kunde Waldstein GmbH (Org.-Nr. 908048199) hat die Rechnung für "Webdesign" (8750 NOK ohne MwSt.) reklamiert. Erstellen Sie eine vollständige Gutschrift, die die gesamte Rechnung storniert.

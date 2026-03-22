@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Opprett en faktura til kunden Bergvik AS (org.nr 807508474) med tre produktlinjer: Konsulenttimer (5947) til 29950 kr med 25 % MVA, Webdesign (8528) til 2900 kr med 15 % MVA (næringsmiddel), og System

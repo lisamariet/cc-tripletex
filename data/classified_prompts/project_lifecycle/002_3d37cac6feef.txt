@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Gjennomfør hele prosjektsyklusen for 'Dataplattform Tindra' (Tindra AS, org.nr 925122025): 1) Prosjektet har budsjett 432000 kr. 2) Registrer timer: Astrid Hansen (prosjektleder, astrid.hansen@example

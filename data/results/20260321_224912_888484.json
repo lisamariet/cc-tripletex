@@ -1,0 +1,150 @@
+{
+  "timestamp": "20260321_224912_888484",
+  "prompt": "Create the customer Greenfield Ltd with organization number 872154442. The address is Sjøgata 85, 7010 Trondheim. Email: post@greenfield.no.",
+  "parsed_task": {
+    "task_type": "create_customer",
+    "fields": {
+      "name": "Greenfield Ltd",
+      "organizationNumber": "872154442",
+      "email": "post@greenfield.no",
+      "invoiceEmail": "post@greenfield.no",
+      "address": {
+        "addressLine1": "Sjøgata 85",
+        "postalCode": "7010",
+        "city": "Trondheim"
+      },
+      "overdueNoticeEmail": "post@greenfield.no"
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/customer",
+      "status": 201,
+      "duration_ms": 4243.1,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/customer",
+      "request_body": {
+        "name": "Greenfield Ltd",
+        "isCustomer": true,
+        "organizationNumber": "872154442",
+        "email": "post@greenfield.no",
+        "invoiceEmail": "post@greenfield.no",
+        "overdueNoticeEmail": "post@greenfield.no",
+        "postalAddress": {
+          "addressLine1": "Sjøgata 85",
+          "postalCode": "7010",
+          "city": "Trondheim"
+        },
+        "physicalAddress": {
+          "addressLine1": "Sjøgata 85",
+          "postalCode": "7010",
+          "city": "Trondheim"
+        }
+      },
+      "response_body": "{\"value\":{\"id\":108447418,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/customer/108447418\",\"name\":\"Greenfield Ltd\",\"organizationNumber\":\"872154442\",\"globalLocationNumber\":0,\"supplierNumber\":0,\"customerNumber\":10001,\"isSupplier\":false,\"isCustomer\":true,\"isInactive\":false,\"accountManager\":null,\"department\":null,\"email\":\"post@greenfield.no\",\"invoiceEmail\":\"post@greenfield.no\",\"overdueNoticeEmail\":\"post@greenfield.no\",\"phoneNumber\":\"\",\"phoneNumberMobile\":\"\",\"description\":\"\",\"language\":\"NO\",\"displayName\":\"Greenfield Ltd (10001)\",\"isPrivateIndividual\":false,\"singleCustomerInvoice\":false,\"invoiceSendMethod\":\"EMAIL\",\"emailAttachmentType\":\"ATTACHMENT\",\"postalAddress\":{\"id\":405742361,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405742361\",\"addressLine1\":\"Sjøgata 85\",\"addressLine2\":\"\",\"postalCode\":\"7010\",\"city\":\"Trondheim\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Greenfield Ltd, Sjøgata 85, 7010 Trondheim, Norge\",\"addressAsString\":\"Sjøgata 85, 7010 Trondheim, Norge\",\"displayNameInklMatrikkel\":\"Greenfield Ltd, Sjøgata 85, 7010 Trondheim, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"physicalAddress\":{\"id\":405742360,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/address/405742360\",\"addressLine1\":\"Sjøgata 85\",\"addressLine2\":\"\",\"postalCode\":\"7010\",\"city\":\"Trondheim\",\"country\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"displayName\":\"Greenfield Ltd, Sjøgata 85, 7010 Trondheim, Norge\",\"addressAsString\":\"Sjøgata 85, 7010 Trondheim, Norge\",\"displayNameInklMatrikkel\":\"Greenfield Ltd, Sjøgata 85, 7010 Trondheim, Norge\",\"knr\":0,\"gnr\":0,\"bnr\":0,\"fnr\":0,\"snr\":0,\"unitNumber\":\"\"},\"deliveryAddress\":null,\"category1\":null,\"category2\":null,\"category3\":null,\"invoicesDueIn\":14,\"invoicesDueInType\":\"DAYS\",\"currency\":{\"id\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/currency/1\"},\"bankAccountPresentation\":[],\"ledgerAccount\":{\"id\":377538650,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/ledger/account/3775"
+    }
+  ],
+  "total_calls": 1,
+  "error_count_4xx": 0,
+  "total_duration_ms": 6131.8,
+  "result": {
+    "status": "completed",
+    "taskType": "create_customer",
+    "created": {
+      "id": 108447418,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/customer/108447418",
+      "name": "Greenfield Ltd",
+      "organizationNumber": "872154442",
+      "globalLocationNumber": 0,
+      "supplierNumber": 0,
+      "customerNumber": 10001,
+      "isSupplier": false,
+      "isCustomer": true,
+      "isInactive": false,
+      "accountManager": null,
+      "department": null,
+      "email": "post@greenfield.no",
+      "invoiceEmail": "post@greenfield.no",
+      "overdueNoticeEmail": "post@greenfield.no",
+      "phoneNumber": "",
+      "phoneNumberMobile": "",
+      "description": "",
+      "language": "NO",
+      "displayName": "Greenfield Ltd (10001)",
+      "isPrivateIndividual": false,
+      "singleCustomerInvoice": false,
+      "invoiceSendMethod": "EMAIL",
+      "emailAttachmentType": "ATTACHMENT",
+      "postalAddress": {
+        "id": 405742361,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405742361",
+        "addressLine1": "Sjøgata 85",
+        "addressLine2": "",
+        "postalCode": "7010",
+        "city": "Trondheim",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Greenfield Ltd, Sjøgata 85, 7010 Trondheim, Norge",
+        "addressAsString": "Sjøgata 85, 7010 Trondheim, Norge",
+        "displayNameInklMatrikkel": "Greenfield Ltd, Sjøgata 85, 7010 Trondheim, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "physicalAddress": {
+        "id": 405742360,
+        "version": 0,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/address/405742360",
+        "addressLine1": "Sjøgata 85",
+        "addressLine2": "",
+        "postalCode": "7010",
+        "city": "Trondheim",
+        "country": {
+          "id": 161,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+        },
+        "displayName": "Greenfield Ltd, Sjøgata 85, 7010 Trondheim, Norge",
+        "addressAsString": "Sjøgata 85, 7010 Trondheim, Norge",
+        "displayNameInklMatrikkel": "Greenfield Ltd, Sjøgata 85, 7010 Trondheim, Norge",
+        "knr": 0,
+        "gnr": 0,
+        "bnr": 0,
+        "fnr": 0,
+        "snr": 0,
+        "unitNumber": ""
+      },
+      "deliveryAddress": null,
+      "category1": null,
+      "category2": null,
+      "category3": null,
+      "invoicesDueIn": 14,
+      "invoicesDueInType": "DAYS",
+      "currency": {
+        "id": 1,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/currency/1"
+      },
+      "bankAccountPresentation": [],
+      "ledgerAccount": {
+        "id": 377538650,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/ledger/account/377538650"
+      },
+      "isFactoring": false,
+      "invoiceSendSMSNotification": false,
+      "invoiceSMSNotificationNumber": "",
+      "isAutomaticSoftReminderEnabled": false,
+      "isAutomaticReminderEnabled": false,
+      "isAutomaticNoticeOfDebtCollectionEnabled": false,
+      "discountPercentage": 0,
+      "website": ""
+    }
+  }
+}

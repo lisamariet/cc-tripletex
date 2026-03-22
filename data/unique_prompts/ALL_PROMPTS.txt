@@ -1,0 +1,515 @@
+# 513 unike prompts fra 29 task types
+
+[bank_reconciliation] Reconcile the bank statement (attached CSV) against open invoices in Tripletex. Match incoming payments to customer invo
+[bank_reconciliation] Avstem bankutskriften (vedlagt CSV) mot apne fakturaer i Tripletex. Match innbetalinger til kundefakturaer og utbetaling
+[bank_reconciliation] Reconcilie o extrato bancario (CSV anexo) com as faturas em aberto no Tripletex. Relacione os pagamentos recebidos com a
+[bank_reconciliation] Rapprochez le releve bancaire (CSV ci-joint) avec les factures ouvertes dans Tripletex. Associez les paiements entrants 
+[batch_create_department] Crea tres departamentos en Tripletex: "HR", "Regnskap" y "Lager".
+[batch_create_department] Crie três departamentos no Tripletex: "Drift", "Kundeservice" e "HR".
+[batch_create_department] Create three departments in Tripletex: "Produksjon", "Kundeservice", and "Økonomi".
+[batch_create_department] Crea tres departamentos en Tripletex: "Markedsføring", "Lager" y "Kundeservice".
+[batch_create_department] Crea tres departamentos en Tripletex: "IT", "Drift" y "Kundeservice".
+[batch_create_department] Opprett tre avdelingar i Tripletex: "Økonomi", "Administrasjon" og "Innkjøp".
+[batch_create_department] Create three departments in Tripletex: "Markedsføring", "Produksjon", and "Innkjøp".
+[batch_create_department] Erstellen Sie drei Abteilungen in Tripletex: "Økonomi", "Regnskap" und "Kvalitetskontroll".
+[batch_create_department] Crie três departamentos no Tripletex: "Økonomi", "Innkjøp" e "Regnskap".
+[batch_create_department] Opprett tre avdelinger i Tripletex: "Utvikling", "Drift" og "HR".
+[batch_create_department] Crea tres departamentos en Tripletex: "Drift", "Administrasjon" y "Lager".
+[batch_create_department] Create three departments in Tripletex: "Innkjøp", "Drift", and "Kundeservice".
+[batch_create_department] Crie três departamentos no Tripletex: "Kundeservice", "Innkjøp" e "Regnskap".
+[batch_create_department] Créez trois départements dans Tripletex : "Produksjon", "Salg" et "Innkjøp".
+[batch_create_department] Crie três departamentos no Tripletex: "HR", "Lager" e "IT".
+[batch_create_department] Créez trois départements dans Tripletex : "Produksjon", "Salg" et "Logistikk".
+[batch_create_department] Create three departments in Tripletex: "Drift", "Innkjøp", and "Salg".
+[batch_create_order] Crea un pedido para el cliente Luna SL (org. nº 989093630) con los productos Almacenamiento en la nube (5981) a 29950 NO
+[batch_create_order] Crea un pedido para el cliente Viento SL (org. nº 924480505) con los productos Sesión de formación (8488) a 5700 NOK y H
+[batch_create_order] Créez une commande pour le client Cascade SARL (nº org. 804781943) avec les produits Développement système (1393) à 1395
+[batch_create_order] Créez une commande pour le client Colline SARL (nº org. 841589033) avec les produits Stockage cloud (2289) à 24050 NOK e
+[batch_create_order] Create an order for the customer Ridgepoint Ltd (org no. 925103489) with the products Consulting Hours (5359) at 21150 N
+[batch_create_voucher] Gjer forenkla årsoppgjer for 2025: 1) Rekn ut og bokfør årlege avskrivingar for tre eigedelar: Programvare (364700 kr, 4
+[batch_create_voucher] Utfør forenklet årsoppgjør for 2025: 1) Beregn og bokfør årlige avskrivninger for tre eiendeler: Programvare (156100 kr,
+[batch_register_timesheet] Erfassen Sie 33 Stunden für Paul Müller (paul.muller@example.org) auf der Aktivität "Testing" im Projekt "Datenmigration
+[batch_register_timesheet] Registre 11 horas para Ana Romero (ana.romero@example.org) en la actividad "Design" del proyecto "Integración de platafo
+[batch_register_timesheet] Log 12 hours for Victoria Brown (victoria.brown@example.org) on the activity "Analyse" in the project "Data Migration" f
+[batch_register_timesheet] Registre 34 horas para Carmen Pérez (carmen.perez@example.org) en la actividad "Design" del proyecto "Migración de datos
+[batch_register_timesheet] Registrer 24 timer for Solveig Hansen (solveig.hansen@example.org) på aktiviteten "Analyse" i prosjektet "Apputvikling" 
+[batch_register_timesheet] Registe 11 horas para Inês Rodrigues (ines.rodrigues@example.org) na atividade "Design" do projeto "Redesign do site" pa
+[correct_ledger_error] Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering p
+[correct_ledger_error] Hemos descubierto errores en el libro mayor de enero y febrero de 2026. Revise todos los comprobantes y encuentre los 4 
+[correct_ledger_error] Me har oppdaga feil i hovudboka for januar og februar 2026. Gå gjennom alle bilag og finn dei 4 feila: ei postering på f
+[correct_ledger_error] We have discovered errors in the general ledger for January and February 2026. Review all vouchers and find the 4 errors
+[correct_ledger_error] Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering p
+[correct_ledger_error] We have discovered errors in the general ledger for January and February 2026. Review all vouchers and find the 4 errors
+[correct_ledger_error] Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez l
+[correct_ledger_error] Wir haben Fehler im Hauptbuch für Januar und Februar 2026 entdeckt. Überprüfen Sie alle Belege und finden Sie die 4 Fehl
+[correct_ledger_error] Wir haben Fehler im Hauptbuch für Januar und Februar 2026 entdeckt. Überprüfen Sie alle Belege und finden Sie die 4 Fehl
+[correct_ledger_error] Me har oppdaga feil i hovudboka for januar og februar 2026. Gå gjennom alle bilag og finn dei 4 feila: ei postering på f
+[correct_ledger_error] Descobrimos erros no livro razão de janeiro e fevereiro de 2026. Revise todos os vouchers e encontre os 4 erros: um lanç
+[correct_ledger_error] Opprett en fri regnskapsdimensjon "Kostsenter" med verdiene "Innkjøp" og "Logistikk". Bokfør deretter et bilag på konto 
+[correct_ledger_error] Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez l
+[correct_ledger_error] Vi har oppdaget feil i hovedboken for januar og februar 2026. Gå gjennom alle bilag og finn de 4 feilene: en postering p
+[correct_ledger_error] Descobrimos erros no livro razão de janeiro e fevereiro de 2026. Revise todos os vouchers e encontre os 4 erros: um lanç
+[create_credit_note] Kunden Vestfjord AS (org.nr 860678403) har reklamert på fakturaen for "Skylagring" (45350 kr ekskl. MVA). Opprett ei ful
+[create_credit_note] O cliente Luz do Sol Lda (org. nº 961893283) reclamou sobre a fatura referente a "Licença de software" (11400 NOK sem IV
+[create_credit_note] Der Kunde Sonnental GmbH (Org.-Nr. 809303829) hat die Rechnung für "Systementwicklung" (10400 NOK ohne MwSt.) reklamiert
+[create_credit_note] O cliente Horizonte Lda (org. nº 880951262) reclamou sobre a fatura referente a "Desenvolvimento de sistemas" (35700 NOK
+[create_credit_note] Le client Montagne SARL (nº org. 882988155) a réclamé concernant la facture pour "Heures de conseil" (40900 NOK HT). Éme
+[create_credit_note] The customer Ridgepoint Ltd (org no. 989339028) has complained about the invoice for "Maintenance" (19650 NOK excl. VAT)
+[create_credit_note] O cliente Cascata Lda (org. nº 967090743) reclamou sobre a fatura referente a "Sessão de formação" (23800 NOK sem IVA). 
+[create_credit_note] Kunden Fjelltopp AS (org.nr 950710241) har reklamert på fakturaen for "Nettverksteneste" (28100 kr ekskl. MVA). Opprett 
+[create_credit_note] Kunden Nordhav AS (org.nr 996887898) har reklamert på fakturaen for "Vedlikehold" (19200 kr ekskl. MVA). Opprett en full
+[create_credit_note] Der Kunde Nordlicht GmbH (Org.-Nr. 912435113) hat die Rechnung für "Webdesign" (40550 NOK ohne MwSt.) reklamiert. Erstel
+[create_credit_note] The customer Brightstone Ltd (org no. 846305157) has complained about the invoice for "Data Advisory" (38000 NOK excl. V
+[create_credit_note] El cliente Viento SL (org. nº 857019199) ha reclamado sobre la factura por "Informe de análisis" (27200 NOK sin IVA). Em
+[create_credit_note] Kunden Elvdal AS (org.nr 812449982) har reklamert på fakturaen for "Datarådgjeving" (45300 kr ekskl. MVA). Opprett ei fu
+[create_credit_note] Der Kunde Waldstein GmbH (Org.-Nr. 908048199) hat die Rechnung für "Webdesign" (8750 NOK ohne MwSt.) reklamiert. Erstell
+[create_credit_note] Kunden Nordlys AS (org.nr 829535181) har reklamert på fakturaen for "Nettverksteneste" (15550 kr ekskl. MVA). Opprett ei
+[create_credit_note] Kunden Havbris AS (org.nr 995581094) har reklamert på fakturaen for "Programvarelisens" (34650 kr ekskl. MVA). Opprett e
+[create_credit_note] O cliente Estrela Lda (org. nº 890872492) reclamou sobre a fatura referente a "Consultoria de dados" (12000 NOK sem IVA)
+[create_credit_note] Kunden Bergvik AS (org.nr 878347846) har reklamert på fakturaen for "Konsulenttimer" (20300 kr ekskl. MVA). Opprett en f
+[create_credit_note] Le client Colline SARL (nº org. 879581265) a réclamé concernant la facture pour "Conseil en données" (23750 NOK HT). Éme
+[create_credit_note] Kunden Nordlys AS (org.nr 902392165) har reklamert på fakturaen for "Programvarelisens" (47350 kr ekskl. MVA). Opprett e
+[create_credit_note] Le client Colline SARL (nº org. 879532124) a réclamé concernant la facture pour "Conseil en données" (28600 NOK HT). Éme
+[create_credit_note] O cliente Luz do Sol Lda (org. nº 821149517) reclamou sobre a fatura referente a "Horas de consultoria" (16650 NOK sem I
+[create_custom_dimension] Cree una dimensión contable personalizada "Kostsenter" con los valores "Økonomi" y "Produktutvikling". Luego registre un
+[create_custom_dimension] Crie uma dimensão contabilística personalizada "Region" com os valores "Midt-Norge" e "Vestlandet". Em seguida, lance um
+[create_custom_dimension] Opprett en fri regnskapsdimensjon "Prosjekttype" med verdiene "Forskning" og "Utvikling". Bokfør deretter et bilag på ko
+[create_custom_dimension] Crie uma dimensão contabilística personalizada "Marked" com os valores "Offentlig" e "Bedrift". Em seguida, lance um doc
+[create_custom_dimension] Créez une dimension comptable personnalisée "Produktlinje" avec les valeurs "Premium" et "Basis". Puis comptabilisez une
+[create_custom_dimension] Créez une dimension comptable personnalisée "Kostsenter" avec les valeurs "Økonomi" et "IT". Puis comptabilisez une pièc
+[create_custom_dimension] Créez une dimension comptable personnalisée "Prosjekttype" avec les valeurs "Internt" et "Utvikling". Puis comptabilisez
+[create_custom_dimension] Erstellen Sie eine benutzerdefinierte Buchhaltungsdimension "Kostsenter" mit den Werten "IT" und "Innkjøp". Buchen Sie d
+[create_custom_dimension] Créez une dimension comptable personnalisée "Kostsenter" avec les valeurs "Produktutvikling" et "Salg". Puis comptabilis
+[create_custom_dimension] Create a custom accounting dimension "Marked" with the values "Offentlig" and "Privat". Then post a voucher on account 7
+[create_custom_dimension] Crie uma dimensão contabilística personalizada "Region" com os valores "Vestlandet" e "Midt-Norge". Em seguida, lance um
+[create_custom_dimension] Crie uma dimensão contabilística personalizada "Marked" com os valores "Bedrift" e "Privat". Em seguida, lance um docume
+[create_customer] Opprett kunden Bølgekraft AS med organisasjonsnummer 988957747. Adressa er Kirkegata 23, 0182 Oslo. E-post: post@blgekra
+[create_customer] Erstellen Sie den Kunden Flussgold GmbH mit der Organisationsnummer 952754750. Die Adresse ist Havnegata 36, 9008 Tromsø
+[create_customer] Erstellen Sie den Kunden Flussgold GmbH mit der Organisationsnummer 914077168. Die Adresse ist Storgata 109, 7010 Trondh
+[create_customer] Opprett kunden Snøhetta AS med organisasjonsnummer 969719878. Adressen er Industriveien 148, 2317 Hamar. E-post: post@sn
+[create_customer] Opprett kunden Havbris AS med organisasjonsnummer 946293199. Adressen er Sjøgata 112, 4611 Kristiansand. E-post: post@ha
+[create_customer] Create the customer Oakwood Ltd with organization number 980094863. The address is Torggata 10, 6003 Ålesund. Email: pos
+[create_customer] Create the customer Oakwood Ltd with organization number 927790629. The address is Solveien 71, 5003 Bergen. Email: post
+[create_customer] Créez le client Prairie SARL avec le numéro d'organisation 870133669. L'adresse est Solveien 88, 9008 Tromsø. E-mail : p
+[create_customer] Crea el cliente Montaña SL con número de organización 957430201. La dirección es Nygata 24, 3015 Drammen. Correo: post@m
+[create_customer] Create the customer Silveroak Ltd with organization number 993297909. The address is Solveien 1, 8006 Bodø. Email: post@
+[create_customer] Crie o cliente Solmar Lda com número de organização 850733651. O endereço é Storgata 108, 7010 Trondheim. E-mail: post@s
+[create_customer] Crea el cliente Río Verde SL con número de organización 975181626. La dirección es Solveien 97, 3015 Drammen. Correo: po
+[create_customer] Crea el cliente Viento SL con número de organización 910107739. La dirección es Parkveien 93, 7010 Trondheim. Correo: po
+[create_customer] Crie o cliente Porto Alegre Lda com número de organização 964528136. O endereço é Sjøgata 128, 4611 Kristiansand. E-mail
+[create_customer] Crie o cliente Porto Alegre Lda com número de organização 834147254. O endereço é Storgata 65, 4611 Kristiansand. E-mail
+[create_customer] Crie o cliente Rio Azul Lda com número de organização 865253443. O endereço é Havnegata 16, 4006 Stavanger. E-mail: post
+[create_customer] Erstellen Sie den Kunden Bergwerk GmbH mit der Organisationsnummer 946768693. Die Adresse ist Solveien 5, 3015 Drammen. 
+[create_customer] Create the customer Greenfield Ltd with organization number 872154442. The address is Sjøgata 85, 7010 Trondheim. Email:
+[create_customer] Opprett kunden Skogheim AS med organisasjonsnummer 953656744. Adressa er Kirkegata 7, 7010 Trondheim. E-post: post@skogh
+[create_customer] Opprett kunden Skogheim AS med organisasjonsnummer 855954346. Adressa er Parkveien 17, 4611 Kristiansand. E-post: post@s
+[create_customer] Créez le client Colline SARL avec le numéro d'organisation 939137599. L'adresse est Kirkegata 77, 4611 Kristiansand. E-m
+[create_customer] A project handover requires documentation of all automation systems. Create a customer named 'Automation Handover Q1-202
+[create_customer] Erstellen Sie den Kunden Sonnental GmbH mit der Organisationsnummer 929940016. Die Adresse ist Solveien 21, 9008 Tromsø.
+[create_customer] Crea el cliente Dorada SL con número de organización 823073917. La dirección es Kirkegata 46, 4006 Stavanger. Correo: po
+[create_employee] Nous avons un nouvel employé nommé Sarah Richard, né le 15. August 1980. Veuillez le créer en tant qu'employé avec l'e-m
+[create_employee] Nous avons un nouvel employé nommé Jules Richard, né le 2. August 1986. Veuillez le créer en tant qu'employé avec l'e-ma
+[create_employee] Nous avons un nouvel employé nommé Jules Bernard, né le 8. December 1982. Veuillez le créer en tant qu'employé avec l'e-
+[create_employee] Me har ein ny tilsett som heiter Geir Neset, fødd 24. June 1997. Opprett vedkomande som tilsett med e-post geir.neset@ex
+[create_employee] Me har ein ny tilsett som heiter Gunnhild Eide, fødd 21. June 1997. Opprett vedkomande som tilsett med e-post gunnhild.e
+[create_employee] Wir haben einen neuen Mitarbeiter namens Sophia Hoffmann, geboren am 7. January 1995. Bitte legen Sie ihn als Mitarbeite
+[create_employee] We have a new employee named Henry Smith, born 2. December 1988. Please create them as an employee with email henry.smit
+[create_employee] Tenemos un nuevo empleado llamado Miguel Sánchez, nacido el 20. April 1991. Créelo como empleado con el correo miguel.sa
+[create_employee] Vi har en ny ansatt som heter Solveig Johansen, født 15. May 1993. Opprett vedkommende som ansatt med e-post solveig.joh
+[create_employee] Nous avons un nouvel employé nommé Léa Thomas, né le 30. June 2000. Veuillez le créer en tant qu'employé avec l'e-mail l
+[create_employee] Tenemos un nuevo empleado llamado Lucía Hernández, nacido el 14. March 1986. Créelo como empleado con el correo lucia.he
+[create_employee] Has recibido un contrato de trabajo (ver PDF adjunto). Crea el empleado en Tripletex con todos los datos del contrato: n
+[create_employee] Du har motteke eit tilbodsbrev (sjaa vedlagt PDF) for ein ny tilsett. Utfor komplett onboarding: opprett den tilsette, t
+[create_employee] Sie haben ein Angebotsschreiben erhalten (siehe beigefugte PDF) fuer einen neuen Mitarbeiter. Fuehren Sie das vollstaend
+[create_employee] Has recibido una carta de oferta (ver PDF adjunto) para un nuevo empleado. Completa la incorporacion: crea el empleado, 
+[create_employee] Vous avez recu un contrat de travail (voir PDF ci-joint). Creez l'employe dans Tripletex avec tous les details du contra
+[create_employee] Du har mottatt et tilbudsbrev (se vedlagt PDF) for en ny ansatt. Utfor komplett onboarding: opprett den ansatte, tilknyt
+[create_employee] Du har motteke ein arbeidskontrakt (sjaa vedlagt PDF). Opprett den tilsette i Tripletex med alle detaljar fraa kontrakte
+[create_employee] Du har mottatt en arbeidskontrakt (se vedlagt PDF). Opprett den ansatte i Tripletex med alle detaljer fra kontrakten: pe
+[create_employee] You received an offer letter (see attached PDF) for a new employee. Complete the onboarding: create the employee, assign
+[create_employee] Vi har en ny ansatt som heter Ingrid Johansen, født 9. November 1995. Opprett vedkommende som ansatt med e-post ingrid.j
+[create_employee] Nous avons un nouvel employé nommé Arthur Martin, né le 20. May 1991. Veuillez le créer en tant qu'employé avec l'e-mail
+[create_employee] Tenemos un nuevo empleado llamado Diego Rodríguez, nacido el 28. August 1996. Créelo como empleado con el correo diego.r
+[create_employee] Tenemos un nuevo empleado llamado Lucía García, nacido el 18. March 1997. Créelo como empleado con el correo lucia.garci
+[create_employee] Sie haben einen Arbeitsvertrag erhalten (siehe beigefugte PDF). Erstellen Sie den Mitarbeiter in Tripletex mit allen Det
+[create_employee] Vous avez recu une lettre d'offre (voir PDF ci-joint) pour un nouvel employe. Effectuez l'integration complete : creez l
+[create_employee] Tenemos un nuevo empleado llamado Lucía Rodríguez, nacido el 30. April 1996. Créelo como empleado con el correo lucia.ro
+[create_employee] Me har ein ny tilsett som heiter Torbjørn Neset, fødd 14. November 1991. Opprett vedkomande som tilsett med e-post torbj
+[create_employee] We have a new employee named Charles Taylor, born 21. October 1994. Please create them as an employee with email charles
+[create_employee] Voce recebeu um contrato de trabalho (ver PDF anexo). Crie o funcionario no Tripletex com todos os detalhes do contrato:
+[create_employee] You received an employment contract (see attached PDF). Create the employee in Tripletex with all details from the contr
+[create_employee] Voce recebeu uma carta de oferta (ver PDF anexo) para um novo funcionario. Complete a integracao: crie o funcionario, at
+[create_employee] Vi har en ny ansatt som heter Lars Bakken, født 1. October 1983. Opprett vedkommende som ansatt med e-post lars.bakken@e
+[create_invoice] Créez et envoyez une facture au client Colline SARL (nº org. 944164340) de 44750 NOK hors TVA. La facture concerne Servi
+[create_invoice] Opprett ein faktura til kunden Bølgekraft AS (org.nr 827304212) med tre produktlinjer: Webdesign (6744) til 27000 kr med
+[create_invoice] Opprett og send ein faktura til kunden Bølgekraft AS (org.nr 892362416) på 34150 kr eksklusiv MVA. Fakturaen gjeld Vedli
+[create_invoice] Opprett og send ein faktura til kunden Skogheim AS (org.nr 929397088) på 23250 kr eksklusiv MVA. Fakturaen gjeld Vedlike
+[create_invoice] Fixez un prix forfaitaire de 354200 NOK sur le projet "Sécurité des données" pour Colline SARL (nº org. 862154258). Le c
+[create_invoice] Opprett en faktura til kunden Havbris AS (org.nr 977448239) med tre produktlinjer: Konsulenttimer (6390) til 2850 kr med
+[create_invoice] Opprett en faktura til kunden Tindra AS (org.nr 967636665) med tre produktlinjer: Skylagring (2186) til 25500 kr med 25 
+[create_invoice] Create invoice for Test AS
+[create_invoice] Créez une facture pour le client Océan SARL (nº org. 974909103) avec trois lignes de produit : Développement système (90
+[create_invoice] Créez une facture pour le client Lumière SARL (nº org. 925760838) avec trois lignes de produit : Maintenance (3644) à 18
+[create_invoice] Opprett og send en faktura til kunden Bergvik AS (org.nr 890733751) på 28900 kr eksklusiv MVA. Fakturaen gjelder Systemu
+[create_invoice] Erstellen und senden Sie eine Rechnung an den Kunden Bergwerk GmbH (Org.-Nr. 981122011) über 45150 NOK ohne MwSt. Die Re
+[create_invoice] Crea y envía una factura al cliente Río Verde SL (org. nº 894012358) por 29100 NOK sin IVA. La factura es por Sesión de 
+[create_invoice] Crea una factura para el cliente Sierra SL (org. nº 909007135) con tres líneas de producto: Desarrollo de sistemas (8344
+[create_invoice] Create and send an invoice to the customer Blueshore Ltd (org no. 987928921) for 40600 NOK excluding VAT. The invoice is
+[create_invoice] Créez et envoyez une facture au client Prairie SARL (nº org. 818016662) de 7200 NOK hors TVA. La facture concerne Rappor
+[create_invoice] Crie uma fatura para o cliente Montanha Lda (org. nº 869972401) com três linhas de produto: Sessão de formação (7733) a 
+[create_invoice] Crie uma fatura para o cliente Floresta Lda (org. nº 919172657) com três linhas de produto: Sessão de formação (4783) a 
+[create_invoice] Crea una factura para el cliente Sierra SL (org. nº 841679563) con tres líneas de producto: Horas de consultoría (8891) 
+[create_invoice] Opprett ein faktura til kunden Fossekraft AS (org.nr 913494253) med tre produktlinjer: Skylagring (4508) til 1050 kr med
+[create_invoice] Erstellen und senden Sie eine Rechnung an den Kunden Flussgold GmbH (Org.-Nr. 965203516) über 19650 NOK ohne MwSt. Die R
+[create_invoice] Crea una factura para el cliente Río Verde SL (org. nº 863477905) con tres líneas de producto: Desarrollo de sistemas (2
+[create_invoice] Create an invoice for the customer Ridgepoint Ltd (org no. 932956233) with three product lines: Analysis Report (5566) a
+[create_invoice] Opprett og send ein faktura til kunden Sjøbris AS (org.nr 847830840) på 7350 kr eksklusiv MVA. Fakturaen gjeld Nettverks
+[create_invoice] Opprett ein faktura til kunden Strandvik AS (org.nr 900314183) med tre produktlinjer: Webdesign (9716) til 13450 kr med 
+[create_invoice] Erstellen Sie eine Rechnung für den Kunden Eichenhof GmbH (Org.-Nr. 936374492) mit drei Produktzeilen: Wartung (2878) zu
+[create_invoice] Créez une facture pour le client Rivière SARL (nº org. 909579791) avec trois lignes de produit : Maintenance (6481) à 28
+[create_invoice] Create an invoice for the customer Windmill Ltd (org no. 994973150) with three product lines: System Development (6517) 
+[create_invoice] Crea y envía una factura al cliente Luna SL (org. nº 931597922) por 5450 NOK sin IVA. La factura es por Sesión de formac
+[create_invoice] Crie uma fatura para o cliente Montanha Lda (org. nº 970481389) com três linhas de produto: Horas de consultoria (8659) 
+[create_invoice] Erstellen und senden Sie eine Rechnung an den Kunden Waldstein GmbH (Org.-Nr. 925346519) über 25100 NOK ohne MwSt. Die R
+[create_invoice] Create an invoice for the customer Windmill Ltd (org no. 926849395) with three product lines: Software License (6309) at
+[create_invoice] Execute the complete project lifecycle for 'System Upgrade Greenfield' (Greenfield Ltd, org no. 873288949): 1) The proje
+[create_invoice] Crie e envie uma fatura ao cliente Rio Azul Lda (org. nº 959230277) por 27900 NOK sem IVA. A fatura refere-se a Relatóri
+[create_invoice] Crie e envie uma fatura ao cliente Porto Alegre Lda (org. nº 826870192) por 22700 NOK sem IVA. A fatura refere-se a Desi
+[create_invoice] Créez une facture pour le client Prairie SARL (nº org. 834343096) avec trois lignes de produit : Rapport d'analyse (1282
+[create_invoice] Crea y envía una factura al cliente Luna SL (org. nº 844920520) por 20200 NOK sin IVA. La factura es por Servicio de red
+[create_invoice] Crea una factura para el cliente Solmar SL (org. nº 829487888) con tres líneas de producto: Sesión de formación (6042) a
+[create_invoice] Create and send an invoice to the customer Ridgepoint Ltd (org no. 985190631) for 32650 NOK excluding VAT. The invoice i
+[create_invoice] Opprett og send en faktura til kunden Havbris AS (org.nr 808525410) på 22550 kr eksklusiv MVA. Fakturaen gjelder Dataråd
+[create_invoice] Crea y envía una factura al cliente Viento SL (org. nº 844876831) por 35350 NOK sin IVA. La factura es por Licencia de s
+[create_invoice] Crea y envía una factura al cliente Solmar SL (org. nº 893298169) por 19500 NOK sin IVA. La factura es por Mantenimiento
+[create_invoice] Opprett og send ein faktura til kunden Fjelltopp AS (org.nr 927173875) på 42600 kr eksklusiv MVA. Fakturaen gjeld Nettve
+[create_invoice] Erstellen Sie eine Rechnung für den Kunden Bergwerk GmbH (Org.-Nr. 967361690) mit drei Produktzeilen: Schulung (9995) zu
+[create_invoice] Create and send an invoice to the customer Ridgepoint Ltd (org no. 941587437) for 40400 NOK excluding VAT. The invoice i
+[create_invoice] Opprett en faktura til kunden Bergvik AS (org.nr 807508474) med tre produktlinjer: Konsulenttimer (5947) til 29950 kr me
+[create_invoice] Opprett ein faktura til kunden Elvdal AS (org.nr 810713909) med tre produktlinjer: Nettverksteneste (7765) til 13150 kr 
+[create_order] Créez une commande pour le client Océan SARL (nº org. 984524706) avec les produits Licence logicielle (7127) à 6750 NOK 
+[create_order] Opprett en ordre for kunden Bergvik AS (org.nr 873675926) med produktene Skylagring (2961) til 12000 kr og Analyserappor
+[create_order] Opprett ein ordre for kunden Vestfjord AS (org.nr 970769994) med produkta Nettverksteneste (3237) til 13450 kr og Analys
+[create_order] Opprett en ordre for kunden Stormberg AS (org.nr 870531559) med produktene Vedlikehold (4665) til 35200 kr og Systemutvi
+[create_order] Créez une commande pour le client Étoile SARL (nº org. 972488607) avec les produits Rapport d'analyse (2823) à 21350 NOK
+[create_order] Crie um pedido para o cliente Horizonte Lda (org. nº 904130338) com os produtos Serviço de rede (6247) a 15250 NOK e Des
+[create_order] Create an order for the customer Greenfield Ltd (org no. 914083478) with the products Web Design (8474) at 23450 NOK and
+[create_order] Create an order for the customer Brightstone Ltd (org no. 971948981) with the products Data Advisory (4083) at 4050 NOK 
+[create_order] Opprett ein ordre for kunden Strandvik AS (org.nr 911845016) med produkta Skylagring (7865) til 38500 kr og Datarådgjevi
+[create_order] Create an order for the customer Northwave Ltd (org no. 997677889) with the products Cloud Storage (4257) at 27150 NOK a
+[create_product] Opprett produktet "Konsulenttimer" med produktnummer 9497. Prisen er 17300 kr eksklusiv MVA, og standard MVA-sats på 25 
+[create_product] Erstellen Sie das Produkt "Orangensaft" mit der Produktnummer 1256. Der Preis beträgt 17450 NOK ohne MwSt., mit dem MwSt
+[create_product] Crea el producto "Mantenimiento" con número de producto 4508. El precio es 41500 NOK sin IVA, utilizando la tasa estánda
+[create_product] Créez le produit "Design web" avec le numéro de produit 8115. Le prix est de 17200 NOK hors TVA, avec le taux standard d
+[create_product] Erstellen Sie das Produkt "Cloud-Speicher" mit der Produktnummer 9235. Der Preis beträgt 28800 NOK ohne MwSt., mit dem S
+[create_product] Crea el producto "Servicio de red" con número de producto 6866. El precio es 19100 NOK sin IVA, utilizando la tasa están
+[create_product] Erstellen Sie das Produkt "Datenberatung" mit der Produktnummer 9788. Der Preis beträgt 41150 NOK ohne MwSt., mit dem St
+[create_product] Erstellen Sie das Produkt "Datenberatung" mit der Produktnummer 5524. Der Preis beträgt 22550 NOK ohne MwSt., mit dem St
+[create_product] Opprett produktet "Frokostblanding" med produktnummer 1391. Prisen er 37450 kr eksklusiv MVA, og MVA-sats for næringsmid
+[create_product] Crie o produto "Design web" com número de produto 4775. O preço é 27300 NOK sem IVA, utilizando a taxa padrão de 25 %.
+[create_product] Erstellen Sie das Produkt "Datenberatung" mit der Produktnummer 7855. Der Preis beträgt 41550 NOK ohne MwSt., mit dem St
+[create_product] Créez le produit "Stockage cloud" avec le numéro de produit 9433. Le prix est de 7550 NOK hors TVA, avec le taux standar
+[create_product] Create the product "Textbook" with product number 9036. The price is 33950 NOK excluding VAT, using the 0% VAT rate for 
+[create_product] Opprett produktet "Vedlikehold" med produktnummer 6794. Prisen er 31600 kr eksklusiv MVA, og standard MVA-sats på 25 % s
+[create_product] Create the product "Training Session" with product number 7908. The price is 26250 NOK excluding VAT, using the standard
+[create_product] Opprett produktet "Skylagring" med produktnummer 6283. Prisen er 19050 kr eksklusiv MVA, og standard MVA-sats på 25 % sk
+[create_product] Créez le produit "Eau minérale" avec le numéro de produit 7027. Le prix est de 36750 NOK hors TVA, avec le taux de TVA p
+[create_product] Crea el producto "Mantenimiento" con número de producto 7266. El precio es 650 NOK sin IVA, utilizando la tasa estándar 
+[create_project] Create the project "Integration Northwave" linked to the customer Northwave Ltd (org no. 950072652). The project manager
+[create_project] Opprett prosjektet "Analyse Fjordkraft" knyttet til kunden Fjordkraft AS (org.nr 944845712). Prosjektleder er Hilde Joha
+[create_project] Erstellen Sie das Projekt "Integration Windkraft" verknüpft mit dem Kunden Windkraft GmbH (Org.-Nr. 964854629). Projektl
+[create_project] Créez le projet "Intégration Montagne" lié au client Montagne SARL (nº org. 975615766). Le chef de projet est Jules Robe
+[create_project] Erstellen Sie das Projekt "Integration Windkraft" verknüpft mit dem Kunden Windkraft GmbH (Org.-Nr. 804172807). Projektl
+[create_project] Create the project "Upgrade Greenfield" linked to the customer Greenfield Ltd (org no. 918986197). The project manager i
+[create_project] Create the project "Analysis Oakwood" linked to the customer Oakwood Ltd (org no. 849612913). The project manager is Luc
+[create_project] Crea el proyecto "Actualización Dorada" vinculado al cliente Dorada SL (org. nº 800043328). El director del proyecto es 
+[create_project] Opprett prosjektet "Analyse Sjøbris" knytt til kunden Sjøbris AS (org.nr 883693329). Prosjektleiar er Steinar Berge (ste
+[create_project] Opprett prosjektet "Migrasjon Elvdal" knytt til kunden Elvdal AS (org.nr 877501906). Prosjektleiar er Liv Haugen (liv.ha
+[create_project] Totalkostnadene auka monaleg frå januar til februar 2026. Analyser hovudboka og finn dei tre kostnadskontoane med størst
+[create_project] Totalkostnadene økte betydelig fra januar til februar 2026. Analyser hovedboken og finn de tre kostnadskontoene med stør
+[create_project] Totalkostnadene økte betydelig fra januar til februar 2026. Analyser hovedboken og finn de tre kostnadskontoene med stør
+[create_project] Crea el proyecto "Migración Viento" vinculado al cliente Viento SL (org. nº 857047575). El director del proyecto es Carl
+[create_project] Create the project "Upgrade Windmill" linked to the customer Windmill Ltd (org no. 978017681). The project manager is Gr
+[create_project] Les coûts totaux ont augmenté de manière significative de janvier à février 2026. Analysez le grand livre et identifiez 
+[create_project] Los costos totales aumentaron significativamente de enero a febrero de 2026. Analice el libro mayor e identifique las tr
+[create_project] Opprett prosjektet "Integrasjon Havbris" knyttet til kunden Havbris AS (org.nr 999148387). Prosjektleder er Henrik Ødegå
+[create_project] Crie o projeto "Integração Porto" vinculado ao cliente Porto Alegre Lda (org. nº 884811686). O gerente de projeto é Luca
+[create_project] Create the project "Upgrade Silveroak" linked to the customer Silveroak Ltd (org no. 937657250). The project manager is 
+[create_project] Os custos totais aumentaram significativamente de janeiro a fevereiro de 2026. Analise o livro razão e identifique as tr
+[create_project] Total costs increased significantly from January to February 2026. Analyze the general ledger and identify the three exp
+[create_project] Créez le projet "Analyse Lumière" lié au client Lumière SARL (nº org. 929902688). Le chef de projet est Léo Dubois (leo.
+[create_project] Crie o projeto "Análise Porto" vinculado ao cliente Porto Alegre Lda (org. nº 996943305). O gerente de projeto é Lucas O
+[create_project] Opprett prosjektet "Integrasjon Tindra" knyttet til kunden Tindra AS (org.nr 887870462). Prosjektleder er Lars Johansen 
+[create_supplier] Register the supplier Northwave Ltd with organization number 949044378. Email: faktura@northwaveltd.no.
+[create_supplier] Registe o fornecedor Floresta Lda com número de organização 981154614. E-mail: faktura@florestalda.no.
+[create_supplier] Registrer leverandøren Vestfjord AS med organisasjonsnummer 914908787. E-post: faktura@vestfjord.no.
+[create_supplier] Registrer leverandøren Sjøbris AS med organisasjonsnummer 811212717. E-post: faktura@sjbris.no.
+[create_supplier] Register the supplier Silveroak Ltd with organization number 811867500. Email: faktura@silveroakltd.no.
+[create_supplier] Registe o fornecedor Floresta Lda com número de organização 883568885. E-mail: faktura@florestalda.no.
+[create_supplier] Register the supplier Brightstone Ltd with organization number 845031037. Email: faktura@brightstoneltd.no.
+[create_supplier] Registrieren Sie den Lieferanten Waldstein GmbH mit der Organisationsnummer 874546445. E-Mail: faktura@waldsteingmbh.no.
+[create_supplier] Registrer leverandøren Skogheim AS med organisasjonsnummer 993130494. E-post: faktura@skogheim.no.
+[create_supplier] Register the supplier Oakwood Ltd with organization number 887507295. Email: faktura@oakwoodltd.no.
+[create_supplier] Enregistrez le fournisseur Colline SARL avec le numéro d'organisation 915612865. E-mail : faktura@collinesarl.no.
+[create_supplier] Registe o fornecedor Luz do Sol Lda com número de organização 894596554. E-mail: faktura@luzdosollda.no.
+[create_supplier] Registre el proveedor Costa Brava SL con número de organización 936616224. Correo electrónico: faktura@costabravasl.no.
+[create_supplier] Registrer leverandøren Brattli AS med organisasjonsnummer 950029978. E-post: faktura@brattli.no.
+[create_supplier] Registrieren Sie den Lieferanten Waldstein GmbH mit der Organisationsnummer 891505019. E-Mail: faktura@waldsteingmbh.no.
+[create_supplier] Enregistrez le fournisseur Cascade SARL avec le numéro d'organisation 999591027. E-mail : faktura@cascadesarl.no.
+[create_supplier] Registre el proveedor Estrella SL con número de organización 899246829. Correo electrónico: faktura@estrellasl.no.
+[create_supplier] Registre el proveedor Dorada SL con número de organización 853166553. Correo electrónico: faktura@doradasl.no.
+[create_supplier] Vous avez recu une facture fournisseur (voir PDF ci-joint). Enregistrez la facture dans Tripletex. Creez le fournisseur 
+[create_supplier] Recebemos a fatura INV-2026-6556 do fornecedor Solmar Lda (org. nº 974178680) no valor de 50750 NOK com IVA incluído. O 
+[create_supplier] Registre el proveedor Dorada SL con número de organización 855328062. Correo electrónico: faktura@doradasl.no.
+[create_supplier] Enregistrez le fournisseur Océan SARL avec le numéro d'organisation 975630749. E-mail : faktura@ocansarl.no.
+[create_supplier] Registre el proveedor Sierra SL con número de organización 898340473. Correo electrónico: faktura@sierrasl.no.
+[create_supplier] Registrer leverandøren Tindra AS med organisasjonsnummer 888286195. E-post: faktura@tindra.no.
+[create_supplier] Registe o fornecedor Luz do Sol Lda com número de organização 962006930. E-mail: faktura@luzdosollda.no.
+[create_supplier] Registrieren Sie den Lieferanten Brückentor GmbH mit der Organisationsnummer 978195806. E-Mail: faktura@brckentorgmbh.no
+[create_travel_expense] Erfassen Sie eine Reisekostenabrechnung für Paul Hoffmann (paul.hoffmann@example.org) für "Kundenbesuch Trondheim". Die 
+[create_travel_expense] Registrer en reiseregning for Astrid Larsen (astrid.larsen@example.org) for "Konferanse Ålesund". Reisen varte 4 dager m
+[create_travel_expense] Registrer en reiseregning for Lars Johansen (lars.johansen@example.org) for "Kundebesøk Stavanger". Reisen varte 3 dager
+[create_travel_expense] Register a travel expense for Charles Harris (charles.harris@example.org) for "Client visit Oslo". The trip lasted 5 day
+[create_travel_expense] Register a travel expense for Charlotte Williams (charlotte.williams@example.org) for "Client visit Bodø". The trip last
+[create_travel_expense] Registrer en reiseregning for Ragnhild Bakken (ragnhild.bakken@example.org) for "Kundebesøk Kristiansand". Reisen varte 
+[create_travel_expense] Registrer ei reiserekning for Marit Vik (marit.vik@example.org) for "Konferanse Kristiansand". Reisa varte 4 dagar med d
+[create_travel_expense] Register a travel expense for Charlotte Smith (charlotte.smith@example.org) for "Conference Tromsø". The trip lasted 2 d
+[create_travel_expense] Register a travel expense for Thomas Lewis (thomas.lewis@example.org) for "Client visit Oslo". The trip lasted 4 days wi
+[create_travel_expense] Registre una nota de gastos de viaje para Pablo Sánchez (pablo.sanchez@example.org) por "Visita cliente Tromsø". El viaj
+[create_travel_expense] Registrer en reiseregning for Sigurd Hansen (sigurd.hansen@example.org) for "Kundebesøk Trondheim". Reisen varte 4 dager
+[create_travel_expense] Enregistrez une note de frais de déplacement pour Arthur Robert (arthur.robert@example.org) pour "Visite client Kristian
+[create_travel_expense] Registe uma despesa de viagem para Bruno Silva (bruno.silva@example.org) referente a "Conferência Bodø". A viagem durou 
+[create_travel_expense] Registe uma despesa de viagem para Maria Martins (maria.martins@example.org) referente a "Visita cliente Trondheim". A v
+[create_travel_expense] Registre una nota de gastos de viaje para Ricardo Romero (ricardo.romero@example.org) por "Conferencia Ålesund". El viaj
+[create_travel_expense] Registrer ei reiserekning for Svein Berge (svein.berge@example.org) for "Kundebesøk Trondheim". Reisa varte 5 dagar med 
+[create_travel_expense] Registrer en reiseregning for Magnus Haugen (magnus.haugen@example.org) for "Kundebesøk Bergen". Reisen varte 4 dager me
+[create_travel_expense] Enregistrez une note de frais de déplacement pour Arthur Bernard (arthur.bernard@example.org) pour "Visite client Tromsø
+[create_travel_expense] Registrer ei reiserekning for Arne Vik (arne.vik@example.org) for "Kundebesøk Stavanger". Reisa varte 2 dagar med diett 
+[create_travel_expense] Register a travel expense for Alice Clark (alice.clark@example.org) for "Client visit Oslo". The trip lasted 3 days with
+[create_voucher] En av kundene dine har en forfalt faktura. Finn den forfalte fakturaen og bokfor et purregebyr pa 50 kr. Debet kundeford
+[create_voucher] L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 65 NOK. 
+[create_voucher] One of your customers has an overdue invoice. Find the overdue invoice and post a reminder fee of 35 NOK. Debit accounts
+[monthly_closing] Realice el cierre anual simplificado de 2025: 1) Calcule y contabilice la depreciación anual de tres activos: Kontormask
+[monthly_closing] Realice el cierre mensual de marzo de 2026. Registre la periodificación (4600 NOK por mes de la cuenta 1700 a gasto). Co
+[monthly_closing] Realize o encerramento mensal de março de 2026. Registe a reversão de acréscimos (12200 NOK por mês da conta 1710 para d
+[monthly_closing] Führen Sie den Monatsabschluss für März 2026 durch. Buchen Sie die Rechnungsabgrenzung (3400 NOK pro Monat von Konto 170
+[monthly_closing] Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobi
+[monthly_closing] Effectuez la clôture mensuelle de mars 2026. Comptabilisez la régularisation (13600 NOK par mois du compte 1700 vers cha
+[monthly_closing] Utfør månedsavslutning for mars 2026. Periodiser forskuddsbetalt kostnad (7050 kr per måned fra konto 1710 til kostkonto
+[monthly_closing] Führen Sie den Monatsabschluss für März 2026 durch. Buchen Sie die Rechnungsabgrenzung (5150 NOK pro Monat von Konto 170
+[monthly_closing] Realize o encerramento mensal de março de 2026. Registe a reversão de acréscimos (12250 NOK por mês da conta 1710 para d
+[monthly_closing] Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobi
+[monthly_closing] Realice el cierre anual simplificado de 2025: 1) Calcule y contabilice la depreciación anual de tres activos: Kjøretøy (
+[monthly_closing] Perform month-end closing for March 2026. Post accrual reversal (12400 NOK per month from account 1710 to expense). Reco
+[monthly_closing] Gjer månavslutninga for mars 2026. Periodiser forskotsbetalt kostnad (14400 kr per månad frå konto 1710 til kostnadskont
+[monthly_closing] Führen Sie den Monatsabschluss für März 2026 durch. Buchen Sie die Rechnungsabgrenzung (6150 NOK pro Monat von Konto 171
+[monthly_closing] Gjer månavslutninga for mars 2026. Periodiser forskotsbetalt kostnad (12000 kr per månad frå konto 1700 til kostnadskont
+[monthly_closing] Realize o encerramento mensal de março de 2026. Registe a reversão de acréscimos (10700 NOK por mês da conta 1720 para d
+[monthly_closing] Effectuez la clôture mensuelle de mars 2026. Comptabilisez la régularisation (13200 NOK par mois du compte 1710 vers cha
+[monthly_closing] Perform month-end closing for March 2026. Post accrual reversal (9200 NOK per month from account 1720 to expense). Recor
+[overdue_invoice] Einer Ihrer Kunden hat eine uberfallige Rechnung. Finden Sie die uberfallige Rechnung und buchen Sie eine Mahngebuhr von
+[overdue_invoice] Uno de sus clientes tiene una factura vencida. Encuentre la factura vencida y registre un cargo por recordatorio de 55 N
+[overdue_invoice] Uno de sus clientes tiene una factura vencida. Encuentre la factura vencida y registre un cargo por recordatorio de 60 N
+[overdue_invoice] Uno de sus clientes tiene una factura vencida. Encuentre la factura vencida y registre un cargo por recordatorio de 35 N
+[overdue_invoice] Ein av kundane dine har ein forfallen faktura. Finn den forfalne fakturaen og bokfor eit purregebyr pa 55 kr. Debet kund
+[overdue_invoice] Ein av kundane dine har ein forfallen faktura. Finn den forfalne fakturaen og bokfor eit purregebyr pa 65 kr. Debet kund
+[overdue_invoice] Uno de sus clientes tiene una factura vencida. Encuentre la factura vencida y registre un cargo por recordatorio de 40 N
+[project_lifecycle] Execute the complete project lifecycle for 'Cloud Migration Windmill' (Windmill Ltd, org no. 882329348): 1) The project 
+[project_lifecycle] Gjennomfør heile prosjektsyklusen for 'Digitalportal Strandvik' (Strandvik AS, org.nr 842328004): 1) Prosjektet har buds
+[project_lifecycle] Führen Sie den vollständigen Projektzyklus für 'Systemupgrade Brückentor' (Brückentor GmbH, Org.-Nr. 929610156) durch: 1
+[project_lifecycle] Gjennomfør hele prosjektsyklusen for 'ERP-implementering Bergvik' (Bergvik AS, org.nr 886943407): 1) Prosjektet har buds
+[project_lifecycle] Execute o ciclo de vida completo do projeto 'Portal Digital Estrela' (Estrela Lda, org. nº 977256828): 1) O projeto tem 
+[project_lifecycle] Execute the complete project lifecycle for 'Cloud Migration Northwave' (Northwave Ltd, org no. 932075482): 1) The projec
+[register_expense_receipt] Necesitamos el gasto de Skjermfilter de este recibo registrado en el departamento Innkjøp. Usa la cuenta de gastos corre
+[register_expense_receipt] Precisamos da despesa de Kundemøte lunsj deste recibo registada no departamento Økonomi. Use a conta de despesas correta
+[register_expense_receipt] Necesitamos el gasto de USB-hub de este recibo registrado en el departamento Utvikling. Usa la cuenta de gastos correcta
+[register_expense_receipt] We need the Kontorstoler expense from this receipt posted to department Kundeservice. Use the correct expense account an
+[register_expense_receipt] Vi trenger Whiteboard fra denne kvitteringen bokfort pa avdeling HR. Bruk riktig utgiftskonto basert pa kjopet, og sorg 
+[register_expense_receipt] Vi trenger Togbillett fra denne kvitteringen bokfort pa avdeling Utvikling. Bruk riktig utgiftskonto basert pa kjopet, o
+[register_expense_receipt] Vi treng Overnatting fra denne kvitteringa bokfort pa avdeling Utvikling. Bruk rett utgiftskonto basert pa kjopet, og so
+[register_expense_receipt] Necesitamos el gasto de Togbillett de este recibo registrado en el departamento HR. Usa la cuenta de gastos correcta y a
+[register_expense_receipt] We need the Kontorrekvisita expense from this receipt posted to department Markedsføring. Use the correct expense accoun
+[register_expense_receipt] Wir benotigen die Forretningslunsj-Ausgabe aus dieser Quittung in der Abteilung Salg. Verwenden Sie das richtige Aufwand
+[register_expense_receipt] Wir benotigen die Togbillett-Ausgabe aus dieser Quittung in der Abteilung Logistikk. Verwenden Sie das richtige Aufwands
+[register_expense_receipt] Precisamos da despesa de Kaffemøte deste recibo registada no departamento Salg. Use a conta de despesas correta e garant
+[register_expense_receipt] Wir benotigen die Tastatur-Ausgabe aus dieser Quittung in der Abteilung Markedsføring. Verwenden Sie das richtige Aufwan
+[register_payment] O cliente Luz do Sol Lda (org. nº 939210970) tem uma fatura pendente de 23900 NOK sem IVA por "Manutenção". Registe o pa
+[register_payment] Betalingen fra Nordhav AS (org.nr 973826018) for fakturaen "Opplæring" (42500 kr ekskl. MVA) ble returnert av banken. Re
+[register_payment] O cliente Floresta Lda (org. nº 916058896) tem uma fatura pendente de 30450 NOK sem IVA por "Desenvolvimento de sistemas
+[register_payment] Der Kunde Windkraft GmbH (Org.-Nr. 954808483) hat eine offene Rechnung über 47600 NOK ohne MwSt. für "Systementwicklung"
+[register_payment] Le client Prairie SARL (nº org. 975013723) a une facture impayée de 45100 NOK hors TVA pour "Licence logicielle". Enregi
+[register_payment] The customer Windmill Ltd (org no. 859444598) has an outstanding invoice for 37550 NOK excluding VAT for "Maintenance". 
+[register_payment] Le client Océan SARL (nº org. 924390735) a une facture impayée de 39300 NOK hors TVA pour "Maintenance". Enregistrez le 
+[register_payment] El cliente Olivares SL (org. nº 874863807) tiene una factura pendiente de 12700 NOK sin IVA por "Servicio de red". Regis
+[register_payment] Le client Montagne SARL (nº org. 893135979) a une facture impayée de 19050 NOK hors TVA pour "Service réseau". Enregistr
+[register_payment] Der Kunde Sonnental GmbH (Org.-Nr. 855482207) hat eine offene Rechnung über 33500 NOK ohne MwSt. für "Wartung". Registri
+[register_payment] El cliente Solmar SL (org. nº 866440034) tiene una factura pendiente de 30000 NOK sin IVA por "Almacenamiento en la nube
+[register_payment] O cliente Rio Azul Lda (org. nº 932217643) tem uma fatura pendente de 44100 NOK sem IVA por "Sessão de formação". Regist
+[register_payment] Me sende ein faktura på 8387 EUR til Dalheim AS (org.nr 847589930) då kursen var 11.99 NOK/EUR. Kunden har no betalt, me
+[register_payment] The customer Greenfield Ltd (org no. 853801941) has an outstanding invoice for 34450 NOK excluding VAT for "Consulting H
+[register_payment] Enviámos uma fatura de 4885 EUR ao Luz do Sol Lda (org. nº 947361074) quando a taxa de câmbio era 11.81 NOK/EUR. O clien
+[register_payment] Enviámos uma fatura de 8676 EUR ao Cascata Lda (org. nº 967770892) quando a taxa de câmbio era 11.62 NOK/EUR. O cliente 
+[register_payment] Wir haben eine Rechnung über 8077 EUR an Bergwerk GmbH (Org.-Nr. 863352010) gesendet, als der Wechselkurs 10.91 NOK/EUR 
+[register_payment] Kunden Skogheim AS (org.nr 900506902) har ein uteståande faktura på 12000 kr eksklusiv MVA for "Systemutvikling". Regist
+[register_payment] We sent an invoice for 19858 EUR to Northwave Ltd (org no. 923909583) when the exchange rate was 11.66 NOK/EUR. The cust
+[register_payment] Nous avons envoyé une facture de 6224 EUR à Rivière SARL (nº org. 886727127) lorsque le taux de change était de 10.90 NO
+[register_payment] Kunden Havbris AS (org.nr 831357983) har en utestående faktura på 5900 kr eksklusiv MVA for "Konsulenttimer". Registrer 
+[register_payment] Vi sendte en faktura på 18391 EUR til Lysgård AS (org.nr 909018005) da kursen var 11.50 NOK/EUR. Kunden har nå betalt, m
+[register_payment] We sent an invoice for 13833 EUR to Brightstone Ltd (org no. 883627393) when the exchange rate was 11.86 NOK/EUR. The cu
+[register_payment] O cliente Estrela Lda (org. nº 975389642) tem uma fatura pendente de 47200 NOK sem IVA por "Serviço de rede". Registe o 
+[register_payment] Crie um pedido para o cliente Montanha Lda (org. nº 864062245) com os produtos Licença de software (6749) a 4950 NOK e A
+[register_payment] Enviámos uma fatura de 13986 EUR ao Porto Alegre Lda (org. nº 906918129) quando a taxa de câmbio era 10.37 NOK/EUR. O cl
+[register_payment] Kunden Lysgård AS (org.nr 850823049) har en utestående faktura på 49700 kr eksklusiv MVA for "Opplæring". Registrer full
+[register_payment] Crie um pedido para o cliente Rio Azul Lda (org. nº 942366108) com os produtos Sessão de formação (5517) a 15250 NOK e C
+[register_payment] Crie um pedido para o cliente Solmar Lda (org. nº 867069526) com os produtos Sessão de formação (4466) a 35600 NOK e Lic
+[register_payment] We sent an invoice for 14988 EUR to Northwave Ltd (org no. 972362980) when the exchange rate was 11.80 NOK/EUR. The cust
+[register_payment] Kunden Strandvik AS (org.nr 836530462) har ein uteståande faktura på 6700 kr eksklusiv MVA for "Nettverksteneste". Regis
+[register_payment] Enviamos una factura por 7045 EUR a Sierra SL (org. nº 925302899) cuando el tipo de cambio era 11.32 NOK/EUR. El cliente
+[register_payment] The customer Windmill Ltd (org no. 914408326) has an outstanding invoice for 26400 NOK excluding VAT for "Network Servic
+[register_payment] Me sende ein faktura på 11400 EUR til Fjelltopp AS (org.nr 814814696) då kursen var 10.22 NOK/EUR. Kunden har no betalt,
+[register_payment] Kunden Brattli AS (org.nr 909268265) har en utestående faktura på 31300 kr eksklusiv MVA for "Konsulenttimer". Registrer
+[register_payment] Me sende ein faktura på 10143 EUR til Fjelltopp AS (org.nr 954884791) då kursen var 10.54 NOK/EUR. Kunden har no betalt,
+[register_payment] Me sende ein faktura på 10781 EUR til Elvdal AS (org.nr 964825114) då kursen var 11.03 NOK/EUR. Kunden har no betalt, me
+[register_payment] We sent an invoice for 11671 EUR to Ironbridge Ltd (org no. 915238106) when the exchange rate was 11.22 NOK/EUR. The cus
+[register_payment] We sent an invoice for 2052 EUR to Northwave Ltd (org no. 883808568) when the exchange rate was 10.97 NOK/EUR. The custo
+[register_supplier_invoice] Hemos recibido la factura INV-2026-4194 del proveedor Viento SL (org. nº 933672905) por 19350 NOK con IVA incluido. El i
+[register_supplier_invoice] Recebemos a fatura INV-2026-4855 do fornecedor Solmar Lda (org. nº 972752843) no valor de 62600 NOK com IVA incluído. O 
+[register_supplier_invoice] Recebemos a fatura INV-2026-4811 do fornecedor Montanha Lda (org. nº 859712355) no valor de 33200 NOK com IVA incluído. 
+[register_supplier_invoice] Recebemos a fatura INV-2026-3088 do fornecedor Luz do Sol Lda (org. nº 895339016) no valor de 35200 NOK com IVA incluído
+[register_supplier_invoice] Nous avons reçu la facture INV-2026-7606 du fournisseur Lumière SARL (nº org. 913175212) de 72350 NOK TTC. Le montant co
+[register_supplier_invoice] Recebemos a fatura INV-2026-6293 do fornecedor Montanha Lda (org. nº 980979431) no valor de 12050 NOK com IVA incluído. 
+[register_supplier_invoice] Nous avons reçu la facture INV-2026-4914 du fournisseur Océan SARL (nº org. 853705209) de 56300 NOK TTC. Le montant conc
+[register_supplier_invoice] We have received invoice INV-2026-3205 from the supplier Ironbridge Ltd (org no. 828254375) for 24500 NOK including VAT.
+[register_supplier_invoice] Wir haben die Rechnung INV-2026-2118 vom Lieferanten Brückentor GmbH (Org.-Nr. 981448294) über 70400 NOK einschließlich 
+[register_supplier_invoice] We have received invoice INV-2026-9601 from the supplier Oakwood Ltd (org no. 967247049) for 79750 NOK including VAT. Th
+[register_supplier_invoice] Me har motteke faktura INV-2026-9559 frå leverandøren Elvdal AS (org.nr 935041740) på 36600 kr inklusiv MVA. Beløpet gje
+[register_supplier_invoice] Voce recebeu uma fatura de fornecedor (ver PDF anexo). Registe a fatura no Tripletex. Crie o fornecedor se nao existir. 
+[register_supplier_invoice] Vi treng Kontorstoler fra denne kvitteringa bokfort pa avdeling Drift. Bruk rett utgiftskonto basert pa kjopet, og sorg 
+[register_supplier_invoice] We need the Oppbevaringsboks expense from this receipt posted to department Lager. Use the correct expense account and e
+[register_supplier_invoice] Sie haben eine Lieferantenrechnung erhalten (siehe beigefugte PDF). Registrieren Sie die Rechnung in Tripletex. Erstelle
+[register_supplier_invoice] Vi har mottatt faktura INV-2026-4085 fra leverandøren Snøhetta AS (org.nr 861790029) på 44450 kr inklusiv MVA. Beløpet g
+[register_supplier_invoice] Nous avons reçu la facture INV-2026-5683 du fournisseur Lumière SARL (nº org. 904564184) de 75500 NOK TTC. Le montant co
+[register_supplier_invoice] Wir benotigen die USB-hub-Ausgabe aus dieser Quittung in der Abteilung Lager. Verwenden Sie das richtige Aufwandskonto u
+[register_supplier_invoice] Has recibido una factura de proveedor (ver PDF adjunto). Registra la factura en Tripletex. Crea el proveedor si no exist
+[register_supplier_invoice] Concilia el extracto bancario (CSV adjunto) con las facturas abiertas en Tripletex. Relaciona los pagos entrantes con la
+[register_supplier_invoice] Vi har mottatt faktura INV-2026-8551 fra leverandøren Bergvik AS (org.nr 989568469) på 14850 kr inklusiv MVA. Beløpet gj
+[register_supplier_invoice] You received a supplier invoice (see attached PDF). Register the invoice in Tripletex. Create the supplier if it does no
+[register_supplier_invoice] Gleichen Sie den Kontoauszug (beigefuegte CSV) mit den offenen Rechnungen in Tripletex ab. Ordnen Sie eingehende Zahlung
+[register_supplier_invoice] Nous avons reçu la facture INV-2026-6571 du fournisseur Prairie SARL (nº org. 965215727) de 30100 NOK TTC. Le montant co
+[register_supplier_invoice] Me har motteke faktura INV-2026-6998 frå leverandøren Sjøbris AS (org.nr 932482207) på 76850 kr inklusiv MVA. Beløpet gj
+[register_supplier_invoice] Hemos recibido la factura INV-2026-1515 del proveedor Costa Brava SL (org. nº 886379250) por 47650 NOK con IVA incluido.
+[register_supplier_invoice] Du har mottatt en leverandorfaktura (se vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren hvis den ikk
+[register_timesheet] Registrer 7 timer for Tor Johansen (tor.johansen@example.org) på aktiviteten "Design" i prosjektet "Plattformintegrasjon
+[register_timesheet] Erfassen Sie 14 Stunden für Anna Wagner (anna.wagner@example.org) auf der Aktivität "Analyse" im Projekt "Sicherheitsaud
+[register_timesheet] Registrer 19 timer for Thea Ødegård (thea.degard@example.org) på aktiviteten "Design" i prosjektet "Datamigrering" for T
+[register_timesheet] Registre 39 horas para Miguel Sánchez (miguel.sanchez@example.org) en la actividad "Analyse" del proyecto "Migración de 
+[register_timesheet] Registrer 30 timar for Gunnhild Eide (gunnhild.eide@example.org) på aktiviteten "Rådgivning" i prosjektet "Nettbutikk-ut
+[register_timesheet] Registrer 13 timar for Sigrid Neset (sigrid.neset@example.org) på aktiviteten "Rådgivning" i prosjektet "Systemoppgrader
+[register_timesheet] Registrer 30 timar for Randi Lunde (randi.lunde@example.org) på aktiviteten "Analyse" i prosjektet "Sikkerheitsrevisjon"
+[register_timesheet] Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Dorada' (Dorada SL, org. nº 888398554): 1) El proy
+[register_timesheet] Gjennomfør hele prosjektsyklusen for 'Dataplattform Tindra' (Tindra AS, org.nr 925122025): 1) Prosjektet har budsjett 43
+[register_timesheet] Log 5 hours for Emily Johnson (emily.johnson@example.org) on the activity "Utvikling" in the project "Security Audit" fo
+[register_timesheet] Execute the complete project lifecycle for 'ERP Implementation Silveroak' (Silveroak Ltd, org no. 814740536): 1) The pro
+[register_timesheet] Exécutez le cycle de vie complet du projet 'Migration Cloud Montagne' (Montagne SARL, nº org. 815119924) : 1) Le projet 
+[register_timesheet] Exécutez le cycle de vie complet du projet 'Mise à Niveau Système Soleil' (Soleil SARL, nº org. 869871079) : 1) Le proje
+[register_timesheet] Registrer 15 timer for Solveig Bakken (solveig.bakken@example.org) på aktiviteten "Testing" i prosjektet "Systemoppgrade
+[register_timesheet] Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Viento' (Viento SL, org. nº 828947818): 1) El proy
+[register_timesheet] Erfassen Sie 18 Stunden für Sophia Schmidt (sophia.schmidt@example.org) auf der Aktivität "Design" im Projekt "Sicherhei
+[register_timesheet] Gjennomfør hele prosjektsyklusen for 'Dataplattform Brattli' (Brattli AS, org.nr 937190808): 1) Prosjektet har budsjett 
+[register_timesheet] Ejecute el ciclo de vida completo del proyecto 'Migración Cloud Río' (Río Verde SL, org. nº 904714364): 1) El proyecto t
+[register_timesheet] Gjennomfør hele prosjektsyklusen for 'Systemoppgradering Brattli' (Brattli AS, org.nr 960456300): 1) Prosjektet har buds
+[register_timesheet] Registre 39 horas para Diego Sánchez (diego.sanchez@example.org) en la actividad "Analyse" del proyecto "Desarrollo de a
+[register_timesheet] Log 15 hours for Samuel Williams (samuel.williams@example.org) on the activity "Analyse" in the project "Website Redesig
+[register_timesheet] Registre 15 horas para Miguel Torres (miguel.torres@example.org) en la actividad "Design" del proyecto "Rediseño web" pa
+[reverse_payment] Die Zahlung von Nordlicht GmbH (Org.-Nr. 853417556) für die Rechnung "Netzwerkdienst" (38800 NOK ohne MwSt.) wurde von d
+[reverse_payment] Die Zahlung von Silberberg GmbH (Org.-Nr. 857736672) für die Rechnung "Systementwicklung" (22350 NOK ohne MwSt.) wurde v
+[reverse_payment] Die Zahlung von Nordlicht GmbH (Org.-Nr. 985405077) für die Rechnung "Wartung" (42200 NOK ohne MwSt.) wurde von der Bank
+[reverse_payment] El pago de Costa Brava SL (org. nº 866888426) por la factura "Mantenimiento" (39250 NOK sin IVA) fue devuelto por el ban
+[reverse_payment] Betalinga frå Vestfjord AS (org.nr 805747536) for fakturaen "Systemutvikling" (46850 kr ekskl. MVA) vart returnert av ba
+[reverse_payment] Die Zahlung von Grünfeld GmbH (Org.-Nr. 808603152) für die Rechnung "Netzwerkdienst" (44300 NOK ohne MwSt.) wurde von de
+[reverse_payment] Le paiement de Forêt SARL (nº org. 893396128) pour la facture "Maintenance" (44250 NOK HT) a été retourné par la banque.
+[reverse_payment] Die Zahlung von Windkraft GmbH (Org.-Nr. 823566441) für die Rechnung "Wartung" (29500 NOK ohne MwSt.) wurde von der Bank
+[reverse_payment] O pagamento de Luz do Sol Lda (org. nº 856642402) referente à fatura "Horas de consultoria" (9000 NOK sem IVA) foi devol
+[reverse_payment] El pago de Solmar SL (org. nº 836598741) por la factura "Licencia de software" (8000 NOK sin IVA) fue devuelto por el ba
+[reverse_payment] Die Zahlung von Brückentor GmbH (Org.-Nr. 944848479) für die Rechnung "Wartung" (42200 NOK ohne MwSt.) wurde von der Ban
+[reverse_payment] O pagamento de Porto Alegre Lda (org. nº 957867227) referente à fatura "Armazenamento na nuvem" (48300 NOK sem IVA) foi 
+[reverse_payment] El pago de Olivares SL (org. nº 921296819) por la factura "Almacenamiento en la nube" (46300 NOK sin IVA) fue devuelto p
+[reverse_payment] Betalingen fra Havbris AS (org.nr 998536561) for fakturaen "Programvarelisens" (32350 kr ekskl. MVA) ble returnert av ba
+[reverse_payment] The payment from Windmill Ltd (org no. 858237033) for the invoice "Consulting Hours" (25500 NOK excl. VAT) was returned 
+[reverse_payment] The payment from Blueshore Ltd (org no. 987904135) for the invoice "System Development" (13100 NOK excl. VAT) was return
+[reverse_payment] Betalingen fra Polaris AS (org.nr 896496468) for fakturaen "Skylagring" (17200 kr ekskl. MVA) ble returnert av banken. R
+[reverse_payment] O pagamento de Montanha Lda (org. nº 912922324) referente à fatura "Consultoria de dados" (15400 NOK sem IVA) foi devolv
+[reverse_payment] El pago de Dorada SL (org. nº 849807021) por la factura "Mantenimiento" (8900 NOK sin IVA) fue devuelto por el banco. Re
+[reverse_payment] The payment from Blueshore Ltd (org no. 989902121) for the invoice "Software License" (39700 NOK excl. VAT) was returned
+[run_payroll] Processe o salário de Lucas Martins (lucas.martins@example.org) para este mês. O salário base é de 39000 NOK. Adicione u
+[run_payroll] Køyr løn for Brita Berge (brita.berge@example.org) for denne månaden. Grunnløn er 36800 kr. Legg til ein eingongsbonus p
+[run_payroll] Køyr løn for Sigrid Brekke (sigrid.brekke@example.org) for denne månaden. Grunnløn er 34950 kr. Legg til ein eingongsbon
+[run_payroll] Kjør lønn for Jonas Hansen (jonas.hansen@example.org) for denne måneden. Grunnlønn er 40000 kr. Legg til en engangsbonus
+[run_payroll] Run payroll for Charles Taylor (charles.taylor@example.org) for this month. The base salary is 36450 NOK. Add a one-time
+[run_payroll] Ejecute la nómina de Marta López (marta.lopez@example.org) para este mes. El salario base es de 31300 NOK. Añada una bon
+[run_payroll] Run payroll for Sarah Brown (sarah.brown@example.org) for this month. The base salary is 48300 NOK. Add a one-time bonus
+[run_payroll] Run payroll for Lucy Walker (lucy.walker@example.org) for this month. The base salary is 43050 NOK. Add a one-time bonus
+[run_payroll] Ejecute la nómina de María Rodríguez (maria.rodriguez@example.org) para este mes. El salario base es de 58750 NOK. Añada
+[run_payroll] Processe o salário de Beatriz Pereira (beatriz.pereira@example.org) para este mês. O salário base é de 58650 NOK. Adicio
+[run_payroll] Ejecute la nómina de Fernando García (fernando.garcia@example.org) para este mes. El salario base es de 55350 NOK. Añada
+[run_payroll] Køyr løn for Gunnhild Aasen (gunnhild.aasen@example.org) for denne månaden. Grunnløn er 51800 kr. Legg til ein eingongsb
+[run_payroll] Exécutez la paie de Manon Leroy (manon.leroy@example.org) pour ce mois. Le salaire de base est de 43050 NOK. Ajoutez une
+[run_payroll] Le client Forêt SARL (nº org. 925519685) a une facture impayée de 40750 NOK hors TVA pour "Design web". Enregistrez le p
+[run_payroll] Le paiement de Lumière SARL (nº org. 937075405) pour la facture "Conseil en données" (39100 NOK HT) a été retourné par l
+[run_payroll] Créez une commande pour le client Océan SARL (nº org. 859049788) avec les produits Session de formation (3206) à 4950 NO
+[run_payroll] Processe o salário de Maria Almeida (maria.almeida@example.org) para este mês. O salário base é de 33550 NOK. Adicione u
+[run_payroll] Nous avons envoyé une facture de 12689 EUR à Océan SARL (nº org. 863081793) lorsque le taux de change était de 11.28 NOK
+[run_payroll] Nous avons envoyé une facture de 9273 EUR à Montagne SARL (nº org. 941382142) lorsque le taux de change était de 10.34 N
+[set_project_fixed_price] Legen Sie einen Festpreis von 305450 NOK für das Projekt "Infrastruktur-Upgrade" für Sonnental GmbH (Org.-Nr. 967604178)
+[set_project_fixed_price] Fixez un prix forfaitaire de 365350 NOK sur le projet "Intégration CRM" pour Colline SARL (nº org. 894562234). Le chef d
+[set_project_fixed_price] Set a fixed price of 498050 NOK on the project "CRM Integration" for Ridgepoint Ltd (org no. 844419856). The project man
+[set_project_fixed_price] Fixez un prix forfaitaire de 328650 NOK sur le projet "Développement e-commerce" pour Cascade SARL (nº org. 913754689). 
+[set_project_fixed_price] Defina um preço fixo de 313650 NOK no projeto "Migração para nuvem" para Estrela Lda (org. nº 922471126). O gestor de pr
+[set_project_fixed_price] Fixez un prix forfaitaire de 125550 NOK sur le projet "Mise à niveau infrastructure" pour Soleil SARL (nº org. 931336738
+[set_project_fixed_price] Um dos seus clientes tem uma fatura vencida. Encontre a fatura vencida e registe uma taxa de lembrete de 70 NOK. Debito 
+[set_project_fixed_price] L'un de vos clients a une facture en retard. Trouvez la facture en retard et enregistrez des frais de rappel de 50 NOK. 
+[set_project_fixed_price] Set a fixed price of 433600 NOK on the project "Automation Project" for Clearwater Ltd (org no. 934928199). The project 
+[set_project_fixed_price] Set a fixed price of 170500 NOK on the project "Infrastructure Upgrade" for Brightstone Ltd (org no. 850116091). The pro
+[set_project_fixed_price] Defina um preço fixo de 420900 NOK no projeto "Implementação ERP" para Horizonte Lda (org. nº 976946081). O gestor de pr
+[set_project_fixed_price] Legen Sie einen Festpreis von 473250 NOK für das Projekt "Datensicherheit" für Windkraft GmbH (Org.-Nr. 886395582) fest.
+[set_project_fixed_price] Establezca un precio fijo de 261700 NOK en el proyecto "Integración CRM" para Luna SL (org. nº 847950021). El director d
+[set_project_fixed_price] Legen Sie einen Festpreis von 221600 NOK für das Projekt "CRM-Integration" für Brückentor GmbH (Org.-Nr. 815400542) fest
+[set_project_fixed_price] Sett fastpris 352200 kr på prosjektet "Automatiseringsprosjekt" for Nordhav AS (org.nr 940514584). Prosjektleder er Thea
+[unknown] test
+[unknown] Create three departments in Tripletex: "Utvikling", "Lager", and "Regnskap".
+[unknown] Crie uma dimensão contabilística personalizada "Region" com os valores "Sør-Norge" e "Nord-Norge". Em seguida, lance um 
+[unknown] Führen Sie die Gehaltsabrechnung für Laura Schneider (laura.schneider@example.org) für diesen Monat durch. Das Grundgeha
+[unknown] Créez une dimension comptable personnalisée "Kostsenter" avec les valeurs "Kundeservice" et "Økonomi". Puis comptabilise
+[unknown] Erstellen Sie einen Auftrag für den Kunden Waldstein GmbH (Org.-Nr. 975687821) mit den Produkten Netzwerkdienst (4366) z
+[unknown] Registe 4 horas para Maria Ferreira (maria.ferreira@example.org) na atividade "Utvikling" do projeto "Desenvolvimento de
+[unknown] Run payroll for William Taylor (william.taylor@example.org) for this month. The base salary is 39400 NOK. Add a one-time
+[unknown] Establezca un precio fijo de 152400 NOK en el proyecto "Mejora de infraestructura" para Estrella SL (org. nº 808166283).
+[unknown] Opprett en fri regnskapsdimensjon "Produktlinje" med verdiene "Standard" og "Avansert". Bokfør deretter et bilag på kont
+[unknown] Defina um preço fixo de 114250 NOK no projeto "Implementação ERP" para Luz do Sol Lda (org. nº 898537447). O gestor de p
+[unknown] Sett fastpris 430750 kr på prosjektet "Automatiseringsprosjekt" for Fossekraft AS (org.nr 907433498). Prosjektleiar er S
+[unknown] Sett fastpris 122650 kr på prosjektet "Digital transformasjon" for Fossekraft AS (org.nr 830330704). Prosjektleiar er Li
+[unknown] Sett fastpris 203000 kr på prosjektet "Digital transformasjon" for Stormberg AS (org.nr 834028719). Prosjektleder er Hil
+[unknown] Cree una dimensión contable personalizada "Kostsenter" con los valores "Markedsføring" y "Kundeservice". Luego registre 
+[unknown] Cree una dimensión contable personalizada "Prosjekttype" con los valores "Forskning" y "Utvikling". Luego registre un as
+[unknown] Opprett ein fri rekneskapsdimensjon "Marked" med verdiane "Privat" og "Bedrift". Bokfør deretter eit bilag på konto 6590
+[unknown] Le client Cascade SARL (nº org. 862852745) a réclamé concernant la facture pour "Développement système" (15200 NOK HT). 
+[unknown] Erstellen Sie das Produkt "Softwarelizenz" mit der Produktnummer 7986. Der Preis beträgt 24900 NOK ohne MwSt., mit dem S
+[unknown] Crie três departamentos no Tripletex: "IT", "Kvalitetskontroll" e "Regnskap".
+[unknown] Registre una nota de gastos de viaje para Laura López (laura.lopez@example.org) por "Visita cliente Oslo". El viaje duró
+[unknown] Du har motteke ein leverandorfaktura (sjaa vedlagt PDF). Registrer fakturaen i Tripletex. Opprett leverandoren viss den 
+[unknown] Realice el cierre mensual de marzo de 2026. Registre la periodificación (12500 NOK por mes de la cuenta 1720 a gasto). C
+[unknown] Precisamos da despesa de Oppbevaringsboks deste recibo registada no departamento Markedsføring. Use a conta de despesas 
+[unknown] Die Gesamtkosten sind von Januar bis Februar 2026 deutlich gestiegen. Analysieren Sie das Hauptbuch und identifizieren S
+[unknown] Nous avons découvert des erreurs dans le grand livre de janvier et février 2026. Vérifiez toutes les pièces et trouvez l
+[unknown] Nous avons besoin de la depense Skrivebordlampe de ce recu enregistree au departement Kvalitetskontroll. Utilisez le bon
+[year_end_closing] Realize o encerramento anual simplificado de 2025: 1) Calcule e registe a depreciação anual de três ativos: Kontormaskin
+[year_end_closing] Realice el cierre anual simplificado de 2025: 1) Calcule y contabilice la depreciación anual de tres activos: Kjøretøy (
+[year_end_closing] Realize o encerramento anual simplificado de 2025: 1) Calcule e registe a depreciação anual de três ativos: Kontormaskin
+[year_end_closing] Perform simplified year-end closing for 2025: 1) Calculate and post annual depreciation for three assets: Kontormaskiner
+[year_end_closing] Realize o encerramento anual simplificado de 2025: 1) Calcule e registe a depreciação anual de três ativos: Kontormaskin
+[year_end_closing] Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobi
+[year_end_closing] Führen Sie den vereinfachten Jahresabschluss für 2025 durch: 1) Berechnen und buchen Sie die jährliche Abschreibung für 
+[year_end_closing] Effectuez la clôture annuelle simplifiée pour 2025 : 1) Calculez et comptabilisez l'amortissement annuel de trois immobi
+[year_end_closing] Realize o encerramento anual simplificado de 2025: 1) Calcule e registe a depreciação anual de três ativos: Programvare 
+[year_end_closing] Führen Sie den vereinfachten Jahresabschluss für 2025 durch: 1) Berechnen und buchen Sie die jährliche Abschreibung für 
+[year_end_closing] Führen Sie den vereinfachten Jahresabschluss für 2025 durch: 1) Berechnen und buchen Sie die jährliche Abschreibung für 

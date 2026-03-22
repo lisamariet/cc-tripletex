@@ -1,0 +1,3 @@
+Confidence: 0.98
+
+Opprett prosjektet "Migrasjon Elvdal" knytt til kunden Elvdal AS (org.nr 877501906). Prosjektleiar er Liv Haugen (liv.haugen@example.org).

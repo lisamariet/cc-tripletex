@@ -1,0 +1,10 @@
+{
+  "timestamp": "20260322_130028_794048",
+  "revision": "tripletex-agent-00134-q96",
+  "prompt": "Erstellen Sie drei Abteilungen in Tripletex: \"Økonomi\", \"Regnskap\" und \"Kvalitetskontroll\".",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

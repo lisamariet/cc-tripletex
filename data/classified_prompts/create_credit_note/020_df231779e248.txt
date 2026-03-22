@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Le client Colline SARL (nº org. 879581265) a réclamé concernant la facture pour "Conseil en données" (23750 NOK HT). Émettez un avoir complet qui annule l'intégralité de la facture.

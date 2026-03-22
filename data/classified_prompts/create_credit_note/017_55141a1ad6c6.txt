@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Kunden Havbris AS (org.nr 995581094) har reklamert på fakturaen for "Programvarelisens" (34650 kr ekskl. MVA). Opprett en fullstendig kreditnota som reverserer hele fakturaen.

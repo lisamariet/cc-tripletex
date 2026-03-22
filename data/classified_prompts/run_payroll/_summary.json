@@ -1,0 +1,82 @@
+[
+  {
+    "prompt": "Führen Sie die Gehaltsabrechnung für Laura Schneider (laura.schneider@example.org) für diesen Monat durch. Das Grundgehalt beträgt 33000 NOK. Fügen Sie einen einmaligen Bonus von 17850 NOK zum Grundge",
+    "confidence": 0.95,
+    "hash": "014076f57fce"
+  },
+  {
+    "prompt": "Run payroll for William Taylor (william.taylor@example.org) for this month. The base salary is 39400 NOK. Add a one-time bonus of 11800 NOK on top of the base salary. If the salary API is unavailable,",
+    "confidence": 0.95,
+    "hash": "8bc13158593a"
+  },
+  {
+    "prompt": "Processe o salário de Lucas Martins (lucas.martins@example.org) para este mês. O salário base é de 39000 NOK. Adicione um bónus único de 10500 NOK além do salário base.",
+    "confidence": 0.95,
+    "hash": "ef752583dd32"
+  },
+  {
+    "prompt": "Køyr løn for Brita Berge (brita.berge@example.org) for denne månaden. Grunnløn er 36800 kr. Legg til ein eingongsbonus på 14100 kr i tillegg til grunnløna.",
+    "confidence": 0.95,
+    "hash": "a40476fdc837"
+  },
+  {
+    "prompt": "Køyr løn for Sigrid Brekke (sigrid.brekke@example.org) for denne månaden. Grunnløn er 34950 kr. Legg til ein eingongsbonus på 15350 kr i tillegg til grunnløna.",
+    "confidence": 0.95,
+    "hash": "9a799fa42a9a"
+  },
+  {
+    "prompt": "Kjør lønn for Jonas Hansen (jonas.hansen@example.org) for denne måneden. Grunnlønn er 40000 kr. Legg til en engangsbonus på 10600 kr i tillegg til grunnlønnen. Dersom lønns-API-et ikke fungerer, kan d",
+    "confidence": 0.95,
+    "hash": "51cf4c86e8ed"
+  },
+  {
+    "prompt": "Run payroll for Charles Taylor (charles.taylor@example.org) for this month. The base salary is 36450 NOK. Add a one-time bonus of 10300 NOK on top of the base salary. If the salary API is unavailable,",
+    "confidence": 0.95,
+    "hash": "afda9aac98c7"
+  },
+  {
+    "prompt": "Ejecute la nómina de Marta López (marta.lopez@example.org) para este mes. El salario base es de 31300 NOK. Añada una bonificación única de 13300 NOK además del salario base.",
+    "confidence": 0.95,
+    "hash": "0d43bce59746"
+  },
+  {
+    "prompt": "Run payroll for Sarah Brown (sarah.brown@example.org) for this month. The base salary is 48300 NOK. Add a one-time bonus of 11650 NOK on top of the base salary. If the salary API is unavailable, you c",
+    "confidence": 0.95,
+    "hash": "fca75f3aa11f"
+  },
+  {
+    "prompt": "Run payroll for Lucy Walker (lucy.walker@example.org) for this month. The base salary is 43050 NOK. Add a one-time bonus of 6100 NOK on top of the base salary.",
+    "confidence": 0.95,
+    "hash": "54a4a1f145a7"
+  },
+  {
+    "prompt": "Ejecute la nómina de María Rodríguez (maria.rodriguez@example.org) para este mes. El salario base es de 58750 NOK. Añada una bonificación única de 10750 NOK además del salario base.",
+    "confidence": 0.95,
+    "hash": "3e1ce777757b"
+  },
+  {
+    "prompt": "Processe o salário de Beatriz Pereira (beatriz.pereira@example.org) para este mês. O salário base é de 58650 NOK. Adicione um bónus único de 8850 NOK além do salário base.",
+    "confidence": 0.95,
+    "hash": "e91722453dd7"
+  },
+  {
+    "prompt": "Ejecute la nómina de Fernando García (fernando.garcia@example.org) para este mes. El salario base es de 55350 NOK. Añada una bonificación única de 14600 NOK además del salario base.",
+    "confidence": 0.95,
+    "hash": "018c4a0a5729"
+  },
+  {
+    "prompt": "Køyr løn for Gunnhild Aasen (gunnhild.aasen@example.org) for denne månaden. Grunnløn er 51800 kr. Legg til ein eingongsbonus på 5700 kr i tillegg til grunnløna.",
+    "confidence": 0.95,
+    "hash": "e1a0f7226dcf"
+  },
+  {
+    "prompt": "Exécutez la paie de Manon Leroy (manon.leroy@example.org) pour ce mois. Le salaire de base est de 43050 NOK. Ajoutez une prime unique de 11150 NOK en plus du salaire de base.",
+    "confidence": 0.95,
+    "hash": "5ef22e14a7fb"
+  },
+  {
+    "prompt": "Processe o salário de Maria Almeida (maria.almeida@example.org) para este mês. O salário base é de 33550 NOK. Adicione um bónus único de 14400 NOK além do salário base.",
+    "confidence": 0.95,
+    "hash": "5174304ec5b2"
+  }
+]

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+We sent an invoice for 19858 EUR to Northwave Ltd (org no. 923909583) when the exchange rate was 11.66 NOK/EUR. The customer has now paid, but the rate is 11.00 NOK/EUR. Register the payment and post 

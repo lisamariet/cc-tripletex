@@ -1,0 +1,9 @@
+{
+  "timestamp": "20260321_102717_731848",
+  "prompt": "Ejecute el ciclo de vida completo del proyecto 'Actualización Sistema Dorada' (Dorada SL, org. nº 888398554): 1) El proyecto tiene un presupuesto de 460950 NOK. 2) Registre horas: Carlos García (director de proyecto, carlos.garcia@example.org) 40 horas y Rafael García (consultor, rafael.garcia@example.org) 47 horas. 3) Registre costo de proveedor de 41650 NOK de Estrella SL (org. nº 913385853). 4) Cree una factura al cliente por el proyecto.",
+  "files": [],
+  "tripletex_credentials": {
+    "base_url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2",
+    "session_token": "REDACTED"
+  }
+}

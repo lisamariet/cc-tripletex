@@ -1,0 +1,113 @@
+{
+  "timestamp": "20260321_072535_977043",
+  "prompt": "Crie três departamentos no Tripletex: \"Økonomi\", \"Innkjøp\" e \"Regnskap\".",
+  "parsed_task": {
+    "task_type": "batch_create_department",
+    "fields": {
+      "items": [
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Økonomi"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 1 of 3."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Innkjøp"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 2 of 3."
+        },
+        {
+          "taskType": "create_department",
+          "fields": {
+            "name": "Regnskap"
+          },
+          "confidence": 0.95,
+          "reasoning": "Batch: department 3 of 3."
+        }
+      ]
+    },
+    "confidence": 0.95
+  },
+  "api_calls": [
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1188.6,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1087.5,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/department",
+      "status": 201,
+      "duration_ms": 1078.4,
+      "error": null
+    }
+  ],
+  "total_calls": 3,
+  "error_count_4xx": 0,
+  "total_duration_ms": 4704.6,
+  "result": {
+    "status": "completed",
+    "taskType": "batch_create_department",
+    "batch_results": [
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 926244,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/926244",
+          "name": "Økonomi",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Økonomi",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 926245,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/926245",
+          "name": "Innkjøp",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Innkjøp",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      },
+      {
+        "status": "completed",
+        "taskType": "create_department",
+        "created": {
+          "id": 926246,
+          "version": 0,
+          "url": "kkpqfuj-amager.tripletex.dev/v2/department/926246",
+          "name": "Regnskap",
+          "departmentNumber": "",
+          "departmentManager": null,
+          "displayName": "Regnskap",
+          "isInactive": false,
+          "businessActivityTypeId": 0
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Le client Forêt SARL (nº org. 925519685) a une facture impayée de 40750 NOK hors TVA pour "Design web". Enregistrez le paiement intégral de cette facture.

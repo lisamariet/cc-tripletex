@@ -1,0 +1,3 @@
+Confidence: 0.95
+
+Registrer ei reiserekning for Arne Vik (arne.vik@example.org) for "Kundebesøk Stavanger". Reisa varte 2 dagar med diett (dagssats 800 kr). Utlegg: flybillett 3600 kr og taxi 550 kr.

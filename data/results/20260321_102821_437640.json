@@ -1,0 +1,142 @@
+{
+  "timestamp": "20260321_102821_437640",
+  "prompt": "Has recibido un contrato de trabajo (ver PDF adjunto). Crea el empleado en Tripletex con todos los datos del contrato: numero de identidad, fecha de nacimiento, departamento, codigo de ocupacion, salario, porcentaje de empleo y fecha de inicio.",
+  "parsed_task": {
+    "task_type": "create_employee",
+    "fields": {
+      "firstName": "Isabel",
+      "lastName": "García",
+      "dateOfBirth": "1980-02-14",
+      "nationalIdentityNumber": "14028013567",
+      "email": "isabel.garcia@example.org",
+      "bankAccountNumber": "97208097079",
+      "startDate": "2026-07-13",
+      "role": "Kundeservice",
+      "description": "Stillingskode (STYRK): 3313, Stillingsprosent: 80.0%, Årslønn: 640000 kr."
+    },
+    "confidence": 0.98
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/department",
+      "status": 200,
+      "duration_ms": 4280.5,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/department",
+      "query_params": {
+        "count": 1,
+        "fields": "id,name"
+      },
+      "response_body": "{\"fullResultSize\":1,\"from\":0,\"count\":1,\"versionDigest\":\"'If-None-Match' header not specified\",\"values\":[{\"id\":706881,\"name\":\"Avdeling\"}]}"
+    },
+    {
+      "method": "POST",
+      "path": "/employee",
+      "status": 201,
+      "duration_ms": 5476.7,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee",
+      "request_body": {
+        "firstName": "Isabel",
+        "lastName": "García",
+        "email": "isabel.garcia@example.org",
+        "dateOfBirth": "1980-02-14",
+        "nationalIdentityNumber": "14028013567",
+        "bankAccountNumber": "97208097079",
+        "userType": "STANDARD",
+        "department": {
+          "id": 706881
+        }
+      },
+      "response_body": "{\"value\":{\"id\":18619349,\"version\":1,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18619349\",\"firstName\":\"Isabel\",\"lastName\":\"García\",\"displayName\":\"Isabel García\",\"employeeNumber\":\"\",\"dateOfBirth\":\"1980-02-14\",\"email\":\"isabel.garcia@example.org\",\"phoneNumberMobileCountry\":{\"id\":161,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/country/161\"},\"phoneNumberMobile\":\"\",\"phoneNumberHome\":\"\",\"phoneNumberWork\":\"\",\"nationalIdentityNumber\":\"14028013567\",\"dnumber\":\"\",\"internationalId\":{\"intAmeldingType\":null,\"country\":null,\"number\":\"\"},\"bankAccountNumber\":\"97208097079\",\"iban\":\"\",\"bic\":\"\",\"creditorBankCountryId\":0,\"usesAbroadPayment\":false,\"userType\":null,\"allowInformationRegistration\":true,\"isContact\":false,\"isProxy\":false,\"comments\":\"\",\"address\":null,\"department\":{\"id\":706881,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/department/706881\"},\"employments\":[],\"holidayAllowanceEarned\":{\"year\":0,\"amount\":0,\"basis\":0,\"amountExtraHolidayWeek\":0},\"employeeCategory\":null,\"isAuthProjectOverviewURL\":true,\"pictureId\":0,\"companyId\":107853208,\"vismaConnect2FAactive\":false}}"
+    },
+    {
+      "method": "PUT",
+      "path": "/employee/entitlement/:grantEntitlementsByTemplate",
+      "status": 200,
+      "duration_ms": 6345.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/entitlement/:grantEntitlementsByTemplate",
+      "query_params": {
+        "employeeId": 18619349,
+        "template": "ALL_PRIVILEGES"
+      },
+      "response_body": ""
+    },
+    {
+      "method": "POST",
+      "path": "/employee/employment",
+      "status": 201,
+      "duration_ms": 4630.0,
+      "error": null,
+      "url": "https://tx-proxy-jwanbnu3pq-lz.a.run.app/v2/employee/employment",
+      "request_body": {
+        "employee": {
+          "id": 18619349
+        },
+        "startDate": "2026-07-13"
+      },
+      "response_body": "{\"value\":{\"id\":2813382,\"version\":0,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/employment/2813382\",\"employee\":{\"id\":18619349,\"url\":\"kkpqfuj-amager.tripletex.dev/v2/employee/18619349\"},\"employmentId\":\"\",\"startDate\":\"2026-07-13\",\"endDate\":null,\"employmentEndReason\":null,\"division\":null,\"lastSalaryChangeDate\":null,\"noEmploymentRelationship\":false,\"isMainEmployer\":true,\"taxDeductionCode\":\"loennFraHovedarbeidsgiver\",\"employmentDetails\":[],\"isRemoveAccessAtEmploymentEnded\":false,\"latestSalary\":null}}"
+    }
+  ],
+  "total_calls": 4,
+  "error_count_4xx": 0,
+  "total_duration_ms": 29477.7,
+  "result": {
+    "status": "completed",
+    "taskType": "create_employee",
+    "created": {
+      "id": 18619349,
+      "version": 1,
+      "url": "kkpqfuj-amager.tripletex.dev/v2/employee/18619349",
+      "firstName": "Isabel",
+      "lastName": "García",
+      "displayName": "Isabel García",
+      "employeeNumber": "",
+      "dateOfBirth": "1980-02-14",
+      "email": "isabel.garcia@example.org",
+      "phoneNumberMobileCountry": {
+        "id": 161,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/country/161"
+      },
+      "phoneNumberMobile": "",
+      "phoneNumberHome": "",
+      "phoneNumberWork": "",
+      "nationalIdentityNumber": "14028013567",
+      "dnumber": "",
+      "internationalId": {
+        "intAmeldingType": null,
+        "country": null,
+        "number": ""
+      },
+      "bankAccountNumber": "97208097079",
+      "iban": "",
+      "bic": "",
+      "creditorBankCountryId": 0,
+      "usesAbroadPayment": false,
+      "userType": null,
+      "allowInformationRegistration": true,
+      "isContact": false,
+      "isProxy": false,
+      "comments": "",
+      "address": null,
+      "department": {
+        "id": 706881,
+        "url": "kkpqfuj-amager.tripletex.dev/v2/department/706881"
+      },
+      "employments": [],
+      "holidayAllowanceEarned": {
+        "year": 0,
+        "amount": 0,
+        "basis": 0,
+        "amountExtraHolidayWeek": 0
+      },
+      "employeeCategory": null,
+      "isAuthProjectOverviewURL": true,
+      "pictureId": 0,
+      "companyId": 107853208,
+      "vismaConnect2FAactive": false
+    }
+  }
+}
